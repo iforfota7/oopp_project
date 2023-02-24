@@ -8,7 +8,7 @@
 * Cards - Single-purpose tasks, which have a title
 * Lists - Are used to group together cards into specific categories. Some examples of these could be TODO, Doing, Done
 * Board - A collection of lists & cards that is characterized by a specific id/name
-* Overview - A 
+* Overview - The main menu of the application containing the boards users can access
 
 ### Mocks
 All mockups are attached to the end of this document to illustrate our design ideas and will be referenced where relevant. Note that the background colors of the boards and pop ups are chosen to better illustrate the design and will not necessarily be implemented in this way.
@@ -113,10 +113,9 @@ As an admin, I want…
 
 
 ## Mock Ups
-
-![BoardDetails](images/BoardDetails.png)
-
 ![CardDetails](images/CardDetails.png)
+
+![BoardDetails](images/TagDetails.png)
 
 ![Customization](images/Customization.png)
 
