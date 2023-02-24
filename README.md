@@ -14,6 +14,7 @@ Add your own name (do not add the names for others!) to the section below.
 |---| Tudor-Stefan Magirescu | Magirescu@student.tudelft.nl |
 |---|Emilia Ketterer| e.l.ketterer@student.tudelft.nl |
 |---| Ioana Forfota | I.Forfota@student.tudelft.nl |
+|---|Lazar Polovina| L.Polovina@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
