@@ -5,7 +5,7 @@
 >Mark: **Pass**
 
 Feedback: 
-- I like that it is in markdown and it has good formatting and structure.
+- I like that it is in markdown, and it has good formatting and structure.
 - I like that you included mockups.
 
 ### Backlog Structure
@@ -34,9 +34,9 @@ Feedback: Is in MOSCOW format, so it does not have any mention of epics.
 
 >Mark: **Very Good**
 
-Feedback: The user stories are quite clear and they cover quite atomic things, however some of them have unclear wording and can be reformulated.
+Feedback: The user stories are quite clear, and they cover quite atomic things, however some of them have unclear wording and can be reformulated.
 #### Tops:
-- Very in depth but has the neccesary information to make them clear.
+- Very in depth but has the necessary information to make them clear.
 - I like that you have made them pretty atomic (the scope is good).
 #### Tips:
 - You could rewrite some of them that might be unclear or are written badly (*to make a board my current board by clicking on it*).
@@ -46,7 +46,7 @@ Feedback: The user stories are quite clear and they cover quite atomic things, h
 
 >Mark: **Excellent**
 
-Feedback: Very good and clear subpoints!
+Feedback: Very good and clear sub-points!
 #### Tops:
 - I like that you talk about "having a permanent effect".
 - **Good**: The size is either small or they are explained in subsections.
