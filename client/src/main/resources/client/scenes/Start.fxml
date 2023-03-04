@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="client.scenes.Start"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.StartCtrl">
+   <children>
+      <TextField layoutX="228.0" layoutY="151.0" />
+      <Label layoutX="166.0" layoutY="156.0" text="Board ID:" />
+      <Label layoutX="191.0" layoutY="98.0" text="Please enter your Board ID">
+         <font>
+            <Font name="Times New Roman" size="19.0" />
+         </font>
+      </Label>
+      <Button layoutX="369.0" layoutY="228.0" mnemonicParsing="false" text="Go!" />
+      <Label layoutX="163.0" layoutY="186.0" text="Password:" />
+      <PasswordField layoutX="228.0" layoutY="182.0" />
+   </children>
+   <effect>
+      <DropShadow />
+   </effect>
 </AnchorPane>
