@@ -11,8 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="330.0" prefWidth="500.0" style="-fx-background-color: #90ee90;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
+<AnchorPane prefHeight="330.0" prefWidth="500.0" style="-fx-background-color: #7FFFD4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
    <children>
       <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="29.0" layoutY="24.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="200.0" promptText="Card Title">
          <font>
@@ -39,9 +38,22 @@
                   <Font name="System Bold Italic" size="15.0" />
                </font>
             </Label>
-            <CheckBox fx:id="taskTwonIput" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="150.0" text="Task 2" />
+            <CheckBox fx:id="taskTwoInput" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="150.0" text="Task 2" />
             <CheckBox fx:id="taskThreeInput" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="150.0" text="Task 3" />
-            <Button contentDisplay="BOTTOM" layoutX="164.0" layoutY="34.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="10.0" text="X" />
+            <Button fx:id="taskOneDelete" contentDisplay="BOTTOM" layoutX="164.0" layoutY="40.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="10.0" style="-fx-background-color: #ffb6c1;" text="X">
+               <font>
+                  <Font size="8.0" />
+               </font></Button>
+            <Button fx:id="taskTwoDelete" contentDisplay="BOTTOM" layoutX="164.0" layoutY="58.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="10.0" style="-fx-background-color: #ffb6c1;" text="X">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </Button>
+            <Button fx:id="taskThreeDelete" contentDisplay="BOTTOM" layoutX="164.0" layoutY="76.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="10.0" style="-fx-background-color: #ffb6c1;" text="X">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
       <TextArea fx:id="tagsInput" layoutX="29.0" layoutY="76.0" prefHeight="52.0" prefWidth="200.0" promptText="Tags" />

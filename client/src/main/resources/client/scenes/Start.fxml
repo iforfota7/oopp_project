@@ -9,18 +9,26 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.StartCtrl">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E6E6FA;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.Start">
    <children>
-      <TextField layoutX="228.0" layoutY="151.0" />
-      <Label layoutX="166.0" layoutY="156.0" text="Board ID:" />
+      <TextField fx:id="inputBoardId" layoutX="228.0" layoutY="151.0" promptText="name/Id" />
+      <Label layoutX="162.0" layoutY="155.0" text="Board ID:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
       <Label layoutX="191.0" layoutY="98.0" text="Please enter your Board ID">
          <font>
             <Font name="Times New Roman" size="19.0" />
          </font>
       </Label>
-      <Button layoutX="369.0" layoutY="228.0" mnemonicParsing="false" text="Go!" />
-      <Label layoutX="163.0" layoutY="186.0" text="Password:" />
-      <PasswordField layoutX="228.0" layoutY="182.0" />
+      <Button fx:id="loginBut" layoutX="369.0" layoutY="228.0" mnemonicParsing="false" onAction="#login" text="Go!" />
+      <Label layoutX="158.0" layoutY="186.0" text="Password:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="inputPassword" layoutX="228.0" layoutY="182.0" />
    </children>
    <effect>
       <DropShadow />
