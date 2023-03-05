@@ -25,54 +25,7 @@
             <Font name="BM YEONSUNG OTF" size="18.0" />
          </font>
       </Label>
-      <RadioButton fx:id="lockBtu" layoutX="110.0" layoutY="20.0" mnemonicParsing="false" onAction="#lockOrUnlock" />
-      <AnchorPane layoutX="37.5" layoutY="80.0">
-         <children>
-            <ListView fx:id="listLeft" prefHeight="260.0" prefWidth="150.0" />
-            <Label fx:id="listLeftName" layoutX="57.5" layoutY="3.0" text="ToDo">
-               <font>
-                  <Font name="Bodoni 72 Smallcaps Book" size="13.0" />
-               </font>
-            </Label>
-            <Button fx:id="listLeftDelete" layoutX="88.5" layoutY="233.0" mnemonicParsing="false" onAction="#Delete" style="-fx-background-color: #f08080;" text="Delete List">
-               <font>
-                  <Font size="9.0" />
-               </font>
-            </Button>
-            <Circle fill="#c9a4da" layoutX="24.0" layoutY="243.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
-            <Separator layoutX="0.5" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-            <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="42.5" layoutY="25.0" onAction="#openCard" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
-               <font>
-                  <Font size="12.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="42.5" layoutY="80.0" onAction="#openCard" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
-               <font>
-                  <Font size="12.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="42.5" layoutY="52.0" onAction="#openCard" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
-               <font>
-                  <Font size="12.0" />
-               </font>
-            </Hyperlink>
-            <Button fx:id="deleteCard1" layoutX="11.5" layoutY="28.0" mnemonicParsing="false" onAction="#DeleteCard" style="-fx-background-color: #f08080;" text="X">
-               <font>
-                  <Font size="9.0" />
-               </font>
-            </Button>
-            <Button fx:id="deleteCard2" layoutX="11.5" layoutY="55.0" mnemonicParsing="false" onAction="#DeleteCard" style="-fx-background-color: #f08080;" text="X">
-               <font>
-                  <Font size="9.0" />
-               </font>
-            </Button>
-            <Button fx:id="deleteCard3" layoutX="11.5" layoutY="83.0" mnemonicParsing="false" onAction="#DeleteCard" style="-fx-background-color: #f08080;" text="X">
-               <font>
-                  <Font size="9.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
+      <RadioButton fx:id="lockBtu" layoutX="110.0" layoutY="20.0" mnemonicParsing="false" />
       <AnchorPane layoutX="225.0" layoutY="80.0">
          <children>
             <ListView fx:id="listMid" prefHeight="260.0" prefWidth="150.0" style="-fx-border-radius: 50px;">
@@ -88,7 +41,7 @@
                   <Font name="Bodoni 72 Smallcaps Book" size="13.0" />
                </font>
             </Label>
-            <Button fx:id="listMidDelete" layoutX="89.0" layoutY="233.0" mnemonicParsing="false" onAction="#Delete" style="-fx-background-color: #f08080;" text="Delete List">
+            <Button fx:id="listMidDelete" layoutX="89.0" layoutY="233.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="Delete List">
                <font>
                   <Font size="9.0" />
                </font>
@@ -97,11 +50,70 @@
             <Separator layoutY="21.0" prefHeight="4.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
+      <AnchorPane layoutX="37.5" layoutY="80.0">
+         <children>
+            <ListView fx:id="listLeft" prefHeight="260.0" prefWidth="150.0" />
+            <Label fx:id="listLeftName" layoutX="57.5" layoutY="3.0" text="ToDo">
+               <font>
+                  <Font name="Bodoni 72 Smallcaps Book" size="13.0" />
+               </font>
+            </Label>
+            <Button fx:id="listLeftDelete" layoutX="88.5" layoutY="233.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="Delete List">
+               <font>
+                  <Font size="9.0" />
+               </font>
+            </Button>
+            <Circle fill="#c9a4da" layoutX="24.0" layoutY="243.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+            <Separator layoutX="0.5" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
+            <AnchorPane layoutX="11.5" layoutY="25.0">
+               <children>
+                  <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Button fx:id="deleteCard1" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="11.5" layoutY="80.0">
+               <children>
+                  <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Button fx:id="deleteCard3" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="11.5" layoutY="52.0">
+               <children>
+                  <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Button fx:id="deleteCard2" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
       <AnchorPane layoutX="412.5" layoutY="80.0">
          <children>
             <ListView fx:id="listRight" prefHeight="260.0" prefWidth="150.0" />
             <Label fx:id="listRightName" layoutX="58.5" layoutY="3.0" text="Done" />
-            <Button fx:id="listRightDelete" layoutX="88.5" layoutY="233.0" mnemonicParsing="false" onAction="#Delete" style="-fx-background-color: #f08080;" text="Delete List">
+            <Button fx:id="listRightDelete" layoutX="88.5" layoutY="233.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="Delete List">
                <font>
                   <Font size="9.0" />
                </font>
@@ -110,7 +122,7 @@
             <Separator layoutX="0.5" layoutY="23.0" prefHeight="4.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
-      <Button fx:id="helpBtu" layoutX="517.0" layoutY="357.0" mnemonicParsing="false" onAction="#openHelp" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: #FFF0F5;" text="H">
+      <Button fx:id="helpBtu" layoutX="517.0" layoutY="357.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: #FFF0F5;" text="H">
          <font>
             <Font size="10.0" />
          </font>
