@@ -30,24 +30,24 @@ public class MainCtrl {
     private AddQuoteCtrl addCtrl;
     private Scene add;
 
-    private Scene start;
+    private Scene board;
 
     public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add, Pair<StartCtrl, Parent> start) {
+            Pair<AddQuoteCtrl, Parent> add, Pair<StartCtrl, Parent> board) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
 
         this.addCtrl = add.getKey();
         this.add = new Scene(add.getValue());
-        this.start = new Scene(start.getValue());
+        this.board = new Scene(board.getValue());
         showStart();
         primaryStage.show();
     }
 
     public void showStart(){
         primaryStage.setTitle("Start");
-        primaryStage.setScene(start);
+        primaryStage.setScene(board);
 
     }
     public void showOverview() {
