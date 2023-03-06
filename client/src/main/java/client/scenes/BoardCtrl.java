@@ -1,96 +1,69 @@
 package client.scenes;
 
-import javafx.event.ActionEvent;
+import client.CollisionChecking;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
 
-public class BoardCtrl {
+import javax.inject.Inject;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
-    @FXML
-    private Label BoardName;
-
-    @FXML
-    private Hyperlink card1;
+public class BoardCtrl implements Initializable {
 
     @FXML
-    private Hyperlink card2;
+    private AnchorPane card1Container;
 
     @FXML
-    private Hyperlink card3;
-
+    private AnchorPane list1Container;
     @FXML
-    private Button deleteCard1;
-
+    private AnchorPane list2Container;
     @FXML
-    private Button deleteCard2;
+    private AnchorPane list3Container;
 
-    @FXML
-    private Button deleteCard3;
+    List<AnchorPane> listContainers;
 
-    @FXML
-    private TextField filterInput;
+    private double originalX;
+    private double originalY;
 
-    @FXML
-    private Button helpBtu;
-
-    @FXML
-    private ListView<?> listLeft;
-
-    @FXML
-    private Button listLeftDelete;
-
-    @FXML
-    private Label listLeftName;
-
-    @FXML
-    private ListView<?> listMid;
-
-    @FXML
-    private Button listMidDelete;
-
-    @FXML
-    private Label listMidName;
-
-    @FXML
-    private ListView<?> listRight;
-
-    @FXML
-    private Button listRightDelete;
-
-    @FXML
-    private Label listRightName;
-
-    @FXML
-    private RadioButton lockBtu;
-
-    @FXML
-    void Delete(ActionEvent event) {
-
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        listContainers = new ArrayList<>();
+        listContainers.add(list1Container);
+        listContainers.add(list2Container);
+        listContainers.add(list3Container);
     }
 
-    @FXML
-    void DeleteCard(ActionEvent event) {
-
+    public void dragDetected(MouseEvent mouseEvent) {
+        card1Container.getParent().toFront();
+        card1Container.toFront();
+        card1Container.startFullDrag();
     }
 
-    @FXML
-    void lockOrUnlock(ActionEvent event) {
-
+    public void mousePressed(MouseEvent mouseEvent) {
+        originalX = mouseEvent.getX();
+        originalY = mouseEvent.getY();
     }
 
-    @FXML
-    void openCard(ActionEvent event) {
-
+    public void mouseDragged(MouseEvent mouseEvent) {
+        card1Container.setLayoutX(card1Container.getLayoutX() + mouseEvent.getX() - originalX);
+        card1Container.setLayoutY(card1Container.getLayoutY() + mouseEvent.getY() - originalY);
     }
 
-    @FXML
-    void openHelp(ActionEvent event) {
+    public void mouseReleased() {
 
+        Bounds bound1 = card1Container.localToScene(card1Container.getBoundsInLocal());
+
+        for(AnchorPane listContainer : listContainers) {
+            Bounds bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
+            if(CollisionChecking.collide(bound1, bound2)) {
+                System.out.println("Collision with " + listContainer.getId());
+            }
+        }
     }
 
 }
