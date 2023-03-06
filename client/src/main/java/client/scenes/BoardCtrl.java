@@ -4,11 +4,10 @@ import client.CollisionChecking;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 
-import javax.inject.Inject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,10 @@ public class BoardCtrl implements Initializable {
 
     @FXML
     private AnchorPane card1Container;
-
+    @FXML
+    private AnchorPane card2Container;
+    @FXML
+    private AnchorPane card3Container;
     @FXML
     private AnchorPane list1Container;
     @FXML
@@ -28,6 +30,8 @@ public class BoardCtrl implements Initializable {
 
     List<AnchorPane> listContainers;
 
+    List<AnchorPane> listCards;
+
     private double originalX;
     private double originalY;
 
@@ -36,6 +40,9 @@ public class BoardCtrl implements Initializable {
         listContainers.add(list1Container);
         listContainers.add(list2Container);
         listContainers.add(list3Container);
+        listCards = new ArrayList<>();
+        listCards.add(card2Container);
+        listCards.add(card3Container);
     }
 
     public void dragDetected(MouseEvent mouseEvent) {
@@ -62,6 +69,19 @@ public class BoardCtrl implements Initializable {
             Bounds bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
             if(CollisionChecking.collide(bound1, bound2)) {
                 System.out.println("Collision with " + listContainer.getId());
+
+            }
+        }
+        realign(card1Container, (AnchorPane) card1Container.getParent());
+    }
+
+    public void realign(AnchorPane card, AnchorPane initialList){
+        Bounds cardBounds = card.localToScene(card.getBoundsInLocal());
+        Bounds listBounds = initialList.localToScene(initialList.getBoundsInLocal());
+
+        if(!CollisionChecking.collide(cardBounds, listBounds)) {
+            for (Node cardElement : listCards) {
+                cardElement.setLayoutY(cardElement.getLayoutY() - 25);
             }
         }
     }
