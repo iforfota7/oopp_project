@@ -32,4 +32,10 @@ class CollisionCheckingTest {
         assertFalse(CollisionChecking.collide(bound2, bound1));
     }
 
+    @Test
+    void collideRealBug() {
+        Bounds bound1 = new BoundingBox(85, 205, 0, 126, 23, 0);
+        Bounds bound2 = new BoundingBox(37.5, 80, 0, 151, 260, 0);
+        assertTrue(CollisionChecking.collide(bound1, bound2));
+    }
 }

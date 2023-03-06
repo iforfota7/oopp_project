@@ -106,7 +106,7 @@
                </font>
             </Button>
             <Circle fill="#c9a4da" layoutX="24.0" layoutY="243.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
-            <Separator layoutY="21.0" prefHeight="4.0" prefWidth="150.0" />
+            <Separator layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="list3Container" layoutX="412.5" layoutY="80.0">
@@ -119,7 +119,7 @@
                </font>
             </Button>
             <Circle fill="#c9a4da" layoutX="24.0" layoutY="243.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
-            <Separator layoutX="0.5" layoutY="23.0" prefHeight="4.0" prefWidth="150.0" />
+            <Separator layoutX="0.5" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
       <Button fx:id="helpBtu" layoutX="517.0" layoutY="357.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: #FFF0F5;" text="H">

@@ -4,9 +4,11 @@ import client.lib.CollisionChecking;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,10 @@ public class BoardCtrl implements Initializable {
         listContainers.add(list3Container);
     }
 
-    public void dragDetected() {
+    public void dragDetected(MouseEvent mouseEvent) {
         card1Container.getParent().toFront();
         card1Container.toFront();
+        card1Container.startFullDrag();
     }
 
     public void mousePressed(MouseEvent mouseEvent) {
@@ -57,10 +60,17 @@ public class BoardCtrl implements Initializable {
 
         for(AnchorPane listContainer : listContainers) {
             Bounds bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
-            if(!listContainer.equals(card1Container.getParent()) && CollisionChecking.collide(bound1, bound2)) {
-                System.out.println("Collision with " + listContainer.getId());
+
+            if(CollisionChecking.collide(bound1, bound2)) {
+                dropCard(listContainer);
             }
         }
     }
 
+    public void dropCard(AnchorPane listContainer) {
+        ((AnchorPane)card1Container.getParent()).getChildren().remove(card1Container);
+        listContainer.getChildren().add(card1Container);
+        card1Container.setLayoutX(11.5);
+        card1Container.setLayoutY(25);
+    }
 }

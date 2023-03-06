@@ -39,7 +39,7 @@ public class CollisionChecking {
         double x1 = Math.max(source.getMinX(), destination.getMinX());
         double x2 = Math.min(source.getMaxX(), destination.getMaxX());
         double y1 = Math.max(source.getMinY(), destination.getMinY());
-        double y2 = Math.min(source.getMaxY(), destination.getMaxX());
+        double y2 = Math.min(source.getMaxY(), destination.getMaxY());
 
         return Math.max(x2 - x1, 0) * Math.max(y2 - y1, 0);
     }
