@@ -2,14 +2,19 @@ package client.scenes;
 
 import client.CollisionChecking;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
-public class BoardCtrl {
+public class BoardCtrl implements Initializable {
 
     @FXML
     private AnchorPane card1Container;
@@ -21,14 +26,17 @@ public class BoardCtrl {
     @FXML
     private AnchorPane list3Container;
 
-    @FXML
-    private AnchorPane rootContainer;
-
-    @FXML
-    private Hyperlink card1;
+    List<AnchorPane> listContainers;
 
     private double originalX;
     private double originalY;
+
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        listContainers = new ArrayList<>();
+        listContainers.add(list1Container);
+        listContainers.add(list2Container);
+        listContainers.add(list3Container);
+    }
 
     public void dragDetected(MouseEvent mouseEvent) {
         card1Container.getParent().toFront();
@@ -50,14 +58,11 @@ public class BoardCtrl {
 
         Bounds bound1 = card1Container.localToScene(card1Container.getBoundsInLocal());
 
-        Bounds bound2 = list2Container.localToScene(list2Container.getBoundsInLocal());
-        if(CollisionChecking.collide(bound1, bound2)) {
-            System.out.println("Collision with list 2");
-        }
-
-        bound2 = list3Container.localToScene(list3Container.getBoundsInLocal());
-        if(CollisionChecking.collide(bound1, bound2)) {
-            System.out.println("Collision with list 3");
+        for(AnchorPane listContainer : listContainers) {
+            Bounds bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
+            if(CollisionChecking.collide(bound1, bound2)) {
+                System.out.println("Collision with " + listContainer.getId());
+            }
         }
     }
 
