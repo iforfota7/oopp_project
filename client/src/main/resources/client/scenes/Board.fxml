@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E6E6FA;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane fx:id="rootContainer" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E6E6FA;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
       <TextField fx:id="filterInput" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="80.0" promptText="Filter..">
          <font>
@@ -26,7 +26,7 @@
          </font>
       </Label>
       <RadioButton fx:id="lockBtu" layoutX="110.0" layoutY="20.0" mnemonicParsing="false" />
-      <AnchorPane layoutX="37.5" layoutY="80.0">
+      <AnchorPane fx:id="list1Container" layoutX="37.5" layoutY="80.0">
          <children>
             <ListView fx:id="listLeft" prefHeight="260.0" prefWidth="150.0" />
             <Label fx:id="listLeftName" layoutX="57.5" layoutY="3.0" text="ToDo">
@@ -85,7 +85,7 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="225.0" layoutY="80.0">
+      <AnchorPane fx:id="list2Container" layoutX="225.0" layoutY="80.0">
          <children>
             <ListView fx:id="listMid" prefHeight="260.0" prefWidth="150.0" style="-fx-border-radius: 50px;">
                <opaqueInsets>
@@ -109,7 +109,7 @@
             <Separator layoutY="21.0" prefHeight="4.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="412.5" layoutY="80.0">
+      <AnchorPane fx:id="list3Container" layoutX="412.5" layoutY="80.0">
          <children>
             <ListView fx:id="listRight" prefHeight="260.0" prefWidth="150.0" />
             <Label fx:id="listRightName" layoutX="58.5" layoutY="3.0" text="Done" />
