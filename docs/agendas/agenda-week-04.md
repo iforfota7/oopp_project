@@ -26,8 +26,8 @@ Agenda-items:
 | | Approval of the agenda  - any additions or questions ? |
 | 20 minutes | minimal application – each person give a presentation on their last week work?|
 | | minimal application – showcasing a small demo & TA Feedback  |
-| 10 minutes | Backlog – TA feedback |
-| | Backlog – any additions or questions ? |
+| 10 minutes | Backlog – TA feedback & Discussion about good GIT practices |
+| | Backlog & Git assignment – any additions or questions ? |
 | 10 minutes | Heuristic Usability Evaluation – preliminary plan & any ideas for our tasks this week?|
 | |  Heuristic Usability Evaluation – TA suggestions or requests？|
 | 5 minutes | Feedback round - What went well and what can be improved next time? |
