@@ -32,7 +32,7 @@ import jakarta.ws.rs.core.GenericType;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String SERVER;
 
     public void getQuotesTheHardWay() throws IOException {
         var url = new URL("http://localhost:8080/api/quotes");
@@ -58,5 +58,35 @@ public class ServerUtils {
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+    }
+
+    /**
+     * Setter method for the server attribute
+     * @param server the server address to be set
+     */
+    public static void setServer(String server){
+        SERVER = server;
+    }
+
+    /**
+     * Checks whether set server address is a valid localhost address (might need to be generalised)
+     * @return whether SERVER is a valid localhost address or not
+     */
+    public static boolean checkServer(){
+        String link = "http://localhost:";
+        char[] linkChar = link.toCharArray();
+        int linkLength = linkChar.length;
+
+        int count = 0;
+        for(; count < linkLength; count++){
+            if(count >= SERVER.length() || linkChar[count] != SERVER.charAt(count)) return false;
+        }
+
+        for(; count < linkLength + 4; count++){
+            if(SERVER.length() <= count || SERVER.charAt(count) < 48 || SERVER.charAt(count) > 57) return false;
+        }
+        if(Math.abs(count - SERVER.length()) > 1) return false;
+
+        return true;
     }
 }
