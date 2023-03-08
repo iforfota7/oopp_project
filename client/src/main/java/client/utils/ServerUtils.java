@@ -16,6 +16,7 @@
 package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+import jakarta.ws.rs.ProcessingException;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -69,24 +71,23 @@ public class ServerUtils {
     }
 
     /**
-     * Checks whether set server address is a valid localhost address (might need to be generalised)
-     * @return whether SERVER is a valid localhost address or not
+     * Sends a simple get request to /api/test-connection in order to check if the
+     * provided URL is a running instance of a Talio server
+     *
+     * @return True iff the client-server connection can be established
      */
     public static boolean checkServer(){
-        String link = "http://localhost:";
-        char[] linkChar = link.toCharArray();
-        int linkLength = linkChar.length;
-
-        int count = 0;
-        for(; count < linkLength; count++){
-            if(count >= SERVER.length() || linkChar[count] != SERVER.charAt(count)) return false;
+        try {
+            System.out.println(ClientBuilder.newClient(new ClientConfig())
+                    .target(SERVER).path("api/test-connection")
+                    .request(TEXT_PLAIN)
+                    .accept(TEXT_PLAIN)
+                    .get());
+            return true;
+        }catch(ProcessingException e) {
+            return false;
         }
 
-        for(; count < linkLength + 4; count++){
-            if(SERVER.length() <= count || SERVER.charAt(count) < 48 || SERVER.charAt(count) > 57) return false;
-        }
-        if(Math.abs(count - SERVER.length()) > 1) return false;
 
-        return true;
     }
 }
