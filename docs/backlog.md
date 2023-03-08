@@ -18,33 +18,34 @@ All mockups are attached to the end of this document to illustrate our design id
 *These features allow an instance of the application to be started and the client to be able to view an existing board when opening the application. They have the ability to see the simple board layout (see mock 4) with lists and cards, the latter of which can be moved between lists using drag and drop. Additionally, these features allow editing of the elements in the minimal application (insertion, deletion, updates) with a permanent effect on the database, even if the server is restarted.*
 
 As a user, I want…
+* to connect to a Talio server of my choice, so I can manage my tasks
 * to be able to see the board without the need of registration so that I can easily access the overview of lists and cards.
 * to be able to see different titled lists so that I can order my thoughts.
 * the lists to contain titled cards so that I can visualize my tasks inside categories.
-* to be able to drag a card from its current list and drop it into another list so that I can constantly categorize the tasks.
-* the cards to click into place one below the other when I drag them into a list so that they stay organized, instead of overlapping or being unaligned.
 * to be able to add new lists so that I can better categorize the cards.
     * there to be a button to create a new list on the board
     * there to be a way to name this list when creating it
     * this list to appear on the board
+    * this change to have a permanent effect
+* to rename existing lists, so I can change the focus of a list
+* to be able to remove existing lists when they are no longer required so that new ones can be added in their place allowing a restructuring of the board.
+    * each list to have a **delete** button
+    * this button to remove the list from the board when clicked
     * this change to have a permanent effect
 * to be able to create new cards because I want to add new tasks.
     * there to be a button to create a new card in a list
     * there to be a way to name this card when creating it
     * this card to appear in the selected list
     * this change to have a permanent effect
+* to edit tasks, so I can correct typos
 * to be able to remove existing cards when they are no longer needed to better maintain the tasks that currently matter for me.
     * each card to have a **delete** button
     * this button to remove the card from the list and board when clicked
     * this change to have a permanent effect
-* to be able to remove existing lists when they are no longer required so that new ones can be added in their place allowing a restructuring of the board.
-    * each list to have a **delete** button
-    * this button to remove the list from the board when clicked
-    * this change to have a permanent effect
+* to be able to drag a card from its current list and drop it into another list so that I can constantly categorize the tasks.
+* the cards to click into place one below the other when I drag them into a list so that they stay organized, instead of overlapping or being unaligned.
 * to be able to join the board and have the same level of access as other users, allowing me to collaborate and use all the features available on the board.
-* to be able to see changes on the board when refreshing the page so    that I can synchronize my work with other users.
-    * there to be a **refresh** button 
-    * this button to load any new changes made by others
+* to be able to see changes on the board without refreshing the page so    that I can synchronize my work with other users.
 
 As an admin, I want…
 * to be able to start an instance of the application (the server) and share the connection with other users so that they can work on it as a group.
