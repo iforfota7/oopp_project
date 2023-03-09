@@ -2,7 +2,6 @@ package client.scenes;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 
 import javax.inject.Inject;
 

@@ -8,14 +8,7 @@ import javafx.scene.control.TextField;
 
 public class StartCtrl {
 
-    @FXML
-    private TextField inputBoardId;
 
-    @FXML
-    private PasswordField inputPassword;
-
-    @FXML
-    private Button loginBut;
 
     @FXML
     void login(ActionEvent event) {
