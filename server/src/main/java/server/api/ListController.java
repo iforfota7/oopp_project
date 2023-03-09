@@ -45,6 +45,25 @@ public class ListController {
     }
 
     /**
+     * Method for removing a list from the repo
+     * Note that when removing the list, only its primary key is taken into account
+     * If there is no list that matches the given's list ID, the method does nothing
+     *
+     * @param list the list to be removed
+     * @return 200 OK if the request is successful
+     *         400 Bad Request if the provided list in invalid
+     */
+
+    @PostMapping(path={"/remove", "/remove/"})
+    public ResponseEntity<Lists> removeList(@RequestBody Lists list) {
+        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard < 0)
+            return ResponseEntity.badRequest().build();
+
+        repo.delete(list);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Method for checking whether a String is null or empty
      * @param s the String to be checked
      * @return true if s is null or empty, false otherwise
