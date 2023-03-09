@@ -23,7 +23,7 @@ public class SelectServerCtrl {
      * Method to be executed when connect button is clicked
      * Gets url from text-field and sets it as server url in ServerUtils
      */
-    public void connect() throws RuntimeException {
+    public void connect() {
         String text = inputServer.getText();
 
         //if empty do nothing
@@ -48,7 +48,7 @@ public class SelectServerCtrl {
         }
 
         // check whether valid url, and if valid go to next scene
-        if(!ServerUtils.checkServer()) throw new RuntimeException();
-        else Main.setScenetoBoard();
+        if(ServerUtils.checkServer()) Main.setScenetoBoard();
+        else System.out.println("not a valid url");
     }
 }
