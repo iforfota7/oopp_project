@@ -74,4 +74,7 @@ public class MainCtrl {
     public void closeRNList() {
         secondaryStage.close();
     }
+    public void closeDEList() {
+        secondaryStage.close();
+    }
 }

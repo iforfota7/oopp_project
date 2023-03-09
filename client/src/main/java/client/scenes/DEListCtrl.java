@@ -4,25 +4,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import javax.inject.Inject;
+
 /**
  * Delete List controller
  */
 public class DEListCtrl {
 
-    @FXML
-    private Button cancelDelete;
+    private BoardCtrl boardCtrl;
 
-    @FXML
-    private Button deleteList;
-
+    @Inject
+    public DEListCtrl(BoardCtrl boardCtrl){
+        this.boardCtrl = boardCtrl;
+    }
     @FXML
     void deleteList(ActionEvent event) {
-
+        boardCtrl.deleteL();
     }
 
     @FXML
     void undeleteList(ActionEvent event) {
-
+        boardCtrl.undeleteL();
     }
 
 }

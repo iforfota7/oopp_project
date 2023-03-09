@@ -37,12 +37,6 @@ public class BoardCtrl implements Initializable {
     @FXML
     private AnchorPane list3Container;
     @FXML
-    private MenuItem deleteList;
-    @FXML
-    private MenuItem renameList;
-    @FXML
-    private MenuButton refactorList;
-    @FXML
     private Label listName1;
     List<AnchorPane> listContainers;
 
@@ -192,6 +186,13 @@ public class BoardCtrl implements Initializable {
     @FXML
     void deleteList(ActionEvent event) {
         mainCtrl.showDeleteList();
+    }
+    void deleteL() {
+        list1Container.setVisible(false);
+        mainCtrl.closeDEList();
+    }
+    void undeleteL() {
+        mainCtrl.closeDEList();
     }
 
     /**
