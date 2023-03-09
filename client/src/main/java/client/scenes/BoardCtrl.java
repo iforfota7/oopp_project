@@ -5,15 +5,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.scene.input.MouseEvent;
+
+
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Label;
+
+import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
+    private MainCtrl mainCtrl;
 
     @FXML
     private AnchorPane card1Container;
@@ -27,13 +36,21 @@ public class BoardCtrl implements Initializable {
     private AnchorPane list2Container;
     @FXML
     private AnchorPane list3Container;
-
+    @FXML
+    private MenuItem deleteList;
+    @FXML
+    private MenuItem renameList;
+    @FXML
+    private MenuButton refactorList;
+    @FXML
+    private Label listName1;
     List<AnchorPane> listContainers;
 
     List<AnchorPane> listCards;
 
     private double originalX;
     private double originalY;
+
 
 
     /**
@@ -145,4 +162,45 @@ public class BoardCtrl implements Initializable {
 
 
     }
+
+    /**
+     * Auxiliary call to mainCtrl Inject function
+     * @param mainCtrl The master controller, which will later be replaced by a class of window controllers
+     */
+    @Inject
+    public BoardCtrl(MainCtrl mainCtrl){
+        this.mainCtrl = mainCtrl;
+    }
+
+    /**
+     *Trigger function for the change List name option in the drop-down options button
+     * @param event List name change process
+     */
+    @FXML
+    void renameList(ActionEvent event) {
+        mainCtrl.showRenameList();
+    }
+    void RNList(String name) {
+        listName1.setText(name);
+        mainCtrl.closeRNList();
+    }
+
+    /**
+     *Trigger function for deleting List option in the drop-down options button
+     * @param event List delete process
+     */
+    @FXML
+    void deleteList(ActionEvent event) {
+        mainCtrl.showDeleteList();
+    }
+
+    /**
+     *Trigger function for adding a List with a button
+     * @param event List add process
+     */
+    @FXML
+    void addLIst(ActionEvent event) {
+        mainCtrl.showAddList();
+    }
+
 }

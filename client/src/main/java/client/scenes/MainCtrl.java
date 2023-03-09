@@ -21,13 +21,26 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
-    private Stage primaryStage;
-    private Scene board;
+    private Stage primaryStage, secondaryStage;
+    private Scene board, renameList, deleteList,addList;
+    private RNListCtrl rnListCtrl;
+    private DEListCtrl deListCtrl;
+    private ADListCtrl addListCtrl;
 
-    public void initialize(Stage primaryStage, Pair<StartCtrl, Parent> board) {
+    public void initialize(Stage primaryStage, Pair<StartCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
+                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
+        this.renameList = new Scene(renameList.getValue());
+        this.rnListCtrl = renameList.getKey();
+
+        this.deleteList = new Scene(deleteList.getValue());
+        this.deListCtrl = deleteList.getKey();
+
+        this.addList = new Scene(addList.getValue());
+        this.addListCtrl = addList.getKey();
+
         showStart();
         primaryStage.show();
     }
@@ -35,5 +48,30 @@ public class MainCtrl {
     public void showStart(){
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
+    }
+
+    public void showRenameList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(renameList);
+        secondaryStage.setTitle("Rename list!");
+        secondaryStage.show();
+    }
+
+    public void showDeleteList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(deleteList);
+        secondaryStage.setTitle("Delete List!");
+        secondaryStage.show();
+    }
+
+    public void showAddList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(addList);
+        secondaryStage.setTitle("New List!");
+        secondaryStage.show();
+    }
+
+    public void closeRNList() {
+        secondaryStage.close();
     }
 }
