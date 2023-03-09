@@ -24,7 +24,7 @@ public class MainCtrl {
     private Stage primaryStage;
     private Scene board;
 
-    public void initialize(Stage primaryStage, Pair<StartCtrl, Parent> board) {
+    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board) {
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
@@ -32,8 +32,17 @@ public class MainCtrl {
         primaryStage.show();
     }
 
-    public void showStart(){
+    public void showStart() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
+    }
+
+    /**
+     * Sets scene of stage to passed board
+     * @param board the scene to be displayed
+     */
+    public void setBoard(Pair<BoardCtrl, Parent> board){
+        this.board = new Scene(board.getValue());
+        showStart();
     }
 }
