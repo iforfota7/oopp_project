@@ -15,14 +15,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootContainer" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane fx:id="rootContainer" maxWidth="609.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
       <TextField fx:id="filterInput" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="80.0" promptText="Filter.." AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
          <font>
             <Font name="Baghdad Regular" size="12.0" />
          </font>
       </TextField>
-      <Label fx:id="BoardName" layoutX="256.0" layoutY="16.0" text="Board Name" AnchorPane.leftAnchor="256.0" AnchorPane.topAnchor="16.0">
+      <Label fx:id="BoardName" layoutX="331.0" layoutY="16.0" text="Board Name" AnchorPane.leftAnchor="331.0" AnchorPane.topAnchor="16.0">
          <font>
             <Font name="BM YEONSUNG OTF" size="18.0" />
          </font>
@@ -138,5 +138,68 @@
             <Font size="10.0" />
          </font>
       </Button>
+      <AnchorPane fx:id="listContainerNew" layoutX="592.0" layoutY="80.0" prefHeight="260.0" prefWidth="151.0" style="visibility: false;">
+         <children>
+            <ListView fx:id="listnew" prefHeight="260.0" prefWidth="150.0" />
+            <Label fx:id="listNameNew" layoutX="57.5" layoutY="3.0" text="ToDo">
+               <font>
+                  <Font name="Bodoni 72 Smallcaps Book" size="13.0" />
+               </font>
+            </Label>
+            <Circle fill="#c9a4da" layoutX="24.0" layoutY="243.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+            <Separator layoutX="0.5" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
+            <AnchorPane fx:id="card1Container1" layoutX="11.5" layoutY="25.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
+               <children>
+                  <Hyperlink fx:id="card11" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Button fx:id="deleteCard11" layoutY="3.0" mnemonicParsing="false" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="card3Container1" layoutX="11.5" layoutY="80.0">
+               <children>
+                  <Hyperlink fx:id="card31" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Button fx:id="deleteCard31" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="card2Container1" layoutX="11.5" layoutY="52.0">
+               <children>
+                  <Hyperlink fx:id="card21" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Button fx:id="deleteCard21" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <MenuButton fx:id="refactorList1" layoutX="73.0" layoutY="235.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
+               <items>
+                  <MenuItem fx:id="renameList1" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
+                  <MenuItem fx:id="deleteList1" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+               </items>
+               <font>
+                  <Font size="9.0" />
+               </font>
+            </MenuButton>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

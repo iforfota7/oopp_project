@@ -5,11 +5,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import javax.inject.Inject;
+
 /**
  *  Controller for Add List
  */
 public class ADListCtrl {
+    private BoardCtrl boardCtrl;
 
+    @Inject
+    public ADListCtrl(BoardCtrl boardCtrl){
+        this.boardCtrl = boardCtrl;
+    }
     @FXML
     private TextField newListName;
 
@@ -17,11 +24,8 @@ public class ADListCtrl {
     private TextField newListOrder;
 
     @FXML
-    private Button saveNewList;
-
-    @FXML
     void saveNewList(ActionEvent event) {
-
+        boardCtrl.addNewList(newListName.getText(),newListOrder.getText());
     }
 
 }

@@ -37,7 +37,12 @@ public class BoardCtrl implements Initializable {
     @FXML
     private AnchorPane list3Container;
     @FXML
+    private AnchorPane listContainerNew;
+
+    @FXML
     private Label listName1;
+    @FXML
+    private Label listNameNew;
     List<AnchorPane> listContainers;
 
     List<AnchorPane> listCards;
@@ -204,4 +209,9 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showAddList();
     }
 
+    public void addNewList(String newName, String newOrder) {
+        listNameNew.setText(newName);
+        listContainerNew.setVisible(true);
+        mainCtrl.closeADList();
+    }
 }

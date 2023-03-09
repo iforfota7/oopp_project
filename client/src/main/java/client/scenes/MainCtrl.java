@@ -77,4 +77,9 @@ public class MainCtrl {
     public void closeDEList() {
         secondaryStage.close();
     }
+
+    public void closeADList() {
+        secondaryStage.close();
+
+    }
 }
