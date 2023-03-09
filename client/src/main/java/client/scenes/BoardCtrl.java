@@ -209,9 +209,7 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showAddList();
     }
 
-    public void addNewList(String newName, String newOrder) {
-        listNameNew.setText(newName);
-        listContainerNew.setVisible(true);
+    public void addNewList() {
         mainCtrl.closeADList();
     }
 }
