@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.Main;
 import client.utils.ServerUtils;
-import jakarta.ws.rs.ProcessingException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -23,7 +22,7 @@ public class SelectServerCtrl {
      * Method to be executed when connect button is clicked
      * Gets url from text-field and sets it as server url in ServerUtils
      */
-    public void connect() {
+    public void connect() throws RuntimeException {
         String text = inputServer.getText();
 
         //if empty do nothing
@@ -49,6 +48,6 @@ public class SelectServerCtrl {
 
         // check whether valid url, and if valid go to next scene
         if(ServerUtils.checkServer()) Main.setScenetoBoard();
-        else System.out.println("not a valid url");
+        else throw new RuntimeException();
     }
 }

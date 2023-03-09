@@ -24,9 +24,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
-import com.sun.jdi.InvocationException;
-import jakarta.ws.rs.ProcessingException;
-import jakarta.ws.rs.client.Invocation;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
