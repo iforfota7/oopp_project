@@ -25,7 +25,7 @@ public class ADListCtrl {
 
     @FXML
     void saveNewList(ActionEvent event) {
-    boardCtrl.addNewList();
+        boardCtrl.addNewList(newListName.getText());
     }
 
 }

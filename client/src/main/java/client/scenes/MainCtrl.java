@@ -15,14 +15,17 @@
  */
 package client.scenes;
 
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
     private Scene board, renameList, deleteList,addList;
+
     private RNListCtrl rnListCtrl;
     private DEListCtrl deListCtrl;
     private ADListCtrl addListCtrl;
@@ -32,6 +35,7 @@ public class MainCtrl {
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
+
         this.renameList = new Scene(renameList.getValue());
         this.rnListCtrl = renameList.getKey();
 
@@ -41,6 +45,7 @@ public class MainCtrl {
         this.addList = new Scene(addList.getValue());
         this.addListCtrl = addList.getKey();
 
+        System.out.println(this.board);
         showStart();
         primaryStage.show();
     }
@@ -80,6 +85,13 @@ public class MainCtrl {
 
     public void closeADList() {
         secondaryStage.close();
+    }
+
+    public void addNewList(AnchorPane a, Group root){
+        a.setLayoutX(537);
+        a.setLayoutY(0);
+
+        root.getChildren().add(a);
 
     }
 }

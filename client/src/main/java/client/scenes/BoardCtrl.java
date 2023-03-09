@@ -4,20 +4,20 @@ import client.lib.CollisionChecking;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.scene.input.MouseEvent;
 
 
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Label;
 
 import javax.inject.Inject;
 
@@ -36,13 +36,17 @@ public class BoardCtrl implements Initializable {
     private AnchorPane list2Container;
     @FXML
     private AnchorPane list3Container;
+    //@FXML
+    //private AnchorPane listContainerNew;
     @FXML
-    private AnchorPane listContainerNew;
+    private Group boardGroup;
+    //@FXML
+    //private AnchorPane listsPane;
 
     @FXML
     private Label listName1;
-    @FXML
-    private Label listNameNew;
+    //@FXML
+    //private Label listNameNew;
     List<AnchorPane> listContainers;
 
     List<AnchorPane> listCards;
@@ -193,6 +197,7 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showDeleteList();
     }
     void deleteL() {
+
         list1Container.setVisible(false);
         mainCtrl.closeDEList();
     }
@@ -209,7 +214,57 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showAddList();
     }
 
-    public void addNewList() {
+    /**
+     * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
+     * @param newListName the name of the new list
+     */
+    public void addNewList(String newListName) {
+        // closes the scene of adding a new list
         mainCtrl.closeADList();
+
+        // creating the listView element
+        ListView<Objects> listView = new ListView<>();
+        listView.setPrefWidth(150);
+        listView.setPrefHeight(260);
+
+        // creating the Delete List button, aligning and customising it
+        Button deleteButtonList = new Button();
+        deleteButtonList.setText("Delete List");
+        deleteButtonList.setLayoutX(89);
+        deleteButtonList.setLayoutY(231);
+        deleteButtonList.setPrefWidth(54.4);
+        deleteButtonList.setPrefHeight(20);
+        deleteButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
+
+        // creating the separator under the title, aligning and customising it
+        Separator listSeparator = new Separator();
+        listSeparator.setLayoutX(1);
+        listSeparator.setLayoutY(19);
+        listSeparator.setPrefWidth(150);
+        listSeparator.setPrefHeight(4);
+
+        // creating the adding card button, aligning and customising it
+        Button addButton = new Button();
+        addButton.setText("+");
+        addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; " +
+                            "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
+        addButton.setLayoutX(9);
+        addButton.setLayoutY(230);
+        addButton.setPrefWidth(24);
+        addButton.setPrefHeight(23);
+
+        // creating the label for the name of the list, aligning and customising it
+        Label listName = new Label();
+        listName.setLayoutX(56);
+        listName.setLayoutY(2);
+        listName.setText(newListName);
+        listName.setStyle("-fx-font-size: 13px;");
+
+        // the anchor pane which contains the whole list
+        AnchorPane newList = new AnchorPane();
+
+        newList.getChildren().addAll(listView, deleteButtonList, listSeparator, addButton, listName);
+
+        mainCtrl.addNewList(newList, boardGroup);
     }
 }
