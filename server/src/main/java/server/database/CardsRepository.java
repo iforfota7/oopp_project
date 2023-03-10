@@ -17,7 +17,15 @@ package server.database;
 
 import commons.Cards;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 
+public interface CardsRepository extends JpaRepository<Cards, Long> {
 
-public interface CardsRepository extends JpaRepository<Cards, Long> {}
+    @Modifying
+    @Query(value = "UPDATE Cards SET Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST + 1 WHERE Cards.POSITION_INSIDE_LIST >= ?1 " +
+            "and Cards.LIST_ID = ?2",
+            nativeQuery = true)
+    void incrementListPosition(int positionInList, String list);
+}
