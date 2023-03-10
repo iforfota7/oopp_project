@@ -15,43 +15,119 @@
  */
 package client.scenes;
 
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
+    private Stage primaryStage, secondaryStage;
+    private Scene board, renameList, deleteList,addList;
 
-    private Stage primaryStage;
+    private RNListCtrl rnListCtrl;
+    private DEListCtrl deListCtrl;
+    private ADListCtrl addListCtrl;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+    private int numberOfLists = 2;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
-
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
+                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+        this.board = new Scene(board.getValue());
 
-        showOverview();
+        this.renameList = new Scene(renameList.getValue());
+        this.rnListCtrl = renameList.getKey();
+
+        this.deleteList = new Scene(deleteList.getValue());
+        this.deListCtrl = deleteList.getKey();
+
+        this.addList = new Scene(addList.getValue());
+        this.addListCtrl = addList.getKey();
+
+        showStart();
         primaryStage.show();
     }
 
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    public void showStart() {
+        primaryStage.setTitle("Start");
+        primaryStage.setScene(board);
     }
 
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+    /**
+     * Sets scene of stage to passed board
+     * @param board the scene to be displayed
+     */
+    public void setBoard(Pair<BoardCtrl, Parent> board){
+        this.board = new Scene(board.getValue());
+        showStart();
     }
+
+    public void showRenameList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(renameList);
+        secondaryStage.setTitle("Rename list!");
+        secondaryStage.show();
+    }
+
+    public void showDeleteList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(deleteList);
+        secondaryStage.setTitle("Delete List!");
+        secondaryStage.show();
+    }
+
+    public void showAddList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(addList);
+        secondaryStage.setTitle("New List!");
+        secondaryStage.show();
+    }
+
+    public void closeRNList() {
+        secondaryStage.close();
+    }
+    public void closeDEList() {
+        secondaryStage.close();
+    }
+
+    public void closeADList() {
+        secondaryStage.close();
+    }
+
+    /**
+     * Adds a new list by calculating its coordinates of the board and adding it to the root's children
+     * @param a the list to be added
+     * @param root the root where to add the list
+     */
+    public void addNewList(AnchorPane a, Group root){
+        numberOfLists++;
+        int positionOfTheList = numberOfLists % 4;
+
+        int xLayout;
+        int yLayout;
+
+        if(positionOfTheList == 0) {
+            xLayout = 0;
+        }
+        else {
+            xLayout = (152  + 27) * (positionOfTheList);
+        }
+
+        if(numberOfLists < 4){
+            yLayout = 0;
+        }
+        else{
+            yLayout = 260 * (numberOfLists / 4) + 30 * (numberOfLists / 4);
+        }
+
+        a.setLayoutX(xLayout);
+        a.setLayoutY(yLayout);
+
+        root.getChildren().add(a);
+
+    }
+
 }

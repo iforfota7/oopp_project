@@ -20,11 +20,14 @@ import static com.google.inject.Guice.createInjector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import client.scenes.*;
+import client.scenes.BoardCtrl;
 import com.google.inject.Injector;
 
-import client.scenes.AddQuoteCtrl;
 import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
+import client.scenes.SelectServerCtrl;
+
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -39,11 +42,29 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        var selectServer = FXML.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
 
-        var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "QuoteOverview.fxml");
-        var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
+        /**
+         * List rename&delete&add scene loader
+         */
+        var renameList = FXML.load(RNListCtrl.class,"client", "scenes", "RNList.fxml" );
+        var deleteList = FXML.load(DEListCtrl.class,"client", "scenes", "DEList.fxml" );
+        var addList = FXML.load(ADListCtrl.class,"client", "scenes", "ADList.fxml" );
+
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, overview, add);
+        mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList);
+
     }
+
+    /**
+     * Sets main scene, displaying the board
+     */
+    public static void setSceneToBoard(){
+        var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
+
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        mainCtrl.setBoard(board);
+    }
+
 }
