@@ -26,8 +26,7 @@ import com.google.inject.Injector;
 
 import client.scenes.MainCtrl;
 import client.scenes.SelectServerCtrl;
-import client.scenes.*;
-import com.google.inject.Injector;
+
 
 import javafx.application.Application;
 import javafx.stage.Stage;
