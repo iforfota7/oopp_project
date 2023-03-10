@@ -30,6 +30,8 @@ public class MainCtrl {
     private DEListCtrl deListCtrl;
     private ADListCtrl addListCtrl;
 
+    private int numberOfLists = 2;
+
     public void initialize(Stage primaryStage, Pair<StartCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
         this.primaryStage = primaryStage;
@@ -88,8 +90,30 @@ public class MainCtrl {
     }
 
     public void addNewList(AnchorPane a, Group root){
-        a.setLayoutX(537);
-        a.setLayoutY(0);
+        numberOfLists++;
+        int positionOfTheList = numberOfLists % 4;
+
+        int xLayout;
+        int yLayout;
+
+        switch (positionOfTheList){
+            case 0: {
+                xLayout = 0;
+            }
+            default: {
+                xLayout = (152  + 27) * (positionOfTheList);
+            }
+        }
+
+        if(numberOfLists < 4){
+            yLayout = 0;
+        }
+        else{
+            yLayout = 260 * (numberOfLists / 4) + 30 * (numberOfLists / 4);
+        }
+
+        a.setLayoutX(xLayout);
+        a.setLayoutY(yLayout);
 
         root.getChildren().add(a);
 

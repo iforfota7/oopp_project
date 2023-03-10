@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -222,12 +223,43 @@ public class BoardCtrl implements Initializable {
         // closes the scene of adding a new list
         mainCtrl.closeADList();
 
+        AnchorPane newList = createNewList(newListName);
+        mainCtrl.addNewList(newList, boardGroup);
+    }
+
+    /**
+     * Creates a new list with all its elements
+     * @param newListName the name of the new list to be created
+     * @return and AnchorPane with the new list, aligned correspondingly
+     */
+    public AnchorPane createNewList(String newListName){
         // creating the listView element
-        ListView<Objects> listView = new ListView<>();
-        listView.setPrefWidth(150);
-        listView.setPrefHeight(260);
+        ListView<Objects> listView = createListBody();
 
         // creating the Delete List button, aligning and customising it
+        Button deleteButtonList = createDeleteButton();
+
+        // creating the separator under the title, aligning and customising it
+        Separator listSeparator = createSeparator();
+
+        // creating the adding card button, aligning and customising it
+        Button addCardButton = createAddCardButton();
+
+        // creating the label for the name of the list, aligning and customising it
+        Label listName = createListTitle(newListName);
+
+        // the anchor pane which contains the whole list
+        AnchorPane newList = new AnchorPane();
+
+        newList.getChildren().addAll(listView, deleteButtonList, listSeparator, addCardButton, listName);
+        return newList;
+    }
+
+    /**
+     * Creates a new button on the list, which when pressed, deletes the list;
+     * @return a button to delete a list, aligned correspondingly
+     */
+    public Button createDeleteButton(){
         Button deleteButtonList = new Button();
         deleteButtonList.setText("Delete List");
         deleteButtonList.setLayoutX(89);
@@ -235,36 +267,60 @@ public class BoardCtrl implements Initializable {
         deleteButtonList.setPrefWidth(54.4);
         deleteButtonList.setPrefHeight(20);
         deleteButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
+        return deleteButtonList;
+    }
 
-        // creating the separator under the title, aligning and customising it
+    /**
+     * Creates a separator for a list, separating visually the title of the list from its body
+     * @return a separator, aligned correspondingly
+     */
+    public Separator createSeparator(){
         Separator listSeparator = new Separator();
         listSeparator.setLayoutX(1);
         listSeparator.setLayoutY(19);
         listSeparator.setPrefWidth(150);
         listSeparator.setPrefHeight(4);
+        return listSeparator;
+    }
 
-        // creating the adding card button, aligning and customising it
+    /**
+     * Creates a button which when pressed, creates a new card in the list
+     * @return a button to create a new card, aligned correspondingly
+     */
+    public Button createAddCardButton(){
         Button addButton = new Button();
         addButton.setText("+");
         addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; " +
-                            "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
+                "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
         addButton.setLayoutX(9);
         addButton.setLayoutY(230);
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
+        return addButton;
+    }
 
-        // creating the label for the name of the list, aligning and customising it
+    /**
+     * Creates a label which shows the list's title
+     * @param newListName the name the list should have
+     * @return a label with the name of the list, aligned correspondingly
+     */
+    public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setLayoutX(56);
         listName.setLayoutY(2);
         listName.setText(newListName);
         listName.setStyle("-fx-font-size: 13px;");
+        return listName;
+    }
 
-        // the anchor pane which contains the whole list
-        AnchorPane newList = new AnchorPane();
-
-        newList.getChildren().addAll(listView, deleteButtonList, listSeparator, addButton, listName);
-
-        mainCtrl.addNewList(newList, boardGroup);
+    /**
+     * Creates the body of the list
+     * @return a listView, which represents the body of the list, designed and aligned accordingly
+     */
+    public ListView<Objects> createListBody(){
+        ListView<Objects> listView = new ListView<>();
+        listView.setPrefWidth(150);
+        listView.setPrefHeight(260);
+        return listView;
     }
 }

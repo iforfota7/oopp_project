@@ -13,9 +13,10 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootContainer" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane fx:id="rootContainer" prefWidth="575.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
       <TextField fx:id="filterInput" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="80.0" promptText="Filter.." AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
          <font>
@@ -28,16 +29,28 @@
          </font>
       </Label>
       <RadioButton fx:id="lockBtu" layoutX="110.0" layoutY="20.0" mnemonicParsing="false" />
-      <Button fx:id="helpBtu" layoutX="534.8" layoutY="353.8" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" AnchorPane.bottomAnchor="23.0" AnchorPane.rightAnchor="15.0">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Button>
-      <Button fx:id="AddList" alignment="BOTTOM_LEFT" layoutX="503.0" layoutY="354.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Button>
+      <HBox alignment="CENTER" layoutX="502.0" layoutY="354.0" prefHeight="27.0" prefWidth="67.0">
+         <children>
+            <HBox prefHeight="27.0" prefWidth="35.0">
+               <children>
+                  <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="24.0" prefWidth="24.0">
+               <children>
+                  <Button fx:id="helpBtu" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="22.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
       <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0">
          <children>
             <AnchorPane fx:id="listsPane" prefHeight="260.0" prefWidth="552.0">
