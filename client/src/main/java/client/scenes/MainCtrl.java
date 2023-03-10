@@ -29,6 +29,7 @@ public class MainCtrl {
     private RNListCtrl rnListCtrl;
     private DEListCtrl deListCtrl;
     private ADListCtrl addListCtrl;
+
     private int numberOfLists = 2;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
@@ -126,6 +127,7 @@ public class MainCtrl {
         a.setLayoutY(yLayout);
 
         root.getChildren().add(a);
+
     }
 
 }
