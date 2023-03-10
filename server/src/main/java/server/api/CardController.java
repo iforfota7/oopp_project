@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -36,6 +37,7 @@ public class CardController {
      * @return a 200 OK response for a successful http request
      */
 
+   @Transactional
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Cards> addCard(@RequestBody Cards card){
 
@@ -44,6 +46,7 @@ public class CardController {
         }
 
         Cards saved = repo.save(card);
+        repo.incrementListPosition(card.positionInsideList, card.list.id);
 
         return ResponseEntity.ok(saved);
     }
