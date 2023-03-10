@@ -9,11 +9,9 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="rootContainer" prefWidth="575.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
@@ -23,34 +21,21 @@
             <Font name="Baghdad Regular" size="12.0" />
          </font>
       </TextField>
-      <Label fx:id="BoardName" layoutX="243.0" layoutY="16.0" text="Board Name" AnchorPane.leftAnchor="243.0" AnchorPane.topAnchor="16.0">
+      <Label fx:id="BoardName" alignment="CENTER" layoutX="243.0" layoutY="16.0" text="Board Name" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="243.0" AnchorPane.topAnchor="16.0">
          <font>
             <Font name="BM YEONSUNG OTF" size="18.0" />
          </font>
       </Label>
-      <RadioButton fx:id="lockBtu" layoutX="110.0" layoutY="20.0" mnemonicParsing="false" />
-      <HBox alignment="CENTER" layoutX="502.0" layoutY="354.0" prefHeight="27.0" prefWidth="67.0">
-         <children>
-            <HBox prefHeight="27.0" prefWidth="35.0">
-               <children>
-                  <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
-            <HBox prefHeight="24.0" prefWidth="24.0">
-               <children>
-                  <Button fx:id="helpBtu" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="22.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
-      </HBox>
+      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="506.0" layoutY="360.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="22.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="50.0">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
+      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="538.0" layoutY="360.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="22.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="15.8">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
       <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0">
          <children>
             <AnchorPane fx:id="listsPane" prefHeight="260.0" prefWidth="552.0">
@@ -106,7 +91,7 @@
                               </Button>
                            </children>
                         </AnchorPane>
-                        <MenuButton fx:id="refactorList" layoutX="70.0" layoutY="232.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
+                        <MenuButton fx:id="refactorList" layoutX="66.0" layoutY="230.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.799999999999997">
                           <items>
                             <MenuItem fx:id="renameList" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
                             <MenuItem fx:id="deleteList" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
@@ -115,7 +100,7 @@
                               <Font size="9.0" />
                            </font>
                         </MenuButton>
-                        <Button fx:id="addCard1" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                        <Button fx:id="addCard1" layoutX="10.0" layoutY="229.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="10.0" />
                            </font>
@@ -137,39 +122,48 @@
                               <Font name="Bodoni 72 Smallcaps Book" size="13.0" />
                            </font>
                         </Label>
-                        <Button fx:id="listMidDelete" layoutX="89.0" layoutY="231.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="Delete List">
-                           <font>
-                              <Font size="9.0" />
-                           </font>
-                        </Button>
                         <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-                        <Button fx:id="addCard" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                        <Button fx:id="addCard" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
+                        <MenuButton fx:id="refactorList2" layoutX="62.0" layoutY="232.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.800000000000011">
+                           <items>
+                              <MenuItem fx:id="renameList1" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
+                              <MenuItem fx:id="deleteList1" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                           </items>
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </MenuButton>
                      </children>
                   </AnchorPane>
                   <AnchorPane fx:id="list3Container" layoutX="358.0">
                      <children>
                         <ListView fx:id="listRight" prefHeight="260.0" prefWidth="150.0" />
                         <Label fx:id="listRightName" layoutX="58.5" layoutY="3.0" text="Done" />
-                        <Button fx:id="listRightDelete" layoutX="89.0" layoutY="231.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-font-size: 9px;" text="Delete List">
-                           <font>
-                              <Font size="9.0" />
-                           </font>
-                        </Button>
                         <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-                        <Button fx:id="addCard3" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                        <Button fx:id="addCard3" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
+                        <MenuButton fx:id="refactorList3" layoutX="62.0" layoutY="232.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.799999999999997">
+                           <items>
+                              <MenuItem fx:id="renameList11" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
+                              <MenuItem fx:id="deleteList11" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                           </items>
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </MenuButton>
                      </children>
                   </AnchorPane>
                </children>
             </AnchorPane>
          </children>
       </Group>
+      <Button fx:id="lockBtu" layoutX="108.0" layoutY="16.0" mnemonicParsing="false" text="🔒" AnchorPane.leftAnchor="108.0" AnchorPane.topAnchor="16.0" />
    </children>
 </AnchorPane>

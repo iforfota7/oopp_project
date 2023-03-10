@@ -4,6 +4,7 @@ import client.lib.CollisionChecking;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -162,8 +163,6 @@ public class BoardCtrl implements Initializable {
         listContainer.getChildren().add(card1Container);
         card1Container.setLayoutX(11.5);
         card1Container.setLayoutY(25);
-
-
     }
 
     /**
@@ -236,7 +235,7 @@ public class BoardCtrl implements Initializable {
         ListView<Objects> listView = createListBody();
 
         // creating the Delete List button, aligning and customising it
-        Button deleteButtonList = createDeleteButton();
+        MenuButton refactorButtonList = createRefactorButton();
 
         // creating the separator under the title, aligning and customising it
         Separator listSeparator = createSeparator();
@@ -250,23 +249,36 @@ public class BoardCtrl implements Initializable {
         // the anchor pane which contains the whole list
         AnchorPane newList = new AnchorPane();
 
-        newList.getChildren().addAll(listView, deleteButtonList, listSeparator, addCardButton, listName);
+        newList.getChildren().addAll(listView, refactorButtonList, listSeparator, addCardButton, listName);
         return newList;
     }
 
     /**
-     * Creates a new button on the list, which when pressed, deletes the list;
-     * @return a button to delete a list, aligned correspondingly
+     * Creates a new button on the list, which when pressed, shows a menu of two options: renaming or
+     * deleting the list;
+     * @return a button to refactor a list, aligned correspondingly
      */
-    public Button createDeleteButton(){
-        Button deleteButtonList = new Button();
-        deleteButtonList.setText("Delete List");
-        deleteButtonList.setLayoutX(89);
-        deleteButtonList.setLayoutY(231);
-        deleteButtonList.setPrefWidth(54.4);
-        deleteButtonList.setPrefHeight(20);
-        deleteButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
-        return deleteButtonList;
+    public MenuButton createRefactorButton(){
+        MenuButton refactorButtonList = new MenuButton();
+        refactorButtonList.setText("Refactor List");
+        refactorButtonList.setLayoutX(66);
+        refactorButtonList.setLayoutY(230);
+        refactorButtonList.setPrefWidth(75.2);
+        refactorButtonList.setPrefHeight(20);
+        refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
+
+        MenuItem renameOption = new MenuItem();
+        renameOption.setText("Rename List");
+        renameOption.setOnAction(this::renameList);
+
+        MenuItem deleteOption = new MenuItem();
+        deleteOption.setText("Delete List");
+        deleteOption.setOnAction(this::deleteList);
+
+        refactorButtonList.getItems().add(renameOption);
+        refactorButtonList.getItems().add(deleteOption);
+
+        return refactorButtonList;
     }
 
     /**
@@ -309,6 +321,7 @@ public class BoardCtrl implements Initializable {
         listName.setLayoutY(2);
         listName.setText(newListName);
         listName.setStyle("-fx-font-size: 13px;");
+        listName.setAlignment(Pos.CENTER);
         return listName;
     }
 
