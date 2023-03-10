@@ -45,8 +45,8 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
 
-        Cards saved = repo.save(card);
         repo.incrementListPosition(card.positionInsideList, card.list.id);
+        Cards saved = repo.save(card);
 
         return ResponseEntity.ok(saved);
     }

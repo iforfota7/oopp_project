@@ -26,18 +26,25 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
     /**
      * Custom update query that decreases the position of cards inside the list after a card gets removed from said list
      * E.g. If the card at position 3 is deleted, all cards that had a position > 3 will get their positions decreased by 1
-     *
-     * @param deletedCardPosition The index of the deleted card
+     * @param positionInList The index of the deleted card
+     * @param listID the id of the list holding the card
      */
     @Modifying
     @Query(value = "UPDATE Cards SET " +
             "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST - 1 " +
-            "WHERE Cards.POSITION_INSIDE_LIST > ?1 AND Cards.LIST_ID = ?2", nativeQuery = true)
-    void decrementCardPosition(int deletedCardPosition, String respectiveListID);
-
-    @Modifying
-    @Query(value = "UPDATE Cards SET Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST + 1 WHERE Cards.POSITION_INSIDE_LIST >= ?1 " +
-            "and Cards.LIST_ID = ?2",
+            "WHERE Cards.POSITION_INSIDE_LIST > ?1 AND Cards.LIST_ID = ?2", 
             nativeQuery = true)
-    void incrementListPosition(int positionInList, String list);
+    void decrementCardPosition(int positionInList, String listID);
+
+    /**
+     * Custom update query that increases the position of cards inside the list after a new card gets added to said list
+     * @param positionInList The index of the added card
+     * @param listID the id of the list holding the card
+     */
+    @Modifying
+    @Query(value = "UPDATE Cards SET " +
+            "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST + 1 " +
+            "WHERE Cards.POSITION_INSIDE_LIST >= ?1 AND Cards.LIST_ID = ?2",
+            nativeQuery = true)
+    void incrementListPosition(int positionInList, String listID);
 }
