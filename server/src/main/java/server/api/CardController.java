@@ -27,23 +27,26 @@ public class CardController {
      * @return all cards that are stored in repo
      */
     @GetMapping(path = {"", "/"})
-    public List<Cards> getAll(){
+    public List<Cards> getAllCards(){
         return repo.findAll();
     }
 
     /**
-     * Method for adding a card to the repo
+     * Method for adding a card to the repo (can also be used for updating the cards)
      * @param card the card to be added to the repo
      * @return a 200 OK response for a successful http request
      */
-    @PostMapping(path = {"", "/"})
-    public ResponseEntity<Cards> add(@RequestBody Cards card){
 
-        if(isNullOrEmpty(card.title) || card.positionInsideList<0){
+    @Transactional
+    @PostMapping(path = {"", "/"})
+    public ResponseEntity<Cards> addCard(@RequestBody Cards card){
+
+        if(card == null || isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();
         }
 
         Cards saved = repo.save(card);
+        repo.incrementListPosition(card.positionInsideList, card.list.id);
 
         return ResponseEntity.ok(saved);
     }
