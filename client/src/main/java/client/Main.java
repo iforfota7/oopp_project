@@ -37,7 +37,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        var board = FXML.load(StartCtrl.class, "client", "scenes", "Board.fxml");
+        var selectServer = FXML.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
 
         /**
          * List rename&delete&add scene loader

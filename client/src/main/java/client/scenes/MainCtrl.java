@@ -52,7 +52,7 @@ public class MainCtrl {
         primaryStage.show();
     }
 
-    public void showStart(){
+    public void showStart() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
     }
