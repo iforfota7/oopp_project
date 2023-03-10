@@ -39,16 +39,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        var board = FXML.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
+        var selectServer = FXML.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, board);
+        mainCtrl.initialize(primaryStage, selectServer);
     }
 
     /**
      * Sets main scene, displaying the board
      */
-    public static void setScenetoBoard(){
+    public static void setSceneToBoard(){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
