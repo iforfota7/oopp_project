@@ -21,10 +21,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import client.scenes.*;
+import client.scenes.BoardCtrl;
 import com.google.inject.Injector;
 
 import client.scenes.MainCtrl;
-import client.scenes.StartCtrl;
+import client.scenes.SelectServerCtrl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -39,7 +40,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        var board = FXML.load(StartCtrl.class, "client", "scenes", "Board.fxml");
+        var selectServer = FXML.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
 
         /**
          * List rename&delete&add scene loader
@@ -50,6 +51,18 @@ public class Main extends Application {
 
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, board, renameList, deleteList, addList);
+        mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList);
+
     }
+
+    /**
+     * Sets main scene, displaying the board
+     */
+    public static void setSceneToBoard(){
+        var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
+
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        mainCtrl.setBoard(board);
+    }
+
 }

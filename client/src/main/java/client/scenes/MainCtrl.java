@@ -29,10 +29,9 @@ public class MainCtrl {
     private RNListCtrl rnListCtrl;
     private DEListCtrl deListCtrl;
     private ADListCtrl addListCtrl;
-
     private int numberOfLists = 2;
 
-    public void initialize(Stage primaryStage, Pair<StartCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
+    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
         this.primaryStage = primaryStage;
 
@@ -51,9 +50,18 @@ public class MainCtrl {
         primaryStage.show();
     }
 
-    public void showStart(){
+    public void showStart() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
+    }
+
+    /**
+     * Sets scene of stage to passed board
+     * @param board the scene to be displayed
+     */
+    public void setBoard(Pair<BoardCtrl, Parent> board){
+        this.board = new Scene(board.getValue());
+        showStart();
     }
 
     public void showRenameList() {
