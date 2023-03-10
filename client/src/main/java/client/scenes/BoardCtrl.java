@@ -10,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
-import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -152,7 +151,7 @@ public class BoardCtrl implements Initializable {
      * by removing it from its parent list and adding it to the list it has been dragged to
      * and positioning it to the top of the list using coordinates,
      * as well as realigns the cards from its parent list
-     * @param listContainer
+     * @param listContainer the list in which a card is dropped
      */
     public void dropCard(AnchorPane listContainer) {
         if(!(card1Container.getParent().equals(listContainer))) {
