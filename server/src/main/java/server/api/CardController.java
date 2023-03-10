@@ -1,9 +1,8 @@
 package server.api;
 
 import commons.Cards;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
 import java.util.List;
@@ -31,6 +30,33 @@ public class CardController {
         return repo.findAll();
     }
 
+    /**
+     * Method for adding a card to the repo
+     * @param card the card to be added to the repo
+     * @return a 200 OK response for a successful http request
+     */
+
+    @PostMapping(path = {"", "/"})
+    public ResponseEntity<Cards> add(@RequestBody Cards card){
+
+        if(isNullOrEmpty(card.title) || card.positionInsideList<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        Cards saved = repo.save(card);
+
+        return ResponseEntity.ok(saved);
+    }
+
+    /**
+     * Method for checking whether a String is null or empty
+     * @param s the String to be checked
+     * @return true if s is null or empty, false otherwise
+     */
+
+    private static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
 
 
 }
