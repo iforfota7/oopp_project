@@ -26,7 +26,7 @@
             <Font name="BM YEONSUNG OTF" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="506.0" layoutY="360.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="22.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="50.0">
+      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="506.0" layoutY="360.0" mnemonicParsing="false" onAction="#addList" prefHeight="23.0" prefWidth="22.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="50.0">
          <font>
             <Font size="10.0" />
          </font>
@@ -123,7 +123,7 @@
                            </font>
                         </Label>
                         <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-                        <Button fx:id="addCard" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="addCard" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="10.0" />
                            </font>
@@ -144,7 +144,7 @@
                         <ListView fx:id="listRight" prefHeight="260.0" prefWidth="150.0" />
                         <Label fx:id="listRightName" layoutX="58.5" layoutY="3.0" text="Done" />
                         <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-                        <Button fx:id="addCard3" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addLIst" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="addCard3" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="10.0" />
                            </font>

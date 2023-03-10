@@ -37,24 +37,17 @@ public class BoardCtrl implements Initializable {
     private AnchorPane list2Container;
     @FXML
     private AnchorPane list3Container;
-    //@FXML
-    //private AnchorPane listContainerNew;
     @FXML
     private Group boardGroup;
-    //@FXML
-    //private AnchorPane listsPane;
-
     @FXML
     private Label listName1;
-    //@FXML
-    //private Label listNameNew;
-    List<AnchorPane> listContainers;
 
+
+    List<AnchorPane> listContainers;
     List<AnchorPane> listCards;
 
     private double originalX;
     private double originalY;
-
 
 
     /**
@@ -209,7 +202,7 @@ public class BoardCtrl implements Initializable {
      * @param event List add process
      */
     @FXML
-    void addLIst(ActionEvent event) {
+    void addList(ActionEvent event) {
         mainCtrl.showAddList();
     }
 

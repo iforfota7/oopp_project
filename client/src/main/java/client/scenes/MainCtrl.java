@@ -47,7 +47,6 @@ public class MainCtrl {
         this.addList = new Scene(addList.getValue());
         this.addListCtrl = addList.getKey();
 
-        System.out.println(this.board);
         showStart();
         primaryStage.show();
     }
@@ -89,6 +88,11 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
+    /**
+     * Adds a new list by calculating its coordinates of the board and adding it to the root's children
+     * @param a the list to be added
+     * @param root the root where to add the list
+     */
     public void addNewList(AnchorPane a, Group root){
         numberOfLists++;
         int positionOfTheList = numberOfLists % 4;
@@ -96,13 +100,11 @@ public class MainCtrl {
         int xLayout;
         int yLayout;
 
-        switch (positionOfTheList){
-            case 0: {
-                xLayout = 0;
-            }
-            default: {
-                xLayout = (152  + 27) * (positionOfTheList);
-            }
+        if(positionOfTheList == 0) {
+            xLayout = 0;
+        }
+        else {
+            xLayout = (152  + 27) * (positionOfTheList);
         }
 
         if(numberOfLists < 4){
@@ -116,6 +118,6 @@ public class MainCtrl {
         a.setLayoutY(yLayout);
 
         root.getChildren().add(a);
-
     }
+
 }

@@ -23,6 +23,8 @@ import java.net.URISyntaxException;
 import client.scenes.*;
 import com.google.inject.Injector;
 
+import client.scenes.MainCtrl;
+import client.scenes.StartCtrl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -48,6 +50,6 @@ public class Main extends Application {
 
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, board, renameList,deleteList,addList);
+        mainCtrl.initialize(primaryStage, board, renameList, deleteList, addList);
     }
 }
