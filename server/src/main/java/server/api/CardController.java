@@ -37,7 +37,7 @@ public class CardController {
      * @return a 200 OK response for a successful http request
      */
 
-   @Transactional
+    @Transactional
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Cards> addCard(@RequestBody Cards card){
 
@@ -45,10 +45,32 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
 
-        Cards saved = repo.save(card);
         repo.incrementListPosition(card.positionInsideList, card.list.id);
+        Cards saved = repo.save(card);
 
         return ResponseEntity.ok(saved);
+    }
+
+    /**
+     * Method for deleting a card from the repo
+     * Whenever a card is removed the positions of the cards with
+     * higher position in the same list get decremented by 1
+     * @param card the card to be deleted from the repo
+     * @return a 200 OK response for a successful http request
+     */
+    @Transactional
+    @PostMapping(path = {"/remove", "/remove/"})
+    public ResponseEntity<Cards> removeCard(@RequestBody Cards card){
+
+        if(card==null || isNullOrEmpty(card.title) || card.positionInsideList<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        repo.delete(card);
+
+        repo.decrementCardPosition(card.positionInsideList, card.list.id);
+
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -56,10 +78,7 @@ public class CardController {
      * @param s the String to be checked
      * @return true if s is null or empty, false otherwise
      */
-
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }
-
-
 }
