@@ -17,7 +17,21 @@ package server.database;
 
 import commons.Cards;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 
+public interface CardsRepository extends JpaRepository<Cards, Long> {
 
-public interface CardsRepository extends JpaRepository<Cards, Long> {}
+    /**
+     * Custom update query that decreases the position of cards inside the list after a card gets removed from said list
+     * E.g. If the card at position 3 is deleted, all cards that had a position > 3 will get their positions decreased by 1
+     *
+     * @param deletedCardPosition The index of the deleted card
+     */
+    @Modifying
+    @Query(value = "UPDATE Cards SET " +
+            "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST - 1 " +
+            "WHERE Cards.POSITION_INSIDE_LIST > ?1 AND Cards.LIST_ID = ?2", nativeQuery = true)
+    void decrementCardPosition(int deletedCardPosition, String respectiveListID);
+}

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -49,10 +50,13 @@ public class CardController {
 
     /**
      * Method for deleting a card from the repo
+     * Whenever a card is removed the positions of the cards with
+     * higher position in the same list get decremented by 1
      * @param card the card to be deleted from the repo
      * @return a 200 OK response for a successful http request
      */
-    @PostMapping(path = {"delete", "/"}) //should this have a different path?
+    @Transactional
+    @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Cards> removeCard(@RequestBody Cards card){
 
         if(card==null || isNullOrEmpty(card.title) || card.positionInsideList<0){
@@ -60,6 +64,8 @@ public class CardController {
         }
 
         repo.delete(card);
+
+        repo.decrementCardPosition(card.positionInsideList, card.list.id);
 
         return ResponseEntity.ok().build();
     }
