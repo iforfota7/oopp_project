@@ -40,9 +40,17 @@ public class CardController {
     @Transactional
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Cards> addCard(@RequestBody Cards card){
-
-
         if(card == null || isNullOrEmpty(card.title) || card.positionInsideList<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        Integer maxPositionInsideList = repo.maxPositionInsideList(card.list.id);
+        if(maxPositionInsideList == null) {
+            // there are no Cards entities inside that List
+            maxPositionInsideList = -1;
+        }
+        if(card.positionInsideList > maxPositionInsideList + 1) {
+            // position sent by the client is invalid
             return ResponseEntity.badRequest().build();
         }
 

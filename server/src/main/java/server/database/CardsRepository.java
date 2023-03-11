@@ -47,4 +47,17 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
             "WHERE Cards.POSITION_INSIDE_LIST >= ?1 AND Cards.LIST_ID = ?2",
             nativeQuery = true)
     void incrementCardPosition(int positionInList, long listID);
+
+    /**
+     * Gets the maximum value of the POSITION_INSIDE_LIST among all cards inside
+     * a specific Lists entity
+     *
+     * @param listID The list id of the Lists entity that we search inside of
+     * @return The maximum value or null in case the repository contains no Cards
+     */
+    @Query(value = "SELECT MAX(POSITION_INSIDE_LIST) " +
+            "FROM CARDS " +
+            "WHERE LIST_ID = ?1",
+            nativeQuery = true)
+    Integer maxPositionInsideList(long listID);
 }
