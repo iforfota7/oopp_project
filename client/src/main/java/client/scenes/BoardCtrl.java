@@ -4,16 +4,26 @@ import client.lib.CollisionChecking;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.*;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import javafx.scene.input.MouseEvent;
+
+
+import javafx.event.ActionEvent;
+
+import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
+    private MainCtrl mainCtrl;
 
     @FXML
     private AnchorPane card1Container;
@@ -27,9 +37,13 @@ public class BoardCtrl implements Initializable {
     private AnchorPane list2Container;
     @FXML
     private AnchorPane list3Container;
+    @FXML
+    private Group boardGroup;
+    @FXML
+    private Label listName1;
+
 
     List<AnchorPane> listContainers;
-
     List<AnchorPane> listCards;
 
     private double originalX;
@@ -132,7 +146,7 @@ public class BoardCtrl implements Initializable {
      * by removing it from its parent list and adding it to the list it has been dragged to
      * and positioning it to the top of the list using coordinates,
      * as well as realigns the cards from its parent list
-     * @param listContainer
+     * @param listContainer the list in which a card is dropped
      */
     public void dropCard(AnchorPane listContainer) {
         if(!(card1Container.getParent().equals(listContainer))) {
@@ -143,7 +157,176 @@ public class BoardCtrl implements Initializable {
         listContainer.getChildren().add(card1Container);
         card1Container.setLayoutX(11.5);
         card1Container.setLayoutY(25);
+    }
 
+    /**
+     * Auxiliary call to mainCtrl Inject function
+     * @param mainCtrl The master controller, which will later be replaced by a class of window controllers
+     */
+    @Inject
+    public BoardCtrl(MainCtrl mainCtrl){
+        this.mainCtrl = mainCtrl;
+    }
 
+    /**
+     *Trigger function for the change List name option in the drop-down options button
+     * @param event List name change process
+     */
+    @FXML
+    void renameList(ActionEvent event) {
+        mainCtrl.showRenameList();
+    }
+    void RNList(String name) {
+        listName1.setText(name);
+        mainCtrl.closeRNList();
+    }
+
+    /**
+     *Trigger function for deleting List option in the drop-down options button
+     * @param event List delete process
+     */
+    @FXML
+    void deleteList(ActionEvent event) {
+        mainCtrl.showDeleteList();
+    }
+    void deleteL() {
+
+        list1Container.setVisible(false);
+        mainCtrl.closeDEList();
+    }
+    void undeleteL() {
+        mainCtrl.closeDEList();
+    }
+
+    /**
+     *Trigger function for adding a List with a button
+     * @param event List add process
+     */
+    @FXML
+    void addList(ActionEvent event) {
+        mainCtrl.showAddList();
+    }
+
+    /**
+     * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
+     * @param newListName the name of the new list
+     */
+    public void addNewList(String newListName) {
+        // closes the scene of adding a new list
+        mainCtrl.closeADList();
+
+        AnchorPane newList = createNewList(newListName);
+        mainCtrl.addNewList(newList, boardGroup);
+    }
+
+    /**
+     * Creates a new list with all its elements
+     * @param newListName the name of the new list to be created
+     * @return and AnchorPane with the new list, aligned correspondingly
+     */
+    public AnchorPane createNewList(String newListName){
+        // creating the listView element
+        ListView<Objects> listView = createListBody();
+
+        // creating the Delete List button, aligning and customising it
+        MenuButton refactorButtonList = createRefactorButton();
+
+        // creating the separator under the title, aligning and customising it
+        Separator listSeparator = createSeparator();
+
+        // creating the adding card button, aligning and customising it
+        Button addCardButton = createAddCardButton();
+
+        // creating the label for the name of the list, aligning and customising it
+        Label listName = createListTitle(newListName);
+
+        // the anchor pane which contains the whole list
+        AnchorPane newList = new AnchorPane();
+
+        newList.getChildren().addAll(listView, refactorButtonList, listSeparator, addCardButton, listName);
+        return newList;
+    }
+
+    /**
+     * Creates a new button on the list, which when pressed, shows a menu of two options: renaming or
+     * deleting the list;
+     * @return a button to refactor a list, aligned correspondingly
+     */
+    public MenuButton createRefactorButton(){
+        MenuButton refactorButtonList = new MenuButton();
+        refactorButtonList.setText("Refactor List");
+        refactorButtonList.setLayoutX(66);
+        refactorButtonList.setLayoutY(230);
+        refactorButtonList.setPrefWidth(75.2);
+        refactorButtonList.setPrefHeight(20);
+        refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
+
+        MenuItem renameOption = new MenuItem();
+        renameOption.setText("Rename List");
+        renameOption.setOnAction(this::renameList);
+
+        MenuItem deleteOption = new MenuItem();
+        deleteOption.setText("Delete List");
+        deleteOption.setOnAction(this::deleteList);
+
+        refactorButtonList.getItems().add(renameOption);
+        refactorButtonList.getItems().add(deleteOption);
+
+        return refactorButtonList;
+    }
+
+    /**
+     * Creates a separator for a list, separating visually the title of the list from its body
+     * @return a separator, aligned correspondingly
+     */
+    public Separator createSeparator(){
+        Separator listSeparator = new Separator();
+        listSeparator.setLayoutX(1);
+        listSeparator.setLayoutY(19);
+        listSeparator.setPrefWidth(150);
+        listSeparator.setPrefHeight(4);
+        return listSeparator;
+    }
+
+    /**
+     * Creates a button which when pressed, creates a new card in the list
+     * @return a button to create a new card, aligned correspondingly
+     */
+    public Button createAddCardButton(){
+        Button addButton = new Button();
+        addButton.setText("+");
+        addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; " +
+                "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
+        addButton.setLayoutX(9);
+        addButton.setLayoutY(230);
+        addButton.setPrefWidth(24);
+        addButton.setPrefHeight(23);
+        return addButton;
+    }
+
+    /**
+     * Creates a label which shows the list's title
+     * @param newListName the name the list should have
+     * @return a label with the name of the list, aligned correspondingly
+     */
+    public Label createListTitle(String newListName){
+        Label listName = new Label();
+        listName.setLayoutX(56);
+        listName.setLayoutY(2);
+        listName.setText(newListName);
+        listName.setStyle("-fx-font-size: 13px;");
+        listName.setAlignment(Pos.CENTER);
+        return listName;
+    }
+
+    /**
+     * Creates the body of the list
+     * @return a listView, which represents the body of the list, designed and aligned accordingly
+     */
+    public ListView<Objects> createListBody(){
+        ListView<Objects> listView = new ListView<>();
+        listView.setPrefWidth(150);
+        listView.setPrefHeight(260);
+        return listView;
     }
 }
