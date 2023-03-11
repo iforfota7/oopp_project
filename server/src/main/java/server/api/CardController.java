@@ -44,6 +44,10 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
 
+        // if the instance exists in the repository, the client gets returned a bad request
+        if(repo.existsById(card.id))
+            return ResponseEntity.badRequest().build();
+
         Integer maxPositionInsideList = repo.maxPositionInsideList(card.list.id);
         if(maxPositionInsideList == null) {
             // there are no Cards entities inside that List

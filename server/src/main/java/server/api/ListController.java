@@ -37,8 +37,11 @@ public class ListController {
      */
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
-
         if(isNullOrEmpty(list.title) || list.positionInsideBoard<0)
+            return ResponseEntity.badRequest().build();
+
+        // if the instance exists in the repository, the client gets returned a bad request
+        if(repo.existsById(list.id))
             return ResponseEntity.badRequest().build();
 
         Integer maxPositionInsideBoard = repo.maxPositionInsideBoard();
