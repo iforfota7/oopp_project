@@ -75,9 +75,11 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
 
-        repo.delete(card);
-
-        repo.decrementCardPosition(card.positionInsideList, card.list.id);
+        if(repo.existsById(card.id)) {
+            // only remove and decrement card positions if the entry with the provided id actually exists
+            repo.delete(card);
+            repo.decrementCardPosition(card.positionInsideList, card.list.id);
+        }
 
         return ResponseEntity.ok().build();
     }

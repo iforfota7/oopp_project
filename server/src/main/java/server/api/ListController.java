@@ -72,8 +72,11 @@ public class ListController {
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard < 0)
             return ResponseEntity.badRequest().build();
 
-        repo.delete(list);
-        repo.decrementListPositions(list.positionInsideBoard);
+        if(repo.existsById(list.id)) {
+            // only remove and decrement list positions if the entry with the provided id actually exists
+            repo.delete(list);
+            repo.decrementListPositions(list.positionInsideBoard);
+        }
         return ResponseEntity.ok().build();
     }
 
