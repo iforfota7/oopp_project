@@ -36,6 +36,12 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
             nativeQuery = true)
     void decrementListPositions(int deletedListPosition);
 
+    /**
+     * Custom update query that increases the position of lists inside the board after a list gets inserted
+     * E.g. If the list is inserted at position 3, all lists that had a position >= 3 will get their positions increased by 1
+     *
+     * @param positionInBoard The index of the deleted list
+     */
     @Modifying
     @Query(value = "UPDATE Lists " +
             "SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD + 1 " +
