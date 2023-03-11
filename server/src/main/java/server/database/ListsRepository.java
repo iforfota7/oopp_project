@@ -33,4 +33,14 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
     @Query(value = "UPDATE Lists SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD - 1 WHERE Lists.POSITION_INSIDE_BOARD > ?1",
             nativeQuery = true)
     void decrementListPositions(int deletedListPosition);
+
+    /**
+     * Gets the maximum value of the POSITION_INSIDE_BOARD among all Lists
+     *
+     * @return The maximum value or null in case the repository contains no Lists
+     */
+    @Query(value = "SELECT MAX(POSITION_INSIDE_BOARD) " +
+            "FROM LISTS",
+            nativeQuery = true)
+    Integer maxPositionInsideBoard();
 }

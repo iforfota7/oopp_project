@@ -30,8 +30,8 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
      * @param listID the id of the list holding the card
      */
     @Modifying
-    @Query(value = "UPDATE Cards SET " +
-            "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST - 1 " +
+    @Query(value = "UPDATE Cards " +
+            "SET Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST - 1 " +
             "WHERE Cards.POSITION_INSIDE_LIST > ?1 AND Cards.LIST_ID = ?2", 
             nativeQuery = true)
     void decrementCardPosition(int positionInList, long listID);
@@ -42,8 +42,8 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
      * @param listID the id of the list holding the card
      */
     @Modifying
-    @Query(value = "UPDATE Cards SET " +
-            "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST + 1 " +
+    @Query(value = "UPDATE Cards " +
+            "SET Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST + 1 " +
             "WHERE Cards.POSITION_INSIDE_LIST >= ?1 AND Cards.LIST_ID = ?2",
             nativeQuery = true)
     void incrementCardPosition(int positionInList, long listID);

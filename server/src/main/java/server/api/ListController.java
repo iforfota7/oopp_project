@@ -41,6 +41,16 @@ public class ListController {
         if(isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 
+        Integer maxPositionInsideBoard = repo.maxPositionInsideBoard();
+        if(maxPositionInsideBoard == null) {
+            // there are no Lists entities
+            maxPositionInsideBoard = -1;
+        }
+        if(list.positionInsideBoard > maxPositionInsideBoard + 1) {
+            // position sent by the client is invalid
+            return ResponseEntity.badRequest().build();
+        }
+
         Lists saved = repo.save(list);
         return ResponseEntity.ok(saved);
     }
