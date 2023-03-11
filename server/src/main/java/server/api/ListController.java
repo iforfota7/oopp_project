@@ -35,6 +35,7 @@ public class ListController {
      * @param list the list to be added to the repo
      * @return a 200 OK response for a successful http request
      */
+    @Transactional
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
         if(isNullOrEmpty(list.title) || list.positionInsideBoard<0)
@@ -54,6 +55,7 @@ public class ListController {
             return ResponseEntity.badRequest().build();
         }
 
+        repo.incrementListPosition(list.positionInsideBoard);
         Lists saved = repo.save(list);
         return ResponseEntity.ok(saved);
     }

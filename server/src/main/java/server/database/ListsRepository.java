@@ -30,9 +30,18 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
      * @param deletedListPosition The index of the deleted list
      */
     @Modifying
-    @Query(value = "UPDATE Lists SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD - 1 WHERE Lists.POSITION_INSIDE_BOARD > ?1",
+    @Query(value = "UPDATE Lists " +
+            "SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD - 1 " +
+            "WHERE Lists.POSITION_INSIDE_BOARD > ?1",
             nativeQuery = true)
     void decrementListPositions(int deletedListPosition);
+
+    @Modifying
+    @Query(value = "UPDATE Lists " +
+            "SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD + 1 " +
+            "WHERE Lists.POSITION_INSIDE_BOARD >= ?1",
+            nativeQuery = true)
+    void incrementListPosition(int positionInBoard);
 
     /**
      * Gets the maximum value of the POSITION_INSIDE_BOARD among all Lists
