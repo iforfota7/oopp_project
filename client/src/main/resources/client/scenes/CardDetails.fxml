@@ -18,7 +18,7 @@
             <Font name="Avenir Book" size="13.0" />
          </font>
       </TextField>
-      <TextArea fx:id="descriptionInput" layoutX="260.0" layoutY="96.0" prefHeight="200.0" prefWidth="200.0" promptText="Description">
+      <TextArea fx:id="descriptionInput" layoutX="261.0" layoutY="49.0" prefHeight="200.0" prefWidth="200.0" promptText="Description">
          <cursor>
             <Cursor fx:constant="NONE" />
          </cursor>
@@ -57,5 +57,6 @@
          </children>
       </AnchorPane>
       <TextArea fx:id="tagsInput" layoutX="29.0" layoutY="76.0" prefHeight="52.0" prefWidth="200.0" promptText="Tags" />
+      <Button fx:id="saveDetails" layoutX="406.0" layoutY="284.0" mnemonicParsing="false" onAction="#save" text="Save" />
    </children>
 </AnchorPane>

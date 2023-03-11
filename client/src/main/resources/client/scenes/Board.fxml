@@ -51,12 +51,12 @@
                         <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
                         <AnchorPane fx:id="card1Container" layoutX="11.5" layoutY="25.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
+                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard1" layoutY="3.0" mnemonicParsing="false" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard1" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
@@ -70,7 +70,7 @@
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard3" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard3" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
@@ -84,7 +84,7 @@
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard2" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard2" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>

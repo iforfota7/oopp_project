@@ -1,10 +1,14 @@
 package client.scenes;
 
+import commons.Cards;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import javax.inject.Inject;
+
 
 public class CardDetailsCtrl {
 
@@ -35,4 +39,16 @@ public class CardDetailsCtrl {
     @FXML
     private CheckBox taskTwoInput;
 
+    private BoardCtrl boardCtrl;
+
+    @Inject
+    public CardDetailsCtrl(BoardCtrl boardCtrl){
+        this.boardCtrl = boardCtrl;
+    }
+    @FXML
+    void save() {
+//         Cards card = new Cards();
+//         boardCtrl.RefreshCard(card);
+        boardCtrl.RefreshCard(cardTitleInput.getText());
+    }
 }

@@ -41,14 +41,15 @@ public class BoardCtrl implements Initializable {
     private Group boardGroup;
     @FXML
     private Label listName1;
-
+    @FXML
+    private MenuItem deleteList;
 
     List<AnchorPane> listContainers;
     List<AnchorPane> listCards;
 
     private double originalX;
     private double originalY;
-
+    private Hyperlink currentCard;
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -187,11 +188,10 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void deleteList(ActionEvent event) {
-        mainCtrl.showDeleteList();
+        mainCtrl.showDeleteList(deleteList);
     }
     void deleteL() {
-
-        list1Container.setVisible(false);
+        ((AnchorPane)list1Container.getParent()).getChildren().remove(list1Container);
         mainCtrl.closeDEList();
     }
     void undeleteL() {
@@ -328,5 +328,32 @@ public class BoardCtrl implements Initializable {
         listView.setPrefWidth(150);
         listView.setPrefHeight(260);
         return listView;
+    }
+    /**
+     * Delete Card function
+     */
+    @FXML
+    void deleteCard(ActionEvent event) {
+        Button deleteCard = (Button) event.getTarget();
+        ((AnchorPane)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
+    }
+
+    /**
+     * open the Card Detail scene and modify all information about the card, including its name.....
+     * @param event an button (Hyperlink)
+     */
+    @FXML
+    void cardDetail(ActionEvent event) {
+        Hyperlink currentCard = (Hyperlink) event.getTarget();
+        this.currentCard = currentCard;
+        mainCtrl.showCardDetail(currentCard);
+    }
+
+    /**
+     * Save new card details to board scene
+     */
+    void RefreshCard(String text) {
+        this.currentCard.setText(text);
+        mainCtrl.closeCardDetails();
     }
 }
