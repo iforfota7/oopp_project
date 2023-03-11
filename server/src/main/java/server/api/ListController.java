@@ -27,7 +27,7 @@ public class ListController {
      */
     @GetMapping(path = {"", "/"})
     public List<Lists> getAll(){
-        return repo.findAll();
+        return repo.findAllByOrderByPositionInsideBoardAsc();
     }
 
     /**
