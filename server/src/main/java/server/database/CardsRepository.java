@@ -46,5 +46,5 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
             "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST + 1 " +
             "WHERE Cards.POSITION_INSIDE_LIST >= ?1 AND Cards.LIST_ID = ?2",
             nativeQuery = true)
-    void incrementListPosition(int positionInList, long listID);
+    void incrementCardPosition(int positionInList, long listID);
 }
