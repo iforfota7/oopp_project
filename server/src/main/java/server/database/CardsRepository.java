@@ -34,7 +34,7 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
             "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST - 1 " +
             "WHERE Cards.POSITION_INSIDE_LIST > ?1 AND Cards.LIST_ID = ?2", 
             nativeQuery = true)
-    void decrementCardPosition(int positionInList, String listID);
+    void decrementCardPosition(int positionInList, long listID);
 
     /**
      * Custom update query that increases the position of cards inside the list after a new card gets added to said list
@@ -46,5 +46,5 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
             "Cards.POSITION_INSIDE_LIST = Cards.POSITION_INSIDE_LIST + 1 " +
             "WHERE Cards.POSITION_INSIDE_LIST >= ?1 AND Cards.LIST_ID = ?2",
             nativeQuery = true)
-    void incrementListPosition(int positionInList, String listID);
+    void incrementListPosition(int positionInList, long listID);
 }
