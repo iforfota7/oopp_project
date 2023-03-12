@@ -356,4 +356,5 @@ public class BoardCtrl implements Initializable {
         this.currentCard.setText(text);
         mainCtrl.closeCardDetails();
     }
+
 }
