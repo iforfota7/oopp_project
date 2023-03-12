@@ -50,7 +50,7 @@ public class BoardCtrl implements Initializable {
     private double originalX;
     private double originalY;
     private Hyperlink currentCard;
-
+    private long mousePressedTime;
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
@@ -76,6 +76,8 @@ public class BoardCtrl implements Initializable {
      * @param mouseEvent an object containing information about the mouse event
      */
     public void dragDetected(MouseEvent mouseEvent) {
+        mousePressedTime = System.currentTimeMillis();
+        mouseEvent.consume();
         card1Container.getParent().toFront();
         card1Container.toFront();
     }
@@ -87,6 +89,7 @@ public class BoardCtrl implements Initializable {
      * @param mouseEvent an object containing information about the mouse event
      */
     public void mousePressed(MouseEvent mouseEvent) {
+
         originalX = mouseEvent.getX();
         originalY = mouseEvent.getY();
     }
@@ -100,6 +103,7 @@ public class BoardCtrl implements Initializable {
      */
 
     public void mouseDragged(MouseEvent mouseEvent) {
+        mouseEvent.consume();
         card1Container.setLayoutX(card1Container.getLayoutX() + mouseEvent.getX() - originalX);
         card1Container.setLayoutY(card1Container.getLayoutY() + mouseEvent.getY() - originalY);
     }
@@ -344,9 +348,13 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void cardDetail(ActionEvent event) {
-        Hyperlink currentCard = (Hyperlink) event.getTarget();
-        this.currentCard = currentCard;
-        mainCtrl.showCardDetail(currentCard);
+        long mouseReleasedTime = System.currentTimeMillis();
+        long mouseDuration = mouseReleasedTime - mousePressedTime;
+        if(mouseDuration >= 2000) {
+            Hyperlink currentCard = (Hyperlink) event.getTarget();
+            this.currentCard = currentCard;
+            mainCtrl.showCardDetail(currentCard);
+        }
     }
 
     /**
@@ -356,5 +364,6 @@ public class BoardCtrl implements Initializable {
         this.currentCard.setText(text);
         mainCtrl.closeCardDetails();
     }
+
 
 }
