@@ -32,6 +32,15 @@ public class CardController {
     }
 
     /**
+     * Method for retrieving all cards inside a list, sorted by their position inside the list
+     * @return all cards that are stored inside a list
+     */
+    @GetMapping("/{id}")
+    public List<Cards> getCardsByListId(@PathVariable("id") long id) {
+        return repo.findByListIdOrderByPositionInsideListAsc(id);
+    }
+
+    /**
      * Method for adding a card to the repo (can also be used for updating the cards)
      * @param card the card to be added to the repo
      * @return a 200 OK response for a successful http request

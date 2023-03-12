@@ -22,7 +22,7 @@ public class ListController {
     }
 
     /**
-     * Method for retrieving all lists in the repo
+     * Method for retrieving all lists in the repo, sorted by their position inside the board
      * @return all lists that are stored in repo
      */
     @GetMapping(path = {"", "/"})
