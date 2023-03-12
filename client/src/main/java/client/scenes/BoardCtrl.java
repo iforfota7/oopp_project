@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.lib.CollisionChecking;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -18,12 +19,13 @@ import java.util.ResourceBundle;
 import javafx.scene.input.MouseEvent;
 
 
+
 import javafx.event.ActionEvent;
 
 import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
-    private MainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     @FXML
     private AnchorPane card1Container;
@@ -40,15 +42,13 @@ public class BoardCtrl implements Initializable {
     @FXML
     private Group boardGroup;
     @FXML
-    private Label listName1;
-    @FXML
-    private MenuItem deleteList;
 
     List<AnchorPane> listContainers;
     List<AnchorPane> listCards;
 
     private double originalX;
     private double originalY;
+    private AnchorPane currentList;
     private Hyperlink currentCard;
     private long mousePressedTime;
     /**
@@ -178,10 +178,20 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void renameList(ActionEvent event) {
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        this.currentList = (AnchorPane) popup.getOwnerNode().getParent();
         mainCtrl.showRenameList();
     }
     void RNList(String name) {
-        listName1.setText(name);
+            ObservableList<Node> children = currentList.getChildren();
+            for (Node node : children) {
+                if (node instanceof Label ) {
+                    Label label = (Label) node;
+                    label.setText(name);
+                    break;
+                }
+            }
         mainCtrl.closeRNList();
     }
 
@@ -191,10 +201,13 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void deleteList(ActionEvent event) {
-        mainCtrl.showDeleteList(deleteList);
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        this.currentList = (AnchorPane) popup.getOwnerNode().getParent();
+        mainCtrl.showDeleteList();
     }
     void deleteL() {
-        ((AnchorPane)list1Container.getParent()).getChildren().remove(list1Container);
+        ((AnchorPane)currentList.getParent()).getChildren().remove(currentList);
         mainCtrl.closeDEList();
     }
     void undeleteL() {
@@ -202,11 +215,10 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     *Trigger function for adding a List with a button
-     * @param event List add process
+     *Trigger function for adding a List with a button //ActionEvent event
      */
     @FXML
-    void addList(ActionEvent event) {
+    void addList(){
         mainCtrl.showAddList();
     }
 
@@ -343,23 +355,24 @@ public class BoardCtrl implements Initializable {
 
     /**
      * open the Card Detail scene and modify all information about the card, including its name.....
+     * In order to prevent it from opening while dragging, the code here sets a time delay between pressing and releasing the left mouse button.
+     * If the time delay is greater than a certain value, the click option will not be triggered, so the cardDetail won't open during dragging.
      *
      * @param event an button (Hyperlink)
-     * @return
      */
     @FXML
     void cardDetail(ActionEvent event) {
         long mouseReleasedTime = System.currentTimeMillis();
         long mouseDuration = mouseReleasedTime - mousePressedTime;
         if(mouseDuration >= 2000) {
-            Hyperlink currentCard = (Hyperlink) event.getTarget();
-            this.currentCard = currentCard;
-            mainCtrl.showCardDetail(currentCard);
+            this.currentCard = (Hyperlink) event.getTarget();
+            mainCtrl.showCardDetail();
         }
     }
 
     /**
      * Save new card details to board scene
+     * When the function returns from mainCtrl, it will update the card name displayed on the board and refresh the pointer to currentCard.
      */
     void RefreshCard(String text) {
         this.currentCard.setText(text);
@@ -382,7 +395,7 @@ public class BoardCtrl implements Initializable {
         anchor.getChildren().add(count + 3, newCard);
 
         this.currentCard = (Hyperlink) newCard.getChildren().get(0);
-        mainCtrl.showCardDetail(currentCard);
+        mainCtrl.showCardDetail();
     }
 
     public AnchorPane newAnchorPane(int position){
@@ -403,6 +416,7 @@ public class BoardCtrl implements Initializable {
         //need to set on click so can view card details!
 
         card.setStyle("-fx-background-color:  #E6E6FA");
+        card.setOnAction(this::cardDetail); // Set the triggering event name to be the same as card link buttons, you can find the name in the fxml file (onAction="#cardDetail")
         return card;
     }
 
@@ -416,6 +430,7 @@ public class BoardCtrl implements Initializable {
         // need to set on action so can delete card!
 
         button.setStyle("-fx-background-color: #f08080; -fx-font-size: 9.0");
+        button.setOnAction(this::deleteCard); //Set the triggering event name to be the same as card link buttons, you can find the name in the fxml file (onAction="#cardDetail")
         return button;
     }
 }

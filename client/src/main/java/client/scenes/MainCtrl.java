@@ -18,8 +18,6 @@ package client.scenes;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -27,11 +25,6 @@ import javafx.util.Pair;
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
     private Scene board, renameList, deleteList, addList,cardDetails;
-
-    private RNListCtrl rnListCtrl;
-    private DEListCtrl deListCtrl;
-    private ADListCtrl addListCtrl;
-    private CardDetailsCtrl cardDetailsCtrl;
 
     private int numberOfLists = 2;
 
@@ -46,16 +39,10 @@ public class MainCtrl {
         this.board = new Scene(board.getValue());
 
         this.renameList = new Scene(renameList.getValue());
-        this.rnListCtrl = renameList.getKey();
-
         this.deleteList = new Scene(deleteList.getValue());
-        this.deListCtrl = deleteList.getKey();
-
         this.addList = new Scene(addList.getValue());
-        this.addListCtrl = addList.getKey();
 
         this.cardDetails = new Scene(cardDetails.getValue());
-        this.cardDetailsCtrl = cardDetails.getKey();
         showStart();
         primaryStage.show();
     }
@@ -87,7 +74,7 @@ public class MainCtrl {
     /**
      * Show scene of Delete List
      */
-    public void showDeleteList(MenuItem deleteList) {
+    public void showDeleteList() {
         secondaryStage = new Stage();
         secondaryStage.setScene(this.deleteList);
         secondaryStage.setTitle("Delete List!");
@@ -150,9 +137,8 @@ public class MainCtrl {
 
     /**
      * Show scene of cardDetails
-     * @param currentCard Card with Corresponding Hyperlink
      */
-    public void showCardDetail(Hyperlink currentCard) {
+    public void showCardDetail() {
         secondaryStage = new Stage();
         secondaryStage.setScene(cardDetails);
         secondaryStage.setTitle("Card Details");
