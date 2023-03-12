@@ -379,25 +379,45 @@ public class BoardCtrl implements Initializable {
         mainCtrl.closeCardDetails();
     }
 
+    /**
+     * Makes a call to add a new card to a specified anchor pane (list)
+     * @param event the press of the plus button in a list
+     */
     public void addCardToList(ActionEvent event){
         AnchorPane list = (AnchorPane) ((Button) event.getTarget()).getParent();
         addNewCard(list);
     }
 
+    /**
+     * Adds a new card to a specified anchor pane (list)
+     * @param anchor list to which a card should be appended
+     */
     public void addNewCard(AnchorPane anchor){
+        // count the number of cards currently in the list
         int count = 0;
         for(Node i : anchor.getChildren()){
             if(i.getClass().equals(AnchorPane.class)) count++;
         }
 
+        // create a new anchor pane for the card
         AnchorPane newCard = newAnchorPane(count);
+
+        // add text and the delete button for the card
         newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
+
+        // append the card to the list
         anchor.getChildren().add(count + 3, newCard);
 
+        // show card detail scene to be able to set details of card
         this.currentCard = (Hyperlink) newCard.getChildren().get(0);
         mainCtrl.showCardDetail();
     }
 
+    /**
+     * Creates an empty anchor pane for a card
+     * @param position the index of the card in the list (starts at zero)
+     * @return the created anchor pane
+     */
     public AnchorPane newAnchorPane(int position){
         AnchorPane anchor = new AnchorPane();
         anchor.setLayoutX(11.5);
@@ -405,32 +425,41 @@ public class BoardCtrl implements Initializable {
         return anchor;
     }
 
+    /**
+     * Creates a new hyperlink for a card
+     * @return the created hyperlink
+     */
     public Hyperlink newHyperlink(){
         Hyperlink card = new Hyperlink();
+
+        // set positioning, sizing, text alignment, and background color of the hyperlink
         card.setLayoutX(31);
         card.setLayoutY(0);
-        card.setPrefHeight(23);
-        card.setPrefWidth(95);
+        card.setPrefSize(95, 23);
         card.setAlignment(Pos.CENTER);
-
-        //need to set on click so can view card details!
-
         card.setStyle("-fx-background-color:  #E6E6FA");
-        card.setOnAction(this::cardDetail); // Set the triggering event name to be the same as card link buttons, you can find the name in the fxml file (onAction="#cardDetail")
+
+        // set the card to execute cardDetail on action
+        card.setOnAction(this::cardDetail);
         return card;
     }
 
+    /**
+     * Create a new delete card button for a card
+     * @return a new button
+     */
     public Button newDeleteCardButton(){
         Button button = new Button();
+
+        // set the text, positioning, mnemonic parsing, and style of the button
         button.setText("X");
         button.setLayoutX(0);
         button.setLayoutY(3);
         button.setMnemonicParsing(false);
-
-        // need to set on action so can delete card!
-
         button.setStyle("-fx-background-color: #f08080; -fx-font-size: 9.0");
-        button.setOnAction(this::deleteCard); //Set the triggering event name to be the same as card link buttons, you can find the name in the fxml file (onAction="#cardDetail")
+
+        // set the button to delete the card it is a part of when clicked
+        button.setOnAction(this::deleteCard);
         return button;
     }
 }
