@@ -32,6 +32,15 @@ public class CardController {
     }
 
     /**
+     * Method for retrieving all cards inside a list, sorted by their position inside the list
+     * @return all cards that are stored inside a list
+     */
+    @GetMapping("/{id}")
+    public List<Cards> getCardsByListId(@PathVariable("id") long id) {
+        return repo.findByListIdOrderByPositionInsideListAsc(id);
+    }
+
+    /**
      * Method for adding a card to the repo (can also be used for updating the cards)
      * @param card the card to be added to the repo
      * @return a 200 OK response for a successful http request
@@ -40,12 +49,25 @@ public class CardController {
     @Transactional
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Cards> addCard(@RequestBody Cards card){
-
         if(card == null || isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();
         }
 
-        repo.incrementListPosition(card.positionInsideList, card.list.id);
+        // if the instance exists in the repository, the client gets returned a bad request
+        if(repo.existsById(card.id))
+            return ResponseEntity.badRequest().build();
+
+        Integer maxPositionInsideList = repo.maxPositionInsideList(card.list.id);
+        if(maxPositionInsideList == null) {
+            // there are no Cards entities inside that List
+            maxPositionInsideList = -1;
+        }
+        if(card.positionInsideList > maxPositionInsideList + 1) {
+            // position sent by the client is invalid
+            return ResponseEntity.badRequest().build();
+        }
+
+        repo.incrementCardPosition(card.positionInsideList, card.list.id);
         Cards saved = repo.save(card);
 
         return ResponseEntity.ok(saved);
@@ -66,9 +88,11 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
 
-        repo.delete(card);
-
-        repo.decrementCardPosition(card.positionInsideList, card.list.id);
+        if(repo.existsById(card.id)) {
+            // only remove and decrement card positions if the entry with the provided id actually exists
+            repo.delete(card);
+            repo.decrementCardPosition(card.positionInsideList, card.list.id);
+        }
 
         return ResponseEntity.ok().build();
     }
