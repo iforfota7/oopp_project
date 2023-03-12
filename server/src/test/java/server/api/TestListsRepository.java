@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Cards;
 import commons.Lists;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Example;
@@ -20,6 +21,7 @@ import java.util.function.Function;
 public class TestListsRepository implements ListsRepository {
 
     public final List<Lists> lists = new ArrayList<>();
+    public final List<Cards> cards = new ArrayList<>();
     public final List<String> calledMethods = new ArrayList<>();
     private void call(String name) { calledMethods.add(name); }
 
@@ -32,10 +34,93 @@ public class TestListsRepository implements ListsRepository {
     @Override
     public void decrementListPositions(int deletedListPosition) {
 
+        call("decrementListPosition");
         for(int i=0; i<lists.size(); i++) {
 
-            if(i>deletedListPosition)
+            if(lists.get(i).positionInsideBoard>deletedListPosition)
                 lists.get(i).positionInsideBoard -= 1;
+        }
+    }
+
+    /**
+     * Custom update query that increases the position of lists inside the board after a list gets inserted
+     * E.g. If the list is inserted at position 3, all lists that had a position >= 3 will get their positions increased by 1
+     *
+     * @param positionInBoard The index of the deleted list
+     */
+    @Override
+    public void incrementListPosition(int positionInBoard) {
+
+        call("incrementListPosition");
+        for(int i=0; i<lists.size(); i++) {
+
+            if(lists.get(i).positionInsideBoard>=positionInBoard)
+                lists.get(i).positionInsideBoard += 1;
+        }
+    }
+
+    /**
+     * Gets the maximum value of the POSITION_INSIDE_BOARD among all Lists
+     *
+     * @return The maximum value or null in case the repository contains no Lists
+     */
+    @Override
+    public Integer maxPositionInsideBoard() {
+
+        call("maxPositionInsideBoard");
+        int max=Integer.MIN_VALUE;
+        for(int i=0; i<lists.size(); i++) {
+
+            if(lists.get(i).positionInsideBoard>max)
+                max=lists.get(i).positionInsideBoard;
+        }
+
+        return max;
+    }
+
+    /**
+     * Retrieves all Lists from the repository, ordered by their position inside board
+     * Note that this method does not need implementation and is handled by JPA since it adhered to the naming conventions
+     *
+     * @return A List containing all sorted Lists entries
+     */
+    @Override
+    public List<Lists> findAllByOrderByPositionInsideBoardAsc() {
+
+        call("findAllByOrderByPositionInsideBoardAsc");
+        List<Lists> res = new ArrayList<>();
+        for(int i=0; i<lists.size(); i++) {
+
+            res.add(lists.get(i));
+            //sort using insertion sort
+            for(int j=res.size()-1; j>0; j--) {
+
+                if(res.get(j).positionInsideBoard<res.get(j-1).positionInsideBoard) {
+
+                    Lists temp = res.get(j);
+                    res.set(j, res.get(j-1));
+                    res.set(j-1, temp);
+                }
+                else break;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Remove all cards that are inside a List
+     *
+     * @param listID ID of the list from where to remove the cards
+     */
+    @Override
+    public void removeCardsInsideList(long listID) {
+
+        call("removeCardsInsideList");
+        for(int i=0; i<cards.size(); i++) {
+
+            if(cards.get(i).list.id==listID) {
+                cards.remove(cards.get(i));
+            }
         }
     }
 
@@ -109,10 +194,7 @@ public class TestListsRepository implements ListsRepository {
     public void delete(Lists entity) {
 
         call("delete");
-        //change id?
-        //also idk if this null check is necessary, added it just in case
-        if(entity!=null && lists.contains(entity))
-            lists.remove(entity);
+        lists.remove(entity);
     }
 
     /**
@@ -157,7 +239,6 @@ public class TestListsRepository implements ListsRepository {
     @Override
     public <S extends Lists> S save(S entity) {
         call("save");
-        //entity.id = (long) lists.size();
         lists.add(entity);
         return entity;
     }
@@ -193,6 +274,13 @@ public class TestListsRepository implements ListsRepository {
      */
     @Override
     public boolean existsById(Long aLong) {
+
+        call("existsById");
+        for(int i=0; i<lists.size(); i++) {
+
+            if(lists.get(i).id==aLong)
+                return true;
+        }
         return false;
     }
 

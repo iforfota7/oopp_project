@@ -32,11 +32,12 @@ public class TestCardsRepository implements CardsRepository {
      * @param listID         the id of the list holding the card
      */
     @Override
-    public void decrementCardPosition(int positionInList, String listID) {
+    public void decrementCardPosition(int positionInList, long listID) {
 
+        call("decrementListPosition");
         for(int i=0; i<cards.size(); i++) {
             Cards card = cards.get(i);
-            if(card.list.id.equals(listID) && card.positionInsideList>positionInList) {
+            if(card.list.id==listID && card.positionInsideList>positionInList) {
                 card.positionInsideList-=1;
             }
         }
@@ -49,14 +50,69 @@ public class TestCardsRepository implements CardsRepository {
      * @param listID         the id of the list holding the card
      */
     @Override
-    public void incrementListPosition(int positionInList, String listID) {
+    public void incrementCardPosition(int positionInList, long listID) {
 
+        call("incrementListPosition");
         for(int i=0; i<cards.size(); i++) {
             Cards card = cards.get(i);
-            if(card.list.id.equals(listID) && card.positionInsideList>=positionInList) {
+            if(card.list.id==listID && card.positionInsideList>=positionInList) {
                 card.positionInsideList+=1;
             }
         }
+    }
+
+    /**
+     * Gets the maximum value of the POSITION_INSIDE_LIST among all cards inside
+     * a specific Lists entity
+     *
+     * @param listID The list id of the Lists entity that we search inside of
+     * @return The maximum value or null in case the repository contains no Cards
+     */
+    @Override
+    public Integer maxPositionInsideList(long listID) {
+
+        call("maxPositionInsideList");
+        int max=Integer.MIN_VALUE;
+        for(int i=0; i<cards.size(); i++) {
+            Cards card = cards.get(i);
+            if(card.list.id==listID && card.positionInsideList>max)
+                max=card.positionInsideList;
+        }
+        return max;
+    }
+
+    /**
+     * Retrieves all Cards from the repository that are inside a specific List, ordered by their position inside that List
+     * Note that this method does not need implementation and is handled by JPA since it adhered to the naming conventions
+     *
+     * @param id The id of the List from which we retrieve the Cards
+     * @return A List containing all sorted Lists entries
+     */
+    @Override
+    public List<Cards> findByListIdOrderByPositionInsideListAsc(long id) {
+
+        call("findByListIdOrderByPositionInsideListAsc");
+        List<Cards> res = new ArrayList<>();
+        for(int i=0; i<cards.size(); i++) {
+
+            Cards card = cards.get(i);
+            if(card.list.id==id) {
+
+                res.add(card);
+                //sort using insertion sort
+                for(int j=res.size()-1; j>0; j--) {
+
+                    if(res.get(j).positionInsideList<res.get(j-1).positionInsideList) {
+
+                        Cards temp = res.get(j);
+                        res.set(j, res.get(j-1));
+                        res.set(j-1, temp);
+                    }
+                    else break;
+                }
+            }
+        }
+        return res;
     }
 
     /**
@@ -129,9 +185,7 @@ public class TestCardsRepository implements CardsRepository {
     public void delete(Cards entity) {
 
         call("delete");
-        //change id?
-        if(entity!=null && cards.contains(entity))
-            cards.remove(entity);
+        cards.remove(entity);
     }
 
     /**
@@ -176,7 +230,6 @@ public class TestCardsRepository implements CardsRepository {
     @Override
     public <S extends Cards> S save(S entity) {
         call("save");
-        //entity.id = (long) cards.size();
         cards.add(entity);
         return entity;
     }
@@ -212,6 +265,13 @@ public class TestCardsRepository implements CardsRepository {
      */
     @Override
     public boolean existsById(Long aLong) {
+
+        call("existsById");
+        for(int i=0; i<cards.size(); i++) {
+            Cards card = cards.get(i);
+            if(card.id==aLong)
+                return true;
+        }
         return false;
     }
 
