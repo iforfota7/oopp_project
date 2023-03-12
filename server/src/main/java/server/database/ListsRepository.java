@@ -68,4 +68,15 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
      * @return A List containing all sorted Lists entries
      */
     List<Lists> findAllByOrderByPositionInsideBoardAsc();
+
+    /**
+     * Remove all cards that are inside a List
+     *
+     * @param listID ID of the list from where to remove the cards
+     */
+    @Modifying
+    @Query(value = "DELETE FROM CARDS " +
+            "WHERE LIST_ID = ?1",
+            nativeQuery = true)
+    void removeCardsInsideList(long listID);
 }

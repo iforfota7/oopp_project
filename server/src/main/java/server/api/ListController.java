@@ -78,6 +78,9 @@ public class ListController {
             return ResponseEntity.badRequest().build();
 
         if(repo.existsById(list.id)) {
+            //remove all cards inside this list
+            repo.removeCardsInsideList(list.id);
+
             // only remove and decrement list positions if the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
