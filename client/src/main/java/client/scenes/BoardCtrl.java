@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.lib.CollisionChecking;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -69,7 +70,6 @@ public class BoardCtrl implements Initializable {
         listCards.add(card3Container);
 
     }
-
 
     /**
      * This method allows the dragged card to be rendered above all the other nodes
@@ -333,14 +333,16 @@ public class BoardCtrl implements Initializable {
      * Delete Card function
      */
     @FXML
-    void deleteCard(ActionEvent event) {
+    public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
         ((AnchorPane)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
     }
 
     /**
      * open the Card Detail scene and modify all information about the card, including its name.....
+     *
      * @param event an button (Hyperlink)
+     * @return
      */
     @FXML
     void cardDetail(ActionEvent event) {
@@ -357,4 +359,56 @@ public class BoardCtrl implements Initializable {
         mainCtrl.closeCardDetails();
     }
 
+    public void addCardToList(ActionEvent event){
+        AnchorPane list = (AnchorPane) ((Button) event.getTarget()).getParent();
+        addNewCard(list);
+    }
+
+    public void addNewCard(AnchorPane anchor){
+        int count = 0;
+        for(Node i : anchor.getChildren()){
+            if(i.getClass().equals(AnchorPane.class)) count++;
+        }
+
+        AnchorPane newCard = newAnchorPane(count);
+        newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
+        anchor.getChildren().add(count + 3, newCard);
+
+        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        mainCtrl.showCardDetail(currentCard);
+    }
+
+    public AnchorPane newAnchorPane(int position){
+        AnchorPane anchor = new AnchorPane();
+        anchor.setLayoutX(11.5);
+        anchor.setLayoutY(25 + position*27);
+        return anchor;
+    }
+
+    public Hyperlink newHyperlink(){
+        Hyperlink card = new Hyperlink();
+        card.setLayoutX(31);
+        card.setLayoutY(0);
+        card.setPrefHeight(23);
+        card.setPrefWidth(95);
+        card.setAlignment(Pos.CENTER);
+
+        //need to set on click so can view card details!
+
+        card.setStyle("-fx-background-color:  #E6E6FA");
+        return card;
+    }
+
+    public Button newDeleteCardButton(){
+        Button button = new Button();
+        button.setText("X");
+        button.setLayoutX(0);
+        button.setLayoutY(3);
+        button.setMnemonicParsing(false);
+
+        // need to set on action so can delete card!
+
+        button.setStyle("-fx-background-color: #f08080; -fx-font-size: 9.0");
+        return button;
+    }
 }
