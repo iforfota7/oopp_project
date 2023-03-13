@@ -24,25 +24,29 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList,cardDetails;
+    private Scene board, renameList, deleteList,addList;
+
+    private RNListCtrl rnListCtrl;
+    private DEListCtrl deListCtrl;
+    private ADListCtrl addListCtrl;
 
     private int numberOfLists = 2;
 
-    public MainCtrl() {
-    }
-
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
-                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
-            ,Parent>cardDetails ) {
+                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
 
         this.renameList = new Scene(renameList.getValue());
-        this.deleteList = new Scene(deleteList.getValue());
-        this.addList = new Scene(addList.getValue());
+        this.rnListCtrl = renameList.getKey();
 
-        this.cardDetails = new Scene(cardDetails.getValue());
+        this.deleteList = new Scene(deleteList.getValue());
+        this.deListCtrl = deleteList.getKey();
+
+        this.addList = new Scene(addList.getValue());
+        this.addListCtrl = addList.getKey();
+
         showStart();
         primaryStage.show();
     }
@@ -61,9 +65,6 @@ public class MainCtrl {
         showStart();
     }
 
-    /**
-     * Show scene of Rename List
-     */
     public void showRenameList() {
         secondaryStage = new Stage();
         secondaryStage.setScene(renameList);
@@ -71,19 +72,13 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
-    /**
-     * Show scene of Delete List
-     */
     public void showDeleteList() {
         secondaryStage = new Stage();
-        secondaryStage.setScene(this.deleteList);
+        secondaryStage.setScene(deleteList);
         secondaryStage.setTitle("Delete List!");
         secondaryStage.show();
     }
 
-    /**
-     * Show scene of addList
-     */
     public void showAddList() {
         secondaryStage = new Stage();
         secondaryStage.setScene(addList);
@@ -135,17 +130,4 @@ public class MainCtrl {
 
     }
 
-    /**
-     * Show scene of cardDetails
-     */
-    public void showCardDetail() {
-        secondaryStage = new Stage();
-        secondaryStage.setScene(cardDetails);
-        secondaryStage.setTitle("Card Details");
-        secondaryStage.show();
-    }
-
-    public void closeCardDetails() {
-        secondaryStage.close();
-    }
 }
