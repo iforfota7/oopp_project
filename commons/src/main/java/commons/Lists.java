@@ -2,26 +2,25 @@ package commons;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Lists {
     @Id
-    public String name;
-
-    @OneToMany
-    public List<Cards> cards;
+    public String id;
+    public String title;
+    public int positionInsideBoard;
 
     /**
      * Constructor method for the lists class
-     * @param name the name of the list (acts as unique id)
-     * @param cards a list of cards contained in the list
+     * @param id the fxml id of the list (acts as unique id)
+     * @param title the name of the list
+     * @param positionInsideBoard the position of list inside the board
      */
-    public Lists(String name, List<Cards> cards) {
-        this.name = name;
-        this.cards = cards;
+    public Lists(String id, String title, int positionInsideBoard) {
+        this.id = id;
+        this.title = title;
+        this.positionInsideBoard = positionInsideBoard;
     }
 
     /**
@@ -40,7 +39,8 @@ public class Lists {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
-        return Objects.equals(name, lists.name) && Objects.equals(cards, lists.cards);
+        return positionInsideBoard == lists.positionInsideBoard &&
+                Objects.equals(id, lists.id) && Objects.equals(title, lists.title);
     }
 
     /**
@@ -49,18 +49,20 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, cards);
+        return Objects.hash(id, title, positionInsideBoard);
     }
 
     /**
      * To string method to return human-readable format
+     *
      * @return a string of the lists information
      */
     @Override
     public String toString() {
         return "Lists{" +
-                "name='" + name + '\'' +
-                ", cards=" + cards +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", positionInsideBoard=" + positionInsideBoard +
                 '}';
     }
 }

@@ -71,6 +71,7 @@ public class BoardCtrl implements Initializable {
         listCards = new ArrayList<>();
         listCards.add(card2Container);
         listCards.add(card3Container);
+
     }
 
 
