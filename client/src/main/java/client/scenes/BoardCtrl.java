@@ -46,6 +46,7 @@ public class BoardCtrl implements Initializable {
     private VBox vBoard;
     @FXML
     private HBox firstRow;
+    //private static HBox actualRow;
 
 
     List<AnchorPane> listContainers;
@@ -71,7 +72,7 @@ public class BoardCtrl implements Initializable {
         listCards = new ArrayList<>();
         listCards.add(card2Container);
         listCards.add(card3Container);
-
+        //actualRow = this.firstRow;
     }
 
 
@@ -221,7 +222,7 @@ public class BoardCtrl implements Initializable {
         mainCtrl.closeADList();
 
         VBox newList = createNewList(newListName);
-        mainCtrl.addNewList(newList);
+        mainCtrl.addNewList(newList, firstRow, vBoard);
     }
 
     /**
@@ -233,7 +234,14 @@ public class BoardCtrl implements Initializable {
         // creating the listView element
         VBox list = createListBody();
         VBox listUp = new VBox(7);
-        HBox listDown = new HBox(27);
+        HBox listDown = new HBox(30);
+
+        listUp.setMinSize(150, 230);
+        listDown.setMinSize(150, 30);
+        listUp.setAlignment(Pos.TOP_CENTER);
+        listDown.setAlignment(Pos.TOP_CENTER);
+        listDown.setStyle("-fx-padding: 0 7 0 7");
+
 
         // creating the adding card button, aligning and customising it
         Button addCardButton = createAddCardButton();
@@ -264,7 +272,7 @@ public class BoardCtrl implements Initializable {
         MenuButton refactorButtonList = new MenuButton();
         refactorButtonList.setText("Refactor List");
         refactorButtonList.setPrefWidth(75.2);
-        refactorButtonList.setPrefHeight(20);
+        refactorButtonList.setPrefHeight(22);
         refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
 
         MenuItem renameOption = new MenuItem();
@@ -289,6 +297,7 @@ public class BoardCtrl implements Initializable {
         Separator listSeparator = new Separator();
         listSeparator.setPrefWidth(150);
         listSeparator.setPrefHeight(4);
+        listSeparator.setStyle("-fx-padding: -10 0 0 0;");
         return listSeparator;
     }
 
@@ -314,7 +323,7 @@ public class BoardCtrl implements Initializable {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
-        listName.setStyle("-fx-font-size: 13px;");
+        listName.setStyle("-fx-font-size: 13px; -fx-content-display: CENTER; -fx-padding: 5 10 0 10;");
         listName.setAlignment(Pos.CENTER);
         return listName;
     }
@@ -327,6 +336,11 @@ public class BoardCtrl implements Initializable {
         VBox vbox = new VBox();
         vbox.setPrefWidth(150);
         vbox.setPrefHeight(260);
+        vbox.setStyle("-fx-background-color: #ffffff;");
         return vbox;
     }
+
+    /*public static void setNewRow(HBox newRow){
+        actualRow = newRow;
+    }*/
 }

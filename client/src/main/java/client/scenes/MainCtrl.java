@@ -110,19 +110,23 @@ public class MainCtrl {
         line.getChildren().add(list);
     }
 
-    public void addNewList(VBox list){
+    public void addNewList(VBox list, HBox actualRow, VBox vBoard){
         numberOfLists++;
         int positionOfTheList = numberOfLists % 4;
 
-        if(positionOfTheList == 0){
+        this.actualRow = actualRow;
+        this.vBoard = vBoard;
+
+        /*if(positionOfTheList == 0){
             HBox newHBox = new HBox(27, list);
             vBoard.getChildren().add(newHBox);
+            BoardCtrl.setNewRow(newHBox);
 
             addNewListToHBox(list, newHBox);
-            actualRow = newHBox;
+            this.actualRow = newHBox;
         }
-        else{
-            addNewListToHBox(list, actualRow);
-        }
+        else{*/
+            addNewListToHBox(list, this.actualRow);
+        //}
     }
 }
