@@ -19,6 +19,8 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -31,6 +33,8 @@ public class MainCtrl {
     private ADListCtrl addListCtrl;
 
     private int numberOfLists = 2;
+    private VBox vBoard;
+    private HBox actualRow;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
@@ -99,35 +103,26 @@ public class MainCtrl {
 
     /**
      * Adds a new list by calculating its coordinates of the board and adding it to the root's children
-     * @param a the list to be added
-     * @param root the root where to add the list
+     * @param list the list to be added
+     * @param line the root where to add the list
      */
-    public void addNewList(AnchorPane a, Group root){
+    public void addNewListToHBox(VBox list, HBox line){
+        line.getChildren().add(list);
+    }
+
+    public void addNewList(VBox list){
         numberOfLists++;
         int positionOfTheList = numberOfLists % 4;
 
-        int xLayout;
-        int yLayout;
+        if(positionOfTheList == 0){
+            HBox newHBox = new HBox(27, list);
+            vBoard.getChildren().add(newHBox);
 
-        if(positionOfTheList == 0) {
-            xLayout = 0;
-        }
-        else {
-            xLayout = (152  + 27) * (positionOfTheList);
-        }
-
-        if(numberOfLists < 4){
-            yLayout = 0;
+            addNewListToHBox(list, newHBox);
+            actualRow = newHBox;
         }
         else{
-            yLayout = 260 * (numberOfLists / 4) + 30 * (numberOfLists / 4);
+            addNewListToHBox(list, actualRow);
         }
-
-        a.setLayoutX(xLayout);
-        a.setLayoutY(yLayout);
-
-        root.getChildren().add(a);
-
     }
-
 }
