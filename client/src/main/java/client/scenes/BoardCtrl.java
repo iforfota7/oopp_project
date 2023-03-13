@@ -76,7 +76,6 @@ public class BoardCtrl implements Initializable {
      */
     public void dragDetected(MouseEvent mouseEvent) {
         mousePressedTime = System.currentTimeMillis();
-        mouseEvent.consume();
         card1Container.getParent().toFront();
         card1Container.toFront();
     }
