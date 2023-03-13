@@ -1,5 +1,6 @@
 package client.scenes;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -9,7 +10,7 @@ import javax.inject.Inject;
  * Change list name controller
  */
 public class RNListCtrl {
-    private final BoardCtrl boardCtrl;
+    private BoardCtrl boardCtrl;
 
     @Inject
     public RNListCtrl(BoardCtrl boardCtrl){
@@ -19,7 +20,7 @@ public class RNListCtrl {
     private TextField newName;
 
     @FXML
-    void saveNewName() {
+    void saveNewName(ActionEvent event) {
         var Name = newName.getText();
         boardCtrl.RNList(Name);
     }
