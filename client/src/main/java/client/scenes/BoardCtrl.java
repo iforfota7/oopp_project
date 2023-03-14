@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -14,13 +13,13 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.scene.input.MouseEvent;
 
 
-
 import javafx.event.ActionEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 
@@ -39,16 +38,20 @@ public class BoardCtrl implements Initializable {
     private AnchorPane list2Container;
     @FXML
     private AnchorPane list3Container;
+
     @FXML
-    private Group boardGroup;
+    private VBox vBoard;
     @FXML
+    private HBox firstRow;
+    //private static HBox actualRow;
+
 
     List<AnchorPane> listContainers;
     List<AnchorPane> listCards;
 
     private double originalX;
     private double originalY;
-    private AnchorPane currentList;
+    private VBox currentList;
     private Hyperlink currentCard;
     private long mousePressedTime;
     /**
@@ -76,6 +79,7 @@ public class BoardCtrl implements Initializable {
      */
     public void dragDetected(MouseEvent mouseEvent) {
         mousePressedTime = System.currentTimeMillis();
+        mouseEvent.consume();
         card1Container.getParent().toFront();
         card1Container.toFront();
     }
@@ -87,7 +91,6 @@ public class BoardCtrl implements Initializable {
      * @param mouseEvent an object containing information about the mouse event
      */
     public void mousePressed(MouseEvent mouseEvent) {
-
         originalX = mouseEvent.getX();
         originalY = mouseEvent.getY();
     }
@@ -179,7 +182,7 @@ public class BoardCtrl implements Initializable {
     void renameList(ActionEvent event) {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
-        this.currentList = (AnchorPane) popup.getOwnerNode().getParent();
+        this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showRenameList();
     }
     void RNList(String name) {
@@ -202,11 +205,11 @@ public class BoardCtrl implements Initializable {
     void deleteList(ActionEvent event) {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
-        this.currentList = (AnchorPane) popup.getOwnerNode().getParent();
+        this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showDeleteList();
     }
     void deleteL() {
-        ((AnchorPane)currentList.getParent()).getChildren().remove(currentList);
+        ((HBox)currentList.getParent()).getChildren().remove(currentList);
         mainCtrl.closeDEList();
     }
     void undeleteL() {
@@ -229,8 +232,8 @@ public class BoardCtrl implements Initializable {
         // closes the scene of adding a new list
         mainCtrl.closeADList();
 
-        AnchorPane newList = createNewList(newListName);
-        mainCtrl.addNewList(newList, boardGroup);
+        VBox newList = createNewList(newListName);
+        mainCtrl.addNewList(newList, firstRow, vBoard);
     }
 
     /**
@@ -238,27 +241,37 @@ public class BoardCtrl implements Initializable {
      * @param newListName the name of the new list to be created
      * @return and AnchorPane with the new list, aligned correspondingly
      */
-    public AnchorPane createNewList(String newListName){
+    public VBox createNewList(String newListName){
         // creating the listView element
-        ListView<Objects> listView = createListBody();
+        VBox list = createListBody();
+        VBox listUp = new VBox(7);
+        HBox listDown = new HBox(30);
 
-        // creating the Delete List button, aligning and customising it
-        MenuButton refactorButtonList = createRefactorButton();
+        listUp.setMinSize(150, 230);
+        listDown.setMinSize(150, 30);
+        listUp.setAlignment(Pos.TOP_CENTER);
+        listDown.setAlignment(Pos.TOP_CENTER);
+        listDown.setStyle("-fx-padding: 0 7 0 7");
 
-        // creating the separator under the title, aligning and customising it
-        Separator listSeparator = createSeparator();
 
         // creating the adding card button, aligning and customising it
         Button addCardButton = createAddCardButton();
 
+        // creating the Delete List button, aligning and customising it
+        MenuButton refactorButtonList = createRefactorButton();
+
+        listDown.getChildren().addAll(addCardButton, refactorButtonList);
+
+        // creating the separator under the title, aligning and customising it
+        Separator listSeparator = createSeparator();
+
         // creating the label for the name of the list, aligning and customising it
         Label listName = createListTitle(newListName);
 
-        // the anchor pane which contains the whole list
-        AnchorPane newList = new AnchorPane();
+        listUp.getChildren().addAll(listName, listSeparator);
 
-        newList.getChildren().addAll(listView, refactorButtonList, listSeparator, addCardButton, listName);
-        return newList;
+        list.getChildren().addAll(listUp, listDown);
+        return list;
     }
 
     /**
@@ -269,10 +282,8 @@ public class BoardCtrl implements Initializable {
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
         refactorButtonList.setText("Refactor List");
-        refactorButtonList.setLayoutX(66);
-        refactorButtonList.setLayoutY(230);
         refactorButtonList.setPrefWidth(75.2);
-        refactorButtonList.setPrefHeight(20);
+        refactorButtonList.setPrefHeight(22);
         refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
 
         MenuItem renameOption = new MenuItem();
@@ -295,10 +306,9 @@ public class BoardCtrl implements Initializable {
      */
     public Separator createSeparator(){
         Separator listSeparator = new Separator();
-        listSeparator.setLayoutX(1);
-        listSeparator.setLayoutY(19);
         listSeparator.setPrefWidth(150);
         listSeparator.setPrefHeight(4);
+        listSeparator.setStyle("-fx-padding: -10 0 0 0;");
         return listSeparator;
     }
 
@@ -311,8 +321,6 @@ public class BoardCtrl implements Initializable {
         addButton.setText("+");
         addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; " +
                 "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
-        addButton.setLayoutX(9);
-        addButton.setLayoutY(230);
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
         return addButton;
@@ -325,10 +333,8 @@ public class BoardCtrl implements Initializable {
      */
     public Label createListTitle(String newListName){
         Label listName = new Label();
-        listName.setLayoutX(56);
-        listName.setLayoutY(2);
         listName.setText(newListName);
-        listName.setStyle("-fx-font-size: 13px;");
+        listName.setStyle("-fx-font-size: 13px; -fx-content-display: CENTER; -fx-padding: 5 10 0 10;");
         listName.setAlignment(Pos.CENTER);
         return listName;
     }
@@ -337,128 +343,11 @@ public class BoardCtrl implements Initializable {
      * Creates the body of the list
      * @return a listView, which represents the body of the list, designed and aligned accordingly
      */
-    public ListView<Objects> createListBody(){
-        ListView<Objects> listView = new ListView<>();
-        listView.setPrefWidth(150);
-        listView.setPrefHeight(260);
-        return listView;
-    }
-    /**
-     * Delete Card function
-     */
-    @FXML
-    public void deleteCard(ActionEvent event) {
-        Button deleteCard = (Button) event.getTarget();
-        ((AnchorPane)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
-    }
-
-    /**
-     * open the Card Detail scene and modify all information about the card, including its name.....
-     * In order to prevent it from opening while dragging, the code here sets a time delay between pressing and releasing the left mouse button.
-     * If the time delay is greater than a certain value, the click option will not be triggered, so the cardDetail won't open during dragging.
-     *
-     * @param event an button (Hyperlink)
-     */
-    @FXML
-    void cardDetail(ActionEvent event) {
-        long mouseReleasedTime = System.currentTimeMillis();
-        long mouseDuration = mouseReleasedTime - mousePressedTime;
-        if(mouseDuration >= 2000) {
-            this.currentCard = (Hyperlink) event.getTarget();
-            mainCtrl.showCardDetail();
-        }
-    }
-
-    /**
-     * Save new card details to board scene
-     * When the function returns from mainCtrl, it will update the card name displayed on the board and refresh the pointer to currentCard.
-     */
-    void RefreshCard(String text) {
-        this.currentCard.setText(text);
-        mainCtrl.closeCardDetails();
-    }
-
-    /**
-     * Makes a call to add a new card to a specified anchor pane (list)
-     * @param event the press of the plus button in a list
-     */
-    public void addCardToList(ActionEvent event){
-        AnchorPane list = (AnchorPane) ((Button) event.getTarget()).getParent();
-        addNewCard(list);
-    }
-
-    /**
-     * Adds a new card to a specified anchor pane (list)
-     * @param anchor list to which a card should be appended
-     */
-    public void addNewCard(AnchorPane anchor){
-        // count the number of cards currently in the list
-        int count = 0;
-        for(Node i : anchor.getChildren()){
-            if(i.getClass().equals(AnchorPane.class)) count++;
-        }
-
-        // create a new anchor pane for the card
-        AnchorPane newCard = newAnchorPane(count);
-
-        // add text and the delete button for the card
-        newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
-
-        // append the card to the list
-        anchor.getChildren().add(count + 3, newCard);
-
-        // show card detail scene to be able to set details of card
-        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
-        mainCtrl.showCardDetail();
-    }
-
-    /**
-     * Creates an empty anchor pane for a card
-     * @param position the index of the card in the list (starts at zero)
-     * @return the created anchor pane
-     */
-    public AnchorPane newAnchorPane(int position){
-        AnchorPane anchor = new AnchorPane();
-        anchor.setLayoutX(11.5);
-        anchor.setLayoutY(25 + position*27);
-        return anchor;
-    }
-
-    /**
-     * Creates a new hyperlink for a card
-     * @return the created hyperlink
-     */
-    public Hyperlink newHyperlink(){
-        Hyperlink card = new Hyperlink();
-
-        // set positioning, sizing, text alignment, and background color of the hyperlink
-        card.setLayoutX(31);
-        card.setLayoutY(0);
-        card.setPrefSize(95, 23);
-        card.setAlignment(Pos.CENTER);
-        card.setStyle("-fx-background-color:  #E6E6FA");
-
-        // set the card to execute cardDetail on action
-        card.setOnAction(this::cardDetail);
-        return card;
-    }
-
-    /**
-     * Create a new delete card button for a card
-     * @return a new button
-     */
-    public Button newDeleteCardButton(){
-        Button button = new Button();
-
-        // set the text, positioning, mnemonic parsing, and style of the button
-        button.setText("X");
-        button.setLayoutX(0);
-        button.setLayoutY(3);
-        button.setMnemonicParsing(false);
-        button.setStyle("-fx-background-color: #f08080; -fx-font-size: 9.0");
-
-        // set the button to delete the card it is a part of when clicked
-        button.setOnAction(this::deleteCard);
-        return button;
+    public VBox createListBody(){
+        VBox vbox = new VBox();
+        vbox.setPrefWidth(150);
+        vbox.setPrefHeight(260);
+        vbox.setStyle("-fx-background-color: #ffffff;");
+        return vbox;
     }
 }

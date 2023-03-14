@@ -1,5 +1,6 @@
 package client.scenes;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.TextField;
@@ -19,11 +20,14 @@ public class ADListCtrl {
     @FXML
     private TextField newListName;
 
+    @FXML
+    private TextField newListOrder;
+
     /**
      * the initialization and customization of the List display name is only achieved through creating a new window.
      */
     @FXML
-    void saveNewList() {
+    void saveNewList(ActionEvent event) {
         boardCtrl.addNewList(newListName.getText());
     }
 

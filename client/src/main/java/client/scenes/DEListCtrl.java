@@ -1,5 +1,6 @@
 package client.scenes;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javax.inject.Inject;
@@ -9,24 +10,19 @@ import javax.inject.Inject;
  */
 public class DEListCtrl {
 
-    private final BoardCtrl boardCtrl;
+    private BoardCtrl boardCtrl;
 
-    /**
-     * Implement the prompt window when deleting a list,
-     * allowing the user to choose between deleting or canceling, and complete the corresponding functionality.
-     * @param boardCtrl boardCtrl
-     */
     @Inject
     public DEListCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
     }
     @FXML
-    void deleteList() {
+    void deleteList(ActionEvent event) {
         boardCtrl.deleteL();
     }
 
     @FXML
-    void undeleteList() {
+    void undeleteList(ActionEvent event) {
         boardCtrl.undeleteL();
     }
 
