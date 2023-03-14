@@ -1,5 +1,7 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -11,6 +13,8 @@ public class Cards {
     public long id;
     public String title;
     public int positionInsideList;
+
+    @JsonBackReference
     @ManyToOne
     public Lists list;
 

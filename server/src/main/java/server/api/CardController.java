@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -20,24 +19,6 @@ public class CardController {
      */
     public CardController(CardsRepository repo) {
         this.repo = repo;
-    }
-
-    /**
-     * Method for retrieving all cards in the repo
-     * @return all cards that are stored in repo
-     */
-    @GetMapping(path = {"", "/"})
-    public List<Cards> getAllCards(){
-        return repo.findAll();
-    }
-
-    /**
-     * Method for retrieving all cards inside a list, sorted by their position inside the list
-     * @return all cards that are stored inside a list
-     */
-    @GetMapping("/{id}")
-    public List<Cards> getCardsByListId(@PathVariable("id") long id) {
-        return repo.findByListIdOrderByPositionInsideListAsc(id);
     }
 
     /**

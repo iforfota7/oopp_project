@@ -1,10 +1,11 @@
 package commons;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 public class Lists {
@@ -13,6 +14,10 @@ public class Lists {
     public long id;
     public String title;
     public int positionInsideBoard;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
+    @OrderBy("positionInsideList ASC")
+    public List<Cards> cards;
 
     /**
      * Constructor method for the lists class
