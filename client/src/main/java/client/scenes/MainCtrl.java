@@ -31,8 +31,6 @@ public class MainCtrl {
     private ADListCtrl addListCtrl;
 
     private int numberOfLists = 2;
-    private VBox vBoard;
-    private HBox actualRow;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
@@ -100,31 +98,12 @@ public class MainCtrl {
     }
 
     /**
-     * Adds a new list by calculating its coordinates of the board and adding it to the root's children
-     * @param list the list to be added
-     * @param line the root where to add the list
+     * Adds a new list to the board
+     * @param list the list to be added to the board
+     * @param row the hbox to which the list should be added (the row)
      */
-    public void addNewListToHBox(VBox list, HBox line){
-        line.getChildren().add(list);
-    }
-
-    public void addNewList(VBox list, HBox actualRow, VBox vBoard){
+    public void addNewList(VBox list, HBox row){
         numberOfLists++;
-        int positionOfTheList = numberOfLists % 4;
-
-        this.actualRow = actualRow;
-        this.vBoard = vBoard;
-
-        /*if(positionOfTheList == 0){
-            HBox newHBox = new HBox(27, list);
-            vBoard.getChildren().add(newHBox);
-            BoardCtrl.setNewRow(newHBox);
-
-            addNewListToHBox(list, newHBox);
-            this.actualRow = newHBox;
-        }
-        else{*/
-            addNewListToHBox(list, this.actualRow);
-        //}
+        row.getChildren().add(list);
     }
 }

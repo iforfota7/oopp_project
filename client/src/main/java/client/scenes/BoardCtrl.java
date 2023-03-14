@@ -233,25 +233,25 @@ public class BoardCtrl implements Initializable {
         mainCtrl.closeADList();
 
         VBox newList = createNewList(newListName);
-        mainCtrl.addNewList(newList, firstRow, vBoard);
+        mainCtrl.addNewList(newList, firstRow);
     }
 
     /**
      * Creates a new list with all its elements
      * @param newListName the name of the new list to be created
-     * @return and AnchorPane with the new list, aligned correspondingly
+     * @return and VBox with the new list, aligned correspondingly
      */
     public VBox createNewList(String newListName){
         // creating the listView element
         VBox list = createListBody();
-        VBox listUp = new VBox(7);
-        HBox listDown = new HBox(30);
+        VBox headerList = new VBox(7);
+        HBox footerList = new HBox(30);
 
-        listUp.setMinSize(150, 230);
-        listDown.setMinSize(150, 30);
-        listUp.setAlignment(Pos.TOP_CENTER);
-        listDown.setAlignment(Pos.TOP_CENTER);
-        listDown.setStyle("-fx-padding: 0 7 0 7");
+        headerList.setMinSize(150, 235);
+        footerList.setMinSize(150, 25);
+        headerList.setAlignment(Pos.TOP_CENTER);
+        footerList.setAlignment(Pos.TOP_CENTER);
+        footerList.setStyle("-fx-padding: 0 7 0 7");
 
 
         // creating the adding card button, aligning and customising it
@@ -260,7 +260,7 @@ public class BoardCtrl implements Initializable {
         // creating the Delete List button, aligning and customising it
         MenuButton refactorButtonList = createRefactorButton();
 
-        listDown.getChildren().addAll(addCardButton, refactorButtonList);
+        footerList.getChildren().addAll(addCardButton, refactorButtonList);
 
         // creating the separator under the title, aligning and customising it
         Separator listSeparator = createSeparator();
@@ -268,16 +268,16 @@ public class BoardCtrl implements Initializable {
         // creating the label for the name of the list, aligning and customising it
         Label listName = createListTitle(newListName);
 
-        listUp.getChildren().addAll(listName, listSeparator);
+        headerList.getChildren().addAll(listName, listSeparator);
 
-        list.getChildren().addAll(listUp, listDown);
+        list.getChildren().addAll(headerList, footerList);
         return list;
     }
 
     /**
      * Creates a new button on the list, which when pressed, shows a menu of two options: renaming or
      * deleting the list;
-     * @return a button to refactor a list, aligned correspondingly
+     * @return a button to refactor a list
      */
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
@@ -314,7 +314,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Creates a button which when pressed, creates a new card in the list
-     * @return a button to create a new card, aligned correspondingly
+     * @return a button to create a new card, properly customised
      */
     public Button createAddCardButton(){
         Button addButton = new Button();
@@ -329,7 +329,7 @@ public class BoardCtrl implements Initializable {
     /**
      * Creates a label which shows the list's title
      * @param newListName the name the list should have
-     * @return a label with the name of the list, aligned correspondingly
+     * @return a Label with the name of the list
      */
     public Label createListTitle(String newListName){
         Label listName = new Label();
@@ -341,7 +341,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Creates the body of the list
-     * @return a listView, which represents the body of the list, designed and aligned accordingly
+     * @return a Vbox, which represents the body of the list, designed accordingly
      */
     public VBox createListBody(){
         VBox vbox = new VBox();
