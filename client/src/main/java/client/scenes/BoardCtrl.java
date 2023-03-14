@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -39,10 +38,7 @@ public class BoardCtrl implements Initializable {
     private AnchorPane list2Container;
     @FXML
     private AnchorPane list3Container;
-    @FXML
-    private Group boardGroup;
-    @FXML
-    private Label listName1;
+
     @FXML
     private VBox vBoard;
     @FXML
@@ -354,8 +350,4 @@ public class BoardCtrl implements Initializable {
         vbox.setStyle("-fx-background-color: #ffffff;");
         return vbox;
     }
-
-    /*public static void setNewRow(HBox newRow){
-        actualRow = newRow;
-    }*/
 }
