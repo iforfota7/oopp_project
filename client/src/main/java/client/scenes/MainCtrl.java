@@ -24,7 +24,7 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList,cardDetails;
+    private Scene board, renameList, deleteList, addList, cardDetails;
 
     private int numberOfLists = 2;
 
@@ -32,8 +32,8 @@ public class MainCtrl {
     }
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
-                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
-            ,Parent>cardDetails ) {
+                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
+                            ,Parent>cardDetails) {
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
@@ -145,7 +145,11 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * close scene of cardDetails
+     */
     public void closeCardDetails() {
         secondaryStage.close();
     }
+
 }

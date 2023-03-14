@@ -1,70 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.MotionBlur?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="330.0" prefWidth="500.0" style="-fx-background-color: #7FFFD4;"
-            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.scenes.CardDetailsCtrl">
-   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="29.0" layoutY="24.0" nodeOrientation="LEFT_TO_RIGHT"
-              prefHeight="28.0" prefWidth="200.0" promptText="Card Title">
+<AnchorPane prefHeight="330.0" prefWidth="500.0" style="-fx-background-color: #7FFFD4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
+   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="150.0" layoutY="135.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="200.0" promptText="Input newCard Title">
       <font>
-         <Font name="Avenir Book" size="13.0"/>
+         <Font name="Avenir Book" size="13.0" />
       </font>
    </TextField>
-   <TextArea fx:id="descriptionInput" layoutX="261.0" layoutY="49.0" prefHeight="200.0" prefWidth="200.0"
-             promptText="Description">
-      <cursor>
-         <Cursor fx:constant="NONE"/>
-      </cursor>
-      <font>
-         <Font size="15.0"/>
-      </font>
-      <effect>
-         <MotionBlur radius="0.0"/>
-      </effect>
-   </TextArea>
-   <Accordion layoutX="85.0" layoutY="149.0"/>
-   <AnchorPane blendMode="SRC_ATOP" layoutX="29.0" layoutY="149.0" prefHeight="147.0" prefWidth="200.0"
-               style="-fx-background-color: #f8f8ff;">
-      <CheckBox fx:id="taskOneInput" layoutX="14.0" layoutY="38.0" mnemonicParsing="false" prefHeight="18.0"
-                prefWidth="150.0" text="Task 1"/>
-      <Label layoutX="65.0" layoutY="5.0" text="Task List">
+   <Accordion layoutX="85.0" layoutY="149.0" />
+   <AnchorPane blendMode="SRC_ATOP" layoutX="29.0" layoutY="149.0" prefHeight="147.0" prefWidth="200.0" style="-fx-background-color: #f8f8ff;" visible="false">
+      <CheckBox fx:id="taskOneInput" disable="true" layoutX="14.0" layoutY="38.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="150.0" text="Task 1" />
+      <Label disable="true" layoutX="65.0" layoutY="5.0" text="Task List">
          <font>
-            <Font name="System Bold Italic" size="15.0"/>
+            <Font name="System Bold Italic" size="15.0" />
          </font>
       </Label>
-      <CheckBox fx:id="taskTwoInput" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" prefHeight="18.0"
-                prefWidth="150.0" text="Task 2"/>
-      <CheckBox fx:id="taskThreeInput" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" prefHeight="18.0"
-                prefWidth="150.0" text="Task 3"/>
-      <Button fx:id="taskOneDelete" contentDisplay="BOTTOM" layoutX="164.0" layoutY="40.0" mnemonicParsing="false"
-              prefHeight="12.0" prefWidth="10.0" style="-fx-background-color: #ffb6c1;" text="X">
+      <Button fx:id="taskOneDelete" contentDisplay="BOTTOM" disable="true" layoutX="164.0" layoutY="40.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="10.0" style="-fx-background-color: #ffb6c1;" text="X">
          <font>
-            <Font size="8.0"/>
-         </font>
-      </Button>
-      <Button fx:id="taskTwoDelete" contentDisplay="BOTTOM" layoutX="164.0" layoutY="58.0" mnemonicParsing="false"
-              prefHeight="12.0" prefWidth="10.0" style="-fx-background-color: #ffb6c1;" text="X">
-         <font>
-            <Font size="8.0"/>
-         </font>
-      </Button>
-      <Button fx:id="taskThreeDelete" contentDisplay="BOTTOM" layoutX="164.0" layoutY="76.0" mnemonicParsing="false"
-              prefHeight="12.0" prefWidth="10.0" style="-fx-background-color: #ffb6c1;" text="X">
-         <font>
-            <Font size="8.0"/>
+            <Font size="8.0" />
          </font>
       </Button>
    </AnchorPane>
-   <TextArea fx:id="tagsInput" layoutX="29.0" layoutY="76.0" prefHeight="52.0" prefWidth="200.0" promptText="Tags"/>
-   <Button fx:id="saveDetails" layoutX="406.0" layoutY="284.0" mnemonicParsing="false" onAction="#save" text="Save"/>
+   <Button fx:id="saveDetails" layoutX="406.0" layoutY="284.0" mnemonicParsing="false" onAction="#save" text="Save" />
+   <Label layoutX="173.0" layoutY="74.0" text="Input newCard Title">
+      <font>
+         <Font name="Hiragino Sans GB W3" size="16.0" />
+      </font>
+   </Label>
 </AnchorPane>
