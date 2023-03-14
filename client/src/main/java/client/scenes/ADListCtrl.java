@@ -11,7 +11,6 @@ import javax.inject.Inject;
  */
 public class ADListCtrl {
     private final BoardCtrl boardCtrl;
-    public TextField newListOrder;
 
     @Inject
     public ADListCtrl(BoardCtrl boardCtrl){

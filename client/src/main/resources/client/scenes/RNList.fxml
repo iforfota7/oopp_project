@@ -7,18 +7,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="200.0" prefWidth="250.0" style="-fx-background-color: #F0FFFF;"
-            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.scenes.RNListCtrl">
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RNListCtrl">
    <effect>
-      <DropShadow/>
+      <DropShadow />
    </effect>
-   <TextField fx:id="newName" layoutX="45.0" layoutY="87.0"/>
-   <Button fx:id="saveName" layoutX="177.0" layoutY="155.0" mnemonicParsing="false" onAction="#saveNewName"
-           style="-fx-background-color: #FFFFCC;" text="Save"/>
-   <Label layoutX="63.0" layoutY="29.0" text="Input New Name">
+   <TextField fx:id="newName" layoutX="39.0" layoutY="87.0" />
+   <Button fx:id="saveName" layoutX="212.0" layoutY="87.0" mnemonicParsing="false" onAction="#saveNewName" style="-fx-background-color: #FFFFCC;" text="Save" />
+   <Label layoutX="89.0" layoutY="29.0" text="Input New Name">
       <font>
-         <Font name="Avenir Book" size="16.0"/>
+         <Font name="Avenir Book" size="16.0" />
       </font>
    </Label>
 </AnchorPane>

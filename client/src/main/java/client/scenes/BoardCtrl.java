@@ -363,7 +363,7 @@ public class BoardCtrl implements Initializable {
     void cardDetail(ActionEvent event) {
         long mouseReleasedTime = System.currentTimeMillis();
         long mouseDuration = mouseReleasedTime - mousePressedTime;
-        if(mouseDuration >= 2000) {
+        if(mouseDuration <= 2000) {
             this.currentCard = (Hyperlink) event.getTarget();
             mainCtrl.showCardDetail();
         }
