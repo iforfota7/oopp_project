@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.lib.CollisionChecking;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -24,7 +25,7 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
-    private MainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     @FXML
     private AnchorPane card1Container;
@@ -54,8 +55,9 @@ public class BoardCtrl implements Initializable {
 
     private double originalX;
     private double originalY;
-
-
+    private VBox currentList;
+    private Hyperlink currentCard;
+    private long mousePressedTime;
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
@@ -72,15 +74,16 @@ public class BoardCtrl implements Initializable {
         listCards = new ArrayList<>();
         listCards.add(card2Container);
         listCards.add(card3Container);
-        //actualRow = this.firstRow;
-    }
 
+    }
 
     /**
      * This method allows the dragged card to be rendered above all the other nodes
      * @param mouseEvent an object containing information about the mouse event
      */
     public void dragDetected(MouseEvent mouseEvent) {
+        mousePressedTime = System.currentTimeMillis();
+        mouseEvent.consume();
         card1Container.getParent().toFront();
         card1Container.toFront();
     }
@@ -105,6 +108,7 @@ public class BoardCtrl implements Initializable {
      */
 
     public void mouseDragged(MouseEvent mouseEvent) {
+        mouseEvent.consume();
         card1Container.setLayoutX(card1Container.getLayoutX() + mouseEvent.getX() - originalX);
         card1Container.setLayoutY(card1Container.getLayoutY() + mouseEvent.getY() - originalY);
     }
@@ -180,10 +184,20 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void renameList(ActionEvent event) {
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showRenameList();
     }
     void RNList(String name) {
-        listName1.setText(name);
+            ObservableList<Node> children = currentList.getChildren();
+            for (Node node : children) {
+                if (node instanceof Label ) {
+                    Label label = (Label) node;
+                    label.setText(name);
+                    break;
+                }
+            }
         mainCtrl.closeRNList();
     }
 
@@ -193,11 +207,13 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void deleteList(ActionEvent event) {
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showDeleteList();
     }
     void deleteL() {
-
-        list1Container.setVisible(false);
+        ((HBox)currentList.getParent()).getChildren().remove(currentList);
         mainCtrl.closeDEList();
     }
     void undeleteL() {
@@ -205,11 +221,10 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     *Trigger function for adding a List with a button
-     * @param event List add process
+     *Trigger function for adding a List with a button //ActionEvent event
      */
     @FXML
-    void addList(ActionEvent event) {
+    void addList(){
         mainCtrl.showAddList();
     }
 
