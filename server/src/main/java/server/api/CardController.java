@@ -84,7 +84,7 @@ public class CardController {
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Cards> removeCard(@RequestBody Cards card){
 
-        if(card==null || isNullOrEmpty(card.title) || card.positionInsideList<0){
+        if(card==null){
             return ResponseEntity.badRequest().build();
         }
 
@@ -92,6 +92,9 @@ public class CardController {
             // only remove and decrement card positions if the entry with the provided id actually exists
             repo.delete(card);
             repo.decrementCardPosition(card.positionInsideList, card.list.id);
+        }
+        else {
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok().build();

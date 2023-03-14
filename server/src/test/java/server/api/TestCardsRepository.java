@@ -72,12 +72,13 @@ public class TestCardsRepository implements CardsRepository {
     public Integer maxPositionInsideList(long listID) {
 
         call("maxPositionInsideList");
-        int max=Integer.MIN_VALUE;
+        int max=-1;
         for(int i=0; i<cards.size(); i++) {
             Cards card = cards.get(i);
             if(card.list.id==listID && card.positionInsideList>max)
                 max=card.positionInsideList;
         }
+
         return max;
     }
 

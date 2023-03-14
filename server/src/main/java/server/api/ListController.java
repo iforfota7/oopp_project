@@ -38,7 +38,7 @@ public class ListController {
     @Transactional
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
-        if(isNullOrEmpty(list.title) || list.positionInsideBoard<0)
+        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 
         // if the instance exists in the repository, the client gets returned a bad request
@@ -74,7 +74,7 @@ public class ListController {
     @Transactional
     @PostMapping(path={"/remove", "/remove/"})
     public ResponseEntity<Lists> removeList(@RequestBody Lists list) {
-        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard < 0)
+        if(list == null)
             return ResponseEntity.badRequest().build();
 
         if(repo.existsById(list.id)) {
@@ -85,6 +85,10 @@ public class ListController {
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
         }
+        else {
+            return ResponseEntity.badRequest().build();
+        }
+
         return ResponseEntity.ok().build();
     }
 

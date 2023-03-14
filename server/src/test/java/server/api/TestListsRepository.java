@@ -52,6 +52,7 @@ public class TestListsRepository implements ListsRepository {
     public void incrementListPosition(int positionInBoard) {
 
         call("incrementListPosition");
+
         for(int i=0; i<lists.size(); i++) {
 
             if(lists.get(i).positionInsideBoard>=positionInBoard)
@@ -68,7 +69,7 @@ public class TestListsRepository implements ListsRepository {
     public Integer maxPositionInsideBoard() {
 
         call("maxPositionInsideBoard");
-        int max=Integer.MIN_VALUE;
+        int max=-1;
         for(int i=0; i<lists.size(); i++) {
 
             if(lists.get(i).positionInsideBoard>max)
