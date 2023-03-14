@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<<<<<<< HEAD
 <AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RNListCtrl">
    <effect>
       <DropShadow />
@@ -19,19 +18,4 @@
          <Font name="Avenir Book" size="16.0" />
       </font>
    </Label>
-=======
-<AnchorPane prefHeight="200.0" prefWidth="250.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RNListCtrl">
-   <effect>
-      <DropShadow />
-   </effect>
-   <children>
-      <TextField fx:id="newName" layoutX="45.0" layoutY="87.0" />
-      <Button fx:id="saveName" layoutX="177.0" layoutY="155.0" mnemonicParsing="false" onAction="#saveNewName" style="-fx-background-color: #FFFFCC;" text="Save" />
-      <Label layoutX="63.0" layoutY="29.0" text="Input New Name">
-         <font>
-            <Font name="Avenir Book" size="16.0" />
-         </font>
-      </Label>
-   </children>
->>>>>>> 88cfe6b716b0809e7b79882121b68cc6a52e972e
 </AnchorPane>

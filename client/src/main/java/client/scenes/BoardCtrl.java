@@ -114,7 +114,7 @@ public class BoardCtrl implements Initializable {
      */
     public void mouseReleased() {
 
-        // bound1 is the boundaries of card1Container
+        /// bound1 is the boundaries of card1Container
         Bounds bound1 = card1Container.localToScene(card1Container.getBoundsInLocal());
 
         // check for potential drop targets
@@ -186,14 +186,14 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showRenameList();
     }
     void RNList(String name) {
-            ObservableList<Node> children = currentList.getChildren();
-            for (Node node : children) {
-                if (node instanceof Label ) {
-                    Label label = (Label) node;
-                    label.setText(name);
-                    break;
-                }
+        ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
+        for (Node node : children) {
+            if (node instanceof Label ) {
+                Label label = (Label) node;
+                label.setText(name);
+                break;
             }
+        }
         mainCtrl.closeRNList();
     }
 
@@ -323,6 +323,7 @@ public class BoardCtrl implements Initializable {
                 "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
+        addButton.setOnAction(this::addCardToList);
         return addButton;
     }
 
@@ -349,5 +350,123 @@ public class BoardCtrl implements Initializable {
         vbox.setPrefHeight(260);
         vbox.setStyle("-fx-background-color: #ffffff;");
         return vbox;
+    }
+
+    /**
+     * Delete Card function
+     */
+    @FXML
+    public void deleteCard(ActionEvent event) {
+        Button deleteCard = (Button) event.getTarget();
+        ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
+    }
+
+    /**
+     * open the Card Detail scene and modify all information about the card, including its name.....
+     * In order to prevent it from opening while dragging, the code here sets a time delay between pressing and releasing the left mouse button.
+     * If the time delay is greater than a certain value, the click option will not be triggered, so the cardDetail won't open during dragging.
+     *
+     * @param event an button (Hyperlink)
+     */
+    @FXML
+    void cardDetail(ActionEvent event) {
+        long mouseReleasedTime = System.currentTimeMillis();
+        long mouseDuration = mouseReleasedTime - mousePressedTime;
+        if(mouseDuration >= 2000) {
+            this.currentCard = (Hyperlink) event.getTarget();
+            mainCtrl.showCardDetail();
+        }
+    }
+
+    /**
+     * Save new card details to board scene
+     * When the function returns from mainCtrl, it will update the card name displayed on the board and refresh the pointer to currentCard.
+     */
+    void RefreshCard(String text) {
+        this.currentCard.setText(text);
+        mainCtrl.closeCardDetails();
+    }
+
+    /**
+     * Makes a call to add a new card to a specified anchor pane (list)
+     * @param event the press of the plus button in a list
+     */
+    public void addCardToList(ActionEvent event){
+        VBox list = ((VBox) ((VBox)((Button) event.getTarget()).getParent().getParent()).getChildren().get(0));
+        addNewCard(list);
+    }
+
+    /**
+     * Adds a new card to a specified anchor pane (list)
+     * @param anchor list to which a card should be appended
+     */
+    public void addNewCard(VBox anchor){
+        // count the number of cards currently in the list
+        int count = 0;
+        for(Node i : anchor.getChildren()){
+            if(i.getClass().equals(AnchorPane.class)) count++;
+        }
+
+        // create a new anchor pane for the card
+        AnchorPane newCard = newAnchorPane();
+
+        // add text and the delete button for the card
+        newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
+
+        // append the card to the list
+        anchor.getChildren().add(count + 2, newCard);
+
+        // show card detail scene to be able to set details of card
+        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        mainCtrl.showCardDetail();
+    }
+
+    /**
+     * Creates an empty anchor pane for a card
+     * @return the created anchor pane
+     */
+    public AnchorPane newAnchorPane(){
+        AnchorPane anchor = new AnchorPane();
+        anchor.setLayoutX(0);
+        anchor.setLayoutY(0);
+        return anchor;
+    }
+
+    /**
+     * Creates a new hyperlink for a card
+     * @return the created hyperlink
+     */
+    public Hyperlink newHyperlink(){
+        Hyperlink card = new Hyperlink();
+
+        // set positioning, sizing, text alignment, and background color of the hyperlink
+        card.setLayoutX(41);
+        card.setLayoutY(1);
+        card.setPrefSize(95, 23);
+        card.setAlignment(Pos.CENTER);
+        card.setStyle("-fx-background-color:  #E6E6FA");
+
+        // set the card to execute cardDetail on action
+        card.setOnAction(this::cardDetail);
+        return card;
+    }
+
+    /**
+     * Create a new delete card button for a card
+     * @return a new button
+     */
+    public Button newDeleteCardButton(){
+        Button button = new Button();
+
+        // set the text, positioning, mnemonic parsing, and style of the button
+        button.setText("X");
+        button.setLayoutX(11);
+        button.setLayoutY(3);
+        button.setMnemonicParsing(false);
+        button.setStyle("-fx-background-color: #f08080; -fx-font-size: 9.0");
+
+        // set the button to delete the card it is a part of when clicked
+        button.setOnAction(this::deleteCard);
+        return button;
     }
 }
