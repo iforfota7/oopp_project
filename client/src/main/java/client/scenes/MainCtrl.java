@@ -15,34 +15,49 @@
  */
 package client.scenes;
 
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
+<<<<<<< HEAD
     private Scene board, renameList, deleteList, addList, cardDetails;
+=======
+    private Scene board, renameList, deleteList,addList;
+
+    private RNListCtrl rnListCtrl;
+    private DEListCtrl deListCtrl;
+    private ADListCtrl addListCtrl;
+>>>>>>> 88cfe6b716b0809e7b79882121b68cc6a52e972e
 
     private int numberOfLists = 2;
-
-    public MainCtrl() {
-    }
+    private VBox vBoard;
+    private HBox actualRow;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
+<<<<<<< HEAD
                             Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
                             ,Parent>cardDetails) {
+=======
+                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
+>>>>>>> 88cfe6b716b0809e7b79882121b68cc6a52e972e
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
 
         this.renameList = new Scene(renameList.getValue());
-        this.deleteList = new Scene(deleteList.getValue());
-        this.addList = new Scene(addList.getValue());
+        this.rnListCtrl = renameList.getKey();
 
-        this.cardDetails = new Scene(cardDetails.getValue());
+        this.deleteList = new Scene(deleteList.getValue());
+        this.deListCtrl = deleteList.getKey();
+
+        this.addList = new Scene(addList.getValue());
+        this.addListCtrl = addList.getKey();
+
         showStart();
         primaryStage.show();
     }
@@ -61,9 +76,6 @@ public class MainCtrl {
         showStart();
     }
 
-    /**
-     * Show scene of Rename List
-     */
     public void showRenameList() {
         secondaryStage = new Stage();
         secondaryStage.setScene(renameList);
@@ -71,19 +83,13 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
-    /**
-     * Show scene of Delete List
-     */
     public void showDeleteList() {
         secondaryStage = new Stage();
-        secondaryStage.setScene(this.deleteList);
+        secondaryStage.setScene(deleteList);
         secondaryStage.setTitle("Delete List!");
         secondaryStage.show();
     }
 
-    /**
-     * Show scene of addList
-     */
     public void showAddList() {
         secondaryStage = new Stage();
         secondaryStage.setScene(addList);
@@ -104,19 +110,29 @@ public class MainCtrl {
 
     /**
      * Adds a new list by calculating its coordinates of the board and adding it to the root's children
-     * @param a the list to be added
-     * @param root the root where to add the list
+     * @param list the list to be added
+     * @param line the root where to add the list
      */
-    public void addNewList(AnchorPane a, Group root){
+    public void addNewListToHBox(VBox list, HBox line){
+        line.getChildren().add(list);
+    }
+
+    public void addNewList(VBox list, HBox actualRow, VBox vBoard){
         numberOfLists++;
         int positionOfTheList = numberOfLists % 4;
 
-        int xLayout;
-        int yLayout;
+        this.actualRow = actualRow;
+        this.vBoard = vBoard;
 
-        if(positionOfTheList == 0) {
-            xLayout = 0;
+        /*if(positionOfTheList == 0){
+            HBox newHBox = new HBox(27, list);
+            vBoard.getChildren().add(newHBox);
+            BoardCtrl.setNewRow(newHBox);
+
+            addNewListToHBox(list, newHBox);
+            this.actualRow = newHBox;
         }
+<<<<<<< HEAD
         else {
             xLayout = (152  + 27) * (positionOfTheList);
         }
@@ -150,6 +166,11 @@ public class MainCtrl {
      */
     public void closeCardDetails() {
         secondaryStage.close();
+=======
+        else{*/
+            addNewListToHBox(list, this.actualRow);
+        //}
+>>>>>>> 88cfe6b716b0809e7b79882121b68cc6a52e972e
     }
 
 }

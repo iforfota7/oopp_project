@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootContainer" prefWidth="575.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane fx:id="rootContainer" minHeight="398.0" prefHeight="398.0" prefWidth="775.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
       <TextField fx:id="filterInput" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="80.0" promptText="Filter.." AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
          <font>
@@ -26,6 +26,189 @@
             <Font name="BM YEONSUNG OTF" size="18.0" />
          </font>
       </Label>
+      <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0" />
+      <Button fx:id="lockBtu" layoutX="108.0" layoutY="16.0" mnemonicParsing="false" text="🔒" AnchorPane.leftAnchor="108.0" AnchorPane.topAnchor="16.0" />
+      <HBox fx:id="firstRow" layoutX="41.0" layoutY="68.0" prefHeight="272.0" prefWidth="507.0" spacing="27.0" style="-fx-background-color: #E6E6FA;">
+         <children>
+            <VBox fx:id="listLeft" prefHeight="260.0" prefWidth="150.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <VBox alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
+                     <children>
+                        <Label fx:id="listName1" contentDisplay="CENTER" graphicTextGap="6.0" text="ToDo">
+                           <padding>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Separator prefWidth="200.0">
+                           <padding>
+                              <Insets top="-5.0" />
+                           </padding>
+                        </Separator>
+                        <AnchorPane fx:id="card1Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
+                           <children>
+                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="1.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Button fx:id="deleteCard1" layoutX="11.0" layoutY="3.0" mnemonicParsing="false" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="card2Container">
+                           <children>
+                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Button fx:id="deleteCard2" layoutX="11.0" layoutY="2.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="card3Container">
+                           <children>
+                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Button fx:id="deleteCard3" layoutX="11.0" layoutY="2.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" minWidth="150.0" prefHeight="38.0" prefWidth="150.0" spacing="30.0">
+                     <children>
+                        <Button fx:id="addCard1" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <MenuButton fx:id="refactorList" mnemonicParsing="false" prefHeight="22.0" prefWidth="75.0" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
+                          <items>
+                            <MenuItem fx:id="renameList" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
+                            <MenuItem fx:id="deleteList" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                          </items>
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </MenuButton>
+                     </children>
+                     <padding>
+                        <Insets left="7.0" right="7.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="listMid" prefHeight="260.0" prefWidth="150.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <VBox alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
+                     <children>
+                        <Label fx:id="listName2" contentDisplay="CENTER" graphicTextGap="6.0" text="Doing">
+                           <padding>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Separator prefWidth="200.0">
+                           <padding>
+                              <Insets top="-5.0" />
+                           </padding>
+                        </Separator>
+                     </children>
+                  </VBox>
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" minWidth="150.0" prefHeight="38.0" prefWidth="150.0" spacing="30.0">
+                     <children>
+                        <Button fx:id="addCard2" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <MenuButton fx:id="refactorList2" mnemonicParsing="false" prefHeight="22.0" prefWidth="75.0" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
+                           <items>
+                              <MenuItem fx:id="renameList2" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
+                              <MenuItem fx:id="deleteList2" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                           </items>
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </MenuButton>
+                     </children>
+                     <padding>
+                        <Insets left="7.0" right="7.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="260.0" prefWidth="150.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <VBox alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
+                     <children>
+                        <Label fx:id="listName3" contentDisplay="CENTER" graphicTextGap="6.0" text="Done">
+                           <padding>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Separator prefWidth="200.0">
+                           <padding>
+                              <Insets top="-5.0" />
+                           </padding>
+                        </Separator>
+                     </children>
+                  </VBox>
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" minWidth="150.0" prefHeight="38.0" prefWidth="150.0" spacing="30.0">
+                     <children>
+                        <Button fx:id="addCard" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <MenuButton fx:id="refactorList3" mnemonicParsing="false" prefHeight="22.0" prefWidth="75.0" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
+                           <items>
+                              <MenuItem fx:id="renameList21" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
+                              <MenuItem fx:id="deleteList3" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                           </items>
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </MenuButton>
+                     </children>
+                     <padding>
+                        <Insets left="7.0" right="7.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
       <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="506.0" layoutY="360.0" mnemonicParsing="false" onAction="#addList" prefHeight="23.0" prefWidth="22.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="50.0">
          <font>
             <Font size="10.0" />
@@ -36,135 +219,5 @@
             <Font size="10.0" />
          </font>
       </Button>
-      <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0">
-         <children>
-            <AnchorPane fx:id="listsPane" prefHeight="260.0" prefWidth="552.0">
-               <children>
-                  <AnchorPane fx:id="list1Container">
-                     <children>
-                        <ListView fx:id="listLeft" prefHeight="260.0" prefWidth="150.0" />
-                        <Label fx:id="listName1" accessibleRole="TEXT_AREA" layoutX="57.5" layoutY="3.0" text="ToDo">
-                           <font>
-                              <Font name="Bodoni 72 Smallcaps Book" size="13.0" />
-                           </font>
-                        </Label>
-                        <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-                        <AnchorPane fx:id="card1Container" layoutX="11.5" layoutY="25.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
-                           <children>
-                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                                 
-                              </Hyperlink>
-                              <Button fx:id="deleteCard1" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="card3Container" layoutX="11.5" layoutY="79.0">
-                           <children>
-                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" onAction="#cardDetail" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                              </Hyperlink>
-                              <Button fx:id="deleteCard3" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="card2Container" layoutX="11.5" layoutY="52.0">
-                           <children>
-                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" onAction="#cardDetail" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                              </Hyperlink>
-                              <Button fx:id="deleteCard2" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                        </AnchorPane>
-                        <MenuButton fx:id="refactorList" layoutX="66.0" layoutY="230.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.799999999999997">
-                          <items>
-                            <MenuItem fx:id="renameList" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
-                            <MenuItem fx:id="deleteList" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
-                          </items>
-                           <font>
-                              <Font size="9.0" />
-                           </font>
-                        </MenuButton>
-                        <Button fx:id="addCard1" layoutX="10.0" layoutY="229.0" mnemonicParsing="false" onAction="#addCardToList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="list2Container" layoutX="179.0">
-                     <children>
-                        <ListView fx:id="listMid" prefHeight="260.0" prefWidth="150.0" style="-fx-border-radius: 50px;">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </ListView>
-                        <Label fx:id="listMidName" layoutX="56.0" layoutY="2.0" text="Doing">
-                           <font>
-                              <Font name="Bodoni 72 Smallcaps Book" size="13.0" />
-                           </font>
-                        </Label>
-                        <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-                        <Button fx:id="addCard2" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addCardToList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <MenuButton fx:id="refactorList2" layoutX="62.0" layoutY="232.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.800000000000011">
-                           <items>
-                              <MenuItem fx:id="renameList1" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
-                              <MenuItem fx:id="deleteList1" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
-                           </items>
-                           <font>
-                              <Font size="9.0" />
-                           </font>
-                        </MenuButton>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="list3Container" layoutX="358.0">
-                     <children>
-                        <ListView fx:id="listRight" prefHeight="260.0" prefWidth="150.0" />
-                        <Label fx:id="listRightName" layoutX="58.5" layoutY="3.0" text="Done" />
-                        <Separator layoutX="1.0" layoutY="19.0" prefHeight="4.0" prefWidth="150.0" />
-                        <Button fx:id="addCard3" layoutX="9.0" layoutY="230.0" mnemonicParsing="false" onAction="#addCardToList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+" AnchorPane.bottomAnchor="7.800000000000001" AnchorPane.leftAnchor="10.0">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <MenuButton fx:id="refactorList3" layoutX="62.0" layoutY="232.0" mnemonicParsing="false" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.799999999999997">
-                           <items>
-                              <MenuItem fx:id="renameList11" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
-                              <MenuItem fx:id="deleteList11" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
-                           </items>
-                           <font>
-                              <Font size="9.0" />
-                           </font>
-                        </MenuButton>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </AnchorPane>
-         </children>
-      </Group>
-      <Button fx:id="lockBtu" layoutX="108.0" layoutY="16.0" mnemonicParsing="false" text="🔒" AnchorPane.leftAnchor="108.0" AnchorPane.topAnchor="16.0" />
    </children>
 </AnchorPane>
