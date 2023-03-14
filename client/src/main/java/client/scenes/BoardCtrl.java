@@ -33,11 +33,11 @@ public class BoardCtrl implements Initializable {
     @FXML
     private AnchorPane card3Container;
     @FXML
-    private AnchorPane list1Container;
+    private VBox header1;
     @FXML
-    private AnchorPane list2Container;
+    private VBox header2;
     @FXML
-    private AnchorPane list3Container;
+    private VBox header3;
 
     @FXML
     private VBox vBoard;
@@ -46,11 +46,13 @@ public class BoardCtrl implements Initializable {
     //private static HBox actualRow;
 
 
-    List<AnchorPane> listContainers;
+    List<VBox> listContainers;
     List<AnchorPane> listCards;
 
     private double originalX;
     private double originalY;
+    private Bounds parentListBounds;
+    private Bounds card1Bounds;
     private VBox currentList;
     private Hyperlink currentCard;
     private long mousePressedTime;
@@ -64,9 +66,9 @@ public class BoardCtrl implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
-        listContainers.add(list1Container);
-        listContainers.add(list2Container);
-        listContainers.add(list3Container);
+        listContainers.add(header1);
+        listContainers.add(header2);
+        listContainers.add(header3);
         listCards = new ArrayList<>();
         listCards.add(card2Container);
         listCards.add(card3Container);
@@ -80,8 +82,8 @@ public class BoardCtrl implements Initializable {
     public void dragDetected(MouseEvent mouseEvent) {
         mousePressedTime = System.currentTimeMillis();
         mouseEvent.consume();
-        card1Container.getParent().toFront();
-        card1Container.toFront();
+        //card1Container.getParent().getParent().toFront();
+        //card1Container.toFront();
     }
 
     /**
@@ -93,6 +95,7 @@ public class BoardCtrl implements Initializable {
     public void mousePressed(MouseEvent mouseEvent) {
         originalX = mouseEvent.getX();
         originalY = mouseEvent.getY();
+        parentListBounds = card1Container.getParent().localToScene(card1Container.getParent().getBoundsInLocal());
     }
 
     /**
@@ -104,9 +107,10 @@ public class BoardCtrl implements Initializable {
      */
 
     public void mouseDragged(MouseEvent mouseEvent) {
-        mouseEvent.consume();
+        //mouseEvent.consume();
         card1Container.setLayoutX(card1Container.getLayoutX() + mouseEvent.getX() - originalX);
         card1Container.setLayoutY(card1Container.getLayoutY() + mouseEvent.getY() - originalY);
+        card1Bounds = card1Container.localToScene(card1Container.getBoundsInLocal());
     }
 
     /**
@@ -115,18 +119,20 @@ public class BoardCtrl implements Initializable {
     public void mouseReleased() {
 
         // bound1 is the boundaries of card1Container
-        Bounds bound1 = card1Container.localToScene(card1Container.getBoundsInLocal());
+        Bounds bound1 = card1Bounds;
 
         // check for potential drop targets
-        for(AnchorPane listContainer : listContainers) {
+        for(VBox listContainer : listContainers) {
             // bound2 is the boundaries of the listContainer
-            Bounds bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
+            Bounds bound2;
+            if(listContainer.equals(card1Container.getParent())){
+                bound2 = parentListBounds;
+            }
+            else {
+                bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
+            }
 
             if(CollisionChecking.collide(bound1, bound2)) {
-                if(!listContainer.equals(card1Container.getParent())) {
-                    // if the card is dropped into a new list, then the cards in the old list are moved up
-                    realign((AnchorPane) card1Container.getParent(), -1);
-                }
                 dropCard(listContainer);
             }
         }
@@ -154,15 +160,11 @@ public class BoardCtrl implements Initializable {
      * as well as realigns the cards from its parent list
      * @param listContainer the list in which a card is dropped
      */
-    public void dropCard(AnchorPane listContainer) {
-        if(!(card1Container.getParent().equals(listContainer))) {
-            realign(listContainer, 1);
+    public void dropCard(VBox listContainer) {
+        if(!(card1Container.getParent().getParent().equals(listContainer))) {
+            ((VBox)card1Container.getParent()).getChildren().remove(card1Container);
+            listContainer.getChildren().add(card1Container);
         }
-
-        ((AnchorPane)card1Container.getParent()).getChildren().remove(card1Container);
-        listContainer.getChildren().add(card1Container);
-        card1Container.setLayoutX(11.5);
-        card1Container.setLayoutY(25);
     }
 
     /**
