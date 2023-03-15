@@ -24,30 +24,27 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList,addList;
-
-    private RNListCtrl rnListCtrl;
-    private DEListCtrl deListCtrl;
-    private ADListCtrl addListCtrl;
+    private Scene board, renameList, deleteList, addList, cardDetails;
 
     private int numberOfLists = 2;
     private VBox vBoard;
     private HBox actualRow;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
-                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList) {
+                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
+                            ,Parent>cardDetails) {
+
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
 
         this.renameList = new Scene(renameList.getValue());
-        this.rnListCtrl = renameList.getKey();
 
         this.deleteList = new Scene(deleteList.getValue());
-        this.deListCtrl = deleteList.getKey();
 
         this.addList = new Scene(addList.getValue());
-        this.addListCtrl = addList.getKey();
+
+        this.cardDetails = new Scene(cardDetails.getValue());
 
         showStart();
         primaryStage.show();
@@ -99,32 +96,31 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
-    /**
-     * Adds a new list by calculating its coordinates of the board and adding it to the root's children
-     * @param list the list to be added
-     * @param line the root where to add the list
-     */
-    public void addNewListToHBox(VBox list, HBox line){
-        line.getChildren().add(list);
-    }
-
-    public void addNewList(VBox list, HBox actualRow, VBox vBoard){
+    public void addNewList(VBox list, HBox actualRow, VBox vBoard) {
         numberOfLists++;
         int positionOfTheList = numberOfLists % 4;
 
         this.actualRow = actualRow;
         this.vBoard = vBoard;
 
-        /*if(positionOfTheList == 0){
-            HBox newHBox = new HBox(27, list);
-            vBoard.getChildren().add(newHBox);
-            BoardCtrl.setNewRow(newHBox);
-
-            addNewListToHBox(list, newHBox);
-            this.actualRow = newHBox;
-        }
-        else{*/
-            addNewListToHBox(list, this.actualRow);
-        //}
+        actualRow.getChildren().add(list);
     }
+
+    /**
+     * Show scene of cardDetails
+     */
+    public void showCardDetail() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(cardDetails);
+        secondaryStage.setTitle("Card Details");
+        secondaryStage.show();
+    }
+
+    /**
+     * close scene of cardDetails
+     */
+    public void closeCardDetails() {
+        secondaryStage.close();
+    }
+
 }
