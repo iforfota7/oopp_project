@@ -24,7 +24,7 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList,addList, cardDetails;
+    private Scene board, renameList, deleteList, addList, cardDetails;
 
     private RNListCtrl rnListCtrl;
     private DEListCtrl deListCtrl;
@@ -120,5 +120,25 @@ public class MainCtrl {
     public void addNewList(VBox list, HBox row){
         numberOfLists++;
         row.getChildren().add(list);
+
+        row.getChildren().add(list);
     }
+
+    /**
+     * Show scene of cardDetails
+     */
+    public void showCardDetail() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(cardDetails);
+        secondaryStage.setTitle("Card Details");
+        secondaryStage.show();
+    }
+
+    /**
+     * close scene of cardDetails
+     */
+    public void closeCardDetails() {
+        secondaryStage.close();
+    }
+
 }
