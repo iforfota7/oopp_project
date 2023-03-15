@@ -52,12 +52,12 @@
                         </Separator>
                         <AnchorPane fx:id="card1Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="1.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
+                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="1.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard1" layoutX="11.0" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard1" layoutX="11.0" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
@@ -66,7 +66,7 @@
                         </AnchorPane>
                         <AnchorPane fx:id="card2Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
+                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
@@ -80,7 +80,7 @@
                         </AnchorPane>
                         <AnchorPane fx:id="card3Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
+                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
                                  <font>
                                     <Font size="12.0" />
                                  </font>

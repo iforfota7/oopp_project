@@ -457,6 +457,7 @@ public class BoardCtrl implements Initializable {
         card.setOnDragDetected(this::dragDetected);
         card.setOnMouseDragged(this::mouseDragged);
         card.setOnMousePressed(this::mousePressed);
+        card.setOnMouseReleased(this::mouseReleased);
 
         // set the card to execute cardDetail on action
         card.setOnAction(this::cardDetail);
