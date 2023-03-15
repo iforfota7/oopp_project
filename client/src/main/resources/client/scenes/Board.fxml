@@ -64,9 +64,9 @@
                               </Button>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="card2Container">
+                        <AnchorPane fx:id="card2Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
+                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
@@ -78,9 +78,9 @@
                               </Button>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="card3Container">
+                        <AnchorPane fx:id="card3Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" onAction="#cardDetail" layoutX="41.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
+                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
                                  <font>
                                     <Font size="12.0" />
                                  </font>

@@ -27,7 +27,7 @@ public class BoardCtrl implements Initializable {
     private final MainCtrl mainCtrl;
 
     @FXML
-    private AnchorPane card1Container;
+    private AnchorPane cardContainer;
     @FXML
     private AnchorPane card2Container;
     @FXML
@@ -92,7 +92,14 @@ public class BoardCtrl implements Initializable {
     public void mousePressed(MouseEvent mouseEvent) {
         originalX = mouseEvent.getX();
         originalY = mouseEvent.getY();
-        parentListBounds = card1Container.getParent().localToScene(card1Container.getParent().getBoundsInLocal());
+        if(mouseEvent.getSource().getClass().equals(Hyperlink.class)){
+            Hyperlink card = (Hyperlink) mouseEvent.getSource();
+            cardContainer = (AnchorPane) card.getParent();
+        }
+        else {
+            cardContainer = (AnchorPane) mouseEvent.getSource();
+        }
+        parentListBounds = cardContainer.getParent().localToScene(cardContainer.getParent().getBoundsInLocal());
     }
 
     /**
@@ -105,24 +112,33 @@ public class BoardCtrl implements Initializable {
 
     public void mouseDragged(MouseEvent mouseEvent) {
         //mouseEvent.consume();
-        card1Container.setLayoutX(card1Container.getLayoutX() + mouseEvent.getX() - originalX);
-        card1Container.setLayoutY(card1Container.getLayoutY() + mouseEvent.getY() - originalY);
-        card1Bounds = card1Container.localToScene(card1Container.getBoundsInLocal());
+        if(mouseEvent.getSource().getClass().equals(Hyperlink.class)){
+            Hyperlink card = (Hyperlink) mouseEvent.getSource();
+            cardContainer = (AnchorPane) card.getParent();
+        }
+        else {
+            cardContainer = (AnchorPane) mouseEvent.getSource();
+        }
+
+        cardContainer.setLayoutX(cardContainer.getLayoutX() + mouseEvent.getX() - originalX);
+        cardContainer.setLayoutY(cardContainer.getLayoutY() + mouseEvent.getY() - originalY);
+        card1Bounds = cardContainer.localToScene(cardContainer.getBoundsInLocal());
     }
 
     /**
      * The method finalises drag-and-drop
      */
-    public void mouseReleased() {
+    public void mouseReleased(MouseEvent mouseEvent) {
 
         // bound1 is the boundaries of card1Container
         Bounds bound1 = card1Bounds;
+
 
         // check for potential drop targets
         for(VBox listContainer : listContainers) {
             // bound2 is the boundaries of the listContainer
             Bounds bound2;
-            if(listContainer.equals(card1Container.getParent())){
+            if(listContainer.equals(cardContainer.getParent())){
                 bound2 = parentListBounds;
             }
             else {
@@ -143,9 +159,9 @@ public class BoardCtrl implements Initializable {
      * @param listContainer the list in which a card is dropped
      */
     public void dropCard(VBox listContainer) {
-        if(!(card1Container.getParent().getParent().equals(listContainer))) {
-            ((VBox)card1Container.getParent()).getChildren().remove(card1Container);
-            listContainer.getChildren().add(card1Container);
+        if(!(cardContainer.getParent().getParent().equals(listContainer))) {
+            ((VBox)cardContainer.getParent()).getChildren().remove(cardContainer);
+            listContainer.getChildren().add(cardContainer);
         }
     }
 
@@ -193,6 +209,7 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showDeleteList();
     }
     void deleteL() {
+        listContainers.remove(currentList.getChildren().get(0));
         ((HBox)currentList.getParent()).getChildren().remove(currentList);
         mainCtrl.closeDEList();
     }
@@ -228,8 +245,10 @@ public class BoardCtrl implements Initializable {
     public VBox createNewList(String newListName){
         // creating the listView element
         VBox list = createListBody();
-        VBox headerList = new VBox(7);
+        VBox headerList = new VBox(6);
         HBox footerList = new HBox(30);
+
+        headerList.setId("header");
 
         headerList.setMinSize(150, 235);
         footerList.setMinSize(150, 25);
@@ -253,6 +272,7 @@ public class BoardCtrl implements Initializable {
         Label listName = createListTitle(newListName);
 
         headerList.getChildren().addAll(listName, listSeparator);
+        listContainers.add(headerList);
 
         list.getChildren().addAll(headerList, footerList);
         return list;
@@ -413,6 +433,10 @@ public class BoardCtrl implements Initializable {
         AnchorPane anchor = new AnchorPane();
         anchor.setLayoutX(0);
         anchor.setLayoutY(0);
+        anchor.setOnDragDetected(this::dragDetected);
+        anchor.setOnMouseDragged(this::mouseDragged);
+        anchor.setOnMousePressed(this::mousePressed);
+        anchor.setOnMouseReleased(this::mouseReleased);
         return anchor;
     }
 
@@ -429,6 +453,10 @@ public class BoardCtrl implements Initializable {
         card.setPrefSize(95, 23);
         card.setAlignment(Pos.CENTER);
         card.setStyle("-fx-background-color:  #E6E6FA");
+
+        card.setOnDragDetected(this::dragDetected);
+        card.setOnMouseDragged(this::mouseDragged);
+        card.setOnMousePressed(this::mousePressed);
 
         // set the card to execute cardDetail on action
         card.setOnAction(this::cardDetail);
