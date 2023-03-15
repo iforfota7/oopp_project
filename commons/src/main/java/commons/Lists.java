@@ -1,24 +1,30 @@
 package commons;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 public class Lists {
     @Id
-    public String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
     public String title;
     public int positionInsideBoard;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
+    @OrderBy("positionInsideList ASC")
+    public List<Cards> cards;
 
     /**
      * Constructor method for the lists class
-     * @param id the fxml id of the list (acts as unique id)
      * @param title the name of the list
      * @param positionInsideBoard the position of list inside the board
      */
-    public Lists(String id, String title, int positionInsideBoard) {
-        this.id = id;
+    public Lists(String title, int positionInsideBoard) {
         this.title = title;
         this.positionInsideBoard = positionInsideBoard;
     }
@@ -39,8 +45,8 @@ public class Lists {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
-        return positionInsideBoard == lists.positionInsideBoard &&
-                Objects.equals(id, lists.id) && Objects.equals(title, lists.title);
+        return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
+                Objects.equals(title, lists.title);
     }
 
     /**
