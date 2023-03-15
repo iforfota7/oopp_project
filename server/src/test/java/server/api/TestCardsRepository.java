@@ -83,40 +83,6 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Retrieves all Cards from the repository that are inside a specific List, ordered by their position inside that List
-     * Note that this method does not need implementation and is handled by JPA since it adhered to the naming conventions
-     *
-     * @param id The id of the List from which we retrieve the Cards
-     * @return A List containing all sorted Lists entries
-     */
-    @Override
-    public List<Cards> findByListIdOrderByPositionInsideListAsc(long id) {
-
-        call("findByListIdOrderByPositionInsideListAsc");
-        List<Cards> res = new ArrayList<>();
-        for(int i=0; i<cards.size(); i++) {
-
-            Cards card = cards.get(i);
-            if(card.list.id==id) {
-
-                res.add(card);
-                //sort using insertion sort
-                for(int j=res.size()-1; j>0; j--) {
-
-                    if(res.get(j).positionInsideList<res.get(j-1).positionInsideList) {
-
-                        Cards temp = res.get(j);
-                        res.set(j, res.get(j-1));
-                        res.set(j-1, temp);
-                    }
-                    else break;
-                }
-            }
-        }
-        return res;
-    }
-
-    /**
      * @return
      */
     @Override
@@ -186,6 +152,8 @@ public class TestCardsRepository implements CardsRepository {
     public void delete(Cards entity) {
 
         call("delete");
+        if(entity.list.cards==null) entity.list.cards = new ArrayList<>();
+        entity.list.cards.remove(entity);
         cards.remove(entity);
     }
 
@@ -231,6 +199,19 @@ public class TestCardsRepository implements CardsRepository {
     @Override
     public <S extends Cards> S save(S entity) {
         call("save");
+        if(entity.list.cards==null) entity.list.cards = new ArrayList<>();
+        entity.list.cards.add(entity);
+        //order by positionInsideList using insertion sort
+        for(int j=entity.list.cards.size()-1; j>0; j--) {
+
+            if(entity.list.cards.get(j).positionInsideList<entity.list.cards.get(j-1).positionInsideList) {
+
+                Cards temp = entity.list.cards.get(j);
+                entity.list.cards.set(j, entity.list.cards.get(j-1));
+                entity.list.cards.set(j-1, temp);
+            }
+            else break;
+        }
         cards.add(entity);
         return entity;
     }

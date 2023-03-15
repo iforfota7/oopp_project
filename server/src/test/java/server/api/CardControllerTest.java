@@ -47,7 +47,7 @@ class CardControllerTest {
         cards.add(c3);
         cards.add(c4);
 
-        assertEquals(cards, sut.getAllCards());
+        assertEquals(cards, repo.cards);
     }
 
     @Test
@@ -55,8 +55,6 @@ class CardControllerTest {
 
         Lists list = new Lists("todo", 0);
         Lists list2 = new Lists("todo", 0);
-        list.id=0;
-        list2.id=1;
 
         Cards c1 = getCard("a",0, list, cardCount);
         Cards c2 = getCard("b",1, list2, cardCount);
@@ -73,7 +71,7 @@ class CardControllerTest {
         cards.add(c3);
         cards.add(c4);
 
-        assertEquals(cards, sut.getCardsByListId(0));
+        assertEquals(cards, list.cards);
     }
 
     @Test
@@ -81,8 +79,6 @@ class CardControllerTest {
 
         Lists list = new Lists("todo", 0);
         Lists list2 = new Lists("todo", 0);
-        list.id = 0;
-        list2.id = 1;
 
         Cards c1 = getCard("a", 0, list, cardCount);
         Cards c2 = getCard("b", 1, list2, cardCount);
@@ -102,7 +98,7 @@ class CardControllerTest {
         cards.add(c3);
         cards.add(c4);
 
-        assertEquals(cards, sut.getCardsByListId(0));
+        assertEquals(cards, list.cards);
     }
 
     //we technically already test adding/saving cards in the above two tests, so maybe not necessary to do it again?
@@ -165,7 +161,6 @@ class CardControllerTest {
     void addCardIncrementPositionTest() {
 
         Lists list = new Lists("todo", 0);
-        list.id = 0;
 
         Cards c1 = getCard("a", 0, list, cardCount);
         Cards c2 = getCard("b", 1, list, cardCount);
@@ -186,7 +181,7 @@ class CardControllerTest {
         cards.add(c3);
         cards.add(c4);
 
-        assertEquals(cards, sut.getCardsByListId(0));
+        assertEquals(cards, list.cards);
     }
 
     @Test
@@ -197,7 +192,7 @@ class CardControllerTest {
         sut.addCard(c1);
         sut.removeCard(c1);
 
-        assertEquals("[]", sut.getAllCards().toString());
+        assertEquals("[]", repo.cards.toString());
     }
 
     @Test

@@ -117,10 +117,16 @@ public class TestListsRepository implements ListsRepository {
     public void removeCardsInsideList(long listID) {
 
         call("removeCardsInsideList");
-        for(int i=0; i<cards.size(); i++) {
+        List<Cards> copy = new ArrayList<>();
 
-            if(cards.get(i).list.id==listID) {
-                cards.remove(cards.get(i));
+        for(int i=0; i<cards.size(); i++) {
+            copy.add(cards.get(i));
+        }
+
+        for(int i=0; i<copy.size(); i++) {
+
+            if(copy.get(i).list.id==listID) {
+                cards.remove(copy.get(i));
             }
         }
     }

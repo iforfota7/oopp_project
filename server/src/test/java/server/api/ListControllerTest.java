@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Cards;
 import commons.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -190,7 +191,27 @@ public class ListControllerTest {
     @Test
     void removeListAlsoRemovesCardsInsideListTest() {
 
-        //skip for now
+        Lists l1 = getList("hi", 0, listCount);
+        Lists l2 = getList("hii", 1, listCount);
+
+        sut.addList(l1);
+        sut.addList(l2);
+
+        repo.cards.add(new Cards("t",0,l1));
+        repo.cards.add(new Cards("e",1,l1));
+        repo.cards.add(new Cards("a",2,l1));
+        repo.cards.add(new Cards("b",0,l2));
+        repo.cards.add(new Cards("o",1,l2));
+        repo.cards.add(new Cards("l",2,l2));
+
+        sut.removeList(l1);
+
+        List<Cards> cards = new ArrayList<>();
+        cards.add(new Cards("b",0,l2));
+        cards.add(new Cards("o",1,l2));
+        cards.add(new Cards("l",2,l2));
+
+        assertEquals(cards, repo.cards);
     }
 
     @Test
