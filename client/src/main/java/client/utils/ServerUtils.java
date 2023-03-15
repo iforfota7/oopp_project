@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+import commons.Cards;
+import commons.Lists;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -60,6 +62,48 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
+
+    public Lists addList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(list, APPLICATION_JSON), Lists.class);
+    }
+
+    public Lists removeList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(list, APPLICATION_JSON), Lists.class);
+    }
+
+    public Cards addCard(Cards card){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/cards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
+
+    public Cards removeCard(Cards card){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
+
+
+    public List<Lists> getLists() {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/lists") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Lists>>() {});
+    }
+
+    public List<Cards> getCards() {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/cards") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Cards>>() {});
+    }
+
 
     /**
      * Setter method for the server attribute
