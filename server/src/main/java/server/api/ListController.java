@@ -84,12 +84,12 @@ public class ListController {
             // only remove and decrement list positions if the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
-        }
-        else {
+
+            return ResponseEntity.ok().build();
+        } else {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok().build();
     }
 
     /**
