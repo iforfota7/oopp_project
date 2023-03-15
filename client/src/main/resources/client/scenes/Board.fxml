@@ -32,7 +32,7 @@
          <children>
             <VBox fx:id="listLeft" prefHeight="260.0" prefWidth="150.0" style="-fx-background-color: #ffffff;">
                <children>
-                  <VBox alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
+                  <VBox fx:id="header1" alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
                      <children>
                         <Label fx:id="listName1" contentDisplay="CENTER" graphicTextGap="6.0" text="ToDo">
                            <padding>
@@ -52,21 +52,21 @@
                         </Separator>
                         <AnchorPane fx:id="card1Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="1.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" onAction="#cardDetail" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
+                              <Hyperlink fx:id="card1" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="1.0" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 1">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard1" layoutX="11.0" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard1" layoutX="11.0" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
                               </Button>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="card2Container">
+                        <AnchorPane fx:id="card2Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
+                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
@@ -78,9 +78,9 @@
                               </Button>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="card3Container">
+                        <AnchorPane fx:id="card3Container" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased">
                            <children>
-                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" onAction="#cardDetail" layoutX="41.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
+                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
@@ -119,7 +119,7 @@
             </VBox>
             <VBox fx:id="listMid" prefHeight="260.0" prefWidth="150.0" style="-fx-background-color: #ffffff;">
                <children>
-                  <VBox alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
+                  <VBox fx:id="header2" alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
                      <children>
                         <Label fx:id="listName2" contentDisplay="CENTER" graphicTextGap="6.0" text="Doing">
                            <padding>
@@ -162,9 +162,9 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox prefHeight="260.0" prefWidth="150.0" style="-fx-background-color: #ffffff;">
+            <VBox fx:id="list3Container" prefHeight="260.0" prefWidth="150.0" style="-fx-background-color: #ffffff;">
                <children>
-                  <VBox alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
+                  <VBox fx:id="header3" alignment="TOP_CENTER" minHeight="230.0" minWidth="150.0" prefHeight="238.0" prefWidth="150.0" spacing="6.0" style="-fx-background-color: #ffffff;">
                      <children>
                         <Label fx:id="listName3" contentDisplay="CENTER" graphicTextGap="6.0" text="Done">
                            <padding>

@@ -23,6 +23,9 @@ public class ADListCtrl {
     @FXML
     private TextField newListOrder;
 
+    /**
+     * the initialization and customization of the List display name is only achieved through creating a new window.
+     */
     @FXML
     void saveNewList(ActionEvent event) {
         boardCtrl.addNewList(newListName.getText());
