@@ -32,11 +32,11 @@ public class MainCtrl {
     private CardDetailsCtrl cardDetailsCtrl;
 
     private int numberOfLists = 2;
-    private VBox vBoard;
-    private HBox actualRow;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
-                           Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl, Parent> cardDetails) {
+                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
+                            ,Parent>cardDetails) {
+
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
@@ -121,7 +121,6 @@ public class MainCtrl {
         numberOfLists++;
         row.getChildren().add(list);
 
-        row.getChildren().add(list);
     }
 
     /**

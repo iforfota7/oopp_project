@@ -57,7 +57,7 @@
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard1" layoutX="11.0" layoutY="3.0" mnemonicParsing="false" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard1" layoutX="11.0" layoutY="3.0" mnemonicParsing="false" onAction="#deleteCard" onDragDetected="#dragDetected" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
@@ -66,12 +66,12 @@
                         </AnchorPane>
                         <AnchorPane fx:id="card2Container">
                            <children>
-                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
+                              <Hyperlink fx:id="card2" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" onAction="#cardDetail" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 2">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard2" layoutX="11.0" layoutY="2.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard2" layoutX="11.0" layoutY="2.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
@@ -80,12 +80,12 @@
                         </AnchorPane>
                         <AnchorPane fx:id="card3Container">
                            <children>
-                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
+                              <Hyperlink fx:id="card3" alignment="CENTER" contentDisplay="CENTER" onAction="#cardDetail" layoutX="41.0" prefHeight="23.0" prefWidth="95.0" style="-fx-background-color: #E6E6FA;" text="Card 3">
                                  <font>
                                     <Font size="12.0" />
                                  </font>
                               </Hyperlink>
-                              <Button fx:id="deleteCard3" layoutX="11.0" layoutY="2.0" mnemonicParsing="false" style="-fx-background-color: #f08080;" text="X">
+                              <Button fx:id="deleteCard3" layoutX="11.0" layoutY="2.0" mnemonicParsing="false" onAction="#deleteCard" style="-fx-background-color: #f08080;" text="X">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
@@ -96,16 +96,16 @@
                   </VBox>
                   <HBox alignment="TOP_CENTER" minHeight="30.0" minWidth="150.0" prefHeight="38.0" prefWidth="150.0" spacing="30.0">
                      <children>
-                        <Button fx:id="addCard1" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                        <Button fx:id="addCard1" mnemonicParsing="false" onAction="#addCardToList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
                         <MenuButton fx:id="refactorList" mnemonicParsing="false" prefHeight="22.0" prefWidth="75.0" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
-                          <items>
-                            <MenuItem fx:id="renameList" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
-                            <MenuItem fx:id="deleteList" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
-                          </items>
+                           <items>
+                              <MenuItem fx:id="renameList" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
+                              <MenuItem fx:id="deleteList" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                           </items>
                            <font>
                               <Font size="9.0" />
                            </font>
@@ -141,7 +141,7 @@
                   </VBox>
                   <HBox alignment="TOP_CENTER" minHeight="30.0" minWidth="150.0" prefHeight="38.0" prefWidth="150.0" spacing="30.0">
                      <children>
-                        <Button fx:id="addCard2" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                        <Button fx:id="addCard2" mnemonicParsing="false" onAction="#addCardToList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
                            <font>
                               <Font size="10.0" />
                            </font>
@@ -186,7 +186,7 @@
                   </VBox>
                   <HBox alignment="TOP_CENTER" minHeight="30.0" minWidth="150.0" prefHeight="38.0" prefWidth="150.0" spacing="30.0">
                      <children>
-                        <Button fx:id="addCard" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
+                        <Button fx:id="addCard" mnemonicParsing="false" onAction="#addCardToList" prefHeight="23.0" prefWidth="24.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6;" text="+">
                            <font>
                               <Font size="10.0" />
                            </font>
