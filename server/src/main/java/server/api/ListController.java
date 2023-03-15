@@ -22,12 +22,12 @@ public class ListController {
     }
 
     /**
-     * Method for retrieving all lists in the repo
+     * Method for retrieving all lists in the repo, sorted by their position inside the board
      * @return all lists that are stored in repo
      */
     @GetMapping(path = {"", "/"})
     public List<Lists> getAll(){
-        return repo.findAll();
+        return repo.findAllByOrderByPositionInsideBoardAsc();
     }
 
     /**
@@ -35,12 +35,27 @@ public class ListController {
      * @param list the list to be added to the repo
      * @return a 200 OK response for a successful http request
      */
+    @Transactional
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
-
-        if(isNullOrEmpty(list.title) || list.positionInsideBoard<0)
+        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 
+        // if the instance exists in the repository, the client gets returned a bad request
+        if(repo.existsById(list.id))
+            return ResponseEntity.badRequest().build();
+
+        Integer maxPositionInsideBoard = repo.maxPositionInsideBoard();
+        if(maxPositionInsideBoard == null) {
+            // there are no Lists entities
+            maxPositionInsideBoard = -1;
+        }
+        if(list.positionInsideBoard > maxPositionInsideBoard + 1) {
+            // position sent by the client is invalid
+            return ResponseEntity.badRequest().build();
+        }
+
+        repo.incrementListPosition(list.positionInsideBoard);
         Lists saved = repo.save(list);
         return ResponseEntity.ok(saved);
     }
@@ -59,12 +74,22 @@ public class ListController {
     @Transactional
     @PostMapping(path={"/remove", "/remove/"})
     public ResponseEntity<Lists> removeList(@RequestBody Lists list) {
-        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard < 0)
+        if(list == null)
             return ResponseEntity.badRequest().build();
 
-        repo.delete(list);
-        repo.decrementListPositions(list.positionInsideBoard);
-        return ResponseEntity.ok().build();
+        if(repo.existsById(list.id)) {
+            //remove all cards inside this list
+            repo.removeCardsInsideList(list.id);
+
+            // only remove and decrement list positions if the entry with the provided id actually exists
+            repo.delete(list);
+            repo.decrementListPositions(list.positionInsideBoard);
+
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 
     /**
