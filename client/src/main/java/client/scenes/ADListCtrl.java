@@ -11,7 +11,7 @@ import javax.inject.Inject;
  *  Controller for Add List
  */
 public class ADListCtrl {
-    private BoardCtrl boardCtrl;
+    private final BoardCtrl boardCtrl;
 
     @Inject
     public ADListCtrl(BoardCtrl boardCtrl){
