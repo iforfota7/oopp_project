@@ -76,6 +76,8 @@ public class TestListsRepository implements ListsRepository {
                 max=lists.get(i).positionInsideBoard;
         }
 
+        if(max==-1) return null;
+
         return max;
     }
 

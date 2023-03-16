@@ -8,20 +8,19 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ListControllerTest {
 
-    public AtomicInteger listCount;
+    public long listCount;
     public TestListsRepository repo;
     public ListController sut;
 
     @BeforeEach
     public void setup() {
 
-        listCount = new AtomicInteger(0);
+        listCount = 0;
         repo = new TestListsRepository();
         sut = new ListController(repo);
     }
@@ -29,10 +28,10 @@ public class ListControllerTest {
     @Test
     void getAllTest() {
 
-        Lists l1 = getList("a",0, listCount);
-        Lists l2 = getList("b",1, listCount);
-        Lists l3 = getList("c",2, listCount);
-        Lists l4 = getList("d",3, listCount);
+        Lists l1 = getList("a",0);
+        Lists l2 = getList("b",1);
+        Lists l3 = getList("c",2);
+        Lists l4 = getList("d",3);
 
         sut.addList(l1);
         sut.addList(l2);
@@ -45,17 +44,23 @@ public class ListControllerTest {
         lists.add(l3);
         lists.add(l4);
 
+        assertTrue(repo.calledMethods.contains("existsById"));
+        assertTrue(repo.calledMethods.contains("maxPositionInsideBoard"));
+        assertTrue(repo.calledMethods.contains("incrementListPosition"));
+        assertTrue(repo.calledMethods.contains("save"));
+
         assertEquals(lists, sut.getAll());
+        assertTrue(repo.calledMethods.contains("findAllByOrderByPositionInsideBoardAsc"));
     }
 
     @Test
     void getAllInAscOrderTest() {
 
-        Lists l1 = getList("a",0, listCount);
-        Lists l2 = getList("b",1, listCount);
-        Lists l3 = getList("c",2, listCount);
-        Lists l4 = getList("d",3, listCount);
-        Lists l5 = getList("e",1, listCount);
+        Lists l1 = getList("a",0);
+        Lists l2 = getList("b",1);
+        Lists l3 = getList("c",2);
+        Lists l4 = getList("d",3);
+        Lists l5 = getList("e",1);
 
         sut.addList(l1);
         sut.addList(l2);
@@ -76,9 +81,9 @@ public class ListControllerTest {
     @Test
     void addListTest() {
 
-        Lists l1 = getList("asdasd", 0, listCount);
+        Lists l1 = getList("asdasd", 0);
         sut.addList(l1);
-        Lists l2 = getList("asdasd", 1, listCount);
+        Lists l2 = getList("asdasd", 1);
         sut.addList(l2);
 
         List<Lists> lists = new ArrayList<>();
@@ -97,7 +102,7 @@ public class ListControllerTest {
     @Test
     void addListNullTitleTest() {
 
-        Lists l1 = getList(null, 0, listCount);
+        Lists l1 = getList(null, 0);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
     }
@@ -105,7 +110,7 @@ public class ListControllerTest {
     @Test
     void addListEmptyTitleTest() {
 
-        Lists l1 = getList( "", 0, listCount);
+        Lists l1 = getList( "", 0);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
     }
@@ -114,7 +119,7 @@ public class ListControllerTest {
     @Test
     void addListNegativePositionTest() {
 
-        Lists l1 = getList("asdasd", -91412, listCount);
+        Lists l1 = getList("asdasd", -91412);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
     }
@@ -122,7 +127,7 @@ public class ListControllerTest {
     @Test
     void addListAlreadyExistsTest() {
 
-        Lists l1 = getList("asdasd", 0, listCount);
+        Lists l1 = getList("asdasd", 0);
         sut.addList(l1);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
@@ -131,8 +136,8 @@ public class ListControllerTest {
     @Test
     void addListInvalidPositivePositionTest() {
 
-        Lists l1 = getList("asdasd", 0, listCount);
-        Lists l2 = getList("asdasd", 5, listCount);
+        Lists l1 = getList("asdasd", 0);
+        Lists l2 = getList("asdasd", 5);
         sut.addList(l1);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addList(l2));
@@ -141,11 +146,11 @@ public class ListControllerTest {
     @Test
     void addListIncrementPositionTest() {
 
-        Lists l1 = getList("a", 0, listCount);
-        Lists l2 = getList("b", 1, listCount);
-        Lists l3 = getList("c", 2, listCount);
-        Lists l4 = getList("d", 3, listCount);
-        Lists l5 = getList("e", 1, listCount);
+        Lists l1 = getList("a", 0);
+        Lists l2 = getList("b", 1);
+        Lists l3 = getList("c", 2);
+        Lists l4 = getList("d", 3);
+        Lists l5 = getList("e", 1);
 
         sut.addList(l1);
         sut.addList(l2);
@@ -166,9 +171,14 @@ public class ListControllerTest {
     @Test
     void removeListTest() {
 
-        Lists l1 = getList("asdasd", 0, listCount);
+        Lists l1 = getList("asdasd", 0);
         sut.addList(l1);
         sut.removeList(l1);
+
+        assertTrue(repo.calledMethods.contains("existsById"));
+        assertTrue(repo.calledMethods.contains("removeCardsInsideList"));
+        assertTrue(repo.calledMethods.contains("delete"));
+        assertTrue(repo.calledMethods.contains("decrementListPosition"));
 
         assertEquals("[]", sut.getAll().toString());
     }
@@ -182,7 +192,7 @@ public class ListControllerTest {
     @Test
     void removeListInvalidIdTest() {
 
-        Lists l1 = getList("hi", 0, listCount);
+        Lists l1 = getList("hi", 0);
 
         //l1 wasn't added, therefore it's ID is invalid inside the repository
         assertEquals(ResponseEntity.badRequest().build(), sut.removeList(l1));
@@ -191,8 +201,8 @@ public class ListControllerTest {
     @Test
     void removeListAlsoRemovesCardsInsideListTest() {
 
-        Lists l1 = getList("hi", 0, listCount);
-        Lists l2 = getList("hii", 1, listCount);
+        Lists l1 = getList("hi", 0);
+        Lists l2 = getList("hii", 1);
 
         sut.addList(l1);
         sut.addList(l2);
@@ -217,10 +227,10 @@ public class ListControllerTest {
     @Test
     void removeListDecrementsPositionOfOtherListsTest() {
 
-        Lists l1 = getList("a", 0, listCount);
-        Lists l2 = getList("b", 1, listCount);
-        Lists l3 = getList("c", 2, listCount);
-        Lists l4 = getList("d", 3, listCount);
+        Lists l1 = getList("a", 0);
+        Lists l2 = getList("b", 1);
+        Lists l3 = getList("c", 2);
+        Lists l4 = getList("d", 3);
 
         sut.addList(l1);
         sut.addList(l2);
@@ -237,11 +247,11 @@ public class ListControllerTest {
         assertEquals("[0, 1, 2]", positions.toString());
     }
 
-    public static Lists getList(String t, int p, AtomicInteger listCount) {
+    public Lists getList(String t, int p) {
 
         Lists list = new Lists(t,p);
-        list.id = listCount.longValue();
-        listCount.incrementAndGet();
+        list.id = listCount;
+        listCount++;
         return list;
     }
 }

@@ -8,20 +8,19 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardControllerTest {
 
-    public AtomicInteger cardCount;
+    public long cardCount;
     public TestCardsRepository repo;
     public CardController sut;
 
     @BeforeEach
     public void setup() {
 
-        cardCount = new AtomicInteger(0);
+        cardCount = 0;
         repo = new TestCardsRepository();
         sut = new CardController(repo);
     }
@@ -31,10 +30,10 @@ class CardControllerTest {
 
         Lists list = new Lists("todo", 0);
 
-        Cards c1 = getCard("a",0, list, cardCount);
-        Cards c2 = getCard("b",1, list, cardCount);
-        Cards c3 = getCard("c",2, list, cardCount);
-        Cards c4 = getCard("d",3, list, cardCount);
+        Cards c1 = getCard("a",0, list);
+        Cards c2 = getCard("b",1, list);
+        Cards c3 = getCard("c",2, list);
+        Cards c4 = getCard("d",3, list);
 
         sut.addCard(c1);
         sut.addCard(c2);
@@ -47,6 +46,11 @@ class CardControllerTest {
         cards.add(c3);
         cards.add(c4);
 
+        assertTrue(repo.calledMethods.contains("existsById"));
+        assertTrue(repo.calledMethods.contains("maxPositionInsideList"));
+        assertTrue(repo.calledMethods.contains("incrementCardPosition"));
+        assertTrue(repo.calledMethods.contains("save"));
+
         assertEquals(cards, repo.cards);
     }
 
@@ -56,10 +60,10 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0);
         Lists list2 = new Lists("todo", 0);
 
-        Cards c1 = getCard("a",0, list, cardCount);
-        Cards c2 = getCard("b",1, list2, cardCount);
-        Cards c3 = getCard("c",1, list, cardCount);
-        Cards c4 = getCard("d",2, list, cardCount);
+        Cards c1 = getCard("a",0, list);
+        Cards c2 = getCard("b",1, list2);
+        Cards c3 = getCard("c",1, list);
+        Cards c4 = getCard("d",2, list);
 
         sut.addCard(c1);
         sut.addCard(c2);
@@ -80,11 +84,11 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0);
         Lists list2 = new Lists("todo", 0);
 
-        Cards c1 = getCard("a", 0, list, cardCount);
-        Cards c2 = getCard("b", 1, list2, cardCount);
-        Cards c3 = getCard("c", 1, list, cardCount);
-        Cards c4 = getCard("d", 2, list, cardCount);
-        Cards c5 = getCard("e", 1, list, cardCount);
+        Cards c1 = getCard("a", 0, list);
+        Cards c2 = getCard("b", 1, list2);
+        Cards c3 = getCard("c", 1, list);
+        Cards c4 = getCard("d", 2, list);
+        Cards c5 = getCard("e", 1, list);
 
         sut.addCard(c1);
         sut.addCard(c2);
@@ -101,8 +105,6 @@ class CardControllerTest {
         assertEquals(cards, list.cards);
     }
 
-    //we technically already test adding/saving cards in the above two tests, so maybe not necessary to do it again?
-
     @Test
     void addNullCard() {
 
@@ -113,7 +115,7 @@ class CardControllerTest {
     void addCardNullTitleTest() {
 
         Lists list = new Lists("todo", 0);
-        Cards c1 = getCard(null, 0, list, cardCount);
+        Cards c1 = getCard(null, 0, list);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c1));
     }
@@ -122,7 +124,7 @@ class CardControllerTest {
     void addCardEmptyTitleTest() {
 
         Lists list = new Lists("todo", 0);
-        Cards c1 = getCard( "", 0, list, cardCount);
+        Cards c1 = getCard( "", 0, list);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c1));
     }
@@ -131,7 +133,7 @@ class CardControllerTest {
     void addCardNegativePositionTest() {
 
         Lists list = new Lists("todo", 0);
-        Cards c1 = getCard( "", Integer.MIN_VALUE, list, cardCount);
+        Cards c1 = getCard( "", Integer.MIN_VALUE, list);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c1));
     }
@@ -140,7 +142,7 @@ class CardControllerTest {
     void addCardAlreadyExistsTest() {
 
         Lists list = new Lists("todo", 0);
-        Cards c1 = getCard("asdasd", 0, list, cardCount);
+        Cards c1 = getCard("asdasd", 0, list);
         sut.addCard(c1);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c1));
@@ -150,8 +152,8 @@ class CardControllerTest {
     void addCardInvalidPositivePositionTest() {
 
         Lists list = new Lists("todo", 0);
-        Cards c1 = getCard("asdasd", 0, list, cardCount);
-        Cards c2 = getCard("asdasd", 5, list, cardCount);
+        Cards c1 = getCard("asdasd", 0, list);
+        Cards c2 = getCard("asdasd", 5, list);
         sut.addCard(c1);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c2));
@@ -162,11 +164,11 @@ class CardControllerTest {
 
         Lists list = new Lists("todo", 0);
 
-        Cards c1 = getCard("a", 0, list, cardCount);
-        Cards c2 = getCard("b", 1, list, cardCount);
-        Cards c3 = getCard("c", 2, list, cardCount);
-        Cards c4 = getCard("d", 3, list, cardCount);
-        Cards c5 = getCard("e", 1, list, cardCount);
+        Cards c1 = getCard("a", 0, list);
+        Cards c2 = getCard("b", 1, list);
+        Cards c3 = getCard("c", 2, list);
+        Cards c4 = getCard("d", 3, list);
+        Cards c5 = getCard("e", 1, list);
 
         sut.addCard(c1);
         sut.addCard(c2);
@@ -188,9 +190,13 @@ class CardControllerTest {
     void removeCard() {
 
         Lists list = new Lists("wae", 0);
-        Cards c1 = getCard("asdasd", 0, list, cardCount);
+        Cards c1 = getCard("asdasd", 0, list);
         sut.addCard(c1);
         sut.removeCard(c1);
+
+        assertTrue(repo.calledMethods.contains("existsById"));
+        assertTrue(repo.calledMethods.contains("delete"));
+        assertTrue(repo.calledMethods.contains("decrementCardPosition"));
 
         assertEquals("[]", repo.cards.toString());
     }
@@ -205,7 +211,7 @@ class CardControllerTest {
     void removeCardInvalidIdTest() {
 
         Lists list = new Lists("wae", 0);
-        Cards c1 = getCard("asdasd", 0, list, cardCount);
+        Cards c1 = getCard("asdasd", 0, list);
 
         //c1 wasn't added, therefore it's ID is invalid inside the repository
         assertEquals(ResponseEntity.badRequest().build(), sut.removeCard(c1));
@@ -217,11 +223,11 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0);
         list.id = 0;
 
-        Cards c1 = getCard("a", 0, list, cardCount);
-        Cards c2 = getCard("b", 1, list, cardCount);
-        Cards c3 = getCard("c", 2, list, cardCount);
-        Cards c4 = getCard("d", 3, list, cardCount);
-        Cards c5 = getCard("e", 4, list, cardCount);
+        Cards c1 = getCard("a", 0, list);
+        Cards c2 = getCard("b", 1, list);
+        Cards c3 = getCard("c", 2, list);
+        Cards c4 = getCard("d", 3, list);
+        Cards c5 = getCard("e", 4, list);
 
         sut.addCard(c1);
         sut.addCard(c2);
@@ -240,11 +246,11 @@ class CardControllerTest {
         assertEquals("[0, 1, 2, 3]", positions.toString());
     }
 
-    public static Cards getCard(String t, int p, Lists list, AtomicInteger cardCount) {
+    public Cards getCard(String t, int p, Lists list) {
 
         Cards card = new Cards(t,p,list);
-        card.id = cardCount.longValue();
-        cardCount.incrementAndGet();
+        card.id = cardCount;
+        cardCount++;
         return card;
     }
 }

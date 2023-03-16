@@ -34,7 +34,7 @@ public class TestCardsRepository implements CardsRepository {
     @Override
     public void decrementCardPosition(int positionInList, long listID) {
 
-        call("decrementListPosition");
+        call("decrementCardPosition");
         for(int i=0; i<cards.size(); i++) {
             Cards card = cards.get(i);
             if(card.list.id==listID && card.positionInsideList>positionInList) {
@@ -52,7 +52,7 @@ public class TestCardsRepository implements CardsRepository {
     @Override
     public void incrementCardPosition(int positionInList, long listID) {
 
-        call("incrementListPosition");
+        call("incrementCardPosition");
         for(int i=0; i<cards.size(); i++) {
             Cards card = cards.get(i);
             if(card.list.id==listID && card.positionInsideList>=positionInList) {
@@ -78,6 +78,8 @@ public class TestCardsRepository implements CardsRepository {
             if(card.list.id==listID && card.positionInsideList>max)
                 max=card.positionInsideList;
         }
+
+        if(max==-1) return null;
 
         return max;
     }
