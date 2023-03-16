@@ -1,7 +1,6 @@
 package server.api;
 
 import commons.Cards;
-import commons.Lists;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
