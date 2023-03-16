@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.lib.CollisionChecking;
 import client.utils.ServerUtils;
+import commons.Cards;
 import commons.Lists;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +17,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import javafx.scene.input.MouseEvent;
 
@@ -75,10 +75,11 @@ public class BoardCtrl implements Initializable {
         listCards.add(card3Container);
         List<Lists> lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
-            this.addNewList(lists.get(i).title);
+         this.addNewList(lists.get(i));
+
         }
         server.registerForMessages("/topic/lists", Lists.class, l->{
-         this.addNewList(l.title);
+
         });
     }
 
@@ -248,22 +249,26 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
-     * @param newListName the name of the new list
+     * @param l list to be added
      */
-    public void addNewList(String newListName) {
+    public void addNewList(Lists l) {
         // closes the scene of adding a new list
        // mainCtrl.closeADList();
 
-        VBox newList = createNewList(newListName);
+        VBox newList = createNewList(l);
+
         mainCtrl.addNewList(newList, firstRow);
+        for(int i = 0; i<l.cards.size(); i++){
+            addNewCard(newList, l.cards.get(i));
+        }
     }
 
     /**
      * Creates a new list with all its elements
-     * @param newListName the name of the new list to be created
+     * @param l list to be created
      * @return and VBox with the new list, aligned correspondingly
      */
-    public VBox createNewList(String newListName){
+    public VBox createNewList(Lists l){
         // creating the listView element
         VBox list = createListBody();
         VBox headerList = new VBox(6);
@@ -290,12 +295,13 @@ public class BoardCtrl implements Initializable {
         Separator listSeparator = createSeparator();
 
         // creating the label for the name of the list, aligning and customising it
-        Label listName = createListTitle(newListName);
+        Label listName = createListTitle(l.title);
 
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
 
         list.getChildren().addAll(headerList, footerList);
+        list.setId(Long.toString(l.id));
         return list;
     }
 
@@ -418,6 +424,7 @@ public class BoardCtrl implements Initializable {
      */
     public void addCardToList(ActionEvent event){
         VBox list = ((VBox) ((VBox)((Button) event.getTarget()).getParent().getParent()).getChildren().get(0));
+
         addNewCard(list);
     }
 
@@ -445,6 +452,28 @@ public class BoardCtrl implements Initializable {
         this.currentCard = (Hyperlink) newCard.getChildren().get(0);
         mainCtrl.showCardDetail();
     }
+
+    public void addNewCard(VBox anchor, Cards c){
+        // count the number of cards currently in the list
+        int count = 0;
+        for(Node i : anchor.getChildren()){
+            if(i.getClass().equals(AnchorPane.class)) count++;
+        }
+
+        // create a new anchor pane for the card
+        AnchorPane newCard = newAnchorPane();
+
+        // add text and the delete button for the card
+        newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
+
+        // append the card to the list
+        anchor.getChildren().add(count + 2, newCard);
+
+        // show card detail scene to be able to set details of card
+        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        this.currentCard.setText(c.title);
+    }
+
 
     /**
      * Creates an empty anchor pane for a card

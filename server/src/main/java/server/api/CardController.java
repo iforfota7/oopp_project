@@ -2,6 +2,7 @@ package server.api;
 
 import commons.Cards;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
@@ -12,13 +13,14 @@ import javax.transaction.Transactional;
 public class CardController {
 
     private final CardsRepository repo;
-
+    private final SimpMessagingTemplate msgs;
     /**
      * Constructor for CardController
      * @param repo - Repository for cards entities
      */
-    public CardController(CardsRepository repo) {
+    public CardController(CardsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
+        this.msgs = msgs;
     }
 
     /**
@@ -50,7 +52,7 @@ public class CardController {
 
         repo.incrementCardPosition(card.positionInsideList, card.list.id);
         Cards saved = repo.save(card);
-
+        msgs.convertAndSend("/topic/cards", saved);
         return ResponseEntity.ok(saved);
     }
 

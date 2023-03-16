@@ -63,9 +63,9 @@ public class ListController {
         repo.incrementListPosition(list.positionInsideBoard);
 
         Lists saved = repo.save(list);
-        Thread.sleep(2000);
+
         msgs.convertAndSend("/topic/lists", saved);
-        Thread.sleep(2000);
+
         return ResponseEntity.ok(saved);
     }
 

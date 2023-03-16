@@ -371,3 +371,6 @@ DELETE FROM LISTS LISTS WHERE LISTS.ID = list1 [42122-200]
 2023-03-15 20:10:17 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM LISTS LISTS CARDS[*] CARDS"; SQL statement:
 SELECT * FROM LISTS LISTS CARDS CARDS [42000-200]
+2023-03-16 08:15:02 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM LISTS LISTS CARDS[*] CARDS"; SQL statement:
+SELECT * FROM LISTS LISTS CARDS CARDS [42000-200]

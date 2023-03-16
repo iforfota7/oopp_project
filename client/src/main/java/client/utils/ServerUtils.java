@@ -18,21 +18,15 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import commons.Cards;
 import commons.Lists;
-import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -116,7 +110,7 @@ public class ServerUtils {
 
     }
 
-    private StompSession session =  connect("ws://localhost:8080/websocket");
+    private final StompSession session =  connect("ws://localhost:8080/websocket");
 
     private StompSession connect(String url){
         var client = new StandardWebSocketClient();
@@ -146,9 +140,7 @@ public class ServerUtils {
         });
     }
 
-    public void send(String dest, Object o){
-        session.send(dest, o);
-    }
+
 
 
 }
