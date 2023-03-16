@@ -146,7 +146,7 @@ public class BoardCtrl implements Initializable {
             }
 
             if(CollisionChecking.collide(bound1, bound2)) {
-                dropCard(listContainer, mouseEvent.getScreenY());
+                dropCard(listContainer, mouseEvent.getY());
             }
         }
     }
@@ -160,8 +160,10 @@ public class BoardCtrl implements Initializable {
      * @param yPosition the absolute y position of the mouse when the card is dropped
      */
     public void dropCard(VBox listContainer, double yPosition) {
-        // calculate index of card compared to other cards from absolute y position of mouse
-        int index = (int) Math.round((yPosition - 305)/30 - 0.5);
+        // calculate index of card compared to other cards from relative y position of mouse and original index
+        int index = ((VBox)cardContainer.getParent()).getChildren().indexOf(cardContainer);
+        index += (int) Math.round((yPosition)/26);
+
         // if mouse was above the upper bound of the list, set index to 0 (card forced into first position)
         if(index < 0) index = 0;
 
@@ -169,9 +171,9 @@ public class BoardCtrl implements Initializable {
             ((VBox)cardContainer.getParent()).getChildren().remove(cardContainer);
 
             // if the index is too large compared to the number of children, add it to end of the list
-            if(index >= listContainer.getChildren().size() - 2) listContainer.getChildren().add(cardContainer);
-            // otherwise add in the position of the calculated index (add 2 due to title and separator in vbox)
-            else listContainer.getChildren().add(index + 2, cardContainer);
+            if(index >= listContainer.getChildren().size()) listContainer.getChildren().add(cardContainer);
+            // otherwise add in the position of the calculated index
+            else listContainer.getChildren().add(index, cardContainer);
         }
     }
 
