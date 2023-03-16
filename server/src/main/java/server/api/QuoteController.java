@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,9 +39,13 @@ public class QuoteController {
     private final Random random;
     private final QuoteRepository repo;
 
-    public QuoteController(Random random, QuoteRepository repo) {
+    private final SimpMessagingTemplate msgs;
+
+    public QuoteController(Random random, QuoteRepository repo, SimpMessagingTemplate msgs) {
         this.random = random;
         this.repo = repo;
+        //OPTION 2
+        this.msgs = msgs;
     }
 
     @GetMapping(path = { "", "/" })
@@ -54,6 +61,15 @@ public class QuoteController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
+    /*OPTION 1
+    @MessageMapping("/quotes")
+    @SendTo("/topic/quotes")
+    public Quote addMessage(Quote q){
+        add(q);
+        return q;
+    }
+    */
+
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Quote> add(@RequestBody Quote quote) {
 
@@ -61,8 +77,11 @@ public class QuoteController {
                 || isNullOrEmpty(quote.quote)) {
             return ResponseEntity.badRequest().build();
         }
+        //OPTION 2
+        msgs.convertAndSend("/topic/quotes", quote);
 
         Quote saved = repo.save(quote);
+
         return ResponseEntity.ok(saved);
     }
 

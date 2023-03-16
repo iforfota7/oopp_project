@@ -1,6 +1,8 @@
 package client.scenes;
 
 import client.lib.CollisionChecking;
+import client.utils.ServerUtils;
+import commons.Lists;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +16,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
+
 import javafx.scene.input.MouseEvent;
 
 
@@ -25,7 +29,7 @@ import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
     private final MainCtrl mainCtrl;
-
+    private final ServerUtils server;
     @FXML
     private AnchorPane cardContainer;
     @FXML
@@ -69,7 +73,13 @@ public class BoardCtrl implements Initializable {
         listCards = new ArrayList<>();
         listCards.add(card2Container);
         listCards.add(card3Container);
-
+        List<Lists> lists = server.getLists();
+        for(int i = 0; i<lists.size(); i++){
+            this.addNewList(lists.get(i).title);
+        }
+        server.registerForMessages("/topic/lists", Lists.class, l->{
+         this.addNewList(l.title);
+        });
     }
 
     /**
@@ -180,8 +190,9 @@ public class BoardCtrl implements Initializable {
      * @param mainCtrl The master controller, which will later be replaced by a class of window controllers
      */
     @Inject
-    public BoardCtrl(MainCtrl mainCtrl){
+    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
         this.mainCtrl = mainCtrl;
+        this.server = server;
     }
 
     /**
@@ -241,7 +252,7 @@ public class BoardCtrl implements Initializable {
      */
     public void addNewList(String newListName) {
         // closes the scene of adding a new list
-        mainCtrl.closeADList();
+       // mainCtrl.closeADList();
 
         VBox newList = createNewList(newListName);
         mainCtrl.addNewList(newList, firstRow);
