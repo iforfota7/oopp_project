@@ -36,6 +36,7 @@ public class ADListCtrl {
     {
         int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size() - 3; //this -3 takes into account the hardcoded lists
         server.addList(new Lists(newListName.getText(), positionInsideBoard));
+        newListName.setText("");
 
         mainCtrl.closeADList();
     }
