@@ -1,16 +1,13 @@
 package server.api;
 
-import commons.Cards;
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import server.database.ListsRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/lists")
@@ -75,7 +72,7 @@ public class ListController {
      * @return 200 OK if renaming was successful
      */
     @PostMapping(path = {"/rename","/rename/"})
-    public ResponseEntity<Lists> renameCard(@RequestBody Lists list) {
+    public ResponseEntity<Lists> renameList(@RequestBody Lists list) {
 
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0){
             return ResponseEntity.badRequest().build();

@@ -1,14 +1,12 @@
 package server.api;
 
 import commons.Cards;
-import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -23,11 +21,6 @@ public class CardController {
     public CardController(CardsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
         this.msgs = msgs;
-    }
-
-    @GetMapping(path = {"/get", "/get/"})
-    public List<Cards> getAll(){
-        return repo.findAll();
     }
 
     /**
