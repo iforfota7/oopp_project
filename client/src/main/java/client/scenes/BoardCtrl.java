@@ -4,6 +4,7 @@ import client.lib.CollisionChecking;
 import client.utils.ServerUtils;
 import commons.Cards;
 import commons.Lists;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -79,7 +80,12 @@ public class BoardCtrl implements Initializable {
 
         }
         server.registerForMessages("/topic/lists", Lists.class, l->{
-
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    addNewList(l);
+                }
+            });
         });
     }
 
