@@ -41,7 +41,7 @@ public class ListController {
     @Transactional
     @Async
     @PostMapping(path={"", "/"})
-    public ResponseEntity<Lists> addList(@RequestBody Lists list) throws InterruptedException {
+    public ResponseEntity<Lists> addList(@RequestBody Lists list) {
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 
