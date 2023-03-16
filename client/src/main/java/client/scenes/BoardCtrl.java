@@ -43,7 +43,6 @@ public class BoardCtrl implements Initializable {
     private VBox header2;
     @FXML
     private VBox header3;
-
     @FXML
     private HBox firstRow;
 
@@ -68,12 +67,12 @@ public class BoardCtrl implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
-        listContainers.add(header1);
-        listContainers.add(header2);
-        listContainers.add(header3);
+//        listContainers.add(header1);
+//        listContainers.add(header2);
+//        listContainers.add(header3);
         listCards = new ArrayList<>();
-        listCards.add(card2Container);
-        listCards.add(card3Container);
+//        listCards.add(card2Container);
+//        listCards.add(card3Container);
         List<Lists> lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
          this.addNewList(lists.get(i));
@@ -265,7 +264,7 @@ public class BoardCtrl implements Initializable {
 
         mainCtrl.addNewList(newList, firstRow);
         for(int i = 0; i<l.cards.size(); i++){
-            addNewCard(newList, l.cards.get(i));
+            addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
         }
     }
 
@@ -537,5 +536,9 @@ public class BoardCtrl implements Initializable {
         // set the button to delete the card it is a part of when clicked
         button.setOnAction(this::deleteCard);
         return button;
+    }
+
+    public HBox getFirstRow() {
+        return firstRow;
     }
 }

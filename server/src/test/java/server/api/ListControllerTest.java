@@ -5,6 +5,9 @@ import commons.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.AbstractMessageChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ListControllerTest {
 
     public long listCount;
+    public SimpMessagingTemplate msgs;
     public TestListsRepository repo;
     public ListController sut;
 
@@ -21,8 +25,14 @@ public class ListControllerTest {
     public void setup() {
 
         listCount = 0;
+        msgs = new SimpMessagingTemplate(new AbstractMessageChannel() {
+            @Override
+            protected boolean sendInternal(Message<?> message, long timeout) {
+                return true;
+            }
+        });
         repo = new TestListsRepository();
-        sut = new ListController(repo);
+        sut = new ListController(repo, msgs);
     }
 
     @Test

@@ -34,8 +34,11 @@ public class ADListCtrl {
     @FXML
     void saveNewList(ActionEvent event)
     {
+        int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
+        server.addList(new Lists(newListName.getText(), positionInsideBoard));
+        newListName.setText("");
+
         mainCtrl.closeADList();
-        server.addList(new Lists(newListName.getText(), 1));
     }
 
 }
