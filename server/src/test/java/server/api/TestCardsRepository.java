@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.Cards;
+import commons.Lists;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -202,7 +203,17 @@ public class TestCardsRepository implements CardsRepository {
     public <S extends Cards> S save(S entity) {
         call("save");
         if(entity.list.cards==null) entity.list.cards = new ArrayList<>();
-        entity.list.cards.add(entity);
+
+        boolean cardExists = false;
+        for(int i=0; i<entity.list.cards.size(); i++)
+            if(entity.id == entity.list.cards.get(i).id) {
+                entity.list.cards.set(i, entity);
+                cardExists = true;
+            }
+
+        if(!cardExists)
+            entity.list.cards.add(entity);
+
         //order by positionInsideList using insertion sort
         for(int j=entity.list.cards.size()-1; j>0; j--) {
 
@@ -214,6 +225,13 @@ public class TestCardsRepository implements CardsRepository {
             }
             else break;
         }
+
+        for(int i=0; i<cards.size(); i++)
+            if(cards.get(i).id == entity.id) {
+                cards.set(i, entity);
+                return entity;
+            }
+
         cards.add(entity);
         return entity;
     }
@@ -237,6 +255,9 @@ public class TestCardsRepository implements CardsRepository {
      */
     @Override
     public Optional<Cards> findById(Long aLong) {
+        for(Cards c : cards)
+            if(c.id == aLong)
+                return Optional.of(c);
         return Optional.empty();
     }
 

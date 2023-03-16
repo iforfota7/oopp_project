@@ -248,6 +248,13 @@ public class TestListsRepository implements ListsRepository {
     @Override
     public <S extends Lists> S save(S entity) {
         call("save");
+
+        for(int i=0; i<lists.size(); i++)
+            if(lists.get(i).id == entity.id) {
+                lists.set(i, entity);
+                return entity;
+            }
+
         lists.add(entity);
         return entity;
     }
@@ -271,6 +278,9 @@ public class TestListsRepository implements ListsRepository {
      */
     @Override
     public Optional<Lists> findById(Long aLong) {
+        for(Lists l : lists)
+            if(l.id == aLong)
+                return Optional.of(l);
         return Optional.empty();
     }
 
