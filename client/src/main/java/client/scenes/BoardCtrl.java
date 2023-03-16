@@ -265,7 +265,7 @@ public class BoardCtrl implements Initializable {
 
         mainCtrl.addNewList(newList, firstRow);
         for(int i = 0; i<l.cards.size(); i++){
-            addNewCard(newList, l.cards.get(i));
+            addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
         }
     }
 
