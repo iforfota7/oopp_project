@@ -11,7 +11,7 @@ import javax.inject.Inject;
  *  Controller for Add List
  */
 public class ADListCtrl {
-    private BoardCtrl boardCtrl;
+    private final BoardCtrl boardCtrl;
 
     @Inject
     public ADListCtrl(BoardCtrl boardCtrl){
@@ -23,6 +23,9 @@ public class ADListCtrl {
     @FXML
     private TextField newListOrder;
 
+    /**
+     * the initialization and customization of the List display name is only achieved through creating a new window.
+     */
     @FXML
     void saveNewList(ActionEvent event) {
         boardCtrl.addNewList(newListName.getText());
