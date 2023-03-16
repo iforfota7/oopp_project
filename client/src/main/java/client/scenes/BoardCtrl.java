@@ -43,7 +43,6 @@ public class BoardCtrl implements Initializable {
     private VBox header2;
     @FXML
     private VBox header3;
-
     @FXML
     private HBox firstRow;
 
@@ -537,5 +536,9 @@ public class BoardCtrl implements Initializable {
         // set the button to delete the card it is a part of when clicked
         button.setOnAction(this::deleteCard);
         return button;
+    }
+
+    public HBox getFirstRow() {
+        return firstRow;
     }
 }
