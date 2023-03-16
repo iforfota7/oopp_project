@@ -1,12 +1,14 @@
 package server.api;
 
 import commons.Cards;
+import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -21,6 +23,11 @@ public class CardController {
     public CardController(CardsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
         this.msgs = msgs;
+    }
+
+    @GetMapping(path = {"/get", "/get/"})
+    public List<Cards> getAll(){
+        return repo.findAll();
     }
 
     /**
@@ -57,6 +64,32 @@ public class CardController {
     }
 
     /**
+     * Method for updating the title of a card
+     * @param card the card whose title is to be renamed
+     * @return 200 OK if renaming was successful
+     */
+    @PostMapping(path = {"/rename","/rename/"})
+    public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
+
+        if(card == null || card.list==null || isNullOrEmpty(card.title) || card.positionInsideList<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(!repo.existsById(card.id))
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(card.id).get().positionInsideList!=card.positionInsideList)
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(card.id).get().list.id!=card.list.id)
+            return ResponseEntity.badRequest().build();
+
+        Cards saved = repo.save(card);
+        msgs.convertAndSend("/topic/cards", saved);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**
      * Method for deleting a card from the repo
      * Whenever a card is removed the positions of the cards with
      * higher position in the same list get decremented by 1
@@ -65,7 +98,7 @@ public class CardController {
      */
     @Transactional
     @PostMapping(path = {"/remove", "/remove/"})
-    public ResponseEntity<Cards> removeCard(@RequestBody Cards card){
+    public ResponseEntity<Cards> removeCard(@RequestBody Cards card) {
 
         if(card == null){
             return ResponseEntity.badRequest().build();

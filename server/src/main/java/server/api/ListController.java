@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Cards;
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -9,6 +10,7 @@ import server.database.ListsRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/lists")
@@ -39,7 +41,6 @@ public class ListController {
      * @return a 200 OK response for a successful http request
      */
     @Transactional
-    @Async
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
@@ -59,13 +60,34 @@ public class ListController {
             return ResponseEntity.badRequest().build();
         }
 
-
         repo.incrementListPosition(list.positionInsideBoard);
 
         Lists saved = repo.save(list);
 
         msgs.convertAndSend("/topic/lists", saved);
 
+        return ResponseEntity.ok(saved);
+    }
+
+    /**
+     * Method for updating the title of a list
+     * @param list the list whose title is to be renamed
+     * @return 200 OK if renaming was successful
+     */
+    @PostMapping(path = {"/rename","/rename/"})
+    public ResponseEntity<Lists> renameCard(@RequestBody Lists list) {
+
+        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(!repo.existsById(list.id))
+            return ResponseEntity.badRequest().build();
+
+        repo.findById(list.id).get().title = list.title;
+
+        Lists saved = repo.save(repo.findById(list.id).get());
+        msgs.convertAndSend("/topic/lists", saved);
         return ResponseEntity.ok(saved);
     }
 
