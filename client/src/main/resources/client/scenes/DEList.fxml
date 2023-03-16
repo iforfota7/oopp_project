@@ -11,12 +11,12 @@
       <DropShadow />
    </effect>
    <children>
-      <Button fx:id="deleteList" layoutX="188.0" layoutY="50.0" mnemonicParsing="false" onAction="#deleteList" text="Delete" />
+      <Button fx:id="deleteList" layoutX="188.0" layoutY="50.0" mnemonicParsing="false" onAction="#confirmDeleteList" text="Delete" />
       <Label layoutX="43.0" layoutY="14.0" text="Do you really want to delete ?">
          <font>
             <Font name="Avenir Book" size="16.0" />
          </font>
       </Label>
-      <Button fx:id="cancelDelete" layoutX="60.0" layoutY="50.0" mnemonicParsing="false" onAction="#undeleteList" text="Cancel" />
+      <Button fx:id="cancelDelete" layoutX="60.0" layoutY="50.0" mnemonicParsing="false" onAction="#cancelDeleteList" text="Cancel" />
    </children>
 </AnchorPane>

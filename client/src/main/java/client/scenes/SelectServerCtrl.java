@@ -3,9 +3,10 @@ package client.scenes;
 import client.Main;
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+
 
 public class SelectServerCtrl {
 
@@ -15,8 +16,6 @@ public class SelectServerCtrl {
     @FXML
     private TextField inputServer;
 
-    @FXML
-    private Button connect;
 
     /**
      * Method to be executed when connect button is clicked
@@ -38,5 +37,16 @@ public class SelectServerCtrl {
         // check whether valid url, and if valid go to next scene
         if(ServerUtils.checkServer()) Main.setSceneToBoard();
         else inputServer.setText("invalid");
+    }
+
+    /**
+     * Button 'connect' keyboard shortcut, triggering button event on pressing enter key on keyboard.
+     * @param keyEvent The keyboard stroke element from FXML.
+     */
+    @FXML
+    public void buttonKeyPress(javafx.scene.input.KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.ENTER){
+            connect();
+        }
     }
 }

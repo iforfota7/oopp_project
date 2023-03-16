@@ -1,6 +1,5 @@
 package client.scenes;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -20,9 +19,9 @@ public class RNListCtrl {
     private TextField newName;
 
     @FXML
-    void saveNewName(ActionEvent event) {
+    void saveNewName() {
         var Name = newName.getText();
-        boardCtrl.RNList(Name);
+        boardCtrl.saveNewListName(Name);
     }
 
 }

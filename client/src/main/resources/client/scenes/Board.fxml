@@ -104,7 +104,7 @@
                         <MenuButton fx:id="refactorList" mnemonicParsing="false" prefHeight="22.0" prefWidth="75.0" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
                            <items>
                               <MenuItem fx:id="renameList" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
-                              <MenuItem fx:id="deleteList" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                              <MenuItem fx:id="doubleConfirmDeleteList" mnemonicParsing="false" onAction="#doubleConfirmDeleteList" text="Delete List" />
                            </items>
                            <font>
                               <Font size="9.0" />
@@ -149,7 +149,7 @@
                         <MenuButton fx:id="refactorList2" mnemonicParsing="false" prefHeight="22.0" prefWidth="75.0" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
                            <items>
                               <MenuItem fx:id="renameList2" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
-                              <MenuItem fx:id="deleteList2" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                              <MenuItem fx:id="deleteList2" mnemonicParsing="false" onAction="#doubleConfirmDeleteList" text="Delete List" />
                            </items>
                            <font>
                               <Font size="9.0" />
@@ -194,7 +194,7 @@
                         <MenuButton fx:id="refactorList3" mnemonicParsing="false" prefHeight="22.0" prefWidth="75.0" style="-fx-background-color: #f08080; -fx-border-image-width: 50px;" text="Refactor List">
                            <items>
                               <MenuItem fx:id="renameList21" mnemonicParsing="false" onAction="#renameList" text="Rename List" />
-                              <MenuItem fx:id="deleteList3" mnemonicParsing="false" onAction="#deleteList" text="Delete List" />
+                              <MenuItem fx:id="deleteList3" mnemonicParsing="false" onAction="#doubleConfirmDeleteList" text="Delete List" />
                            </items>
                            <font>
                               <Font size="9.0" />

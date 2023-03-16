@@ -195,7 +195,7 @@ public class BoardCtrl implements Initializable {
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showRenameList();
     }
-    void RNList(String name) {
+    void saveNewListName(String name) {
         ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
         for (Node node : children) {
             if (node instanceof Label ) {
@@ -208,27 +208,36 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     *Trigger function for deleting List option in the drop-down options button
+     * Trigger function for deleting List option in the drop-down options button
      * @param event List delete process
      */
     @FXML
-    void deleteList(ActionEvent event) {
+    void doubleConfirmDeleteList(ActionEvent event) {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showDeleteList();
     }
-    void deleteL() {
+
+    /**
+     * delete function with double confirmation
+     * that users will not accidentally delete a list and lose a large amount of information.
+     */
+    void doubleConfirmDeleteList() {
         listContainers.remove(currentList.getChildren().get(0));
         ((HBox)currentList.getParent()).getChildren().remove(currentList);
         mainCtrl.closeDEList();
     }
-    void undeleteL() {
+
+    /**
+     * Cancel deletion. This will not execute the delete command and will simply close the window, saving the list.
+     */
+    void cancelDeleteList() {
         mainCtrl.closeDEList();
     }
 
     /**
-     *Trigger function for adding a List with a button //ActionEvent event
+     * Link opens new scene to enter a new list name.
      */
     @FXML
     void addList(){
@@ -239,7 +248,7 @@ public class BoardCtrl implements Initializable {
      * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
      * @param newListName the name of the new list
      */
-    public void addNewList(String newListName) {
+    public void showNewList(String newListName) {
         // closes the scene of adding a new list
         mainCtrl.closeADList();
 
@@ -306,7 +315,7 @@ public class BoardCtrl implements Initializable {
 
         MenuItem deleteOption = new MenuItem();
         deleteOption.setText("Delete List");
-        deleteOption.setOnAction(this::deleteList);
+        deleteOption.setOnAction(this::doubleConfirmDeleteList);
 
         refactorButtonList.getItems().add(renameOption);
         refactorButtonList.getItems().add(deleteOption);
