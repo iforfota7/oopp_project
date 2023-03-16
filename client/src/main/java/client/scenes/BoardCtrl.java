@@ -67,12 +67,12 @@ public class BoardCtrl implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
-        listContainers.add(header1);
-        listContainers.add(header2);
-        listContainers.add(header3);
+//        listContainers.add(header1);
+//        listContainers.add(header2);
+//        listContainers.add(header3);
         listCards = new ArrayList<>();
-        listCards.add(card2Container);
-        listCards.add(card3Container);
+//        listCards.add(card2Container);
+//        listCards.add(card3Container);
         List<Lists> lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
          this.addNewList(lists.get(i));

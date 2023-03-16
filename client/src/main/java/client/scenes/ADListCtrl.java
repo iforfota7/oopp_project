@@ -34,7 +34,7 @@ public class ADListCtrl {
     @FXML
     void saveNewList(ActionEvent event)
     {
-        int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size() - 3; //this -3 takes into account the hardcoded lists
+        int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
         server.addList(new Lists(newListName.getText(), positionInsideBoard));
         newListName.setText("");
 
