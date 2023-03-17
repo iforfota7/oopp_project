@@ -262,13 +262,14 @@ class CardControllerTest {
         list.id = 0;
 
         Cards c = getCard("a", 0, list);
-        repo.save(c);
+        sut.addCard(c);
 
         assertEquals(1, repo.cards.size());
         assertEquals("a", repo.cards.get(0).title);
 
-        c.title = "b";
-        sut.renameCard(c);
+        Cards c2 = getCard("b", 0, list);
+        c2.id = c.id;
+        sut.renameCard(c2);
 
         assertEquals(1, repo.cards.size());
         assertEquals("b", repo.cards.get(0).title);
@@ -276,8 +277,7 @@ class CardControllerTest {
 
     @Test
     void renameNullCard() {
-        Cards c = null;
-        assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c));
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(null));
     }
 
     @Test
@@ -296,7 +296,7 @@ class CardControllerTest {
         list.id = 0;
 
         Cards c = getCard("a", 0, list);
-        repo.save(c);
+        sut.addCard(c);
 
         Lists list2 = new Lists("todo", 0);
         Cards c2 = getCard("b", 0, list2);
@@ -311,10 +311,9 @@ class CardControllerTest {
         list.id = 0;
 
         Cards c = getCard("a", 0, list);
-        repo.save(c);
+        sut.addCard(c);
 
-        Lists list2 = new Lists("todo", 0);
-        Cards c2 = getCard("b", 1, list2);
+        Cards c2 = getCard("b", 1, list);
         c2.id = c.id;
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
     }

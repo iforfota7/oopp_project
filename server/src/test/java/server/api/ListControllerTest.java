@@ -265,8 +265,9 @@ public class ListControllerTest {
         assertEquals(1, repo.lists.size());
         assertEquals("a", repo.lists.get(0).title);
 
-        l.title = "b";
-        sut.renameList(l);
+        Lists l2 = getList("b", 0);
+        l2.id = l.id;
+        sut.renameList(l2);
 
         assertEquals(1, repo.lists.size());
         assertEquals("b", repo.lists.get(0).title);
@@ -283,9 +284,7 @@ public class ListControllerTest {
 
     @Test
     void renameNullList() {
-        Lists l = null;
-
-        assertEquals(ResponseEntity.badRequest().build(), sut.renameList(l));
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameList(null));
     }
 
     public Lists getList(String t, int p) {
