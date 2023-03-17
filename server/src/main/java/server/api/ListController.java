@@ -67,7 +67,10 @@ public class ListController {
     }
 
     /**
-     * Method for updating the title of a list
+     * Method for updating the title of a list.
+     * A list can only be renamed if it or any of its fields (excluding cards) are not null,
+     * if it already exists in the repo
+     * and lastly if it's position is the same as the version of the list in the repo
      * @param list the list whose title is to be renamed
      * @return 200 OK if renaming was successful
      */
@@ -78,13 +81,16 @@ public class ListController {
             return ResponseEntity.badRequest().build();
         }
 
-        if(!repo.existsById(list.id))
+        if(repo.findById(list.id).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(list.id).get().positionInsideBoard!=list.positionInsideBoard)
             return ResponseEntity.badRequest().build();
 
         repo.findById(list.id).get().title = list.title;
 
         Lists saved = repo.save(repo.findById(list.id).get());
-        msgs.convertAndSend("/topic/lists", saved);
+        msgs.convertAndSend("/topic/lists/rename", saved);
         return ResponseEntity.ok(saved);
     }
 

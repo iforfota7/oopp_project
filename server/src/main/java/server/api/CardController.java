@@ -57,7 +57,11 @@ public class CardController {
     }
 
     /**
-     * Method for updating the title of a card
+     * Method for updating the title of a card.
+     * A card can only be renamed if it or any of its fields are not null
+     * if it already exists in the repo,
+     * if it's position is the same as the version of the card in the repo
+     * and lastly if the card's list is the same as the list of the card specified in the repo
      * @param card the card whose title is to be renamed
      * @return 200 OK if renaming was successful
      */
@@ -68,7 +72,7 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
 
-        if(!repo.existsById(card.id))
+        if(repo.findById(card.id).isEmpty())
             return ResponseEntity.badRequest().build();
 
         if(repo.findById(card.id).get().positionInsideList!=card.positionInsideList)
@@ -78,7 +82,7 @@ public class CardController {
             return ResponseEntity.badRequest().build();
 
         Cards saved = repo.save(card);
-        msgs.convertAndSend("/topic/cards", saved);
+        msgs.convertAndSend("/topic/cards/rename", saved);
         return ResponseEntity.ok(saved);
     }
 
