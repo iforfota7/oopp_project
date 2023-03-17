@@ -123,6 +123,7 @@ public class MainCtrl {
 
     }
 
+
     /**
      * Show scene of cardDetails
      */

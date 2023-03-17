@@ -73,19 +73,18 @@ public class BoardCtrl implements Initializable {
         listCards = new ArrayList<>();
 //        listCards.add(card2Container);
 //        listCards.add(card3Container);
-        List<Lists> lists = server.getLists();
-        for(int i = 0; i<lists.size(); i++){
-         this.addNewList(lists.get(i));
-
-        }
+         refresh();
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    addNewList(l);
+                  refresh();
                 }
             });
         });
+
+
+
     }
 
     /**
@@ -97,6 +96,15 @@ public class BoardCtrl implements Initializable {
         mouseEvent.consume();
         //card1Container.getParent().getParent().toFront();
         //card1Container.toFront();
+    }
+
+    public void refresh(){
+        firstRow.getChildren().clear();
+        List<Lists> lists = server.getLists();
+        for(int i = 0; i<lists.size(); i++){
+            addNewList(lists.get(i));
+
+        }
     }
 
     /**
@@ -234,6 +242,7 @@ public class BoardCtrl implements Initializable {
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showDeleteList();
+
     }
     void deleteL() {
         listContainers.remove(currentList.getChildren().get(0));
