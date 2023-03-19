@@ -3,7 +3,6 @@ package server.api;
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import server.database.ListsRepository;
 
@@ -39,7 +38,6 @@ public class ListController {
      * @return a 200 OK response for a successful http request
      */
     @Transactional
-    @Async
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
@@ -59,13 +57,40 @@ public class ListController {
             return ResponseEntity.badRequest().build();
         }
 
-
         repo.incrementListPosition(list.positionInsideBoard);
 
         Lists saved = repo.save(list);
 
         msgs.convertAndSend("/topic/lists", saved);
 
+        return ResponseEntity.ok(saved);
+    }
+
+    /**
+     * Method for updating the title of a list.
+     * A list can only be renamed if it or any of its fields (excluding cards) are not null,
+     * if it already exists in the repo
+     * and lastly if it's position is the same as the version of the list in the repo
+     * @param list the list whose title is to be renamed
+     * @return 200 OK if renaming was successful
+     */
+    @PostMapping(path = {"/rename","/rename/"})
+    public ResponseEntity<Lists> renameList(@RequestBody Lists list) {
+
+        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(repo.findById(list.id).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(list.id).get().positionInsideBoard!=list.positionInsideBoard)
+            return ResponseEntity.badRequest().build();
+
+        repo.findById(list.id).get().title = list.title;
+
+        Lists saved = repo.save(repo.findById(list.id).get());
+        msgs.convertAndSend("/topic/lists/rename", saved);
         return ResponseEntity.ok(saved);
     }
 

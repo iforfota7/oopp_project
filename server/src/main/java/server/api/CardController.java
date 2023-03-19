@@ -57,6 +57,36 @@ public class CardController {
     }
 
     /**
+     * Method for updating the title of a card.
+     * A card can only be renamed if it or any of its fields are not null
+     * if it already exists in the repo,
+     * if it's position is the same as the version of the card in the repo
+     * and lastly if the card's list is the same as the list of the card specified in the repo
+     * @param card the card whose title is to be renamed
+     * @return 200 OK if renaming was successful
+     */
+    @PostMapping(path = {"/rename","/rename/"})
+    public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
+
+        if(card == null || card.list==null || isNullOrEmpty(card.title) || card.positionInsideList<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(repo.findById(card.id).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(card.id).get().positionInsideList!=card.positionInsideList)
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(card.id).get().list.id!=card.list.id)
+            return ResponseEntity.badRequest().build();
+
+        Cards saved = repo.save(card);
+        msgs.convertAndSend("/topic/cards/rename", saved);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**
      * Method for deleting a card from the repo
      * Whenever a card is removed the positions of the cards with
      * higher position in the same list get decremented by 1
@@ -65,7 +95,7 @@ public class CardController {
      */
     @Transactional
     @PostMapping(path = {"/remove", "/remove/"})
-    public ResponseEntity<Cards> removeCard(@RequestBody Cards card){
+    public ResponseEntity<Cards> removeCard(@RequestBody Cards card) {
 
         if(card == null){
             return ResponseEntity.badRequest().build();
