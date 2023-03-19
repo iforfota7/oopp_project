@@ -1,6 +1,10 @@
 package client.scenes;
 
 import client.lib.CollisionChecking;
+import client.utils.ServerUtils;
+import commons.Cards;
+import commons.Lists;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javafx.scene.input.MouseEvent;
 
 
@@ -25,32 +30,30 @@ import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
     private final MainCtrl mainCtrl;
-
+    private final ServerUtils server;
     @FXML
-    private AnchorPane card1Container;
+    private AnchorPane cardContainer;
     @FXML
     private AnchorPane card2Container;
     @FXML
     private AnchorPane card3Container;
     @FXML
-    private AnchorPane list1Container;
+    private VBox header1;
     @FXML
-    private AnchorPane list2Container;
+    private VBox header2;
     @FXML
-    private AnchorPane list3Container;
-
-    @FXML
-    private VBox vBoard;
+    private VBox header3;
     @FXML
     private HBox firstRow;
-    //private static HBox actualRow;
 
 
-    List<AnchorPane> listContainers;
+    List<VBox> listContainers;
     List<AnchorPane> listCards;
 
     private double originalX;
     private double originalY;
+    private Bounds parentListBounds;
+    private Bounds card1Bounds;
     private VBox currentList;
     private Hyperlink currentCard;
     private long mousePressedTime;
@@ -64,12 +67,23 @@ public class BoardCtrl implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
-        listContainers.add(list1Container);
-        listContainers.add(list2Container);
-        listContainers.add(list3Container);
+//        listContainers.add(header1);
+//        listContainers.add(header2);
+//        listContainers.add(header3);
         listCards = new ArrayList<>();
-        listCards.add(card2Container);
-        listCards.add(card3Container);
+//        listCards.add(card2Container);
+//        listCards.add(card3Container);
+         refresh();
+        server.registerForMessages("/topic/lists", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                  refresh();
+                }
+            });
+        });
+
+
 
     }
 
@@ -80,8 +94,17 @@ public class BoardCtrl implements Initializable {
     public void dragDetected(MouseEvent mouseEvent) {
         mousePressedTime = System.currentTimeMillis();
         mouseEvent.consume();
-        card1Container.getParent().toFront();
-        card1Container.toFront();
+        //card1Container.getParent().getParent().toFront();
+        //card1Container.toFront();
+    }
+
+    public void refresh(){
+        firstRow.getChildren().clear();
+        List<Lists> lists = server.getLists();
+        for(int i = 0; i<lists.size(); i++){
+            addNewList(lists.get(i));
+
+        }
     }
 
     /**
@@ -93,6 +116,14 @@ public class BoardCtrl implements Initializable {
     public void mousePressed(MouseEvent mouseEvent) {
         originalX = mouseEvent.getX();
         originalY = mouseEvent.getY();
+        if(mouseEvent.getSource().getClass().equals(Hyperlink.class)){
+            Hyperlink card = (Hyperlink) mouseEvent.getSource();
+            cardContainer = (AnchorPane) card.getParent();
+        }
+        else {
+            cardContainer = (AnchorPane) mouseEvent.getSource();
+        }
+        parentListBounds = cardContainer.getParent().localToScene(cardContainer.getParent().getBoundsInLocal());
     }
 
     /**
@@ -104,47 +135,44 @@ public class BoardCtrl implements Initializable {
      */
 
     public void mouseDragged(MouseEvent mouseEvent) {
-        mouseEvent.consume();
-        card1Container.setLayoutX(card1Container.getLayoutX() + mouseEvent.getX() - originalX);
-        card1Container.setLayoutY(card1Container.getLayoutY() + mouseEvent.getY() - originalY);
+        //mouseEvent.consume();
+        if(mouseEvent.getSource().getClass().equals(Hyperlink.class)){
+            Hyperlink card = (Hyperlink) mouseEvent.getSource();
+            cardContainer = (AnchorPane) card.getParent();
+        }
+        else {
+            cardContainer = (AnchorPane) mouseEvent.getSource();
+        }
+
+        cardContainer.setLayoutX(cardContainer.getLayoutX() + mouseEvent.getX() - originalX);
+        cardContainer.setLayoutY(cardContainer.getLayoutY() + mouseEvent.getY() - originalY);
+        card1Bounds = cardContainer.localToScene(cardContainer.getBoundsInLocal());
     }
 
     /**
      * The method finalises drag-and-drop
      */
-    public void mouseReleased() {
+    public void mouseReleased(MouseEvent mouseEvent) {
 
-        /// bound1 is the boundaries of card1Container
-        Bounds bound1 = card1Container.localToScene(card1Container.getBoundsInLocal());
+        // bound1 is the boundaries of card1Container
+        Bounds bound1 = card1Bounds;
+
 
         // check for potential drop targets
-        for(AnchorPane listContainer : listContainers) {
+        for(VBox listContainer : listContainers) {
             // bound2 is the boundaries of the listContainer
-            Bounds bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
+            Bounds bound2;
+            if(listContainer.equals(cardContainer.getParent())){
+                bound2 = parentListBounds;
+            }
+            else {
+                bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
+            }
 
             if(CollisionChecking.collide(bound1, bound2)) {
-                if(!listContainer.equals(card1Container.getParent())) {
-                    // if the card is dropped into a new list, then the cards in the old list are moved up
-                    realign((AnchorPane) card1Container.getParent(), -1);
-                }
-                dropCard(listContainer);
+                dropCard(listContainer, mouseEvent.getScreenY());
             }
         }
-    }
-
-    /**
-     * The method realigns the cards from a list once a card has been dragged
-     * from / dropped into the list
-     * @param initialList the parent list of the dragged card
-     * @param CONSTANT has the value 1 for moving the remaining cards down
-     *                 has the value -1 for moving the remaining cards up
-     */
-    public void realign(AnchorPane initialList, int CONSTANT){
-        for (Node cardElement : listCards) {
-            if(cardElement.getParent().equals(initialList))
-                cardElement.setLayoutY(cardElement.getLayoutY() + CONSTANT * 25);
-        }
-
     }
 
     /**
@@ -153,16 +181,22 @@ public class BoardCtrl implements Initializable {
      * and positioning it to the top of the list using coordinates,
      * as well as realigns the cards from its parent list
      * @param listContainer the list in which a card is dropped
+     * @param yPosition the absolute y position of the mouse when the card is dropped
      */
-    public void dropCard(AnchorPane listContainer) {
-        if(!(card1Container.getParent().equals(listContainer))) {
-            realign(listContainer, 1);
-        }
+    public void dropCard(VBox listContainer, double yPosition) {
+        // calculate index of card compared to other cards from absolute y position of mouse
+        int index = (int) Math.round((yPosition - 305)/30 - 0.5);
+        // if mouse was above the upper bound of the list, set index to 0 (card forced into first position)
+        if(index < 0) index = 0;
 
-        ((AnchorPane)card1Container.getParent()).getChildren().remove(card1Container);
-        listContainer.getChildren().add(card1Container);
-        card1Container.setLayoutX(11.5);
-        card1Container.setLayoutY(25);
+        if(!(cardContainer.getParent().getParent().equals(listContainer))) {
+            ((VBox)cardContainer.getParent()).getChildren().remove(cardContainer);
+
+            // if the index is too large compared to the number of children, add it to end of the list
+            if(index >= listContainer.getChildren().size() - 2) listContainer.getChildren().add(cardContainer);
+            // otherwise add in the position of the calculated index (add 2 due to title and separator in vbox)
+            else listContainer.getChildren().add(index + 2, cardContainer);
+        }
     }
 
     /**
@@ -170,8 +204,9 @@ public class BoardCtrl implements Initializable {
      * @param mainCtrl The master controller, which will later be replaced by a class of window controllers
      */
     @Inject
-    public BoardCtrl(MainCtrl mainCtrl){
+    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
         this.mainCtrl = mainCtrl;
+        this.server = server;
     }
 
     /**
@@ -207,8 +242,10 @@ public class BoardCtrl implements Initializable {
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showDeleteList();
+
     }
     void deleteL() {
+        listContainers.remove(currentList.getChildren().get(0));
         ((HBox)currentList.getParent()).getChildren().remove(currentList);
         mainCtrl.closeDEList();
     }
@@ -226,32 +263,38 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
-     * @param newListName the name of the new list
+     * @param l list to be added
      */
-    public void addNewList(String newListName) {
+    public void addNewList(Lists l) {
         // closes the scene of adding a new list
-        mainCtrl.closeADList();
+       // mainCtrl.closeADList();
 
-        VBox newList = createNewList(newListName);
-        mainCtrl.addNewList(newList, firstRow, vBoard);
+        VBox newList = createNewList(l);
+
+        mainCtrl.addNewList(newList, firstRow);
+        for(int i = 0; i<l.cards.size(); i++){
+            addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
+        }
     }
 
     /**
      * Creates a new list with all its elements
-     * @param newListName the name of the new list to be created
-     * @return and AnchorPane with the new list, aligned correspondingly
+     * @param l list to be created
+     * @return and VBox with the new list, aligned correspondingly
      */
-    public VBox createNewList(String newListName){
+    public VBox createNewList(Lists l){
         // creating the listView element
         VBox list = createListBody();
-        VBox listUp = new VBox(7);
-        HBox listDown = new HBox(30);
+        VBox headerList = new VBox(6);
+        HBox footerList = new HBox(30);
 
-        listUp.setMinSize(150, 230);
-        listDown.setMinSize(150, 30);
-        listUp.setAlignment(Pos.TOP_CENTER);
-        listDown.setAlignment(Pos.TOP_CENTER);
-        listDown.setStyle("-fx-padding: 0 7 0 7");
+        headerList.setId("header");
+
+        headerList.setMinSize(150, 235);
+        footerList.setMinSize(150, 25);
+        headerList.setAlignment(Pos.TOP_CENTER);
+        footerList.setAlignment(Pos.TOP_CENTER);
+        footerList.setStyle("-fx-padding: 0 7 0 7");
 
 
         // creating the adding card button, aligning and customising it
@@ -260,24 +303,26 @@ public class BoardCtrl implements Initializable {
         // creating the Delete List button, aligning and customising it
         MenuButton refactorButtonList = createRefactorButton();
 
-        listDown.getChildren().addAll(addCardButton, refactorButtonList);
+        footerList.getChildren().addAll(addCardButton, refactorButtonList);
 
         // creating the separator under the title, aligning and customising it
         Separator listSeparator = createSeparator();
 
         // creating the label for the name of the list, aligning and customising it
-        Label listName = createListTitle(newListName);
+        Label listName = createListTitle(l.title);
 
-        listUp.getChildren().addAll(listName, listSeparator);
+        headerList.getChildren().addAll(listName, listSeparator);
+        listContainers.add(headerList);
 
-        list.getChildren().addAll(listUp, listDown);
+        list.getChildren().addAll(headerList, footerList);
+        list.setId(Long.toString(l.id));
         return list;
     }
 
     /**
      * Creates a new button on the list, which when pressed, shows a menu of two options: renaming or
      * deleting the list;
-     * @return a button to refactor a list, aligned correspondingly
+     * @return a button to refactor a list
      */
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
@@ -314,7 +359,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Creates a button which when pressed, creates a new card in the list
-     * @return a button to create a new card, aligned correspondingly
+     * @return a button to create a new card, properly customised
      */
     public Button createAddCardButton(){
         Button addButton = new Button();
@@ -330,7 +375,7 @@ public class BoardCtrl implements Initializable {
     /**
      * Creates a label which shows the list's title
      * @param newListName the name the list should have
-     * @return a label with the name of the list, aligned correspondingly
+     * @return a Label with the name of the list
      */
     public Label createListTitle(String newListName){
         Label listName = new Label();
@@ -342,7 +387,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Creates the body of the list
-     * @return a listView, which represents the body of the list, designed and aligned accordingly
+     * @return a Vbox, which represents the body of the list, designed accordingly
      */
     public VBox createListBody(){
         VBox vbox = new VBox();
@@ -393,6 +438,7 @@ public class BoardCtrl implements Initializable {
      */
     public void addCardToList(ActionEvent event){
         VBox list = ((VBox) ((VBox)((Button) event.getTarget()).getParent().getParent()).getChildren().get(0));
+
         addNewCard(list);
     }
 
@@ -421,6 +467,28 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showCardDetail();
     }
 
+    public void addNewCard(VBox anchor, Cards c){
+        // count the number of cards currently in the list
+        int count = 0;
+        for(Node i : anchor.getChildren()){
+            if(i.getClass().equals(AnchorPane.class)) count++;
+        }
+
+        // create a new anchor pane for the card
+        AnchorPane newCard = newAnchorPane();
+
+        // add text and the delete button for the card
+        newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
+
+        // append the card to the list
+        anchor.getChildren().add(count + 2, newCard);
+
+        // show card detail scene to be able to set details of card
+        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        this.currentCard.setText(c.title);
+    }
+
+
     /**
      * Creates an empty anchor pane for a card
      * @return the created anchor pane
@@ -429,6 +497,10 @@ public class BoardCtrl implements Initializable {
         AnchorPane anchor = new AnchorPane();
         anchor.setLayoutX(0);
         anchor.setLayoutY(0);
+        anchor.setOnDragDetected(this::dragDetected);
+        anchor.setOnMouseDragged(this::mouseDragged);
+        anchor.setOnMousePressed(this::mousePressed);
+        anchor.setOnMouseReleased(this::mouseReleased);
         return anchor;
     }
 
@@ -445,6 +517,11 @@ public class BoardCtrl implements Initializable {
         card.setPrefSize(95, 23);
         card.setAlignment(Pos.CENTER);
         card.setStyle("-fx-background-color:  #E6E6FA");
+
+        card.setOnDragDetected(this::dragDetected);
+        card.setOnMouseDragged(this::mouseDragged);
+        card.setOnMousePressed(this::mousePressed);
+        card.setOnMouseReleased(this::mouseReleased);
 
         // set the card to execute cardDetail on action
         card.setOnAction(this::cardDetail);
@@ -468,5 +545,9 @@ public class BoardCtrl implements Initializable {
         // set the button to delete the card it is a part of when clicked
         button.setOnAction(this::deleteCard);
         return button;
+    }
+
+    public HBox getFirstRow() {
+        return firstRow;
     }
 }

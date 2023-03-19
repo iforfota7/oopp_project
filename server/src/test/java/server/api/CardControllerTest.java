@@ -5,6 +5,9 @@ import commons.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.AbstractMessageChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CardControllerTest {
 
     public long cardCount;
+    public SimpMessagingTemplate msgs;
     public TestCardsRepository repo;
     public CardController sut;
 
@@ -21,8 +25,14 @@ class CardControllerTest {
     public void setup() {
 
         cardCount = 0;
+        msgs = new SimpMessagingTemplate(new AbstractMessageChannel() {
+            @Override
+            protected boolean sendInternal(Message<?> message, long timeout) {
+                return true;
+            }
+        });
         repo = new TestCardsRepository();
-        sut = new CardController(repo);
+        sut = new CardController(repo, msgs);
     }
 
     @Test

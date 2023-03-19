@@ -3,6 +3,7 @@ package commons;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,6 +28,7 @@ public class Lists {
     public Lists(String title, int positionInsideBoard) {
         this.title = title;
         this.positionInsideBoard = positionInsideBoard;
+        this.cards = new ArrayList<>();
     }
 
     /**

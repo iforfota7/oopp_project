@@ -26,9 +26,12 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
     private Scene board, renameList, deleteList, addList, cardDetails;
 
+    private RNListCtrl rnListCtrl;
+    private DEListCtrl deListCtrl;
+    private ADListCtrl addListCtrl;
+    private CardDetailsCtrl cardDetailsCtrl;
+
     private int numberOfLists = 2;
-    private VBox vBoard;
-    private HBox actualRow;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
                             Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
@@ -39,12 +42,16 @@ public class MainCtrl {
         this.board = new Scene(board.getValue());
 
         this.renameList = new Scene(renameList.getValue());
+        this.rnListCtrl = renameList.getKey();
 
         this.deleteList = new Scene(deleteList.getValue());
+        this.deListCtrl = deleteList.getKey();
 
         this.addList = new Scene(addList.getValue());
+        this.addListCtrl = addList.getKey();
 
         this.cardDetails = new Scene(cardDetails.getValue());
+        this.cardDetailsCtrl = cardDetails.getKey();
 
         showStart();
         primaryStage.show();
@@ -64,6 +71,9 @@ public class MainCtrl {
         showStart();
     }
 
+    /**
+     * Show scene of Rename List
+     */
     public void showRenameList() {
         secondaryStage = new Stage();
         secondaryStage.setScene(renameList);
@@ -71,13 +81,19 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Show scene of Delete List
+     */
     public void showDeleteList() {
         secondaryStage = new Stage();
-        secondaryStage.setScene(deleteList);
+        secondaryStage.setScene(this.deleteList);
         secondaryStage.setTitle("Delete List!");
         secondaryStage.show();
     }
 
+    /**
+     * Show scene of addList
+     */
     public void showAddList() {
         secondaryStage = new Stage();
         secondaryStage.setScene(addList);
@@ -96,15 +112,17 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
-    public void addNewList(VBox list, HBox actualRow, VBox vBoard) {
+    /**
+     * Adds a new list to the board
+     * @param list the list to be added to the board
+     * @param row the hbox to which the list should be added (the row)
+     */
+    public void addNewList(VBox list, HBox row){
         numberOfLists++;
-        int positionOfTheList = numberOfLists % 4;
+        row.getChildren().add(list);
 
-        this.actualRow = actualRow;
-        this.vBoard = vBoard;
-
-        actualRow.getChildren().add(list);
     }
+
 
     /**
      * Show scene of cardDetails

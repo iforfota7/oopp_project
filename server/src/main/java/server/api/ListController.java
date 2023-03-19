@@ -2,6 +2,8 @@ package server.api;
 
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import server.database.ListsRepository;
 
@@ -12,13 +14,14 @@ import java.util.List;
 @RequestMapping("/api/lists")
 public class ListController {
     private final ListsRepository repo;
-
+    private final SimpMessagingTemplate msgs;
     /**
      * Constructor for ListController
      * @param repo - Repository for lists entities
      */
-    public ListController(ListsRepository repo) {
+    public ListController(ListsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
+        this.msgs = msgs;
     }
 
     /**
@@ -36,6 +39,7 @@ public class ListController {
      * @return a 200 OK response for a successful http request
      */
     @Transactional
+    @Async
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
@@ -55,8 +59,13 @@ public class ListController {
             return ResponseEntity.badRequest().build();
         }
 
+
         repo.incrementListPosition(list.positionInsideBoard);
+
         Lists saved = repo.save(list);
+
+        msgs.convertAndSend("/topic/lists", saved);
+
         return ResponseEntity.ok(saved);
     }
 

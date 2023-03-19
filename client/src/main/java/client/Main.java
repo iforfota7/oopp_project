@@ -44,18 +44,14 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         var selectServer = FXML.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
 
-        /**
-         * List rename&delete&add scene loader
-         */
+        // List rename&delete&add scene loader
         var renameList = FXML.load(RNListCtrl.class,"client", "scenes", "RNList.fxml" );
         var deleteList = FXML.load(DEListCtrl.class,"client", "scenes", "DEList.fxml" );
         var addList = FXML.load(ADListCtrl.class,"client", "scenes", "ADList.fxml" );
-        var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml");
+        var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList, cardDetails);
-
-
     }
 
     /**
