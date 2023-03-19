@@ -5,7 +5,6 @@ import client.utils.ServerUtils;
 import commons.Cards;
 import commons.Lists;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -33,16 +32,7 @@ public class BoardCtrl implements Initializable {
     private final ServerUtils server;
     @FXML
     private AnchorPane cardContainer;
-    @FXML
-    private AnchorPane card2Container;
-    @FXML
-    private AnchorPane card3Container;
-    @FXML
-    private VBox header1;
-    @FXML
-    private VBox header2;
-    @FXML
-    private VBox header3;
+
     @FXML
     private HBox firstRow;
 
@@ -57,6 +47,8 @@ public class BoardCtrl implements Initializable {
     private VBox currentList;
     private Hyperlink currentCard;
     private long mousePressedTime;
+
+    private List<Lists> lists;
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
@@ -84,6 +76,25 @@ public class BoardCtrl implements Initializable {
         });
 
 
+        server.registerForMessages("/topic/lists/remove", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                   refresh();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/cards/remove", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    refresh();
+                }
+            });
+        });
+
+
 
     }
 
@@ -100,7 +111,7 @@ public class BoardCtrl implements Initializable {
 
     public void refresh(){
         firstRow.getChildren().clear();
-        List<Lists> lists = server.getLists();
+         lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
 
@@ -221,14 +232,18 @@ public class BoardCtrl implements Initializable {
         mainCtrl.showRenameList();
     }
     void RNList(String name) {
-        ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
+        /*ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
         for (Node node : children) {
             if (node instanceof Label ) {
                 Label label = (Label) node;
                 label.setText(name);
                 break;
             }
-        }
+        }*/
+
+        Lists l = (Lists) this.currentList.getProperties().get("list");
+        l.title = name;
+        server.renameList(l);
         mainCtrl.closeRNList();
     }
 
@@ -245,9 +260,10 @@ public class BoardCtrl implements Initializable {
 
     }
     void deleteL() {
-        listContainers.remove(currentList.getChildren().get(0));
-        ((HBox)currentList.getParent()).getChildren().remove(currentList);
+        //listContainers.remove(currentList.getChildren().get(0));
+        //((HBox)currentList.getParent()).getChildren().remove(currentList);
         mainCtrl.closeDEList();
+        server.removeList((Lists) currentList.getProperties().get("list"));
     }
     void undeleteL() {
         mainCtrl.closeDEList();
@@ -273,7 +289,10 @@ public class BoardCtrl implements Initializable {
 
         mainCtrl.addNewList(newList, firstRow);
         for(int i = 0; i<l.cards.size(); i++){
-            addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
+            Cards c = l.cards.get(i);
+            c.list = new Lists(null, -1);
+
+            addNewCard((VBox)newList.getChildren().get(0), c);
         }
     }
 
@@ -316,6 +335,7 @@ public class BoardCtrl implements Initializable {
 
         list.getChildren().addAll(headerList, footerList);
         list.setId(Long.toString(l.id));
+        list.getProperties().put("list", l);
         return list;
     }
 
@@ -403,7 +423,11 @@ public class BoardCtrl implements Initializable {
     @FXML
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
-        ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
+       // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
+        Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
+
+        server.removeCard(c);
+
     }
 
     /**
@@ -485,7 +509,10 @@ public class BoardCtrl implements Initializable {
 
         // show card detail scene to be able to set details of card
         this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        newCard.getProperties().put("card", c);
         this.currentCard.setText(c.title);
+        this.currentCard.setId(Long.toString(c.id));
+        this.currentCard.getProperties().put("card", c);
     }
 
 

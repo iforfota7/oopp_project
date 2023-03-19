@@ -100,12 +100,12 @@ public class CardController {
         if(card == null){
             return ResponseEntity.badRequest().build();
         }
-
+        System.out.println(card);
         if(repo.existsById(card.id)) {
             // only remove and decrement card positions if the entry with the provided id actually exists
             repo.delete(card);
             repo.decrementCardPosition(card.positionInsideList, card.list.id);
-
+            msgs.convertAndSend("/topic/cards/remove", card);
             return ResponseEntity.ok().build();
         }else {
             return ResponseEntity.badRequest().build();

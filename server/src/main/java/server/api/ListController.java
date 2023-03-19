@@ -90,7 +90,7 @@ public class ListController {
         repo.findById(list.id).get().title = list.title;
 
         Lists saved = repo.save(repo.findById(list.id).get());
-        msgs.convertAndSend("/topic/lists/rename", saved);
+        msgs.convertAndSend("/topic/lists", saved);
         return ResponseEntity.ok(saved);
     }
 
@@ -118,7 +118,7 @@ public class ListController {
             // only remove and decrement list positions if the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
-
+            msgs.convertAndSend("/topic/lists/remove",list);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

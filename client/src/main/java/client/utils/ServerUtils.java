@@ -45,6 +45,12 @@ public class ServerUtils {
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
+    public Lists renameList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(list, APPLICATION_JSON), Lists.class);
+    }
+
     public Lists removeList(Lists list){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/lists/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
