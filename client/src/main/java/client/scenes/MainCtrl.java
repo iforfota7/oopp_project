@@ -30,9 +30,10 @@ public class MainCtrl {
     private VBox vBoard;
     private HBox actualRow;
 
-    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
-                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
-                            ,Parent>cardDetails) {
+    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board,
+                           Pair<RNListCtrl,Parent> renameList, Pair<DEListCtrl,
+                           Parent> deleteList, Pair<ADListCtrl, Parent> addList,
+                           Pair<CardDetailsCtrl,Parent>cardDetails) {
 
         this.primaryStage = primaryStage;
 

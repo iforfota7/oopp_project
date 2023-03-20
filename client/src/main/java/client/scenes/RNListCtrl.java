@@ -22,7 +22,7 @@ public class RNListCtrl {
     @FXML
     void saveNewName(ActionEvent event) {
         var Name = newName.getText();
-        boardCtrl.RNList(Name);
+        boardCtrl.rnList(Name);
     }
 
 }

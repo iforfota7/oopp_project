@@ -42,7 +42,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        var selectServer = FXML.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
+        var selectServer = FXML.load(SelectServerCtrl.class,
+                "client", "scenes", "SelectServer.fxml");
 
         /**
          * List rename&delete&add scene loader
@@ -53,7 +54,8 @@ public class Main extends Application {
         var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList, cardDetails);
+        mainCtrl.initialize(primaryStage, selectServer,
+                renameList, deleteList, addList, cardDetails);
 
 
     }

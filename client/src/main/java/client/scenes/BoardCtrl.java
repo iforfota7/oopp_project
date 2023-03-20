@@ -70,7 +70,6 @@ public class BoardCtrl implements Initializable {
         listCards = new ArrayList<>();
         listCards.add(card2Container);
         listCards.add(card3Container);
-
     }
 
     /**
@@ -85,8 +84,8 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     * The method initializes where the mouse has been pressed relative to the top-left corner of the card
-     * before the card being dragged
+     * The method initializes where the mouse has been pressed relative
+     * to the top-left corner of the card before the card being dragged
      *
      * @param mouseEvent an object containing information about the mouse event
      */
@@ -97,12 +96,12 @@ public class BoardCtrl implements Initializable {
 
     /**
      * The method changes the cardContainer's position based on the cursor's current position by
-     * checking what the difference between where the mouse clicked the card (based on originalX/Y) and where it
-     * currently is (mouseEvent.getX/Y()) and adding it to the card's coordinates (card1Container.getLayoutX/Y())
+     * checking what the difference between where the mouse clicked the card
+     * (based on originalX/Y) and where it currently is (mouseEvent.getX/Y())
+     * and adding it to the card's coordinates (card1Container.getLayoutX/Y())
      *
      * @param mouseEvent an object containing information about the mouse event
      */
-
     public void mouseDragged(MouseEvent mouseEvent) {
         mouseEvent.consume();
         card1Container.setLayoutX(card1Container.getLayoutX() + mouseEvent.getX() - originalX);
@@ -124,7 +123,7 @@ public class BoardCtrl implements Initializable {
 
             if(CollisionChecking.collide(bound1, bound2)) {
                 if(!listContainer.equals(card1Container.getParent())) {
-                    // if the card is dropped into a new list, then the cards in the old list are moved up
+                    // if card is dropped into new list, then cards in the old list are moved up
                     realign((AnchorPane) card1Container.getParent(), -1);
                 }
                 dropCard(listContainer);
@@ -136,20 +135,21 @@ public class BoardCtrl implements Initializable {
      * The method realigns the cards from a list once a card has been dragged
      * from / dropped into the list
      * @param initialList the parent list of the dragged card
-     * @param CONSTANT has the value 1 for moving the remaining cards down
+     * @param constant has the value 1 for moving the remaining cards down
      *                 has the value -1 for moving the remaining cards up
      */
-    public void realign(AnchorPane initialList, int CONSTANT){
+    public void realign(AnchorPane initialList, int constant){
         for (Node cardElement : listCards) {
             if(cardElement.getParent().equals(initialList))
-                cardElement.setLayoutY(cardElement.getLayoutY() + CONSTANT * 25);
+                cardElement.setLayoutY(cardElement.getLayoutY() + constant * 25);
         }
 
     }
 
     /**
-     * The method places the dragged card into the first position of the list which it has been dragged into
-     * by removing it from its parent list and adding it to the list it has been dragged to
+     * The method places the dragged card into the first position
+     * of the list which it has been dragged into by removing it from
+     * its parent list and adding it to the list it has been dragged to
      * and positioning it to the top of the list using coordinates,
      * as well as realigns the cards from its parent list
      * @param listContainer the list in which a card is dropped
@@ -167,7 +167,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Auxiliary call to mainCtrl Inject function
-     * @param mainCtrl The master controller, which will later be replaced by a class of window controllers
+     * @param mainCtrl The main controller, later to be replaced by a window controller
      */
     @Inject
     public BoardCtrl(MainCtrl mainCtrl){
@@ -185,7 +185,7 @@ public class BoardCtrl implements Initializable {
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showRenameList();
     }
-    void RNList(String name) {
+    void rnList(String name) {
         ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
         for (Node node : children) {
             if (node instanceof Label ) {
@@ -225,7 +225,8 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
+     * Adds a new list to the board by creating all of its elements
+     * and aligning them correspondingly in the listView
      * @param newListName the name of the new list
      */
     public void addNewList(String newListName) {
@@ -275,8 +276,8 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     * Creates a new button on the list, which when pressed, shows a menu of two options: renaming or
-     * deleting the list;
+     * Creates a new button on the list, which when pressed,
+     * shows a menu of two options: renaming or deleting the list;
      * @return a button to refactor a list, aligned correspondingly
      */
     public MenuButton createRefactorButton(){
@@ -319,7 +320,8 @@ public class BoardCtrl implements Initializable {
     public Button createAddCardButton(){
         Button addButton = new Button();
         addButton.setText("+");
-        addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; " +
+        addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; " +
+                "-fx-background-color: #c8a5d9; " +
                 "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
@@ -335,7 +337,8 @@ public class BoardCtrl implements Initializable {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
-        listName.setStyle("-fx-font-size: 13px; -fx-content-display: CENTER; -fx-padding: 5 10 0 10;");
+        listName.setStyle("-fx-font-size: 13px; " +
+                "-fx-content-display: CENTER; -fx-padding: 5 10 0 10;");
         listName.setAlignment(Pos.CENTER);
         return listName;
     }
@@ -354,6 +357,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Delete Card function
+     * @param event Card delete event
      */
     @FXML
     public void deleteCard(ActionEvent event) {
@@ -363,8 +367,10 @@ public class BoardCtrl implements Initializable {
 
     /**
      * open the Card Detail scene and modify all information about the card, including its name.....
-     * In order to prevent it from opening while dragging, the code here sets a time delay between pressing and releasing the left mouse button.
-     * If the time delay is greater than a certain value, the click option will not be triggered, so the cardDetail won't open during dragging.
+     * In order to prevent it from opening while dragging,
+     * the code here sets a time delay between pressing and releasing the left mouse button.
+     * If the time delay is greater than a certain value,
+     * the click option will not be triggered, so the cardDetail won't open during dragging.
      *
      * @param event an button (Hyperlink)
      */
@@ -380,9 +386,11 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Save new card details to board scene
-     * When the function returns from mainCtrl, it will update the card name displayed on the board and refresh the pointer to currentCard.
+     * When the function returns from mainCtrl, it will
+     * update the card name displayed on the board and refresh the pointer to currentCard.
+     * @param text the text to be displayed on the card
      */
-    void RefreshCard(String text) {
+    void refreshCard(String text) {
         this.currentCard.setText(text);
         mainCtrl.closeCardDetails();
     }
@@ -392,7 +400,8 @@ public class BoardCtrl implements Initializable {
      * @param event the press of the plus button in a list
      */
     public void addCardToList(ActionEvent event){
-        VBox list = ((VBox) ((VBox)((Button) event.getTarget()).getParent().getParent()).getChildren().get(0));
+        VBox list = ((VBox) ((VBox)((Button) event.getTarget()).getParent()
+                .getParent()).getChildren().get(0));
         addNewCard(list);
     }
 

@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class PersonTest {
-
 	@Test
 	public void checkConstructor() {
 		var p = new Person("f", "l");
