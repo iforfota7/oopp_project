@@ -5,6 +5,9 @@ import commons.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.AbstractMessageChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CardControllerTest {
 
     public long cardCount;
+    public SimpMessagingTemplate msgs;
     public TestCardsRepository repo;
     public CardController sut;
 
@@ -21,8 +25,14 @@ class CardControllerTest {
     public void setup() {
 
         cardCount = 0;
+        msgs = new SimpMessagingTemplate(new AbstractMessageChannel() {
+            @Override
+            protected boolean sendInternal(Message<?> message, long timeout) {
+                return true;
+            }
+        });
         repo = new TestCardsRepository();
-        sut = new CardController(repo);
+        sut = new CardController(repo, msgs);
     }
 
     @Test
@@ -244,6 +254,68 @@ class CardControllerTest {
         positions.add(c5.positionInsideList);
 
         assertEquals("[0, 1, 2, 3]", positions.toString());
+    }
+
+    @Test
+    void renameCardSuccessfully() {
+        Lists list = new Lists("todo", 0);
+        list.id = 0;
+
+        Cards c = getCard("a", 0, list);
+        sut.addCard(c);
+
+        assertEquals(1, repo.cards.size());
+        assertEquals("a", repo.cards.get(0).title);
+
+        Cards c2 = getCard("b", 0, list);
+        c2.id = c.id;
+        sut.renameCard(c2);
+
+        assertEquals(1, repo.cards.size());
+        assertEquals("b", repo.cards.get(0).title);
+    }
+
+    @Test
+    void renameNullCard() {
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(null));
+    }
+
+    @Test
+    void cardDoesNotExistRename() {
+        Lists list = new Lists("todo", 0);
+        list.id = 0;
+
+        Cards c = getCard("a", 0, list);
+
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c));
+    }
+
+    @Test
+    void cardWrongListIDRename() {
+        Lists list = new Lists("todo", 0);
+        list.id = 0;
+
+        Cards c = getCard("a", 0, list);
+        sut.addCard(c);
+
+        Lists list2 = new Lists("todo", 0);
+        Cards c2 = getCard("b", 0, list2);
+        c2.id = c.id;
+        list2.id = 5;
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
+    }
+
+    @Test
+    void cardWrongPositionRename() {
+        Lists list = new Lists("todo", 0);
+        list.id = 0;
+
+        Cards c = getCard("a", 0, list);
+        sut.addCard(c);
+
+        Cards c2 = getCard("b", 1, list);
+        c2.id = c.id;
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
     }
 
     public Cards getCard(String t, int p, Lists list) {

@@ -2,6 +2,7 @@ package server.api;
 
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.ListsRepository;
 
@@ -12,13 +13,15 @@ import java.util.List;
 @RequestMapping("/api/lists")
 public class ListController {
     private final ListsRepository repo;
-
+    private final SimpMessagingTemplate msgs;
     /**
      * Constructor for ListController
      * @param repo - Repository for lists entities
+     * @param msgs - Messaging template
      */
-    public ListController(ListsRepository repo) {
+    public ListController(ListsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
+        this.msgs = msgs;
     }
 
     /**
@@ -56,7 +59,39 @@ public class ListController {
         }
 
         repo.incrementListPosition(list.positionInsideBoard);
+
         Lists saved = repo.save(list);
+
+        msgs.convertAndSend("/topic/lists", saved);
+
+        return ResponseEntity.ok(saved);
+    }
+
+    /**
+     * Method for updating the title of a list.
+     * A list can only be renamed if it or any of its fields (excluding cards) are not null,
+     * if it already exists in the repo
+     * and lastly if it's position is the same as the version of the list in the repo
+     * @param list the list whose title is to be renamed
+     * @return 200 OK if renaming was successful
+     */
+    @PostMapping(path = {"/rename","/rename/"})
+    public ResponseEntity<Lists> renameList(@RequestBody Lists list) {
+
+        if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(repo.findById(list.id).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(list.id).get().positionInsideBoard!=list.positionInsideBoard)
+            return ResponseEntity.badRequest().build();
+
+        repo.findById(list.id).get().title = list.title;
+
+        Lists saved = repo.save(repo.findById(list.id).get());
+        msgs.convertAndSend("/topic/lists/rename", saved);
         return ResponseEntity.ok(saved);
     }
 
@@ -64,8 +99,8 @@ public class ListController {
      * Method for removing a list from the repo
      * Note that when removing the list, only its primary key is taken into account
      * If there is no list that matches the given's list ID, the method does nothing
-     * The lists that had a position inside board greater than the given list have their positions decreased by 1
-     *
+     * The lists that had a position inside board greater than the
+     * given list have their positions decreased by 1
      * @param list the list to be removed
      * @return 200 OK if the request is successful
      *         400 Bad Request if the provided list in invalid
@@ -81,7 +116,8 @@ public class ListController {
             //remove all cards inside this list
             repo.removeCardsInsideList(list.id);
 
-            // only remove and decrement list positions if the entry with the provided id actually exists
+            // only remove and decrement list positions if
+            // the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
 

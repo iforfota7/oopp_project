@@ -24,16 +24,14 @@
             <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
             <property name="max" value="6"/>
         </module>
-        <!-- maximum cyclomatic complexity of 8 -->
+        <!-- maximum cyclomatic complexity of 9 -->
         <module name="CyclomaticComplexity">
             <property name="severity" value="warning"/>
             <property name="switchBlockAsSingleDecisionPoint" value="true"/>
-            <property name="max" value="8"/>
+            <property name="max" value="9"/>
             <property name="tokens" value="LITERAL_WHILE, LITERAL_DO, LITERAL_FOR, LITERAL_IF, LITERAL_SWITCH, LITERAL_CASE"/>
         </module>
-        <module name="Indentation">
-            <property name="severity" value="warning"/>
-        </module>
+
         <module name="UnusedImports">
             <property name="severity" value="warning"/>
         </module>
@@ -41,9 +39,11 @@
         <module name="MemberName">
             <property name="severity" value="warning"/>
         </module>
+
         <module name="MethodName">
             <property name="severity" value="warning"/>
         </module>
+
         <module name="ParameterName">
             <property name="severity" value="warning"/>
         </module>

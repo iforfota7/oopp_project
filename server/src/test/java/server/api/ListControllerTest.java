@@ -5,6 +5,9 @@ import commons.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.AbstractMessageChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ListControllerTest {
 
     public long listCount;
+    public SimpMessagingTemplate msgs;
     public TestListsRepository repo;
     public ListController sut;
 
@@ -21,8 +25,14 @@ public class ListControllerTest {
     public void setup() {
 
         listCount = 0;
+        msgs = new SimpMessagingTemplate(new AbstractMessageChannel() {
+            @Override
+            protected boolean sendInternal(Message<?> message, long timeout) {
+                return true;
+            }
+        });
         repo = new TestListsRepository();
-        sut = new ListController(repo);
+        sut = new ListController(repo, msgs);
     }
 
     @Test
@@ -245,6 +255,36 @@ public class ListControllerTest {
         positions.add(l4.positionInsideBoard);
 
         assertEquals("[0, 1, 2]", positions.toString());
+    }
+
+    @Test
+    void successfullyRenameList() {
+        Lists l = getList("a", 0);
+        sut.addList(l);
+
+        assertEquals(1, repo.lists.size());
+        assertEquals("a", repo.lists.get(0).title);
+
+        Lists l2 = getList("b", 0);
+        l2.id = l.id;
+        sut.renameList(l2);
+
+        assertEquals(1, repo.lists.size());
+        assertEquals("b", repo.lists.get(0).title);
+    }
+
+    @Test
+    void renamedListDoesNotExist() {
+        Lists l1 = getList("a", 0);
+        sut.addList(l1);
+        Lists l2 = getList("b", 1);
+
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameList(l2));
+    }
+
+    @Test
+    void renameNullList() {
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameList(null));
     }
 
     public Lists getList(String t, int p) {
