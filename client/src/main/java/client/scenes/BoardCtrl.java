@@ -24,7 +24,18 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
-    private final MainCtrl mainCtrl;
+    private final ShowScenesCtrl showScenesCtrl;
+
+    /**
+     * Auxiliary call to mainCtrl Inject function
+     *
+     * @param showScenesCtrl The master controller, which will later be replaced by a class of window controllers
+     *
+     */
+    @Inject
+    public BoardCtrl(ShowScenesCtrl showScenesCtrl){
+        this.showScenesCtrl = showScenesCtrl;
+    }
 
     @FXML
     private AnchorPane cardContainer;
@@ -79,8 +90,6 @@ public class BoardCtrl implements Initializable {
     public void dragDetected(MouseEvent mouseEvent) {
         mousePressedTime = System.currentTimeMillis();
         mouseEvent.consume();
-        //card1Container.getParent().getParent().toFront();
-        //card1Container.toFront();
     }
 
     /**
@@ -177,14 +186,7 @@ public class BoardCtrl implements Initializable {
         }
     }
 
-    /**
-     * Auxiliary call to mainCtrl Inject function
-     * @param mainCtrl The master controller, which will later be replaced by a class of window controllers
-     */
-    @Inject
-    public BoardCtrl(MainCtrl mainCtrl){
-        this.mainCtrl = mainCtrl;
-    }
+
 
     /**
      *Trigger function for the change List name option in the drop-down options button
@@ -195,7 +197,7 @@ public class BoardCtrl implements Initializable {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
-        mainCtrl.showRenameList();
+        showScenesCtrl.showRenameList();
     }
     void saveNewListName(String name) {
         ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
@@ -206,7 +208,7 @@ public class BoardCtrl implements Initializable {
                 break;
             }
         }
-        mainCtrl.closeRNList();
+        showScenesCtrl.closeRNList();
     }
 
     /**
@@ -218,24 +220,25 @@ public class BoardCtrl implements Initializable {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
-        mainCtrl.showDeleteList();
+        showScenesCtrl.showDeleteList();
     }
 
     /**
      * delete function with double confirmation
      * that users will not accidentally delete a list and lose a large amount of information.
      */
+    @FXML
     void doubleConfirmDeleteList() {
         listContainers.remove(currentList.getChildren().get(0));
         ((HBox)currentList.getParent()).getChildren().remove(currentList);
-        mainCtrl.closeDEList();
+        showScenesCtrl.closeDEList();
     }
 
     /**
      * Cancel deletion. This will not execute the delete command and will simply close the window, saving the list.
      */
     void cancelDeleteList() {
-        mainCtrl.closeDEList();
+        showScenesCtrl.closeDEList();
     }
 
     /**
@@ -243,7 +246,7 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void addList(){
-        mainCtrl.showAddList();
+        showScenesCtrl.showAddList();
     }
 
     /**
@@ -252,10 +255,10 @@ public class BoardCtrl implements Initializable {
      */
     public void showNewList(String newListName) {
         // closes the scene of adding a new list
-        mainCtrl.closeADList();
+        showScenesCtrl.closeADList();
 
         VBox newList = createNewList(newListName);
-        mainCtrl.addNewList(newList, firstRow);
+        showScenesCtrl.addNewList(newList, firstRow);
     }
 
     /**
@@ -399,7 +402,7 @@ public class BoardCtrl implements Initializable {
         long mouseDuration = mouseReleasedTime - mousePressedTime;
         if(mouseDuration >= 2000) {
             this.currentCard = (Hyperlink) event.getTarget();
-            mainCtrl.showCardDetail();
+            showScenesCtrl.showCardDetail();
         }
     }
 
@@ -409,7 +412,7 @@ public class BoardCtrl implements Initializable {
      */
     void RefreshCard(String text) {
         this.currentCard.setText(text);
-        mainCtrl.closeCardDetails();
+        showScenesCtrl.closeCardDetails();
     }
 
     /**
@@ -443,7 +446,7 @@ public class BoardCtrl implements Initializable {
 
         // show card detail scene to be able to set details of card
         this.currentCard = (Hyperlink) newCard.getChildren().get(0);
-        mainCtrl.showCardDetail();
+        showScenesCtrl.showCardDetail();
     }
 
     /**

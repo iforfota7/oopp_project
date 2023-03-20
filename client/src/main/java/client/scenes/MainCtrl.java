@@ -15,129 +15,22 @@
  */
 package client.scenes;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import client.MyFXML;
+import com.google.inject.Injector;
 import javafx.stage.Stage;
-import javafx.util.Pair;
+
 
 public class MainCtrl {
-    private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList, cardDetails;
 
-    private RNListCtrl rnListCtrl;
-    private DEListCtrl deListCtrl;
-    private ADListCtrl addListCtrl;
-    private CardDetailsCtrl cardDetailsCtrl;
 
-    private int numberOfLists = 2;
-
-    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
-                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
-                            ,Parent>cardDetails) {
-
-        this.primaryStage = primaryStage;
-
-        this.board = new Scene(board.getValue());
-
-        this.renameList = new Scene(renameList.getValue());
-        this.rnListCtrl = renameList.getKey();
-
-        this.deleteList = new Scene(deleteList.getValue());
-        this.deListCtrl = deleteList.getKey();
-
-        this.addList = new Scene(addList.getValue());
-        this.addListCtrl = addList.getKey();
-
-        this.cardDetails = new Scene(cardDetails.getValue());
-        this.cardDetailsCtrl = cardDetails.getKey();
-
-        showStart();
-        primaryStage.show();
-    }
-
-    public void showStart() {
-        primaryStage.setTitle("Start");
-        primaryStage.setScene(board);
-    }
-
-    /**
-     * Sets scene of stage to passed board
-     * @param board the scene to be displayed
-     */
-    public void setBoard(Pair<BoardCtrl, Parent> board){
-        this.board = new Scene(board.getValue());
-        showStart();
-    }
-
-    /**
-     * Show scene of Rename List
-     */
-    public void showRenameList() {
-        secondaryStage = new Stage();
-        secondaryStage.setScene(renameList);
-        secondaryStage.setTitle("Rename list!");
-        secondaryStage.show();
-    }
-
-    /**
-     * Show scene of Delete List
-     */
-    public void showDeleteList() {
-        secondaryStage = new Stage();
-        secondaryStage.setScene(this.deleteList);
-        secondaryStage.setTitle("Delete List!");
-        secondaryStage.show();
-    }
-
-    /**
-     * Show scene of addList
-     */
-    public void showAddList() {
-        secondaryStage = new Stage();
-        secondaryStage.setScene(addList);
-        secondaryStage.setTitle("New List!");
-        secondaryStage.show();
-    }
-
-    public void closeRNList() {
-        secondaryStage.close();
-    }
-    public void closeDEList() {
-        secondaryStage.close();
-    }
-
-    public void closeADList() {
-        secondaryStage.close();
-    }
-
-    /**
-     * Adds a new list to the board
-     * @param list the list to be added to the board
-     * @param row the hbox to which the list should be added (the row)
-     */
-    public void addNewList(VBox list, HBox row){
-        numberOfLists++;
-        row.getChildren().add(list);
-
-    }
-
-    /**
-     * Show scene of cardDetails
-     */
-    public void showCardDetail() {
-        secondaryStage = new Stage();
-        secondaryStage.setScene(cardDetails);
-        secondaryStage.setTitle("Card Details");
-        secondaryStage.show();
-    }
-
-    /**
-     * close scene of cardDetails
-     */
-    public void closeCardDetails() {
-        secondaryStage.close();
+    public void initialize(Stage primaryStage, Injector injector, MyFXML fxml) {
+        var selectServer = fxml.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
+        var renameList = fxml.load(RNListCtrl.class,"client", "scenes", "RNList.fxml" );
+        var deleteList = fxml.load(DEListCtrl.class,"client", "scenes", "DEList.fxml" );
+        var addList = fxml.load(ADListCtrl.class,"client", "scenes", "ADList.fxml" );
+        var cardDetails = fxml.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
+        var showScenesCtrl = injector.getInstance(ShowScenesCtrl.class);
+        showScenesCtrl.openScenes(primaryStage, selectServer, renameList, deleteList, addList, cardDetails);
     }
 
 }
