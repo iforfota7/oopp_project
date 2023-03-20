@@ -1,29 +1,30 @@
 package commons;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 public class Cards {
 
     @Id
-    public String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
     public String title;
     public int positionInsideList;
+
+    @JsonBackReference
     @ManyToOne
     public Lists list;
 
     /**
      * Constructor method for the cards class
-     * @param id the fxml id of the card (acts as unique id)
      * @param title the name of the card
      * @param positionInsideList the position of card inside its list container
      * @param list the list in which the card is
      */
-    public Cards(String id, String title, int positionInsideList, Lists list) {
-        this.id = id;
+    public Cards(String title, int positionInsideList, Lists list) {
         this.title = title;
         this.positionInsideList = positionInsideList;
         this.list = list;
@@ -45,8 +46,8 @@ public class Cards {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cards cards = (Cards) o;
-        return positionInsideList == cards.positionInsideList &&
-                Objects.equals(id, cards.id) && Objects.equals(title, cards.title) && Objects.equals(list, cards.list);
+        return id == cards.id && positionInsideList == cards.positionInsideList
+                && Objects.equals(title, cards.title) && Objects.equals(list, cards.list);
     }
 
     /**

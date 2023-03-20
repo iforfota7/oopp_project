@@ -1,5 +1,7 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
+import commons.Lists;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -11,11 +13,14 @@ import javax.inject.Inject;
  *  Controller for Add List
  */
 public class ADListCtrl {
-    private BoardCtrl boardCtrl;
-
+    private final BoardCtrl boardCtrl;
+    private final ServerUtils server;
+    private final MainCtrl   mainCtrl;
     @Inject
-    public ADListCtrl(BoardCtrl boardCtrl){
+    public ADListCtrl(BoardCtrl boardCtrl, ServerUtils server, MainCtrl mainCtrl){
         this.boardCtrl = boardCtrl;
+        this.server = server;
+        this.mainCtrl = mainCtrl;
     }
     @FXML
     private TextField newListName;
@@ -23,9 +28,17 @@ public class ADListCtrl {
     @FXML
     private TextField newListOrder;
 
+    /**
+     * the initialization and customization of the List display name is only achieved through creating a new window.
+     */
     @FXML
-    void saveNewList(ActionEvent event) {
-        boardCtrl.addNewList(newListName.getText());
+    void saveNewList(ActionEvent event)
+    {
+        int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
+        server.addList(new Lists(newListName.getText(), positionInsideBoard));
+        newListName.setText("");
+
+        mainCtrl.closeADList();
     }
 
 }

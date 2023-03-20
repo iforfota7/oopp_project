@@ -23,6 +23,7 @@ public class RNListCtrl {
     void saveNewName(ActionEvent event) {
         var Name = newName.getText();
         boardCtrl.RNList(Name);
+
     }
 
 }
