@@ -23,13 +23,14 @@ import javafx.stage.Stage;
 public class MainCtrl {
 
 
-    public void initialize(Stage primaryStage, Injector injector, MyFXML fxml) {
+    public void initialize(Stage primaryStage, Injector injector, MyFXML fxml, ShowScenesCtrl showScenesCtrl) {
         var selectServer = fxml.load(SelectServerCtrl.class, "client", "scenes", "SelectServer.fxml");
         var renameList = fxml.load(RNListCtrl.class,"client", "scenes", "RNList.fxml" );
         var deleteList = fxml.load(DEListCtrl.class,"client", "scenes", "DEList.fxml" );
         var addList = fxml.load(ADListCtrl.class,"client", "scenes", "ADList.fxml" );
         var cardDetails = fxml.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
-        var showScenesCtrl = injector.getInstance(ShowScenesCtrl.class);
+        //var showScenesCtrl = injector.getInstance(ShowScenesCtrl.class);
+        //pShowScenesCtrl = showScenesCtrl;
         showScenesCtrl.openScenes(primaryStage, selectServer, renameList, deleteList, addList, cardDetails);
     }
 

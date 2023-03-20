@@ -35,6 +35,7 @@ public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
+    private static ShowScenesCtrl showScenesCtrl = INJECTOR.getInstance(ShowScenesCtrl.class);
 
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();
@@ -43,7 +44,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, INJECTOR, FXML);
+        mainCtrl.initialize(primaryStage, INJECTOR, FXML, showScenesCtrl);
     }
 
     /**
@@ -51,7 +52,7 @@ public class Main extends Application {
      */
     public static void setSceneToBoard(){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
-        var showScenesCtrl = INJECTOR.getInstance(ShowScenesCtrl.class);
+        //var showScenesCtrl = INJECTOR.getInstance(ShowScenesCtrl.class);
         showScenesCtrl.setBoard(board);
     }
 
