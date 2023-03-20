@@ -1,6 +1,10 @@
 package client.scenes;
 
 import client.lib.CollisionChecking;
+import client.utils.ServerUtils;
+import commons.Cards;
+import commons.Lists;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javafx.scene.input.MouseEvent;
 
 
@@ -25,6 +30,7 @@ import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
     private final ShowScenesCtrl showScenesCtrl;
+    private final ServerUtils server;
 
     /**
      * Auxiliary call to mainCtrl Inject function
@@ -33,8 +39,9 @@ public class BoardCtrl implements Initializable {
      *
      */
     @Inject
-    public BoardCtrl(ShowScenesCtrl showScenesCtrl){
+    public BoardCtrl(ShowScenesCtrl showScenesCtrl, ServerUtils server){
         this.showScenesCtrl = showScenesCtrl;
+        this.server = server;
     }
 
     @FXML
@@ -49,7 +56,6 @@ public class BoardCtrl implements Initializable {
     private VBox header2;
     @FXML
     private VBox header3;
-
     @FXML
     private HBox firstRow;
 
@@ -74,12 +80,23 @@ public class BoardCtrl implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
-        listContainers.add(header1);
-        listContainers.add(header2);
-        listContainers.add(header3);
+//        listContainers.add(header1);
+//        listContainers.add(header2);
+//        listContainers.add(header3);
         listCards = new ArrayList<>();
-        listCards.add(card2Container);
-        listCards.add(card3Container);
+//        listCards.add(card2Container);
+//        listCards.add(card3Container);
+         refresh();
+        server.registerForMessages("/topic/lists", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                  refresh();
+                }
+            });
+        });
+
+
 
     }
 
@@ -90,6 +107,14 @@ public class BoardCtrl implements Initializable {
     public void dragDetected(MouseEvent mouseEvent) {
         mousePressedTime = System.currentTimeMillis();
         mouseEvent.consume();
+    }
+
+    public void refresh(){
+        firstRow.getChildren().clear();
+        List<Lists> lists = server.getLists();
+        for(int i = 0; i<lists.size(); i++){
+            createNewList(lists.get(i));
+        }
     }
 
     /**
@@ -155,7 +180,7 @@ public class BoardCtrl implements Initializable {
             }
 
             if(CollisionChecking.collide(bound1, bound2)) {
-                dropCard(listContainer, mouseEvent.getY());
+                dropCard(listContainer, mouseEvent.getScreenY());
             }
         }
     }
@@ -169,10 +194,8 @@ public class BoardCtrl implements Initializable {
      * @param yPosition the absolute y position of the mouse when the card is dropped
      */
     public void dropCard(VBox listContainer, double yPosition) {
-        // calculate index of card compared to other cards from relative y position of mouse and original index
-        int index = ((VBox)cardContainer.getParent()).getChildren().indexOf(cardContainer);
-        index += (int) Math.round((yPosition)/26);
-
+        // calculate index of card compared to other cards from absolute y position of mouse
+        int index = (int) Math.round((yPosition - 305)/30 - 0.5);
         // if mouse was above the upper bound of the list, set index to 0 (card forced into first position)
         if(index < 0) index = 0;
 
@@ -180,9 +203,9 @@ public class BoardCtrl implements Initializable {
             ((VBox)cardContainer.getParent()).getChildren().remove(cardContainer);
 
             // if the index is too large compared to the number of children, add it to end of the list
-            if(index >= listContainer.getChildren().size()) listContainer.getChildren().add(cardContainer);
-            // otherwise add in the position of the calculated index
-            else listContainer.getChildren().add(index, cardContainer);
+            if(index >= listContainer.getChildren().size() - 2) listContainer.getChildren().add(cardContainer);
+            // otherwise add in the position of the calculated index (add 2 due to title and separator in vbox)
+            else listContainer.getChildren().add(index + 2, cardContainer);
         }
     }
 
@@ -251,22 +274,31 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
-     * @param newListName the name of the new list
+     * @param l the database element of the new list
      */
-    public void showNewList(String newListName) {
+    public void showNewList(Lists l) {
         // closes the scene of adding a new list
         showScenesCtrl.closeADList();
+       // mainCtrl.closeADList();
 
-        VBox newList = createNewList(newListName);
+        VBox newList = createNewList(l);
         showScenesCtrl.addNewList(newList, firstRow);
+            for(int i = 0; i < l.cards.size(); i++){
+                addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
+            }
+
+        showScenesCtrl.addNewList(newList, firstRow);
+        for(int i = 0; i<l.cards.size(); i++){
+            addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
+        }
     }
 
     /**
      * Creates a new list with all its elements
-     * @param newListName the name of the new list to be created
+     * @param l the database element of teh list to be created
      * @return and VBox with the new list, aligned correspondingly
      */
-    public VBox createNewList(String newListName){
+    public VBox createNewList(Lists l){
         // creating the listView element
         VBox list = createListBody();
         VBox headerList = new VBox(6);
@@ -293,12 +325,13 @@ public class BoardCtrl implements Initializable {
         Separator listSeparator = createSeparator();
 
         // creating the label for the name of the list, aligning and customising it
-        Label listName = createListTitle(newListName);
+        Label listName = createListTitle(l.title);
 
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
 
         list.getChildren().addAll(headerList, footerList);
+        list.setId(Long.toString(l.id));
         return list;
     }
 
@@ -449,6 +482,28 @@ public class BoardCtrl implements Initializable {
         showScenesCtrl.showCardDetail();
     }
 
+    public void addNewCard(VBox anchor, Cards c){
+        // count the number of cards currently in the list
+        int count = 0;
+        for(Node i : anchor.getChildren()){
+            if(i.getClass().equals(AnchorPane.class)) count++;
+        }
+
+        // create a new anchor pane for the card
+        AnchorPane newCard = newAnchorPane();
+
+        // add text and the delete button for the card
+        newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
+
+        // append the card to the list
+        anchor.getChildren().add(count + 2, newCard);
+
+        // show card detail scene to be able to set details of card
+        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        this.currentCard.setText(c.title);
+    }
+
+
     /**
      * Creates an empty anchor pane for a card
      * @return the created anchor pane
@@ -505,5 +560,9 @@ public class BoardCtrl implements Initializable {
         // set the button to delete the card it is a part of when clicked
         button.setOnAction(this::deleteCard);
         return button;
+    }
+
+    public HBox getFirstRow() {
+        return firstRow;
     }
 }

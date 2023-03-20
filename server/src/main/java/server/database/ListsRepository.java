@@ -20,6 +20,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 
 public interface ListsRepository extends JpaRepository<Lists, Long> {
 
@@ -30,7 +32,51 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
      * @param deletedListPosition The index of the deleted list
      */
     @Modifying
-    @Query(value = "UPDATE Lists SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD - 1 WHERE Lists.POSITION_INSIDE_BOARD > ?1",
+    @Query(value = "UPDATE Lists " +
+            "SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD - 1 " +
+            "WHERE Lists.POSITION_INSIDE_BOARD > ?1",
             nativeQuery = true)
     void decrementListPositions(int deletedListPosition);
+
+    /**
+     * Custom update query that increases the position of lists inside the board after a list gets inserted
+     * E.g. If the list is inserted at position 3, all lists that had a position >= 3 will get their positions increased by 1
+     *
+     * @param positionInBoard The index of the deleted list
+     */
+    @Modifying
+    @Query(value = "UPDATE Lists " +
+            "SET Lists.POSITION_INSIDE_BOARD = Lists.POSITION_INSIDE_BOARD + 1 " +
+            "WHERE Lists.POSITION_INSIDE_BOARD >= ?1",
+            nativeQuery = true)
+    void incrementListPosition(int positionInBoard);
+
+    /**
+     * Gets the maximum value of the POSITION_INSIDE_BOARD among all Lists
+     *
+     * @return The maximum value or null in case the repository contains no Lists
+     */
+    @Query(value = "SELECT MAX(POSITION_INSIDE_BOARD) " +
+            "FROM LISTS",
+            nativeQuery = true)
+    Integer maxPositionInsideBoard();
+
+    /**
+     * Retrieves all Lists from the repository, ordered by their position inside board
+     * Note that this method does not need implementation and is handled by JPA since it adhered to the naming conventions
+     *
+     * @return A List containing all sorted Lists entries
+     */
+    List<Lists> findAllByOrderByPositionInsideBoardAsc();
+
+    /**
+     * Remove all cards that are inside a List
+     *
+     * @param listID ID of the list from where to remove the cards
+     */
+    @Modifying
+    @Query(value = "DELETE FROM CARDS " +
+            "WHERE LIST_ID = ?1",
+            nativeQuery = true)
+    void removeCardsInsideList(long listID);
 }

@@ -7,15 +7,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #7FFFD4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
-   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="21.0" layoutY="100.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="200.0" promptText="Input newCard Title">
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
+   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="37.0" layoutY="100.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="154.0">
       <font>
          <Font name="Avenir Book" size="13.0" />
       </font>
    </TextField>
    <Accordion layoutX="85.0" layoutY="149.0" />
-   <Button fx:id="saveDetails" layoutX="238.0" layoutY="101.0" mnemonicParsing="false" onAction="#save" text="Save" />
-   <Label layoutX="73.0" layoutY="53.0" text="Input newCard Title">
+   <Button fx:id="saveDetails" layoutX="211.0" layoutY="101.0" mnemonicParsing="false" onAction="#save" text="Save" />
+   <Label layoutX="73.0" layoutY="53.0" text="Input new Card Title">
       <font>
          <Font name="Hiragino Sans GB W3" size="16.0" />
       </font>

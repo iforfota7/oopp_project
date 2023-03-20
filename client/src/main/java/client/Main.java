@@ -52,6 +52,7 @@ public class Main extends Application {
      */
     public static void setSceneToBoard(){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         //var showScenesCtrl = INJECTOR.getInstance(ShowScenesCtrl.class);
         showScenesCtrl.setBoard(board);
     }

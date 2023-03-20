@@ -18,48 +18,68 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
+import commons.Cards;
+import commons.Lists;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.*;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
     private static String SERVER;
 
-    public void getQuotesTheHardWay() throws IOException {
-        var url = new URL("http://localhost:8080/api/quotes");
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
+    public Lists addList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
-    public List<Quote> getQuotes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
+    public Lists removeList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
-    public Quote addQuote(Quote quote) {
+    public Cards addCard(Cards card){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/cards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
+
+    public Cards removeCard(Cards card){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
+
+
+    public List<Lists> getLists() {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
+                .target(SERVER).path("api/lists") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+                .get(new GenericType<List<Lists>>() {});
     }
+
+    public List<Cards> getCards() {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/cards") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Cards>>() {});
+    }
+
 
     /**
      * Setter method for the server attribute
@@ -89,4 +109,38 @@ public class ServerUtils {
 
 
     }
+
+    private final StompSession session =  connect("ws://localhost:8080/websocket");
+
+    private StompSession connect(String url){
+        var client = new StandardWebSocketClient();
+        var stomp = new WebSocketStompClient(client);
+        stomp.setMessageConverter(new MappingJackson2MessageConverter());
+        try{
+            return stomp.connect(url, new StompSessionHandlerAdapter() {}).get();
+        } catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+        }catch(ExecutionException e){
+            throw new RuntimeException(e);
+        }
+        throw new IllegalStateException();
+    }
+    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer){
+        session.subscribe(dest, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return type;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                consumer.accept((T) payload);
+            }
+        });
+    }
+
+
+
+
 }
