@@ -29,33 +29,15 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 
 public class BoardCtrl implements Initializable {
-    private final ShowScenesCtrl showScenesCtrl;
     private final ServerUtils server;
 
-    /**
-     * Auxiliary call to mainCtrl Inject function
-     *
-     * @param showScenesCtrl The master controller, which will later be replaced by a class of window controllers
-     *
-     */
     @Inject
-    public BoardCtrl(ShowScenesCtrl showScenesCtrl, ServerUtils server){
-        this.showScenesCtrl = showScenesCtrl;
+    public BoardCtrl(ServerUtils server){
         this.server = server;
     }
 
     @FXML
     private AnchorPane cardContainer;
-    @FXML
-    private AnchorPane card2Container;
-    @FXML
-    private AnchorPane card3Container;
-    @FXML
-    private VBox header1;
-    @FXML
-    private VBox header2;
-    @FXML
-    private VBox header3;
     @FXML
     private HBox firstRow;
 
@@ -80,21 +62,9 @@ public class BoardCtrl implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
-//        listContainers.add(header1);
-//        listContainers.add(header2);
-//        listContainers.add(header3);
         listCards = new ArrayList<>();
-//        listCards.add(card2Container);
-//        listCards.add(card3Container);
          refresh();
-        server.registerForMessages("/topic/lists", Lists.class, l->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                  refresh();
-                }
-            });
-        });
+        server.registerForMessages("/topic/lists", Lists.class, l-> Platform.runLater(this::refresh));
 
 
 
@@ -112,8 +82,8 @@ public class BoardCtrl implements Initializable {
     public void refresh(){
         firstRow.getChildren().clear();
         List<Lists> lists = server.getLists();
-        for(int i = 0; i<lists.size(); i++){
-            createNewList(lists.get(i));
+        for (Lists list : lists) {
+            createNewList(list);
         }
     }
 
@@ -220,7 +190,7 @@ public class BoardCtrl implements Initializable {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
-        showScenesCtrl.showRenameList();
+        ShowScenesCtrl.showRenameList();
     }
     void saveNewListName(String name) {
         ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
@@ -231,7 +201,7 @@ public class BoardCtrl implements Initializable {
                 break;
             }
         }
-        showScenesCtrl.closeRNList();
+        ShowScenesCtrl.closeRNList();
     }
 
     /**
@@ -243,7 +213,7 @@ public class BoardCtrl implements Initializable {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
-        showScenesCtrl.showDeleteList();
+        ShowScenesCtrl.showDeleteList();
     }
 
     /**
@@ -254,14 +224,14 @@ public class BoardCtrl implements Initializable {
     void doubleConfirmDeleteList() {
         listContainers.remove(currentList.getChildren().get(0));
         ((HBox)currentList.getParent()).getChildren().remove(currentList);
-        showScenesCtrl.closeDEList();
+        ShowScenesCtrl.closeDEList();
     }
 
     /**
      * Cancel deletion. This will not execute the delete command and will simply close the window, saving the list.
      */
     void cancelDeleteList() {
-        showScenesCtrl.closeDEList();
+        ShowScenesCtrl.closeDEList();
     }
 
     /**
@@ -269,7 +239,7 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void addList(){
-        showScenesCtrl.showAddList();
+        ShowScenesCtrl.showAddList();
     }
 
     /**
@@ -277,17 +247,14 @@ public class BoardCtrl implements Initializable {
      * @param l the database element of the new list
      */
     public void showNewList(Lists l) {
-        // closes the scene of adding a new list
-        showScenesCtrl.closeADList();
-       // mainCtrl.closeADList();
-
+        ShowScenesCtrl.closeADList();
         VBox newList = createNewList(l);
-        showScenesCtrl.addNewList(newList, firstRow);
+        ShowScenesCtrl.addNewList(newList, firstRow);
             for(int i = 0; i < l.cards.size(); i++){
                 addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
             }
 
-        showScenesCtrl.addNewList(newList, firstRow);
+        ShowScenesCtrl.addNewList(newList, firstRow);
         for(int i = 0; i<l.cards.size(); i++){
             addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
         }
@@ -435,7 +402,7 @@ public class BoardCtrl implements Initializable {
         long mouseDuration = mouseReleasedTime - mousePressedTime;
         if(mouseDuration >= 2000) {
             this.currentCard = (Hyperlink) event.getTarget();
-            showScenesCtrl.showCardDetail();
+            ShowScenesCtrl.showCardDetail();
         }
     }
 
@@ -445,7 +412,7 @@ public class BoardCtrl implements Initializable {
      */
     void RefreshCard(String text) {
         this.currentCard.setText(text);
-        showScenesCtrl.closeCardDetails();
+        ShowScenesCtrl.closeCardDetails();
     }
 
     /**
@@ -479,7 +446,7 @@ public class BoardCtrl implements Initializable {
 
         // show card detail scene to be able to set details of card
         this.currentCard = (Hyperlink) newCard.getChildren().get(0);
-        showScenesCtrl.showCardDetail();
+        ShowScenesCtrl.showCardDetail();
     }
 
     public void addNewCard(VBox anchor, Cards c){

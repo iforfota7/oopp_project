@@ -29,8 +29,6 @@ public class MainCtrl {
         var deleteList = fxml.load(DEListCtrl.class,"client", "scenes", "DEList.fxml" );
         var addList = fxml.load(ADListCtrl.class,"client", "scenes", "ADList.fxml" );
         var cardDetails = fxml.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
-        //var showScenesCtrl = injector.getInstance(ShowScenesCtrl.class);
-        //pShowScenesCtrl = showScenesCtrl;
         showScenesCtrl.openScenes(primaryStage, selectServer, renameList, deleteList, addList, cardDetails);
     }
 

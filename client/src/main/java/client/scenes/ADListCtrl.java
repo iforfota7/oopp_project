@@ -35,10 +35,10 @@ public class ADListCtrl {
     void saveNewList(ActionEvent event)
     {
         int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
-        server.addList(new Lists(newListName.getText(), positionInsideBoard));
+        Lists l = new Lists(newListName.getText(), positionInsideBoard);
+        server.addList(l);
         newListName.setText("");
-
-        showScenesCtrl.closeADList();
+        boardCtrl.showNewList(l);
     }
 
 }
