@@ -25,6 +25,7 @@
 * Some feedback includes: try to separate issues and branches so that everyone has a separate section. We need to have better management of issues to make it more efficient.
 * We need to add issues for the next week in advance every week.
 * Ensure timely updates on the progress and deadlines of issues.
+we can use tasks instead of the check boxes in the description.
 
 ## Heuristic Usability Evaluation:
 * We need to adhere to the ACM formatting template requirements specified in the course requirements."
