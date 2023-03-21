@@ -5,7 +5,6 @@ import client.utils.ServerUtils;
 import commons.Cards;
 import commons.Lists;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -31,6 +30,13 @@ import javax.inject.Inject;
 public class BoardCtrl implements Initializable {
     private final ServerUtils server;
 
+    @FXML
+    private AnchorPane rootContainer;
+    @FXML
+    private AnchorPane cardContainer;
+
+    @FXML
+
     @Inject
     public BoardCtrl(ServerUtils server){
         this.server = server;
@@ -52,6 +58,8 @@ public class BoardCtrl implements Initializable {
     private VBox currentList;
     private Hyperlink currentCard;
     private long mousePressedTime;
+
+    private List<Lists> lists;
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
@@ -64,8 +72,60 @@ public class BoardCtrl implements Initializable {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
          refresh();
-        server.registerForMessages("/topic/lists", Lists.class, l-> Platform.runLater(this::refresh));
 
+
+
+        server.registerForMessages("/topic/lists", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                  addNewList(l);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/lists/rename", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
+                    title.setText(l.title);
+                }
+            });
+        });
+
+
+        server.registerForMessages("/topic/lists/remove", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    VBox list = (VBox)rootContainer.lookup("#list"+l.id);
+                    firstRow.getChildren().remove(list);
+                }
+            });
+        });
+
+
+        server.registerForMessages("/topic/cards/remove", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                   VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
+                    AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
+                    ((VBox) l.getChildren().get(0)).getChildren().remove(card);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/cards/rename", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
+                            getChildren().get(0)).setText(c.title);
+                }
+            });
+        });
 
 
     }
@@ -81,9 +141,10 @@ public class BoardCtrl implements Initializable {
 
     public void refresh(){
         firstRow.getChildren().clear();
-        List<Lists> lists = server.getLists();
-        for (Lists list : lists) {
-            createNewList(list);
+         lists = server.getLists();
+        for(int i = 0; i<lists.size(); i++){
+            addNewList(lists.get(i));
+
         }
     }
 
@@ -98,7 +159,7 @@ public class BoardCtrl implements Initializable {
         originalY = mouseEvent.getY();
         if(mouseEvent.getSource().getClass().equals(Hyperlink.class)){
             Hyperlink card = (Hyperlink) mouseEvent.getSource();
-            cardContainer = (AnchorPane) card.getParent();
+
         }
         else {
             cardContainer = (AnchorPane) mouseEvent.getSource();
@@ -192,16 +253,11 @@ public class BoardCtrl implements Initializable {
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         ShowScenesCtrl.showRenameList();
     }
-    void saveNewListName(String name) {
-        ObservableList<Node> children = ((VBox) currentList.getChildren().get(0)).getChildren();
-        for (Node node : children) {
-            if (node instanceof Label ) {
-                Label label = (Label) node;
-                label.setText(name);
-                break;
-            }
-        }
-        ShowScenesCtrl.closeRNList();
+    void RNList(String name) {
+        Lists l = (Lists) this.currentList.getProperties().get("list");
+        l.title = name;
+        server.renameList(l);
+        mainCtrl.closeRNList();
     }
 
     /**
@@ -209,22 +265,15 @@ public class BoardCtrl implements Initializable {
      * @param event List delete process
      */
     @FXML
-    void doubleConfirmDeleteList(ActionEvent event) {
+    void deleteList(ActionEvent event) {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         ShowScenesCtrl.showDeleteList();
     }
-
-    /**
-     * delete function with double confirmation
-     * that users will not accidentally delete a list and lose a large amount of information.
-     */
-    @FXML
-    void doubleConfirmDeleteList() {
-        listContainers.remove(currentList.getChildren().get(0));
-        ((HBox)currentList.getParent()).getChildren().remove(currentList);
-        ShowScenesCtrl.closeDEList();
+    void deleteL() {
+          mainCtrl.closeDEList();
+        server.removeList((Lists) currentList.getProperties().get("list"));
     }
 
     /**
@@ -244,25 +293,20 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
-     * @param l the database element of the new list
+     * @param l list to be added
      */
-    public void showNewList(Lists l) {
-        ShowScenesCtrl.closeADList();
-        VBox newList = createNewList(l);
-        ShowScenesCtrl.addNewList(newList, firstRow);
-            for(int i = 0; i < l.cards.size(); i++){
-                addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
-            }
-
-        ShowScenesCtrl.addNewList(newList, firstRow);
-        for(int i = 0; i<l.cards.size(); i++){
-            addNewCard((VBox)newList.getChildren().get(0), l.cards.get(i));
+    public void addNewList(Lists l) {
+       VBox newList = createNewList(l);
+       mainCtrl.addNewList(newList, firstRow);
+       for(int i = 0; i<l.cards.size(); i++){
+           Cards c = l.cards.get(i);
+           addNewCard((VBox)newList.getChildren().get(0), c);
         }
     }
 
     /**
      * Creates a new list with all its elements
-     * @param l the database element of teh list to be created
+     * @param l list to be created
      * @return and VBox with the new list, aligned correspondingly
      */
     public VBox createNewList(Lists l){
@@ -293,12 +337,14 @@ public class BoardCtrl implements Initializable {
 
         // creating the label for the name of the list, aligning and customising it
         Label listName = createListTitle(l.title);
+        listName.setId("list_title_"+l.id);
 
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
 
         list.getChildren().addAll(headerList, footerList);
-        list.setId(Long.toString(l.id));
+        list.setId("list"+Long.toString(l.id));
+        list.getProperties().put("list", l);
         return list;
     }
 
@@ -320,7 +366,7 @@ public class BoardCtrl implements Initializable {
 
         MenuItem deleteOption = new MenuItem();
         deleteOption.setText("Delete List");
-        deleteOption.setOnAction(this::doubleConfirmDeleteList);
+        deleteOption.setOnAction(this::deleteList);
 
         refactorButtonList.getItems().add(renameOption);
         refactorButtonList.getItems().add(deleteOption);
@@ -386,7 +432,12 @@ public class BoardCtrl implements Initializable {
     @FXML
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
-        ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
+       // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
+        Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
+        c.list.cards = null;
+        System.out.println(c);
+        server.removeCard(c);
+
     }
 
     /**
@@ -411,8 +462,10 @@ public class BoardCtrl implements Initializable {
      * When the function returns from mainCtrl, it will update the card name displayed on the board and refresh the pointer to currentCard.
      */
     void RefreshCard(String text) {
-        this.currentCard.setText(text);
-        ShowScenesCtrl.closeCardDetails();
+        Cards c  = (Cards) this.currentCard.getProperties().get("card");
+        c.title = text;
+        server.renameCard(c);
+        mainCtrl.closeCardDetails();
     }
 
     /**
@@ -421,6 +474,7 @@ public class BoardCtrl implements Initializable {
      */
     public void addCardToList(ActionEvent event){
         VBox list = ((VBox) ((VBox)((Button) event.getTarget()).getParent().getParent()).getChildren().get(0));
+
         addNewCard(list);
     }
 
@@ -462,12 +516,19 @@ public class BoardCtrl implements Initializable {
         // add text and the delete button for the card
         newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
 
+
         // append the card to the list
+
+        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        newCard.getProperties().put("card", c);
+        newCard.setId("card"+Long.toString(c.id));
+        this.currentCard.setText(c.title);
+        this.currentCard.getProperties().put("card", c);
+
         anchor.getChildren().add(count + 2, newCard);
 
         // show card detail scene to be able to set details of card
-        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
-        this.currentCard.setText(c.title);
+
     }
 
 

@@ -67,7 +67,7 @@ public class ListController {
     }
 
     /**
-     * Method for updating the title of a list.
+     * Method for updating the title of a list.local
      * A list can only be renamed if it or any of its fields (excluding cards) are not null,
      * if it already exists in the repo
      * and lastly if it's position is the same as the version of the list in the repo
@@ -91,6 +91,7 @@ public class ListController {
 
         Lists saved = repo.save(repo.findById(list.id).get());
         msgs.convertAndSend("/topic/lists/rename", saved);
+
         return ResponseEntity.ok(saved);
     }
 
@@ -118,7 +119,7 @@ public class ListController {
             // only remove and decrement list positions if the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
-
+            msgs.convertAndSend("/topic/lists/remove",list);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

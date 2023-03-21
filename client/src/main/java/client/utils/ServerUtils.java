@@ -15,9 +15,6 @@
  */
 package client.utils;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
-
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +32,8 @@ import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+import static jakarta.ws.rs.core.MediaType.*;
+
 public class ServerUtils {
 
     private static String SERVER;
@@ -42,6 +41,12 @@ public class ServerUtils {
     public Lists addList(Lists list){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/lists").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(list, APPLICATION_JSON), Lists.class);
+    }
+
+    public Lists renameList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
@@ -60,8 +65,16 @@ public class ServerUtils {
     public Cards removeCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+               post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
+    }
+
+    public Cards renameCard(Cards card){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/cards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
+
+
 
 
     public List<Lists> getLists() {
