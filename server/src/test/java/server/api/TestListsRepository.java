@@ -379,6 +379,7 @@ public class TestListsRepository implements ListsRepository {
      * @deprecated use {@link JpaRepository#} instead.
      */
     @Override
+    @Deprecated
     public Lists getOne(Long aLong) {
         return null;
     }

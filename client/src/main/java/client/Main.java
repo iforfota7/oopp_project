@@ -49,9 +49,9 @@ public class Main extends Application {
         var deleteList = FXML.load(DEListCtrl.class,"client", "scenes", "DEList.fxml" );
         var addList = FXML.load(ADListCtrl.class,"client", "scenes", "ADList.fxml" );
         var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
-
+        var addCard = FXML.load(newCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList, cardDetails);
+        mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList, cardDetails, addCard);
     }
 
     /**

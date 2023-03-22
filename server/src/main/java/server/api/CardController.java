@@ -52,7 +52,7 @@ public class CardController {
 
         repo.incrementCardPosition(card.positionInsideList, card.list.id);
         Cards saved = repo.save(card);
-        msgs.convertAndSend("/topic/cards", saved);
+        msgs.convertAndSend("/topic/cards/add", saved);
         return ResponseEntity.ok(saved);
     }
 
@@ -96,7 +96,7 @@ public class CardController {
     @Transactional
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Cards> removeCard(@RequestBody Cards card) {
-
+        System.out.println(card);
         if(card == null){
             return ResponseEntity.badRequest().build();
         }
@@ -105,7 +105,7 @@ public class CardController {
             // only remove and decrement card positions if the entry with the provided id actually exists
             repo.delete(card);
             repo.decrementCardPosition(card.positionInsideList, card.list.id);
-
+            msgs.convertAndSend("/topic/cards/remove", card);
             return ResponseEntity.ok().build();
         }else {
             return ResponseEntity.badRequest().build();
