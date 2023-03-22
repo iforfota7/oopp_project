@@ -18,6 +18,7 @@ public class CardController {
     /**
      * Constructor for CardController
      * @param repo - Repository for cards entities
+     * @param msgs - Messaging template
      */
     public CardController(CardsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
@@ -69,7 +70,8 @@ public class CardController {
     @PostMapping(path = {"/rename","/rename/"})
     public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
 
-        if(card == null || card.list==null || isNullOrEmpty(card.title) || card.positionInsideList<0){
+        if(card == null || card.list==null ||
+                isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();
         }
 
@@ -103,7 +105,8 @@ public class CardController {
         }
 
         if(repo.existsById(card.id)) {
-            // only remove and decrement card positions if the entry with the provided id actually exists
+            // only remove and decrement card positions
+            // if the entry with the provided id actually exists
             repo.delete(card);
             repo.decrementCardPosition(card.positionInsideList, card.list.id);
 
@@ -117,9 +120,10 @@ public class CardController {
     /**
      * Method for moving a card from one list to another.
      * A card can only be moved to another list if it already exists in the repo.
-     * The way it is moved between lists is by first removing the existing card (which has the old list id)
-     * from the repo, and later adding the new card (which has the new list id) to the repo.
-     * If adding the new card fails, the old one is added back.
+     * The way it is moved between lists is by first removing the existing card
+     * (which has the old list id) from the repo, and later adding the new card
+     * (which has the new list id) to the repo. If adding the new card fails,
+     * the old one is added back.
      * @param card the card to be moved to another list
      * @return 200 OK if moving the card was successful
      */

@@ -8,12 +8,12 @@ import javax.inject.Inject;
 /**
  * Delete List controller
  */
-public class DEListCtrl {
+public class DeListCtrl {
 
     private BoardCtrl boardCtrl;
 
     @Inject
-    public DEListCtrl(BoardCtrl boardCtrl){
+    public DeListCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
     }
     @FXML

@@ -5,8 +5,10 @@ import javafx.geometry.Bounds;
 public class CollisionChecking {
 
     /**
-     * Checks whether a dragged rectangular shaped node collides with another rectangular shaped node
-     * Two objects are said to collide iff their area of intersection is greater than 50% of the source node's area
+     * Checks whether a dragged rectangular shaped node collides with
+     * another rectangular shaped node
+     * Two objects are said to collide iff their area of
+     * intersection is greater than 50% of the source node's area
      *
      * @param source The bounds of the dragged node
      * @param destination The bounds of the destination node

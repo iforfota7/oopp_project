@@ -17,6 +17,7 @@ public class ListController {
     /**
      * Constructor for ListController
      * @param repo - Repository for lists entities
+     * @param msgs - Messaging template
      */
     public ListController(ListsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
@@ -98,8 +99,8 @@ public class ListController {
      * Method for removing a list from the repo
      * Note that when removing the list, only its primary key is taken into account
      * If there is no list that matches the given's list ID, the method does nothing
-     * The lists that had a position inside board greater than the given list have their positions decreased by 1
-     *
+     * The lists that had a position inside board greater than the
+     * given list have their positions decreased by 1
      * @param list the list to be removed
      * @return 200 OK if the request is successful
      *         400 Bad Request if the provided list in invalid
@@ -115,7 +116,8 @@ public class ListController {
             //remove all cards inside this list
             repo.removeCardsInsideList(list.id);
 
-            // only remove and decrement list positions if the entry with the provided id actually exists
+            // only remove and decrement list positions if
+            // the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
 

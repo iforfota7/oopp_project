@@ -30,7 +30,8 @@ public class SelectServerCtrl {
             return;
         }
 
-        //transforms to complete url, if begins with colon assumed to be localhost address with specified port
+        // transforms to complete url
+        // if begins with colon assumed to be localhost address with specified port
         if(text.startsWith("http://")) ServerUtils.setServer(text);
         else if(text.startsWith(":")) ServerUtils.setServer("http://localhost" + text);
         else ServerUtils.setServer("http://" + text);
