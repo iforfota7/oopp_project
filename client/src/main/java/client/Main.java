@@ -35,7 +35,7 @@ public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
-    private static ShowScenesCtrl showScenesCtrl = INJECTOR.getInstance(ShowScenesCtrl.class);
+    private static final ShowScenesCtrl showScenesCtrl = INJECTOR.getInstance(ShowScenesCtrl.class);
 
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();

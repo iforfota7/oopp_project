@@ -9,7 +9,7 @@ import javax.inject.Inject;
  * Change list name controller
  */
 public class RNListCtrl {
-    private BoardCtrl boardCtrl;
+    private final BoardCtrl boardCtrl;
 
     @Inject
     public RNListCtrl(BoardCtrl boardCtrl){
