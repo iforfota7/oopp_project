@@ -1,7 +1,6 @@
 package commons;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,16 +9,13 @@ import java.util.Objects;
 
 
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Lists {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     public String title;
     public int positionInsideBoard;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
     @OrderBy("positionInsideList ASC")
     public List<Cards> cards;

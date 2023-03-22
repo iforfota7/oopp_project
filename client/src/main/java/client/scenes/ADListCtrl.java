@@ -38,8 +38,7 @@ public class ADListCtrl {
         Lists l = new Lists(newListName.getText(), positionInsideBoard);
         server.addList(l);
         newListName.setText("");
-        boardCtrl.addNewList(l);
-        ShowScenesCtrl.closeADList();
+        boardCtrl.showNewList(l);
     }
 
 }
