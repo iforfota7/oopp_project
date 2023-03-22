@@ -52,7 +52,7 @@ public class CardController {
 
         repo.incrementCardPosition(card.positionInsideList, card.list.id);
         Cards saved = repo.save(card);
-        msgs.convertAndSend("/topic/cards", saved);
+        msgs.convertAndSend("/topic/cards/add", saved);
         return ResponseEntity.ok(saved);
     }
 

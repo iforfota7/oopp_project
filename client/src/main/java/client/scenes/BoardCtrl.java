@@ -1,29 +1,27 @@
 package client.scenes;
 
-import client.lib.CollisionChecking;
+import client.scenes.config.draggable;
 import client.utils.ServerUtils;
 import commons.Cards;
 import commons.Lists;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.scene.input.MouseEvent;
-
 
 import javafx.event.ActionEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 
@@ -33,8 +31,6 @@ public class BoardCtrl implements Initializable {
 
     @FXML
     private AnchorPane rootContainer;
-    @FXML
-    private AnchorPane cardContainer;
 
     @FXML
     private HBox firstRow;
@@ -43,15 +39,13 @@ public class BoardCtrl implements Initializable {
     List<VBox> listContainers;
     List<AnchorPane> listCards;
 
-    private double originalX;
-    private double originalY;
-    private Bounds parentListBounds;
-    private Bounds card1Bounds;
     private VBox currentList;
     private Hyperlink currentCard;
     private long mousePressedTime;
 
     private List<Lists> lists;
+
+    private draggable drag;
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
@@ -62,21 +56,23 @@ public class BoardCtrl implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
-//        listContainers.add(header1);
-//        listContainers.add(header2);
-//        listContainers.add(header3);
         listCards = new ArrayList<>();
-//        listCards.add(card2Container);
-//        listCards.add(card3Container);
          refresh();
 
 
+        webSocket();
 
+
+    }
+
+    private void webSocket() {
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                  addNewList(l);
+
+                    addNewList(l);
+                    refreshData();
                 }
             });
         });
@@ -87,6 +83,7 @@ public class BoardCtrl implements Initializable {
                 public void run() {
                     Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
                     title.setText(l.title);
+                    refreshData();
                 }
             });
         });
@@ -97,7 +94,8 @@ public class BoardCtrl implements Initializable {
                 @Override
                 public void run() {
                     VBox list = (VBox)rootContainer.lookup("#list"+l.id);
-                    firstRow.getChildren().remove(list);
+                    firstRow.getChildren().removeAll(list);
+                    refreshData();
                 }
             });
         });
@@ -107,9 +105,12 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                   VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
+
+                    VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
                     AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
                     ((VBox) l.getChildren().get(0)).getChildren().remove(card);
+                    refreshData();
+
                 }
             });
         });
@@ -120,23 +121,23 @@ public class BoardCtrl implements Initializable {
                 public void run() {
                     ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
                             getChildren().get(0)).setText(c.title);
+                    refreshData();
                 }
             });
         });
 
-
+        server.registerForMessages("/topic/cards/add", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
+                    addNewCard((VBox) l.getChildren().get(0), c);
+                    refreshData();
+                }
+            });
+        });
     }
 
-    /**
-     * This method allows the dragged card to be rendered above all the other nodes
-     * @param mouseEvent an object containing information about the mouse event
-     */
-    public void dragDetected(MouseEvent mouseEvent) {
-        mousePressedTime = System.currentTimeMillis();
-        mouseEvent.consume();
-        //card1Container.getParent().getParent().toFront();
-        //card1Container.toFront();
-    }
 
     public void refresh(){
         firstRow.getChildren().clear();
@@ -147,97 +148,37 @@ public class BoardCtrl implements Initializable {
         }
     }
 
-    /**
-     * The method initializes where the mouse has been pressed relative to the top-left corner of the card
-     * before the card being dragged
-     *
-     * @param mouseEvent an object containing information about the mouse event
-     */
-    public void mousePressed(MouseEvent mouseEvent) {
-        originalX = mouseEvent.getX();
-        originalY = mouseEvent.getY();
-        if(mouseEvent.getSource().getClass().equals(Hyperlink.class)){
-            Hyperlink card = (Hyperlink) mouseEvent.getSource();
-
-        }
-        else {
-            cardContainer = (AnchorPane) mouseEvent.getSource();
-        }
-        parentListBounds = cardContainer.getParent().localToScene(cardContainer.getParent().getBoundsInLocal());
+    public void refreshData(){
+        lists = server.getLists();
+        refreshLists(lists);
     }
 
-    /**
-     * The method changes the cardContainer's position based on the cursor's current position by
-     * checking what the difference between where the mouse clicked the card (based on originalX/Y) and where it
-     * currently is (mouseEvent.getX/Y()) and adding it to the card's coordinates (card1Container.getLayoutX/Y())
-     *
-     * @param mouseEvent an object containing information about the mouse event
-     */
+    public void refreshCards(VBox listContainer, List<Cards> c){
+        int j = 0;
+        for(Node i : listContainer.getChildren()){
 
-    public void mouseDragged(MouseEvent mouseEvent) {
-        //mouseEvent.consume();
-        if(mouseEvent.getSource().getClass().equals(Hyperlink.class)){
-            Hyperlink card = (Hyperlink) mouseEvent.getSource();
-            cardContainer = (AnchorPane) card.getParent();
-        }
-        else {
-            cardContainer = (AnchorPane) mouseEvent.getSource();
-        }
+            Cards card = (Cards) i.getProperties().get("card");
 
-        cardContainer.setLayoutX(cardContainer.getLayoutX() + mouseEvent.getX() - originalX);
-        cardContainer.setLayoutY(cardContainer.getLayoutY() + mouseEvent.getY() - originalY);
-        card1Bounds = cardContainer.localToScene(cardContainer.getBoundsInLocal());
+            if(card!=null){
+              i.getProperties().remove("card");
+              i.getProperties().put("card", c.get(j));
+              j++;
+            }
+        }
     }
-
-    /**
-     * The method finalises drag-and-drop
-     */
-    public void mouseReleased(MouseEvent mouseEvent) {
-
-        // bound1 is the boundaries of card1Container
-        Bounds bound1 = card1Bounds;
-
-
-        // check for potential drop targets
-        for(VBox listContainer : listContainers) {
-            // bound2 is the boundaries of the listContainer
-            Bounds bound2;
-            if(listContainer.equals(cardContainer.getParent())){
-                bound2 = parentListBounds;
-            }
-            else {
-                bound2 = listContainer.localToScene(listContainer.getBoundsInLocal());
-            }
-
-            if(CollisionChecking.collide(bound1, bound2)) {
-                dropCard(listContainer, mouseEvent.getScreenY());
+    public void refreshLists(List<Lists> l){
+        int j = 0;
+        for(Node i : firstRow.getChildren()){
+            Lists list = (Lists) i.getProperties().get("list");
+            if(list!=null){
+                i.getProperties().put("list", l.get(j));
+                refreshCards((VBox) ((VBox) i).getChildren().get(0), l.get(j).cards);
+                j++;
             }
         }
     }
 
-    /**
-     * The method places the dragged card into the first position of the list which it has been dragged into
-     * by removing it from its parent list and adding it to the list it has been dragged to
-     * and positioning it to the top of the list using coordinates,
-     * as well as realigns the cards from its parent list
-     * @param listContainer the list in which a card is dropped
-     * @param yPosition the absolute y position of the mouse when the card is dropped
-     */
-    public void dropCard(VBox listContainer, double yPosition) {
-        // calculate index of card compared to other cards from absolute y position of mouse
-        int index = (int) Math.round((yPosition - 305)/30 - 0.5);
-        // if mouse was above the upper bound of the list, set index to 0 (card forced into first position)
-        if(index < 0) index = 0;
 
-        if(!(cardContainer.getParent().getParent().equals(listContainer))) {
-            ((VBox)cardContainer.getParent()).getChildren().remove(cardContainer);
-
-            // if the index is too large compared to the number of children, add it to end of the list
-            if(index >= listContainer.getChildren().size() - 2) listContainer.getChildren().add(cardContainer);
-            // otherwise add in the position of the calculated index (add 2 due to title and separator in vbox)
-            else listContainer.getChildren().add(index + 2, cardContainer);
-        }
-    }
 
     /**
      * Auxiliary call to mainCtrl Inject function
@@ -247,6 +188,7 @@ public class BoardCtrl implements Initializable {
     public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.drag = new draggable(this.server);
     }
 
     /**
@@ -326,8 +268,10 @@ public class BoardCtrl implements Initializable {
         headerList.setAlignment(Pos.TOP_CENTER);
         footerList.setAlignment(Pos.TOP_CENTER);
         footerList.setStyle("-fx-padding: 0 7 0 7");
-
-
+        list.setOnDragExited(drag::dragExited);
+        list.setOnDragEntered(drag::dragEntered);
+        list.setOnDragDropped(drag::dragDropped);
+        list.setOnDragOver(drag::dragOver);
         // creating the adding card button, aligning and customising it
         Button addCardButton = createAddCardButton();
 
@@ -401,7 +345,7 @@ public class BoardCtrl implements Initializable {
                 "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
-        addButton.setOnAction(this::addCardToList);
+       addButton.setOnAction(this::openAddNewCard);
         return addButton;
     }
 
@@ -438,8 +382,6 @@ public class BoardCtrl implements Initializable {
         Button deleteCard = (Button) event.getTarget();
        // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
-        c.list.cards = null;
-        System.out.println(c);
         server.removeCard(c);
 
     }
@@ -466,53 +408,31 @@ public class BoardCtrl implements Initializable {
      * When the function returns from mainCtrl, it will update the card name displayed on the board and refresh the pointer to currentCard.
      */
     void RefreshCard(String text) {
-        Cards c  = (Cards) this.currentCard.getProperties().get("card");
+        Cards c  = (Cards) this.currentCard.getParent().getProperties().get("card");
         c.title = text;
         server.renameCard(c);
         mainCtrl.closeCardDetails();
     }
 
-    /**
-     * Makes a call to add a new card to a specified anchor pane (list)
-     * @param event the press of the plus button in a list
-     */
-    public void addCardToList(ActionEvent event){
-        VBox list = ((VBox) ((VBox)((Button) event.getTarget()).getParent().getParent()).getChildren().get(0));
-
-        addNewCard(list);
+    void openAddNewCard(ActionEvent event){
+        this.currentList = (VBox)((Node)event.getSource()).getParent().getParent();
+        mainCtrl.showAddCard();
     }
 
-    /**
-     * Adds a new card to a specified anchor pane (list)
-     * @param anchor list to which a card should be appended
-     */
-    public void addNewCard(VBox anchor){
-        // count the number of cards currently in the list
-        int count = 0;
-        for(Node i : anchor.getChildren()){
-            if(i.getClass().equals(AnchorPane.class)) count++;
-        }
 
-        // create a new anchor pane for the card
-        AnchorPane newCard = newAnchorPane();
-
-        // add text and the delete button for the card
-        newCard.getChildren().addAll(newHyperlink(), newDeleteCardButton());
-
-        // append the card to the list
-        anchor.getChildren().add(count + 2, newCard);
-
-        // show card detail scene to be able to set details of card
-        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
-        mainCtrl.showCardDetail();
+    public void addCardToList(String text){
+        Lists l = (Lists) this.currentList.getProperties().get("list");
+        Cards c = new Cards(text, l.cards.size(), l);
+        c.list = l;
+        server.addCard(c);
+        mainCtrl.closeNewCard();
+        //Cards
     }
+
+
 
     public void addNewCard(VBox anchor, Cards c){
-        // count the number of cards currently in the list
-        int count = 0;
-        for(Node i : anchor.getChildren()){
-            if(i.getClass().equals(AnchorPane.class)) count++;
-        }
+
 
         // create a new anchor pane for the card
         AnchorPane newCard = newAnchorPane();
@@ -526,10 +446,13 @@ public class BoardCtrl implements Initializable {
         this.currentCard = (Hyperlink) newCard.getChildren().get(0);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
+        currentCard.setOnDragExited(drag::dragExited);
+        currentCard.setOnDragEntered(drag::dragEntered);
+        currentCard.setOnDragDropped(drag::dragDropped);
+        currentCard.setOnDragOver(drag::dragOver);
         this.currentCard.setText(c.title);
-        this.currentCard.getProperties().put("card", c);
 
-        anchor.getChildren().add(count + 2, newCard);
+        anchor.getChildren().add(c.positionInsideList+ 2, newCard);
 
         // show card detail scene to be able to set details of card
 
@@ -544,10 +467,7 @@ public class BoardCtrl implements Initializable {
         AnchorPane anchor = new AnchorPane();
         anchor.setLayoutX(0);
         anchor.setLayoutY(0);
-        anchor.setOnDragDetected(this::dragDetected);
-        anchor.setOnMouseDragged(this::mouseDragged);
-        anchor.setOnMousePressed(this::mousePressed);
-        anchor.setOnMouseReleased(this::mouseReleased);
+
         return anchor;
     }
 
@@ -565,11 +485,9 @@ public class BoardCtrl implements Initializable {
         card.setAlignment(Pos.CENTER);
         card.setStyle("-fx-background-color:  #E6E6FA");
 
-        card.setOnDragDetected(this::dragDetected);
-        card.setOnMouseDragged(this::mouseDragged);
-        card.setOnMousePressed(this::mousePressed);
-        card.setOnMouseReleased(this::mouseReleased);
+        card.setOnDragDetected(drag::dragDetected);
 
+        card.setOnDragDone(drag::dragDone);
         // set the card to execute cardDetail on action
         card.setOnAction(this::cardDetail);
         return card;
