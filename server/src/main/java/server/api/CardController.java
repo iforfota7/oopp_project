@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
 import javax.transaction.Transactional;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/cards")
