@@ -7,10 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class Draggable {
@@ -32,7 +29,8 @@ public class Draggable {
 
     public void dragEntered(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource()){
+                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
+                event.getSource() instanceof VBox){
 
             ((Region) event.getSource()).setBackground(  new Background( new BackgroundFill(Color.PINK,
                     CornerRadii.EMPTY, Insets.EMPTY)));
@@ -42,7 +40,8 @@ public class Draggable {
     }
     public void dragExited(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource()){
+                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
+                event.getSource() instanceof VBox){
             ((Region) event.getSource()).setBackground(  new Background( new BackgroundFill(Color.WHITE,
                     CornerRadii.EMPTY, Insets.EMPTY)));
         }
@@ -57,35 +56,74 @@ public class Draggable {
         event.consume();
     }
 
+    /**
+     * Computes how to change the card's position when it is dropped
+     * It takes into consideration the cursor coordinates in order to calculate
+     * the position inside that specific list
+     *
+     * @param event An object containing information about the drag event
+     */
     public void dragDropped(DragEvent event){
+        // information about the dragged card
         Cards sourceCard = (Cards) ((Node) event.getGestureSource()).getParent().getProperties().get("card");
 
-        if(((Node) event.getSource()).getProperties().get("list")==null){
-            // the card is dropped on another card
+        // information about the node where the card has been dropped
+        Node node = (Node)event.getSource();
 
-            Cards destinationCard = (Cards) ((Node) event.getSource()).getParent().getProperties().get("card");
+        //this while loop takes care of the case where the card is dropped on a card
+        while(!(node instanceof VBox))
+            node = node.getParent();
 
-            if(sourceCard.list.id == destinationCard.list.id &&
-                    sourceCard.positionInsideList <= destinationCard.positionInsideList)
-                destinationCard.positionInsideList--;
+        //this is statement takes care of the case where the card is dropped on a list
+        if(((VBox) node).getChildren().get(0).getId().equals("header"))
+            node = ((VBox) node).getChildren().get(0);
 
-            sourceCard.positionInsideList = destinationCard.positionInsideList;
-            sourceCard.list = destinationCard.list;
+        // node should now be the interior of the list
 
-            server.moveCard(sourceCard);
-        }else{
-            // the card is dropped on a list
+        int childIndex = 0;
+        boolean foundPosition = false;
+        int originalPosition = sourceCard.positionInsideList;
 
-            Lists destinationList = (Lists) ((Node) event.getSource()).getProperties().get("list");
-            sourceCard.positionInsideList = destinationList.cards.size();
-            if(sourceCard.list.id == destinationList.id)
-                sourceCard.positionInsideList--;
-
-            sourceCard.list = destinationList;
-
-            server.moveCard(sourceCard);
+        Lists targetList;
+        if(node.getProperties().get("list") == null) {
+            // we dropped on a card
+            targetList = (Lists)node.getParent().getProperties().get("list");
         }
 
+        else {
+            // we dropped on a list
+            targetList = (Lists)node.getProperties().get("list");
+        }
+
+        for(Node cardContainer : ((VBox) node).getChildren())
+            if(cardContainer instanceof AnchorPane) {
+                // we iterate through the cards to determine where to drop this card
+
+                // the Y coordinate for the middle of the card
+                double midYPoint = cardContainer.localToScene(0, 0).getY() + ((AnchorPane) cardContainer).getHeight() / 2;
+
+                // the Y coordinate of the mouse when the card has been dropped
+                double mouseY = ((Node)event.getSource()).localToScene(event.getX(), event.getY()).getY();
+
+                System.out.println(midYPoint + " " + mouseY);
+                if(mouseY <= midYPoint) {
+                    sourceCard.positionInsideList = childIndex;
+                    foundPosition = true;
+                    break;
+                }
+                childIndex++;
+            }
+
+        // the card was dropped below all existing cards
+        if(!foundPosition)
+            sourceCard.positionInsideList = childIndex;
+
+        // we treat the special case of dropping the card in the same list
+        if(sourceCard.list.id == targetList.id && originalPosition < sourceCard.positionInsideList)
+            sourceCard.positionInsideList--;
+        sourceCard.list = targetList;
+
+        server.moveCard(sourceCard);
 
         event.setDropCompleted(true);
         event.consume();
