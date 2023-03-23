@@ -126,14 +126,8 @@ public class CardController {
             return ResponseEntity.badRequest().build();
 
         Cards oldCard = repo.findById(card.id).get();
+        removeCard(oldCard);
 
-        ResponseEntity<Cards> removeResponse = removeCard(oldCard);
-        if(removeResponse.equals(ResponseEntity.badRequest().build()))
-            return ResponseEntity.badRequest().build();
-
-        card.id=0;
-        if(card.list.id == oldCard.list.id && card.positionInsideList >= oldCard.positionInsideList)
-            card.positionInsideList--;
         ResponseEntity<Cards> addResponse = addCard(card);
         if(addResponse.equals(ResponseEntity.badRequest().build())) {
             throw new RuntimeException("Failed to add card");

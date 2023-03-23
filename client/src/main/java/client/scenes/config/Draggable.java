@@ -64,6 +64,11 @@ public class Draggable {
             // the card is dropped on another card
 
             Cards destinationCard = (Cards) ((Node) event.getSource()).getParent().getProperties().get("card");
+
+            if(sourceCard.list.id == destinationCard.list.id &&
+                    sourceCard.positionInsideList <= destinationCard.positionInsideList)
+                destinationCard.positionInsideList--;
+
             sourceCard.positionInsideList = destinationCard.positionInsideList;
             sourceCard.list = destinationCard.list;
 
@@ -73,6 +78,9 @@ public class Draggable {
 
             Lists destinationList = (Lists) ((Node) event.getSource()).getProperties().get("list");
             sourceCard.positionInsideList = destinationList.cards.size();
+            if(sourceCard.list.id == destinationList.id)
+                sourceCard.positionInsideList--;
+
             sourceCard.list = destinationList;
 
             server.moveCard(sourceCard);
@@ -84,7 +92,7 @@ public class Draggable {
     }
 
     public void dragDone(DragEvent event){
-//        event.consume();
+        event.consume();
     }
 
 }
