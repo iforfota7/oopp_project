@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import org.w3c.dom.Text;
 
 public class SelectServerCtrl {
 
@@ -14,6 +15,9 @@ public class SelectServerCtrl {
 
     @FXML
     private TextField inputServer;
+
+    @FXML
+    private TextField inputUsername;
 
     @FXML
     private Button connect;
