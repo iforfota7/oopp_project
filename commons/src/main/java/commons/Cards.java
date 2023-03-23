@@ -66,7 +66,6 @@ public class Cards {
 
     /**
      * To string method to return cards object in human-readable format
-     *
      * @return a string with the cards information
      */
     @Override

@@ -24,6 +24,9 @@ public class Lists {
     @OrderBy("positionInsideList ASC")
     public List<Cards> cards;
 
+    @ManyToOne
+    public Boards board;
+
     /**
      * Constructor method for the lists class
      * @param title the name of the list
@@ -33,6 +36,7 @@ public class Lists {
         this.title = title;
         this.positionInsideBoard = positionInsideBoard;
         this.cards = new ArrayList<>();
+        this.board = null; // change later please
     }
 
     /**

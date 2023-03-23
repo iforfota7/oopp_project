@@ -1,6 +1,0 @@
-2023-03-22 14:55:53 jdbc[23]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE LISTS  FROM[*]"; SQL statement:
-delete LISTS  FROM [42000-200]
-2023-03-22 14:56:33 jdbc[23]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LISTSLISTS" not found; SQL statement:
-delete  FROM  listsLISTS [42102-200]
