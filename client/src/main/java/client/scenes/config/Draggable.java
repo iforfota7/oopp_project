@@ -57,6 +57,86 @@ public class Draggable {
     }
 
     /**
+     * Returns the list container based on the element on which the card could be dropped
+     *
+     * @param dropTarget The element on which the card is dropped
+     * @return The list container
+     */
+
+    private VBox getListContainerFromDropTarget(Node dropTarget) {
+        //this while statement takes care of the case where the card is dropped on a card
+        while(!(dropTarget instanceof VBox))
+            dropTarget = dropTarget.getParent();
+
+        //this is statement takes care of the case where the card is dropped on a list
+        if(((VBox) dropTarget).getChildren().get(0).getId().equals("header"))
+            dropTarget = ((VBox) dropTarget).getChildren().get(0);
+
+        return (VBox)dropTarget;
+    }
+
+    /**
+     * Returns the object associated with the list container on which the card could be dropped
+     *
+     * @param dropTarget the element on which the card could be dropped
+     * @return The list object associated with this element
+     */
+
+    private Lists computeTargetList(Node dropTarget) {
+        dropTarget = getListContainerFromDropTarget(dropTarget);
+        return (Lists)dropTarget.getParent().getProperties().get("list");
+    }
+
+    /**
+     * Computes how to change the card's position when it is dropped
+     * It takes into consideration the cursor coordinates in order to calculate
+     * the position inside that specific list
+     *
+     * @param event the object containing information about the drag event
+     * @param sourceCard the card that is being dragged
+     * @param node the element on which the card could be dropped
+     * @return the new position of the dragged card
+     */
+
+    private int positionOfDroppedCard(DragEvent event, Cards sourceCard, Node node) {
+        Lists targetList = computeTargetList(node);
+        node = getListContainerFromDropTarget(node);
+
+        int childIndex = 0;
+        int answer = -1;
+        boolean foundPosition = false;
+        int originalPosition = sourceCard.positionInsideList;
+
+        for(Node cardContainer : ((VBox) node).getChildren())
+            if(cardContainer instanceof AnchorPane) {
+                // we iterate through the cards to determine where to drop this card
+
+                // the Y coordinate for the middle of the card
+                double midYPoint = cardContainer.localToScene(0, 0).getY() + ((AnchorPane) cardContainer).getHeight() / 2;
+
+                // the Y coordinate of the mouse when the card has been dropped
+                double mouseY = ((Node)event.getSource()).localToScene(event.getX(), event.getY()).getY();
+
+                if(mouseY <= midYPoint) {
+                    answer = childIndex;
+                    foundPosition = true;
+                    break;
+                }
+                childIndex++;
+            }
+
+        // the card was dropped below all existing cards
+        if(!foundPosition)
+            answer = childIndex;
+
+        // we treat the special case of dropping the card in the same list
+        if(sourceCard.list.id == targetList.id && originalPosition < answer)
+            answer--;
+
+        return answer;
+    }
+
+    /**
      * Computes how to change the card's position when it is dropped
      * It takes into consideration the cursor coordinates in order to calculate
      * the position inside that specific list
@@ -70,58 +150,8 @@ public class Draggable {
         // information about the node where the card has been dropped
         Node node = (Node)event.getSource();
 
-        //this while loop takes care of the case where the card is dropped on a card
-        while(!(node instanceof VBox))
-            node = node.getParent();
-
-        //this is statement takes care of the case where the card is dropped on a list
-        if(((VBox) node).getChildren().get(0).getId().equals("header"))
-            node = ((VBox) node).getChildren().get(0);
-
-        // node should now be the interior of the list
-
-        int childIndex = 0;
-        boolean foundPosition = false;
-        int originalPosition = sourceCard.positionInsideList;
-
-        Lists targetList;
-        if(node.getProperties().get("list") == null) {
-            // we dropped on a card
-            targetList = (Lists)node.getParent().getProperties().get("list");
-        }
-
-        else {
-            // we dropped on a list
-            targetList = (Lists)node.getProperties().get("list");
-        }
-
-        for(Node cardContainer : ((VBox) node).getChildren())
-            if(cardContainer instanceof AnchorPane) {
-                // we iterate through the cards to determine where to drop this card
-
-                // the Y coordinate for the middle of the card
-                double midYPoint = cardContainer.localToScene(0, 0).getY() + ((AnchorPane) cardContainer).getHeight() / 2;
-
-                // the Y coordinate of the mouse when the card has been dropped
-                double mouseY = ((Node)event.getSource()).localToScene(event.getX(), event.getY()).getY();
-
-                System.out.println(midYPoint + " " + mouseY);
-                if(mouseY <= midYPoint) {
-                    sourceCard.positionInsideList = childIndex;
-                    foundPosition = true;
-                    break;
-                }
-                childIndex++;
-            }
-
-        // the card was dropped below all existing cards
-        if(!foundPosition)
-            sourceCard.positionInsideList = childIndex;
-
-        // we treat the special case of dropping the card in the same list
-        if(sourceCard.list.id == targetList.id && originalPosition < sourceCard.positionInsideList)
-            sourceCard.positionInsideList--;
-        sourceCard.list = targetList;
+        sourceCard.positionInsideList = positionOfDroppedCard(event, sourceCard, node);
+        sourceCard.list = computeTargetList(node);
 
         server.moveCard(sourceCard);
 
