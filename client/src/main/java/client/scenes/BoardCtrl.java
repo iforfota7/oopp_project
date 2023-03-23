@@ -1,6 +1,6 @@
 package client.scenes;
 
-import client.scenes.config.draggable;
+import client.scenes.config.Draggable;
 import client.utils.ServerUtils;
 import commons.Cards;
 import commons.Lists;
@@ -45,7 +45,7 @@ public class BoardCtrl implements Initializable {
 
     private List<Lists> lists;
 
-    private draggable drag;
+    private Draggable drag;
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
@@ -188,7 +188,7 @@ public class BoardCtrl implements Initializable {
     public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
         this.mainCtrl = mainCtrl;
         this.server = server;
-        this.drag = new draggable(this.server);
+        this.drag = new Draggable(this.server);
     }
 
     /**

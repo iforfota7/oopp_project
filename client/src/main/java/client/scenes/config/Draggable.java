@@ -13,16 +13,15 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-public class draggable {
+public class Draggable {
 
     ServerUtils server;
 
-    public draggable(ServerUtils server){
+    public Draggable(ServerUtils server){
         this.server = server;
     }
 
     public void dragDetected(MouseEvent mouseEvent) {
-        System.out.println("onDragDetected");
         Hyperlink dragged = (Hyperlink) mouseEvent.getSource();
         Dragboard db = dragged.startDragAndDrop(TransferMode.ANY);
         ClipboardContent content = new ClipboardContent();
@@ -32,7 +31,6 @@ public class draggable {
     }
 
     public void dragEntered(DragEvent event){
-        System.out.println("onDragEntered");
         if(event.getGestureSource()!=event.getSource() &&
                 ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource()){
 
@@ -60,26 +58,24 @@ public class draggable {
     }
 
     public void dragDropped(DragEvent event){
-        System.out.println("onDragDropped");
-        Cards c = (Cards) ((Node) event.getGestureSource()).getParent().getProperties().get("card");
-        System.out.println(c);
-        server.removeCard(c);
+        Cards sourceCard = (Cards) ((Node) event.getGestureSource()).getParent().getProperties().get("card");
 
         if(((Node) event.getSource()).getProperties().get("list")==null){
-            Cards co = (Cards) ((Node) event.getSource()).getParent().getProperties().get("card");
-            System.out.println(co);
-            c.positionInsideList = co.positionInsideList;
-            c.list = co.list;
-            server.addCard(c);
+            // the card is dropped on another card
+
+            Cards destinationCard = (Cards) ((Node) event.getSource()).getParent().getProperties().get("card");
+            sourceCard.positionInsideList = destinationCard.positionInsideList;
+            sourceCard.list = destinationCard.list;
+
+            server.moveCard(sourceCard);
         }else{
-            Lists l = (Lists) ((Node) event.getSource()).getProperties().get("list");
-            System.out.println(l);
-            c.positionInsideList = l.cards.size();
-            if(c.list.id == l.id)
-                --c.positionInsideList;
-            System.out.println(l.cards.size());
-            c.list = l;
-            server.addCard(c);
+            // the card is dropped on a list
+
+            Lists destinationList = (Lists) ((Node) event.getSource()).getProperties().get("list");
+            sourceCard.positionInsideList = destinationList.cards.size();
+            sourceCard.list = destinationList;
+
+            server.moveCard(sourceCard);
         }
 
 
@@ -88,8 +84,7 @@ public class draggable {
     }
 
     public void dragDone(DragEvent event){
-        System.out.println("onDragDone");
-        event.consume();
+//        event.consume();
     }
 
 }

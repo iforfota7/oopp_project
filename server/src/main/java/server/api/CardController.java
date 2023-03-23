@@ -97,7 +97,6 @@ public class CardController {
     @Transactional
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Cards> removeCard(@RequestBody Cards card) {
-        System.out.println(card);
         if(card == null){
             return ResponseEntity.badRequest().build();
         }
@@ -115,43 +114,32 @@ public class CardController {
     }
 
     /**
-     * Method for moving a card from one list to another.
-     * A card can only be moved to another list if it already exists in the repo.
-     * The way it is moved between lists is by first removing the existing card (which has the old list id)
-     * from the repo, and later adding the new card (which has the new list id) to the repo.
-     * If adding the new card fails, the old one is added back.
+     * Method for moving cards to a different position in a (possibly different) list
+     * If one of the 2 requests fails, the state of the repository is maintained
      * @param card the card to be moved to another list
      * @return 200 OK if moving the card was successful
      */
     @Transactional
-    @PostMapping(path = {"/moveCard","/moveCard/"})
-    public ResponseEntity<Cards> moveCardToAnotherList(@RequestBody Cards card) {
+    @PostMapping(path = {"/move","/move/"})
+    public ResponseEntity<Cards> moveCard(@RequestBody Cards card) {
 
         if(repo.findById(card.id).isEmpty())
             return ResponseEntity.badRequest().build();
 
-        if(repo.findById(card.id).get().list.id==card.list.id)
-            return ResponseEntity.ok().build();
-
         Cards oldCard = repo.findById(card.id).get();
 
-        card.id=0;
-
-        ResponseEntity<Cards> addResponse = addCard(card);
-
-        if(addResponse.getStatusCode().is4xxClientError()) {
-
-            return ResponseEntity.badRequest().build();
-        }
-
-        card.id = Objects.requireNonNull(addResponse.getBody()).id;
-
         ResponseEntity<Cards> removeResponse = removeCard(oldCard);
-
-        if(removeResponse.getStatusCode().is4xxClientError()) {
-            removeCard(card);
+        if(removeResponse.equals(ResponseEntity.badRequest().build()))
             return ResponseEntity.badRequest().build();
+
+        card.id=0;
+        if(card.list.id == oldCard.list.id && card.positionInsideList >= oldCard.positionInsideList)
+            card.positionInsideList--;
+        ResponseEntity<Cards> addResponse = addCard(card);
+        if(addResponse.equals(ResponseEntity.badRequest().build())) {
+            throw new RuntimeException("Failed to add card");
         }
+
         return ResponseEntity.ok().build();
     }
 
