@@ -1,12 +1,9 @@
 package client.scenes.config;
 
-import client.scenes.BoardCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Boards;
 import commons.Cards;
 import commons.Lists;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
