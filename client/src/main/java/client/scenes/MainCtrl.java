@@ -24,19 +24,20 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList, cardDetails;
+    private Scene board, renameList, deleteList, addList, cardDetails, newCard;
 
-    private RnListCtrl rnListCtrl;
-    private DeListCtrl deListCtrl;
-    private AdListCtrl addListCtrl;
+    private RNListCtrl rnListCtrl;
+    private DEListCtrl deListCtrl;
+    private ADListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
+
+    private newCardCtrl newCardCtrl;
 
     private int numberOfLists = 2;
 
-    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board,
-                           Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl,
-                           Parent> deleteList, Pair<AdListCtrl, Parent> addList,
-                           Pair<CardDetailsCtrl,Parent>cardDetails) {
+    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
+                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
+                            ,Parent>cardDetails, Pair<newCardCtrl, Parent> newCardCtrl) {
 
         this.primaryStage = primaryStage;
 
@@ -53,6 +54,9 @@ public class MainCtrl {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
+
+        this.newCard= new Scene(newCardCtrl.getValue());
+        this.newCardCtrl = newCardCtrl.getKey();
 
         showStart();
         primaryStage.show();
@@ -135,11 +139,19 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    public void showAddCard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(newCard);
+        secondaryStage.setTitle("Add new Card");
+        secondaryStage.show();
+    }
+
     /**
      * close scene of cardDetails
      */
     public void closeCardDetails() {
         secondaryStage.close();
     }
+    public void closeNewCard(){secondaryStage.close();}
 
 }
