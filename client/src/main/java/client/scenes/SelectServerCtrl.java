@@ -55,9 +55,15 @@ public class SelectServerCtrl {
             inputServer.setText("invalid");
         }
 
+        // set the username in the frontend
         ServerUtils.setUsername(username);
+
+        // create user from information
         User user = new User(username, new ArrayList<>(), false);
-        server.addUser(user);
+
+        boolean exists = server.existsUser(user);
+
+        if(!exists) server.addUser(user);
 
         Main.setSceneToBoard();
 

@@ -17,12 +17,14 @@ package client.utils;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import commons.Cards;
 import commons.Lists;
 import commons.User;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -44,6 +46,13 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    public boolean existsUser(User user){
+        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + user.username).request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){}) == null) return false;
+        return true;
     }
 
     public Lists addList(Lists list){
