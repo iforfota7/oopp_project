@@ -257,6 +257,46 @@ public class ListControllerTest {
         assertEquals("[0, 1, 2]", positions.toString());
     }
 
+    @Test
+    void successfullyRenameList() {
+        Lists l = getList("a", 0);
+        sut.addList(l);
+
+        assertEquals(1, repo.lists.size());
+        assertEquals("a", repo.lists.get(0).title);
+
+        Lists l2 = getList("b", 0);
+        l2.id = l.id;
+        sut.renameList(l2);
+
+        assertEquals(1, repo.lists.size());
+        assertEquals("b", repo.lists.get(0).title);
+    }
+
+    @Test
+    void renamedListDoesNotExist() {
+        Lists l1 = getList("a", 0);
+        sut.addList(l1);
+        Lists l2 = getList("b", 1);
+
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameList(l2));
+    }
+
+    @Test
+    void renamedListWrongPosition() {
+        Lists l1 = getList("a", 0);
+        sut.addList(l1);
+        Lists l2 = getList("b", 1);
+        l2.id = l1.id;
+
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameList(l2));
+    }
+
+    @Test
+    void renameNullList() {
+        assertEquals(ResponseEntity.badRequest().build(), sut.renameList(null));
+    }
+
     public Lists getList(String t, int p) {
 
         Lists list = new Lists(t,p);

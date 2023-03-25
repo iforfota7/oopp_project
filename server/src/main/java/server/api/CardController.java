@@ -96,7 +96,6 @@ public class CardController {
     @Transactional
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Cards> removeCard(@RequestBody Cards card) {
-        System.out.println(card);
         if(card == null){
             return ResponseEntity.badRequest().build();
         }
@@ -111,6 +110,30 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    /**
+     * Method for moving cards to a different position in a (possibly different) list
+     * If one of the 2 requests fails, the state of the repository is maintained
+     * @param card the card to be moved to another list
+     * @return 200 OK if moving the card was successful
+     */
+    @Transactional
+    @PostMapping(path = {"/move","/move/"})
+    public ResponseEntity<Cards> moveCard(@RequestBody Cards card) {
+
+        if(repo.findById(card.id).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        Cards oldCard = repo.findById(card.id).get();
+        removeCard(oldCard);
+
+        ResponseEntity<Cards> addResponse = addCard(card);
+        if(addResponse.equals(ResponseEntity.badRequest().build())) {
+            throw new RuntimeException("Failed to add card");
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     /**

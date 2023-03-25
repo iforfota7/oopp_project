@@ -74,7 +74,11 @@ public class ServerUtils {
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
-
+    public Cards moveCard(Cards card){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
 
 
     public List<Lists> getLists() {
@@ -83,14 +87,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
-    }
-
-    public List<Cards> getCards() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/cards") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Cards>>() {});
     }
 
 
