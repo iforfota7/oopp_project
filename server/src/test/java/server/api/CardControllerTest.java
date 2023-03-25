@@ -318,6 +318,97 @@ class CardControllerTest {
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
     }
 
+    @Test
+    void MovedCardDoesNotExist() {
+        Cards card = getCard("My Card", 0, null);
+        assertEquals(ResponseEntity.badRequest().build(), sut.moveCard(card));
+    }
+
+    @Test
+    void MoveCardAddFailed() {
+        Lists list = new Lists("My List", 0);
+        Cards oldCard = getCard("My Card", 0, list);
+        sut.addCard(oldCard);
+
+        Cards newCard = getCard("My Card", 10, list);
+        newCard.id = oldCard.id;
+
+        assertThrows(RuntimeException.class, () -> {
+            sut.moveCard(newCard);
+        });
+    }
+
+    @Test
+    void moveCardDifferentList() {
+        Lists list1 = new Lists("My List", 0);
+        Lists list2 = new Lists("My Second List", 1);
+        list2.id = 1;
+        Cards oldCard = getCard("My Card", 0, list1);
+        Cards secondCard = getCard("My Second Card", 0, list2);
+        sut.addCard(oldCard);
+        sut.addCard(secondCard);
+
+        Cards newCard = getCard("My Card", 0, list2);
+        newCard.id = oldCard.id;
+
+        sut.moveCard(newCard);
+
+        List<Cards> allCards = repo.cards;
+        assertEquals(2, allCards.size());
+
+        assertTrue(allCards.contains(secondCard));
+        assertEquals(1, secondCard.positionInsideList);
+
+        assertTrue(allCards.contains(newCard));
+        assertEquals(0, newCard.positionInsideList);
+    }
+
+    @Test
+    void moveCardSameListAbove() {
+        Lists list = new Lists("My List", 0);
+        Cards oldCard = getCard("My Card", 0, list);
+        Cards secondCard = getCard("My Second Card", 1, list);
+        sut.addCard(oldCard);
+        sut.addCard(secondCard);
+
+        Cards newCard = getCard("My Card", 1, list);
+        newCard.id = oldCard.id;
+
+        sut.moveCard(newCard);
+
+        List<Cards> allCards = repo.cards;
+        assertEquals(2, allCards.size());
+
+        assertTrue(allCards.contains(secondCard));
+        assertEquals(0, secondCard.positionInsideList);
+
+        assertTrue(allCards.contains(newCard));
+        assertEquals(1, newCard.positionInsideList);
+    }
+
+    @Test
+    void moveCardSameListBelow() {
+        Lists list = new Lists("My List", 0);
+        Cards secondCard = getCard("My Second Card", 0, list);
+        Cards oldCard = getCard("My Card", 1, list);
+        sut.addCard(secondCard);
+        sut.addCard(oldCard);
+
+        Cards newCard = getCard("My Card", 0, list);
+        newCard.id = oldCard.id;
+
+        sut.moveCard(newCard);
+
+        List<Cards> allCards = repo.cards;
+        assertEquals(2, allCards.size());
+
+        assertTrue(allCards.contains(secondCard));
+        assertEquals(1, secondCard.positionInsideList);
+
+        assertTrue(allCards.contains(newCard));
+        assertEquals(0, newCard.positionInsideList);
+    }
+
     public Cards getCard(String t, int p, Lists list) {
 
         Cards card = new Cards(t,p,list);
