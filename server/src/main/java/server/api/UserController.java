@@ -37,7 +37,7 @@ public class UserController {
     @GetMapping(path = "/find/{username}")
     @ResponseBody
     public User existsUser(@PathVariable String username){
-        System.out.println(username);
+        if(repo.findById(username).isEmpty()) return null;
         return repo.findById(username).get();
     }
 }

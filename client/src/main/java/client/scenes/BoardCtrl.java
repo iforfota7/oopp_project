@@ -58,7 +58,7 @@ public class BoardCtrl implements Initializable {
 
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
-         refresh();
+        refresh();
 
 
         webSocket();
@@ -142,7 +142,7 @@ public class BoardCtrl implements Initializable {
 
     public void refresh(){
         firstRow.getChildren().clear();
-         lists = server.getLists();
+        lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
 
