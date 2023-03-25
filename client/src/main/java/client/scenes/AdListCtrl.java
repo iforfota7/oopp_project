@@ -33,8 +33,7 @@ public class AdListCtrl {
      * List display name is only achieved through creating a new window.
      */
     @FXML
-    void saveNewList(ActionEvent event)
-    {
+    void saveNewList(ActionEvent event){
         int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
         server.addList(new Lists(newListName.getText(), positionInsideBoard));
         newListName.setText("");

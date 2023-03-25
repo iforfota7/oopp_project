@@ -25,6 +25,8 @@ import java.util.function.Consumer;
 
 import commons.Cards;
 import commons.Lists;
+import jakarta.ws.rs.client.Client;
+import org.apache.catalina.User;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -38,6 +40,13 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 public class ServerUtils {
 
     private static String SERVER;
+    private static String USERNAME;
+
+    public User addUser(User user){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
 
     public Lists addList(Lists list){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
@@ -88,6 +97,12 @@ public class ServerUtils {
     public static void setServer(String server){
         SERVER = server;
     }
+
+    /**
+     * Setter method for the username attribute
+     * @param username the username to be set
+     */
+    public static void setUsername(String username) { USERNAME = username;}
 
     /**
      * Sends a simple get request to /api/test-connection in order to check if the

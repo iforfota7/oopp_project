@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import org.apache.catalina.Server;
+
+import javax.inject.Inject;
 
 public class SelectServerCtrl {
 
@@ -21,6 +24,16 @@ public class SelectServerCtrl {
     @FXML
     private Button connect;
 
+    private final BoardCtrl boardCtrl;
+    private final ServerUtils server;
+    private final MainCtrl   mainCtrl;
+    @Inject
+    public SelectServerCtrl(BoardCtrl boardCtrl, ServerUtils server, MainCtrl mainCtrl){
+        this.boardCtrl = boardCtrl;
+        this.server = server;
+        this.mainCtrl = mainCtrl;
+    }
+
     /**
      * Method to be executed when connect button is clicked
      * Gets url from text-field and sets it as server url in ServerUtils
@@ -32,6 +45,9 @@ public class SelectServerCtrl {
         if(text == null || text.equals("")){
             return;
         }
+
+        ServerUtils.setUsername(inputUsername.getText());
+        server.addUser(new User(inputUsername.getText(), ))
 
         // transforms to complete url
         // if begins with colon assumed to be localhost address with specified port
