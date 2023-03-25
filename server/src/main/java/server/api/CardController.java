@@ -116,17 +116,8 @@ public class CardController {
     }
 
     /**
-<<<<<<< HEAD
-     * Method for moving a card from one list to another.
-     * A card can only be moved to another list if it already exists in the repo.
-     * The way it is moved between lists is by first removing the existing card
-     * (which has the old list id) from the repo, and later adding the new card
-     * (which has the new list id) to the repo. If adding the new card fails,
-     * the old one is added back.
-=======
      * Method for moving cards to a different position in a (possibly different) list
      * If one of the 2 requests fails, the state of the repository is maintained
->>>>>>> a0ee37f5009f7c87215c32caa07e300b158fd95c
      * @param card the card to be moved to another list
      * @return 200 OK if moving the card was successful
      */

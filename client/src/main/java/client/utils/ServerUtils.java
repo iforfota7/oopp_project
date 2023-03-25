@@ -22,8 +22,7 @@ import java.util.function.Consumer;
 
 import commons.Cards;
 import commons.Lists;
-import jakarta.ws.rs.client.Client;
-import org.apache.catalina.User;
+import commons.User;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
