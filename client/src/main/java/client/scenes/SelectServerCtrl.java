@@ -21,7 +21,13 @@ public class SelectServerCtrl {
     private TextField inputServer;
 
     @FXML
+    private TextField serverWarning;
+
+    @FXML
     private TextField inputUsername;
+
+    @FXML
+    private TextField usernameWarning;
 
     @FXML
     private Button connect;
