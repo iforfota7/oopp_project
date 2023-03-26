@@ -18,11 +18,21 @@ public class UserController {
     private final UserRepository repo;
     private final SimpMessagingTemplate msgs;
 
+    /**
+     * Constructor method
+     * @param repo the user repository
+     * @param msgs messaging template
+     */
     public UserController(UserRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
         this.msgs = msgs;
     }
 
+    /**
+     * A post reauest sent using a "" or "/" mapping will add a user to the database
+     * @param user the user to be added
+     * @return response entity of user
+     */
     @Transactional
     @PostMapping(path = {"", "/"})
     public ResponseEntity<User> addUser(@RequestBody User user){
@@ -34,9 +44,14 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * A method used to find a user by username
+     * @param username the username of the user
+     * @return the user if found, otherwise null
+     */
     @GetMapping(path = "/find/{username}")
     @ResponseBody
-    public User existsUser(@PathVariable String username){
+    public User findUser(@PathVariable String username){
         if(repo.findById(username).isEmpty()) return null;
         return repo.findById(username).get();
     }

@@ -36,7 +36,6 @@ public class MainCtrl {
 
     private int numberOfLists = 2;
 
-    @SuppressWarnings("checkstyle:ParameterNumber")
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board,
                            Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl, Parent> deleteList,
                            Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl,
@@ -113,6 +112,9 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Show confirmUsername scene
+     */
     public void showConfirmUsername(){
         secondaryStage = new Stage();
         secondaryStage.setScene(confirmUsername);
@@ -131,7 +133,10 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
-    public void closeShowUsername() {secondaryStage.close();}
+    /**
+     * Closes the confirmUsername scene
+     */
+    public void closeConfirmUsername() {secondaryStage.close();}
 
     /**
      * Adds a new list to the board

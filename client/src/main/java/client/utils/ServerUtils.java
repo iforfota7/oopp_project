@@ -40,12 +40,22 @@ public class ServerUtils {
     private static String SERVER;
     private static String USERNAME;
 
+    /**
+     * Method that adds a user to the database
+     * @param user the user to be added
+     * @return the response object
+     */
     public User addUser(User user){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
+    /**
+     * Find whether a user exists or not
+     * @param user a user which should be checked
+     * @return true if user already in database, otherwise false
+     */
     public boolean existsUser(User user){
         if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user/find/" + user.username).

@@ -44,13 +44,14 @@ public class SelectServerCtrl {
     /**
      * Method to be executed when connect button is clicked
      * Gets url from text-field and sets it as server url in ServerUtils
+     * Gets username from text-field and sets it as username in ServerUtils
      */
     public void connect() {
         String address = inputServer.getText();
         String username = inputUsername.getText();
         boolean exists = false;
 
-        //if empty do nothing
+        //if address is empty do nothing
         if(address == null || address.equals("")){
             return;
         }
@@ -61,6 +62,7 @@ public class SelectServerCtrl {
         else if(address.startsWith(":")) ServerUtils.setServer("http://localhost" + address);
         else ServerUtils.setServer("http://" + address);
 
+        // if you can connect to the specified server address
         if(ServerUtils.checkServer()){
             serverWarning.setVisible(false);
 
@@ -72,12 +74,17 @@ public class SelectServerCtrl {
 
             exists = server.existsUser(user);
 
+            // if the user does not already exist, add them to the database
+            // otherwise set warning to visible
             if(!exists) server.addUser(user);
             else usernameWarning.setVisible(true);
         }
         else serverWarning.setVisible(true);
 
+        // if server exists
         if(!serverWarning.isVisible()){
+            // if user does not exist, continue
+            // otherwise show confirmation scene
             if(!exists) Main.setSceneToBoard();
             else{
                 mainCtrl.showConfirmUsername();

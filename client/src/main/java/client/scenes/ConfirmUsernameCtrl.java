@@ -25,14 +25,22 @@ public class ConfirmUsernameCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    /**
+     * Makes call to close confirm username scene
+     * @param event triggers the method
+     */
     @FXML
     void cancel(ActionEvent event) {
-        mainCtrl.closeShowUsername();
+        mainCtrl.closeConfirmUsername();
     }
 
+    /**
+     * Closes confirm username scene and shows the board
+     * @param event triggers the method
+     */
     @FXML
     void confirm(ActionEvent event) {
-        mainCtrl.closeShowUsername();
+        mainCtrl.closeConfirmUsername();
         Main.setSceneToBoard();
     }
 
