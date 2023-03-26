@@ -2,10 +2,15 @@ package client.scenes;
 
 import client.Main;
 import client.utils.ServerUtils;
+import commons.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
 
 public class SelectServerCtrl {
 
@@ -16,27 +21,76 @@ public class SelectServerCtrl {
     private TextField inputServer;
 
     @FXML
+    private Text serverWarning;
+
+    @FXML
+    private TextField inputUsername;
+
+    @FXML
     private Button connect;
+
+    private final ServerUtils server;
+
+    private final MainCtrl mainCtrl;
+    @Inject
+    public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl){
+        this.server = server;
+        this.mainCtrl = mainCtrl;
+    }
 
     /**
      * Method to be executed when connect button is clicked
      * Gets url from text-field and sets it as server url in ServerUtils
+     * Gets username from text-field and sets it as username in ServerUtils
      */
-    public void connect() throws RuntimeException {
-        String text = inputServer.getText();
+    public void connect() {
+        String address = inputServer.getText();
+        String username = inputUsername.getText();
+        boolean exists = false;
 
-        //if empty do nothing
-        if(text == null || text.equals("")){
+        //if address is empty do nothing
+        if(address == null || address.equals("")){
             return;
         }
 
-        //transforms to complete url, if begins with colon assumed to be localhost address with specified port
-        if(text.startsWith("http://")) ServerUtils.setServer(text);
-        else if(text.startsWith(":")) ServerUtils.setServer("http://localhost" + text);
-        else ServerUtils.setServer("http://" + text);
+        // transforms to complete url
+        // if begins with colon assumed to be localhost address with specified port
+        if(address.startsWith("http://")) ServerUtils.setServer(address);
+        else if(address.startsWith(":")) ServerUtils.setServer("http://localhost" + address);
+        else ServerUtils.setServer("http://" + address);
 
-        // check whether valid url, and if valid go to next scene
-        if(ServerUtils.checkServer()) Main.setSceneToBoard();
-        else inputServer.setText("invalid");
+        // if you can connect to the specified server address
+        if(ServerUtils.checkServer()){
+            serverWarning.setVisible(false);
+
+            // set the username in the frontend
+            ServerUtils.setUsername(username);
+
+            // create user from information
+            User user = new User(username, new ArrayList<>(), false);
+
+            exists = server.existsUser(user);
+
+            if(!exists){
+                try{
+                    server.addUser(user); // try to add user if not already in database
+                }
+                catch(Exception e){
+                    System.out.println(e); // probably need a better way of communicating the error
+                }
+            }
+        }
+        else serverWarning.setVisible(true);
+
+        // if server exists
+        if(!serverWarning.isVisible()){
+            // if user does not exist, continue
+            // otherwise show confirmation scene
+            if(!exists) Main.setSceneToBoard();
+            else{
+                mainCtrl.showConfirmUsername();
+            }
+        }
+
     }
 }

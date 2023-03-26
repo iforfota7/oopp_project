@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import commons.Cards;
 import commons.Lists;
+import commons.User;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -37,6 +38,31 @@ import static jakarta.ws.rs.core.MediaType.*;
 public class ServerUtils {
 
     private static String SERVER;
+    private static String USERNAME;
+
+    /**
+     * Method that adds a user to the database
+     * @param user the user to be added
+     * @return the response object
+     */
+    public User addUser(User user){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
+     * Find whether a user exists or not
+     * @param user a user which should be checked
+     * @return true if user already in database, otherwise false
+     */
+    public boolean existsUser(User user){
+        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + user.username).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){}) == null) return false;
+        return true;
+    }
 
     public Lists addList(Lists list){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
@@ -97,6 +123,12 @@ public class ServerUtils {
     public static void setServer(String server){
         SERVER = server;
     }
+
+    /**
+     * Setter method for the username attribute
+     * @param username the username to be set
+     */
+    public static void setUsername(String username) { USERNAME = username;}
 
     /**
      * Sends a simple get request to /api/test-connection in order to check if the

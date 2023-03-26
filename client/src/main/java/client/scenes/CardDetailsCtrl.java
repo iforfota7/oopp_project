@@ -17,12 +17,13 @@ public class CardDetailsCtrl {
     }
 
     /**
-     *The redefinition of the card name on the board is achieved through setting the display properties.
-     * This method sends the information entered in cardDetail to the board to display the card name.
+     *The redefinition of the card name on the board is achieved
+     * through setting the display properties. This method sends the
+     * information entered in cardDetail to the board to display the card name.
      */
     @FXML
     void save() {
 
-        boardCtrl.RefreshCard(cardTitleInput.getText());
+        //boardCtrl.refreshCard(cardTitleInput.getText());
     }
 }

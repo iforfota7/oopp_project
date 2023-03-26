@@ -24,8 +24,10 @@ import org.springframework.data.jpa.repository.Query;
 public interface CardsRepository extends JpaRepository<Cards, Long> {
 
     /**
-     * Custom update query that decreases the position of cards inside the list after a card gets removed from said list
-     * E.g. If the card at position 3 is deleted, all cards that had a position > 3 will get their positions decreased by 1
+     * Custom update query that decreases the position of cards inside
+     * the list after a card gets removed from said list
+     * E.g. If the card at position 3 is deleted, all cards that
+     * had a position > 3 will get their positions decreased by 1
      * @param positionInList The index of the deleted card
      * @param listID the id of the list holding the card
      */
@@ -37,7 +39,8 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
     void decrementCardPosition(int positionInList, long listID);
 
     /**
-     * Custom update query that increases the position of cards inside the list after a new card gets added to said list
+     * Custom update query that increases the position of cards
+     * inside the list after a new card gets added to said list
      * @param positionInList The index of the added card
      * @param listID the id of the list holding the card
      */
