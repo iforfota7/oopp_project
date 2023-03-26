@@ -24,21 +24,24 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList, cardDetails, newCard;
+    private Scene board, renameList, deleteList, addList, cardDetails, newCard, confirmUsername;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
+    private NewCardCtrl newCardCtrl;
 
-    private newCardCtrl newCardCtrl;
+    private ConfirmUsernameCtrl confirmUsernameCtrl;
 
     private int numberOfLists = 2;
 
+    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board,
+                           Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl, Parent> deleteList,
+                           Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl,
+                            Parent>cardDetails, Pair<NewCardCtrl, Parent> newCardCtrl,
+                           Pair<ConfirmUsernameCtrl, Parent> confirmUsername) {
 
-    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RnListCtrl,Parent> renameList,
-                            Pair<DeListCtrl, Parent> deleteList, Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl
-                            ,Parent>cardDetails, Pair<newCardCtrl, Parent> newCardCtrl) {
 
         this.primaryStage = primaryStage;
 
@@ -58,6 +61,9 @@ public class MainCtrl {
 
         this.newCard= new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
+
+        this.confirmUsername = new Scene(confirmUsername.getValue());
+        this.confirmUsernameCtrl = confirmUsername.getKey();
 
         showStart();
         primaryStage.show();
@@ -107,6 +113,16 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Show confirmUsername scene
+     */
+    public void showConfirmUsername(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(confirmUsername);
+        secondaryStage.setTitle("Confirm Username!");
+        secondaryStage.show();
+    }
+
     public void closeRNList() {
         secondaryStage.close();
     }
@@ -117,6 +133,11 @@ public class MainCtrl {
     public void closeADList() {
         secondaryStage.close();
     }
+
+    /**
+     * Closes the confirmUsername scene
+     */
+    public void closeConfirmUsername() {secondaryStage.close();}
 
     /**
      * Adds a new list to the board

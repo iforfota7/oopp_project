@@ -50,9 +50,12 @@ public class Main extends Application {
         var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
         var addList = FXML.load(AdListCtrl.class,"client", "scenes", "AdList.fxml" );
         var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
-        var addCard = FXML.load(newCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
+        var addCard = FXML.load(NewCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
+        var confirmUsername = FXML.load(ConfirmUsernameCtrl.class,
+                "client", "scenes", "ConfirmUsername.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList, cardDetails, addCard);
+        mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList,
+                cardDetails, addCard, confirmUsername);
     }
 
     /**
