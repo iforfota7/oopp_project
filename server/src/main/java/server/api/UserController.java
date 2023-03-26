@@ -1,35 +1,27 @@
 package server.api;
 
 import commons.User;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     private final UserRepository repo;
-    private final SimpMessagingTemplate msgs;
 
     /**
      * Constructor method
      * @param repo the user repository
-     * @param msgs messaging template
      */
-    public UserController(UserRepository repo, SimpMessagingTemplate msgs) {
+    public UserController(UserRepository repo) {
         this.repo = repo;
-        this.msgs = msgs;
     }
 
     /**
-     * A post reauest sent using a "" or "/" mapping will add a user to the database
+     * A post request sent using a "" or "/" mapping will add a user to the database
      * @param user the user to be added
      * @return response entity of user
      */
@@ -40,7 +32,7 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
 
-        msgs.convertAndSend("/topic/user/add", repo.save(user));
+        repo.save(user);
         return ResponseEntity.ok().build();
     }
 

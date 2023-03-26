@@ -27,9 +27,6 @@ public class SelectServerCtrl {
     private TextField inputUsername;
 
     @FXML
-    private Text usernameWarning;
-
-    @FXML
     private Button connect;
 
     private final ServerUtils server;
@@ -74,10 +71,14 @@ public class SelectServerCtrl {
 
             exists = server.existsUser(user);
 
-            // if the user does not already exist, add them to the database
-            // otherwise set warning to visible
-            if(!exists) server.addUser(user);
-            else usernameWarning.setVisible(true);
+            if(!exists){
+                try{
+                    server.addUser(user); // try to add user if not already in database
+                }
+                catch(Exception e){
+                    System.out.println(e); // probably need a better way of communicating the error
+                }
+            }
         }
         else serverWarning.setVisible(true);
 

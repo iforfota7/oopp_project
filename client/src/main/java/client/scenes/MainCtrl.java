@@ -44,6 +44,7 @@ public class MainCtrl {
                            Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
                            Pair<BoardOverviewCtrl, Parent> boardOverview) {
 
+
         this.primaryStage = primaryStage;
 
         this.selectServer = new Scene(selectServer.getValue());
