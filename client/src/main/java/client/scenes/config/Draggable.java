@@ -48,8 +48,8 @@ public class Draggable {
                 ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
                 event.getSource() instanceof VBox){
 
-            ((Region) event.getSource()).setBackground(  new Background( new BackgroundFill(Color.PINK,
-                    CornerRadii.EMPTY, Insets.EMPTY)));
+            ((Region) event.getSource()).setBackground(  new Background(
+                    new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
 
         }
         event.consume();
@@ -65,8 +65,8 @@ public class Draggable {
         if(event.getGestureSource()!=event.getSource() &&
                 ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
                 event.getSource() instanceof VBox){
-            ((Region) event.getSource()).setBackground(  new Background( new BackgroundFill(Color.WHITE,
-                    CornerRadii.EMPTY, Insets.EMPTY)));
+            ((Region) event.getSource()).setBackground(  new Background(
+                    new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         removeVisualCue((Node)event.getSource());
@@ -146,10 +146,12 @@ public class Draggable {
                 // we iterate through the cards to determine where to drop this card
 
                 // the Y coordinate for the middle of the card
-                double midYPoint = cardContainer.localToScene(0, 0).getY() + ((AnchorPane) cardContainer).getHeight() / 2;
+                double midYPoint = cardContainer.localToScene(0, 0).getY()
+                        + ((AnchorPane) cardContainer).getHeight() / 2;
 
                 // the Y coordinate of the mouse when the card has been dropped
-                double mouseY = ((Node) event.getSource()).localToScene(event.getX(), event.getY()).getY();
+                double mouseY = ((Node) event.getSource()).localToScene(event.getX(),
+                        event.getY()).getY();
 
                 if (mouseY <= midYPoint) {
                     answer = childIndex;
@@ -174,15 +176,21 @@ public class Draggable {
      * Creates and renders a visual cue that indicates where will the card be dropped
      *
      * @param dropTarget The element on which the source card is dropped
-     * @param targetList The Lists object that corresponds to the list container inside which the card is dropped
+     * @param targetList The Lists object that corresponds to the list container
+     *                   inside which the card is dropped
      * @param sourceCard The card that is being dragged
-     * @param positionInsideList The position at which the card will be dropped at this moment in time
+     * @param positionInsideList The position at which the card will be dropped
+     *                          at this moment in time
      */
 
-    public void createVisualCue(Node dropTarget, Lists targetList, Cards sourceCard, int positionInsideList) {
+    public void createVisualCue(Node dropTarget, Lists targetList,
+                                Cards sourceCard, int positionInsideList) {
+
         Separator listSeparator = new Separator();
-        listSeparator.setPrefWidth(150);
-        listSeparator.setPrefHeight(4);
+        listSeparator.setMaxWidth(125);
+        listSeparator.setPrefHeight(1);
+        listSeparator.setTranslateX(-1);
+        listSeparator.setStyle("-fx-background-color: #8d78a6;");
         listSeparator.setId("visual-cue");
 
         VBox listContainer = getListContainerFromDropTarget(dropTarget);
@@ -199,10 +207,12 @@ public class Draggable {
 
         }
 
-        if(targetList.id == sourceCard.list.id && sourceCard.positionInsideList < positionInsideList)
+        if(targetList.id == sourceCard.list.id &&
+                sourceCard.positionInsideList < positionInsideList)
             index++;
 
-        if(targetList.id != sourceCard.list.id || positionInsideList != sourceCard.positionInsideList)
+        if(targetList.id != sourceCard.list.id ||
+                positionInsideList != sourceCard.positionInsideList)
             listContainer.getChildren().add(index, listSeparator);
     }
 
@@ -220,7 +230,8 @@ public class Draggable {
         }
 
         // information about the dragged card
-        Cards sourceCard = (Cards) ((Node) event.getGestureSource()).getParent().getProperties().get("card");
+        Cards sourceCard = (Cards) ((Node) event.getGestureSource())
+                .getParent().getProperties().get("card");
 
         // information about the node where the card has been dropped
         Node node = (Node)event.getSource();
@@ -241,7 +252,8 @@ public class Draggable {
      */
     public void dragDropped(DragEvent event){
         // information about the dragged card
-        Cards sourceCard = (Cards) ((Node) event.getGestureSource()).getParent().getProperties().get("card");
+        Cards sourceCard = (Cards) ((Node) event.getGestureSource())
+                .getParent().getProperties().get("card");
 
         // information about the node where the card has been dropped
         Node node = (Node)event.getSource();
