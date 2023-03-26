@@ -41,6 +41,7 @@ public class ListController {
     @Transactional
     @PostMapping(path={"", "/"})
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
+        System.out.println(list);
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 

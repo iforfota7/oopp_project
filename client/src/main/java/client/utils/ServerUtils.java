@@ -65,6 +65,7 @@ public class ServerUtils {
     }
 
     public Lists addList(Lists list){
+        System.out.println(list);
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/lists").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);

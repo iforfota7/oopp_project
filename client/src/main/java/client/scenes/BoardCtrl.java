@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 
 
 import javafx.event.ActionEvent;
+import javassist.bytecode.ExceptionTable;
 
 import javax.inject.Inject;
 
@@ -443,8 +444,12 @@ public class BoardCtrl implements Initializable {
         Boards board = new Boards(boardName.getText(), lists);
         Lists list = new Lists(text, position, board);
         board.lists.add(list);
-
-        System.out.println(server.addList(list));
+        try {
+            server.addList(list);
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
     }
 
     public void addNewCard(VBox anchor, Cards c){
