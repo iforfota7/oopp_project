@@ -53,7 +53,8 @@ public class Main extends Application {
         var addCard = FXML.load(NewCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
         var confirmUsername = FXML.load(ConfirmUsernameCtrl.class,
                 "client", "scenes", "ConfirmUsername.fxml");
-        var boardOverview = FXML.load(BoardOverviewCtrl.class, "client", "scenes", "BoardOverview.fxml");
+        var boardOverview = FXML.load(BoardOverviewCtrl.class,
+                "client", "scenes", "BoardOverview.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initialize(primaryStage, selectServer, renameList, deleteList, addList,
                 cardDetails, addCard, confirmUsername, boardOverview);
@@ -61,6 +62,7 @@ public class Main extends Application {
 
     /**
      * Sets main scene, displaying the board
+     * @param boardName the name of the board
      */
     public static void setSceneToBoard(String boardName){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");

@@ -32,11 +32,11 @@ public class Lists {
      * @param title the name of the list
      * @param positionInsideBoard the position of list inside the board
      */
-    public Lists(String title, int positionInsideBoard) {
+    public Lists(String title, int positionInsideBoard, Boards board) {
         this.title = title;
         this.positionInsideBoard = positionInsideBoard;
         this.cards = new ArrayList<>();
-        this.board = null; // change later please
+        this.board = board;
     }
 
     /**
@@ -56,7 +56,8 @@ public class Lists {
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
         return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
-                Objects.equals(title, lists.title);
+                Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards) &&
+                Objects.equals(board, lists.board);
     }
 
     /**
@@ -65,7 +66,7 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideBoard);
+        return Objects.hash(id, title, positionInsideBoard, board);
     }
 
     /**
@@ -76,9 +77,11 @@ public class Lists {
     @Override
     public String toString() {
         return "Lists{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", positionInsideBoard=" + positionInsideBoard +
+                ", cards=" + cards +
+                ", board=" + board +
                 '}';
     }
 }

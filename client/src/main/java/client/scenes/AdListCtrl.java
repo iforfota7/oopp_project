@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Boards;
 import commons.Lists;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
 /**
  *  Controller for Add List
@@ -35,7 +37,8 @@ public class AdListCtrl {
     @FXML
     void saveNewList(ActionEvent event){
         int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
-        server.addList(new Lists(newListName.getText(), positionInsideBoard));
+
+        boardCtrl.addListToBoard(newListName.getText(), positionInsideBoard);
         newListName.setText("");
 
         mainCtrl.closeADList();

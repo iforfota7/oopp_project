@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.scenes.config.Draggable;
 import client.utils.ServerUtils;
+import commons.Boards;
 import commons.Lists;
 import commons.Cards;
 import javafx.application.Platform;
@@ -437,7 +438,14 @@ public class BoardCtrl implements Initializable {
         //Cards
     }
 
+    public void addListToBoard(String text, int position){
+        // the following two lines causes a stack overflow
+        Boards board = new Boards(boardName.getText(), lists);
+        Lists list = new Lists(text, position, board);
+        board.lists.add(list);
 
+        System.out.println(server.addList(list));
+    }
 
     public void addNewCard(VBox anchor, Cards c){
 
