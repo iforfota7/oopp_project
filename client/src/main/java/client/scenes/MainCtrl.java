@@ -24,7 +24,8 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList, cardDetails, newCard, confirmUsername, boardOverview;
+    private Scene board, renameList, deleteList, addList;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview;
     private Scene selectServer;
 
     private RnListCtrl rnListCtrl;
@@ -88,6 +89,7 @@ public class MainCtrl {
     /**
      * Sets scene of stage to passed board
      * @param board the scene to be displayed
+     * @param boardName used to display the title of the board
      */
     public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
         this.board = new Scene(board.getValue());
