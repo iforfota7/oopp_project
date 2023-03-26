@@ -21,9 +21,8 @@ public class RnListCtrl {
 
     @FXML
     void saveNewName(ActionEvent event) {
-        var Name = newName.getText();
-        boardCtrl.RNList(Name);
-
+        var name = newName.getText();
+        boardCtrl.rnList(name);
     }
 
 }

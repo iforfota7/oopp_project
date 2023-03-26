@@ -2,8 +2,8 @@ package client.scenes;
 
 import client.scenes.config.Draggable;
 import client.utils.ServerUtils;
-import commons.Cards;
 import commons.Lists;
+import commons.Cards;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,15 +57,12 @@ public class BoardCtrl implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
-         refresh();
+        refresh();
 
-
-        webSocket();
-
-
+        webSocketLists(); webSocketCards();
     }
 
-    private void webSocket() {
+    private void webSocketLists() {
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -88,7 +85,6 @@ public class BoardCtrl implements Initializable {
             });
         });
 
-
         server.registerForMessages("/topic/lists/remove", Lists.class, l->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -99,8 +95,9 @@ public class BoardCtrl implements Initializable {
                 }
             });
         });
+    }
 
-
+    private void webSocketCards() {
         server.registerForMessages("/topic/cards/remove", Cards.class, c->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -137,7 +134,6 @@ public class BoardCtrl implements Initializable {
             });
         });
     }
-
 
     public void refresh(){
         firstRow.getChildren().clear();
@@ -178,11 +174,11 @@ public class BoardCtrl implements Initializable {
         }
     }
 
-
-
     /**
      * Auxiliary call to mainCtrl Inject function
-     * @param mainCtrl The master controller, which will later be replaced by a class of window controllers
+     * @param mainCtrl The master controller, which will later be replaced
+     *                by a class of window controllers
+     * @param server Used for connection to backend and websockets to function
      */
     @Inject
     public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
@@ -202,7 +198,7 @@ public class BoardCtrl implements Initializable {
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showRenameList();
     }
-    void RNList(String name) {
+    void rnList(String name) {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         l.title = name;
         server.renameList(l);
@@ -238,7 +234,8 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     * Adds a new list to the board by creating all of its elements and aligning them correspondingly in the listView
+     * Adds a new list to the board by creating all of its elements
+     * and aligning them correspondingly in the listView
      * @param l list to be added
      */
     public void addNewList(Lists l) {
@@ -297,8 +294,8 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     * Creates a new button on the list, which when pressed, shows a menu of two options: renaming or
-     * deleting the list;
+     * Creates a new button on the list, which when pressed,
+     * shows a menu of two options: renaming or deleting the list;
      * @return a button to refactor a list
      */
     public MenuButton createRefactorButton(){
@@ -341,8 +338,9 @@ public class BoardCtrl implements Initializable {
     public Button createAddCardButton(){
         Button addButton = new Button();
         addButton.setText("+");
-        addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; " +
-                "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
+        addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; " +
+                "-fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; " +
+                "-fx-font-size: 10px;");
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
        addButton.setOnAction(this::openAddNewCard);
@@ -357,7 +355,8 @@ public class BoardCtrl implements Initializable {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
-        listName.setStyle("-fx-font-size: 13px; -fx-content-display: CENTER; -fx-padding: 5 10 0 10;");
+        listName.setStyle("-fx-font-size: 13px; -fx-content-display: " +
+                "CENTER; -fx-padding: 5 10 0 10;");
         listName.setAlignment(Pos.CENTER);
         return listName;
     }
@@ -376,6 +375,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Delete Card function
+     * @param event Card delete process
      */
     @FXML
     public void deleteCard(ActionEvent event) {
@@ -383,31 +383,31 @@ public class BoardCtrl implements Initializable {
        // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
         server.removeCard(c);
-
     }
 
     /**
      * open the Card Detail scene and modify all information about the card, including its name.....
-     * In order to prevent it from opening while dragging, the code here sets a time delay between pressing and releasing the left mouse button.
-     * If the time delay is greater than a certain value, the click option will not be triggered, so the cardDetail won't open during dragging.
+     * In order to prevent it from opening while dragging,
+     * the code here sets a time delay between pressing and releasing the left mouse button.
+     * If the time delay is greater than a certain value,
+     * the click option will not be triggered, so the cardDetail won't open during dragging.
      *
-     * @param event an button (Hyperlink)
+     * @param event a button (Hyperlink)
      */
     @FXML
     void cardDetail(ActionEvent event) {
-        long mouseReleasedTime = System.currentTimeMillis();
-        long mouseDuration = mouseReleasedTime - mousePressedTime;
-        if(mouseDuration >= 2000) {
+
             this.currentCard = (Hyperlink) event.getTarget();
             mainCtrl.showCardDetail();
-        }
+
     }
 
     /**
      * Save new card details to board scene
-     * When the function returns from mainCtrl, it will update the card name displayed on the board and refresh the pointer to currentCard.
+     * When the function returns from mainCtrl,
+     * it will update the card name displayed on the board and refresh the pointer to currentCard.
      */
-    void RefreshCard(String text) {
+    void refreshCard(String text) {
         Cards c  = (Cards) this.currentCard.getParent().getProperties().get("card");
         c.title = text;
         server.renameCard(c);

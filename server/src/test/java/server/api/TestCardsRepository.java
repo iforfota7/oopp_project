@@ -25,9 +25,9 @@ public class TestCardsRepository implements CardsRepository {
     private void call(String name) { calledMethods.add(name); }
 
     /**
-     * Custom update query that decreases the position of cards inside the list after a card gets removed from said list
-     * E.g. If the card at position 3 is deleted, all cards that had a position > 3 will get their positions decreased by 1
-     *
+     * Custom update query that decreases the position of cards inside the list
+     * after a card gets removed from said list E.g. If the card at position 3 is deleted,
+     * all cards that had a position > 3 will get their positions decreased by 1
      * @param positionInList The index of the deleted card
      * @param listID         the id of the list holding the card
      */
@@ -44,8 +44,8 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Custom update query that increases the position of cards inside the list after a new card gets added to said list
-     *
+     * Custom update query that increases the position of cards
+     * inside the list after a new card gets added to said list
      * @param positionInList The index of the added card
      * @param listID         the id of the list holding the card
      */
@@ -104,8 +104,8 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Returns a {@link Page} of entities meeting the paging restriction provided in the {@code Pageable} object.
-     *
+     * Returns a {@link Page} of entities meeting the paging
+     * restriction provided in the {@code Pageable} object.
      * @param pageable
      * @return a page of entities
      */
@@ -163,7 +163,8 @@ public class TestCardsRepository implements CardsRepository {
      * Deletes all instances of the type {@code T} with the given IDs.
      *
      * @param longs must not be {@literal null}. Must not contain {@literal null} elements.
-     * @throws IllegalArgumentException in case the given {@literal ids} or one of its elements is {@literal null}.
+     * @throws IllegalArgumentException in case the given {@literal ids}
+     *         or one of its elements is {@literal null}.
      * @since 2.5
      */
     @Override
@@ -175,7 +176,8 @@ public class TestCardsRepository implements CardsRepository {
      * Deletes the given entities.
      *
      * @param entities must not be {@literal null}. Must not contain {@literal null} elements.
-     * @throws IllegalArgumentException in case the given {@literal entities} or one of its entities is {@literal null}.
+     * @throws IllegalArgumentException in case the given {@literal entities}
+     *         or one of its entities is {@literal null}.
      */
     @Override
     public void deleteAll(Iterable<? extends Cards> entities) {
@@ -191,9 +193,8 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the
-     * entity instance completely.
-     *
+     * Saves a given entity. Use the returned instance for further operations
+     * as the save operation might have changed the entity instance completely.
      * @param entity must not be {@literal null}.
      * @return the saved entity; will never be {@literal null}.
      * @throws IllegalArgumentException in case the given {@literal entity} is {@literal null}.
@@ -216,7 +217,8 @@ public class TestCardsRepository implements CardsRepository {
         //order by positionInsideList using insertion sort
         for(int j=entity.list.cards.size()-1; j>0; j--) {
 
-            if(entity.list.cards.get(j).positionInsideList<entity.list.cards.get(j-1).positionInsideList) {
+            if(entity.list.cards.get(j).positionInsideList<entity
+                    .list.cards.get(j-1).positionInsideList) {
 
                 Cards temp = entity.list.cards.get(j);
                 entity.list.cards.set(j, entity.list.cards.get(j-1));
@@ -264,7 +266,8 @@ public class TestCardsRepository implements CardsRepository {
      * Returns whether an entity with the given id exists.
      *
      * @param aLong must not be {@literal null}.
-     * @return {@literal true} if an entity with the given id exists, {@literal false} otherwise.
+     * @return {@literal true} if an entity with the
+     *          given id exists, {@literal false} otherwise.
      * @throws IllegalArgumentException if {@literal id} is {@literal null}.
      */
     @Override
@@ -311,10 +314,9 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Deletes the given entities in a batch which means it will create a single query. This kind of operation leaves JPAs
-     * first level cache and the database out of sync. Consider flushing the {@link EntityManager} before calling this
-     * method.
-     *
+     * Deletes the given entities in a batch which means it will create a single query.
+     * This kind of operation leaves JPAs first level cache and the database out of sync.
+     * Consider flushing the {@link EntityManager} before calling this method.
      * @param entities entities to be deleted. Must not be {@literal null}.
      * @since 2.5
      */
@@ -324,9 +326,9 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Deletes the entities identified by the given ids using a single query. This kind of operation leaves JPAs first
-     * level cache and the database out of sync. Consider flushing the {@link EntityManager} before calling this method.
-     *
+     * Deletes the entities identified by the given ids using a single query.
+     * This kind of operation leaves JPAs first level cache and the database out of sync.
+     * Consider flushing the {@link EntityManager} before calling this method.
      * @param longs the ids of the entities to be deleted. Must not be {@literal null}.
      * @since 2.5
      */
@@ -344,27 +346,26 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Returns a reference to the entity with the given identifier. Depending on how the JPA persistence provider is
-     * implemented this is very likely to always return an instance and throw an
+     * Returns a reference to the entity with the given identifier.
+     * Depending on how the JPA persistence provider is implemented this
+     * is very likely to always return an instance and throw an
      * {@link EntityNotFoundException} on first access. Some of them will reject invalid identifiers
      * immediately.
-     *
      * @param aLong must not be {@literal null}.
      * @return a reference to the entity with the given identifier.
      * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
      * @deprecated use {@link JpaRepository#} instead.
      */
-    @Override
+    @Override @Deprecated
     public Cards getOne(Long aLong) {
         return null;
     }
 
     /**
-     * Returns a reference to the entity with the given identifier. Depending on how the JPA persistence provider is
-     * implemented this is very likely to always return an instance and throw an
-     * {@link EntityNotFoundException} on first access. Some of them will reject invalid identifiers
-     * immediately.
-     *
+     * Returns a reference to the entity with the given identifier.
+     * Depending on how the JPA persistence provider is implemented this is very
+     * likely to always return an instance and throw an {@link EntityNotFoundException}
+     * on first access. Some of them will reject invalid identifiers immediately.
      * @param aLong must not be {@literal null}.
      * @return a reference to the entity with the given identifier.
      * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
@@ -376,10 +377,11 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Returns a single entity matching the given {@link Example} or {@link Optional#empty()} if none was found.
-     *
+     * Returns a single entity matching the given
+     * {@link Example} or {@link Optional#empty()} if none was found.
      * @param example must not be {@literal null}.
-     * @return a single entity matching the given {@link Example} or {@link Optional#empty()} if none was found.
+     * @return a single entity matching the given {@link Example} or
+     *         {@link Optional#empty()} if none was found.
      * @throws IncorrectResultSizeDataAccessException if the Example yields more than one result.
      */
     @Override
@@ -399,7 +401,8 @@ public class TestCardsRepository implements CardsRepository {
 
     /**
      * @param example must not be {@literal null}.
-     * @param sort    the {@link Sort} specification to sort the results by, must not be {@literal null}.
+     * @param sort    the {@link Sort} specification to sort the results by,
+     *                must not be {@literal null}.
      * @param <S>
      * @return
      */
@@ -409,9 +412,8 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Returns a {@link Page} of entities matching the given {@link Example}. In case no match could be found, an empty
-     * {@link Page} is returned.
-     *
+     * Returns a {@link Page} of entities matching the given {@link Example}.
+     * In case no match could be found, an empty {@link Page} is returned.
      * @param example  must not be {@literal null}.
      * @param pageable can be {@literal null}.
      * @return a {@link Page} of entities matching the given {@link Example}.
@@ -435,8 +437,10 @@ public class TestCardsRepository implements CardsRepository {
     /**
      * Checks whether the data store contains elements that match the given {@link Example}.
      *
-     * @param example the {@link Example} to use for the existence check. Must not be {@literal null}.
-     * @return {@literal true} if the data store contains elements that match the given {@link Example}.
+     * @param example the {@link Example} to use for the existence check.
+     *                Must not be {@literal null}.
+     * @return {@literal true} if the data store contains elements that match
+     *         the given {@link Example}.
      */
     @Override
     public <S extends Cards> boolean exists(Example<S> example) {
@@ -444,16 +448,16 @@ public class TestCardsRepository implements CardsRepository {
     }
 
     /**
-     * Returns entities matching the given {@link Example} applying the {@link Function queryFunction} that defines the
-     * query and its result type.
-     *
+     * Returns entities matching the given {@link Example} applying the
+     * {@link Function queryFunction} that defines the query and its result type.
      * @param example       must not be {@literal null}.
      * @param queryFunction the query function defining projection, sorting, and the result type
      * @return all entities matching the given {@link Example}.
      * @since 2.6
      */
     @Override
-    public <S extends Cards, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends Cards, R> R findBy(Example<S> example, Function<FluentQuery.
+            FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 }

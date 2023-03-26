@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/test-connection")
-public class testConnectionController {
+public class TestConnectionController {
     @GetMapping(path = { "", "/" })
     public String testConnection() {
         return "Client successfully connected!";
