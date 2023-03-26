@@ -26,17 +26,17 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
     private Scene board, renameList, deleteList, addList, cardDetails, newCard;
 
-    private RNListCtrl rnListCtrl;
-    private DEListCtrl deListCtrl;
-    private ADListCtrl addListCtrl;
+    private RnListCtrl rnListCtrl;
+    private DeListCtrl deListCtrl;
+    private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
 
     private NewCardCtrl newCardCtrl;
 
     private int numberOfLists = 2;
 
-    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
-                            Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
+    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RnListCtrl,Parent> renameList,
+                           Pair<DeListCtrl, Parent> deleteList, Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl
                             ,Parent>cardDetails, Pair<NewCardCtrl, Parent> newCardCtrl) {
 
         this.primaryStage = primaryStage;

@@ -9,11 +9,11 @@ import javax.inject.Inject;
 /**
  * Change list name controller
  */
-public class RNListCtrl {
+public class RnListCtrl {
     private BoardCtrl boardCtrl;
 
     @Inject
-    public RNListCtrl(BoardCtrl boardCtrl){
+    public RnListCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
     }
     @FXML
