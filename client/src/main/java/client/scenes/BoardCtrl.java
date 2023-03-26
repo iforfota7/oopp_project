@@ -2,8 +2,8 @@ package client.scenes;
 
 import client.scenes.config.Draggable;
 import client.utils.ServerUtils;
-import commons.Cards;
 import commons.Lists;
+import commons.Cards;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,6 +37,7 @@ public class BoardCtrl implements Initializable {
     @FXML
     private Label boardName;
 
+
     List<VBox> listContainers;
     List<AnchorPane> listCards;
 
@@ -57,18 +58,15 @@ public class BoardCtrl implements Initializable {
      *                       the root object was not localized.
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         refresh();
 
-
-        webSocket();
-
-
+        webSocketLists();
+        webSocketCards();
     }
 
-    private void webSocket() {
+    private void webSocketLists() {
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -91,7 +89,6 @@ public class BoardCtrl implements Initializable {
             });
         });
 
-
         server.registerForMessages("/topic/lists/remove", Lists.class, l->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -102,8 +99,9 @@ public class BoardCtrl implements Initializable {
                 }
             });
         });
+    }
 
-
+    private void webSocketCards() {
         server.registerForMessages("/topic/cards/remove", Cards.class, c->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -140,7 +138,6 @@ public class BoardCtrl implements Initializable {
             });
         });
     }
-
 
     public void refresh(){
         firstRow.getChildren().clear();
@@ -184,8 +181,9 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Auxiliary call to mainCtrl Inject function
-     * @param mainCtrl The main controller, later to be replaced by a window controller
-     * @param server The server util to connect to server
+     * @param mainCtrl The master controller, which will later be replaced
+     *                by a class of window controllers
+     * @param server Used for connection to backend and websockets to function
      */
     @Inject
     public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
@@ -195,7 +193,7 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     * Trigger function for the change List name option in the drop-down options button
+     *Trigger function for the change List name option in the drop-down options button
      * @param event List name change process
      */
     @FXML
@@ -347,8 +345,8 @@ public class BoardCtrl implements Initializable {
         Button addButton = new Button();
         addButton.setText("+");
         addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; " +
-                "-fx-background-color: #c8a5d9; " +
-                "-fx-border-color: #8d78a6; -fx-font-size: 10px;");
+                "-fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; " +
+                "-fx-font-size: 10px;");
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
        addButton.setOnAction(this::openAddNewCard);
@@ -363,8 +361,8 @@ public class BoardCtrl implements Initializable {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
-        listName.setStyle("-fx-font-size: 13px; " +
-                "-fx-content-display: CENTER; -fx-padding: 5 10 0 10;");
+        listName.setStyle("-fx-font-size: 13px; -fx-content-display: " +
+                "CENTER; -fx-padding: 5 10 0 10;");
         listName.setAlignment(Pos.CENTER);
         return listName;
     }
@@ -383,7 +381,7 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Delete Card function
-     * @param event Card delete event
+     * @param event Card delete process
      */
     @FXML
     public void deleteCard(ActionEvent event) {
@@ -391,7 +389,6 @@ public class BoardCtrl implements Initializable {
        // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
         server.removeCard(c);
-
     }
 
     /**
@@ -401,7 +398,7 @@ public class BoardCtrl implements Initializable {
      * If the time delay is greater than a certain value,
      * the click option will not be triggered, so the cardDetail won't open during dragging.
      *
-     * @param event an button (Hyperlink)
+     * @param event a button (Hyperlink)
      */
     @FXML
     void cardDetail(ActionEvent event) {
@@ -415,11 +412,9 @@ public class BoardCtrl implements Initializable {
 
     /**
      * Save new card details to board scene
-     * When the function returns from mainCtrl, it will
-     * update the card name displayed on the board and refresh the pointer to currentCard.
-     * @param text the text to be displayed on the card
+     * When the function returns from mainCtrl,
+     * it will update the card name displayed on the board and refresh the pointer to currentCard.
      */
-
     void refreshCard(String text) {
         Cards c  = (Cards) this.currentCard.getParent().getProperties().get("card");
         c.title = text;

@@ -17,7 +17,7 @@ public class CardController {
     /**
      * Constructor for CardController
      * @param repo - Repository for cards entities
-     * @param msgs - Messaging template
+     * @param msgs - used for websockets
      */
     public CardController(CardsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
@@ -69,8 +69,8 @@ public class CardController {
     @PostMapping(path = {"/rename","/rename/"})
     public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
 
-        if(card == null || card.list==null ||
-                isNullOrEmpty(card.title) || card.positionInsideList<0){
+        if(card == null || card.list==null
+                || isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();
         }
 

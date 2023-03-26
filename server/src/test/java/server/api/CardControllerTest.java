@@ -319,13 +319,13 @@ class CardControllerTest {
     }
 
     @Test
-    void MovedCardDoesNotExist() {
+    void movedCardDoesNotExist() {
         Cards card = getCard("My Card", 0, null);
         assertEquals(ResponseEntity.badRequest().build(), sut.moveCard(card));
     }
 
     @Test
-    void MoveCardAddFailed() {
+    void moveCardAddFailed() {
         Lists list = new Lists("My List", 0);
         Cards oldCard = getCard("My Card", 0, list);
         sut.addCard(oldCard);
