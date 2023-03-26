@@ -30,18 +30,24 @@ public class MainCtrl {
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
-
     private NewCardCtrl newCardCtrl;
 
     private int numberOfLists = 2;
 
-    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board,
-                           Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl, Parent> deleteList,
-                           Pair<AdListCtrl, Parent> addList,Pair<NewCardCtrl, Parent> newCardCtrl) {
+    public void initializeBoard(Stage primaryStage,
+                                Pair<SelectServerCtrl, Parent> board) {
 
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
+
+        showStart();
+        primaryStage.show();
+    }
+
+    public void initializeLists( Pair<RnListCtrl,Parent> renameList,
+                Pair<DeListCtrl, Parent> deleteList,
+                Pair<AdListCtrl, Parent> addList) {
 
         this.renameList = new Scene(renameList.getValue());
         this.rnListCtrl = renameList.getKey();
@@ -51,15 +57,16 @@ public class MainCtrl {
 
         this.addList = new Scene(addList.getValue());
         this.addListCtrl = addList.getKey();
+    }
 
-//        this.cardDetails = new Scene(cardDetails.getValue());
-//        this.cardDetailsCtrl = cardDetails.getKey();
+    public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
+            Pair<NewCardCtrl, Parent> newCardCtrl) {
 
-        this.newCard= new Scene(newCardCtrl.getValue());
+        this.cardDetails = new Scene(cardDetails.getValue());
+        this.cardDetailsCtrl = cardDetails.getKey();
+
+        this.newCard = new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
-
-        showStart();
-        primaryStage.show();
     }
 
     public void showStart() {

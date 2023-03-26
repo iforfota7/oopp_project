@@ -24,6 +24,6 @@ public class CardDetailsCtrl {
     @FXML
     void save() {
 
-        //boardCtrl.refreshCard(cardTitleInput.getText());
+        boardCtrl.refreshCard(cardTitleInput.getText());
     }
 }
