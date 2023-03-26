@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class newCardCtrl {
+public class NewCardCtrl {
     @FXML
     private TextField cardTitleInput;
 
@@ -12,7 +12,7 @@ public class newCardCtrl {
     private final BoardCtrl boardCtrl;
 
     @Inject
-    public newCardCtrl(BoardCtrl boardCtrl){
+    public NewCardCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
     }
 

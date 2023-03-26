@@ -31,13 +31,13 @@ public class MainCtrl {
     private ADListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
 
-    private newCardCtrl newCardCtrl;
+    private NewCardCtrl newCardCtrl;
 
     private int numberOfLists = 2;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board, Pair<RNListCtrl,Parent> renameList,
                             Pair<DEListCtrl, Parent> deleteList, Pair<ADListCtrl, Parent> addList, Pair<CardDetailsCtrl
-                            ,Parent>cardDetails, Pair<newCardCtrl, Parent> newCardCtrl) {
+                            ,Parent>cardDetails, Pair<NewCardCtrl, Parent> newCardCtrl) {
 
         this.primaryStage = primaryStage;
 
