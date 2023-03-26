@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="rootContainer" minHeight="398.0" prefHeight="398.0" prefWidth="775.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
-      <Button layoutX="520.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: #ffcccc; -fx-border-radius: 3; -fx-border-color: #660000;" text="Exit Board" AnchorPane.rightAnchor="8.799999999999997" AnchorPane.topAnchor="17.0" />
+      <Button layoutX="520.0" layoutY="17.0" mnemonicParsing="false" onAction="#exitBoard" style="-fx-background-color: #ffcccc; -fx-border-radius: 3; -fx-border-color: #660000;" text="Exit Board" AnchorPane.rightAnchor="8.799999999999997" AnchorPane.topAnchor="17.0" />
       <TextField fx:id="filterInput" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="80.0" promptText="Filter.." AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
          <font>
             <Font name="Baghdad Regular" size="12.0" />
