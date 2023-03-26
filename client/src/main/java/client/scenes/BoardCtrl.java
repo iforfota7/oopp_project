@@ -396,12 +396,10 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void cardDetail(ActionEvent event) {
-        long mouseReleasedTime = System.currentTimeMillis();
-        long mouseDuration = mouseReleasedTime - mousePressedTime;
-        if(mouseDuration >= 2000) {
+
             this.currentCard = (Hyperlink) event.getTarget();
             mainCtrl.showCardDetail();
-        }
+
     }
 
     /**
