@@ -42,6 +42,7 @@ public class MainCtrl {
                             Parent>cardDetails, Pair<NewCardCtrl, Parent> newCardCtrl,
                            Pair<ConfirmUsernameCtrl, Parent> confirmUsername) {
 
+
         this.primaryStage = primaryStage;
 
         this.board = new Scene(board.getValue());
