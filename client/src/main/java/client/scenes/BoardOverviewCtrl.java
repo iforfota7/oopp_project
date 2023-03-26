@@ -66,4 +66,8 @@ public class BoardOverviewCtrl implements Initializable {
     public void goToBoard(MouseEvent event) {
         Main.setSceneToBoard();
     }
+
+    public void disconnect() {
+        mainCtrl.showSelectServer();
+    }
 }

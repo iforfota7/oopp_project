@@ -23,7 +23,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="board1" alignment="CENTER" onMouseClicked="#doSth" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 1">
+            <Label fx:id="board1" alignment="CENTER" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 1">
                <font>
                   <Font size="15.0" />
                </font>
@@ -66,6 +66,6 @@
             <Font name="Bodoni MT Bold" size="11.0" />
          </font>
       </Button>
-      <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" style="-fx-background-color: #ffcccc; -fx-border-radius: 3; -fx-border-color: #660000;" text="Disconnect" />
+      <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#disconnect" style="-fx-background-color: #ffcccc; -fx-border-radius: 3; -fx-border-color: #660000;" text="Disconnect" />
    </children>
 </AnchorPane>
