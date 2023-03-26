@@ -33,8 +33,7 @@ public class AdListCtrl {
      * A warning is displayed if the input field is empty.
      */
     @FXML
-    void saveNewList()
-    {
+    void saveNewList() {
         warning.setVisible(false);
 
         if(newListName.getText().isBlank()) {

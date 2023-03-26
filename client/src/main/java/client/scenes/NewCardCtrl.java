@@ -36,5 +36,6 @@ public class NewCardCtrl {
         }
 
         boardCtrl.addCardToList(cardTitleInput.getText());
+        cardTitleInput.clear();
     }
 }
