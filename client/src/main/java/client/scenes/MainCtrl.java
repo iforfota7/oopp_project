@@ -24,23 +24,22 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList, cardDetails, newCard, confirmUsername;
+    private Scene board, renameList, deleteList, addList, cardDetails, newCard, confirmUsername, boardOverview;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
     private NewCardCtrl newCardCtrl;
-
     private ConfirmUsernameCtrl confirmUsernameCtrl;
-
-    private int numberOfLists = 2;
+    private BoardOverviewCtrl boardOverviewCtrl;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board,
                            Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl, Parent> deleteList,
                            Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl,
                             Parent>cardDetails, Pair<NewCardCtrl, Parent> newCardCtrl,
-                           Pair<ConfirmUsernameCtrl, Parent> confirmUsername) {
+                           Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
+                           Pair<BoardOverviewCtrl, Parent> boardOverview) {
 
         this.primaryStage = primaryStage;
 
@@ -63,6 +62,9 @@ public class MainCtrl {
 
         this.confirmUsername = new Scene(confirmUsername.getValue());
         this.confirmUsernameCtrl = confirmUsername.getKey();
+
+        this.boardOverview = new Scene(boardOverview.getValue());
+        this.boardOverviewCtrl = boardOverview.getKey();
 
         showStart();
         primaryStage.show();
@@ -144,7 +146,6 @@ public class MainCtrl {
      * @param row the hbox to which the list should be added (the row)
      */
     public void addNewList(VBox list, HBox row){
-        numberOfLists++;
         row.getChildren().add(list);
 
     }
@@ -174,5 +175,10 @@ public class MainCtrl {
         secondaryStage.close();
     }
     public void closeNewCard(){secondaryStage.close();}
+
+    public void showBoardOverview() {
+        primaryStage.setTitle("Board Overview");
+        primaryStage.setScene(boardOverview);
+    }
 
 }
