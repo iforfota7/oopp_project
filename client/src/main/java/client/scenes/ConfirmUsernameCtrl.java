@@ -41,7 +41,6 @@ public class ConfirmUsernameCtrl {
     @FXML
     void confirm(ActionEvent event) {
         mainCtrl.closeConfirmUsername();
-//        Main.setSceneToBoard();
         mainCtrl.showBoardOverview();
     }
 

@@ -85,7 +85,7 @@ public class SelectServerCtrl {
         if(!serverWarning.isVisible()){
             // if user does not exist, continue
             // otherwise show confirmation scene
-            if(!exists) Main.setSceneToBoard();
+            if(!exists) mainCtrl.showBoardOverview();
             else{
                 mainCtrl.showConfirmUsername();
             }

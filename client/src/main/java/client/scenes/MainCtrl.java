@@ -45,8 +45,7 @@ public class MainCtrl {
 
         this.primaryStage = primaryStage;
 
-        this.board = new Scene(selectServer.getValue());
-        this.selectServer = this.board;
+        this.selectServer = new Scene(selectServer.getValue());
         this.selectServerCtrl = selectServer.getKey();
 
         this.renameList = new Scene(renameList.getValue());
@@ -76,6 +75,11 @@ public class MainCtrl {
 
     public void showStart() {
         primaryStage.setTitle("Start");
+        primaryStage.setScene(selectServer);
+    }
+
+    public void showBoard() {
+        primaryStage.setTitle("Start");
         primaryStage.setScene(board);
     }
 
@@ -85,7 +89,7 @@ public class MainCtrl {
      */
     public void setBoard(Pair<BoardCtrl, Parent> board){
         this.board = new Scene(board.getValue());
-        showStart();
+        showBoard();
     }
 
     /**
