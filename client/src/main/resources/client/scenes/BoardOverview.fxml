@@ -23,7 +23,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" onMouseClicked="#doSth" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 1">
+            <Label fx:id="board1" alignment="CENTER" onMouseClicked="#doSth" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 1">
                <font>
                   <Font size="15.0" />
                </font>
@@ -31,7 +31,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 2" GridPane.columnIndex="1">
+            <Label fx:id="board2" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 2" GridPane.columnIndex="1">
                <font>
                   <Font size="15.0" />
                </font>
@@ -39,7 +39,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 3" GridPane.columnIndex="2">
+            <Label fx:id="board3" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="128.0" prefWidth="170.0" style="-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3;" text="Board 3" GridPane.columnIndex="2">
                <font>
                   <Font size="15.0" />
                </font>
