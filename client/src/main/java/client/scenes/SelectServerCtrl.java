@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import org.apache.catalina.Server;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

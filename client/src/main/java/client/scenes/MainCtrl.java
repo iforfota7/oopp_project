@@ -30,17 +30,18 @@ public class MainCtrl {
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
-    private newCardCtrl newCardCtrl;
+    private NewCardCtrl newCardCtrl;
 
     private ConfirmUsernameCtrl confirmUsernameCtrl;
 
     private int numberOfLists = 2;
 
-
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> board,
                            Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl, Parent> deleteList,
-                           Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl,Parent>cardDetails,
-                           Pair<newCardCtrl, Parent> newCardCtrl, Pair<ConfirmUsernameCtrl, Parent> confirmUsername) {
+                           Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl,
+                            Parent>cardDetails, Pair<NewCardCtrl, Parent> newCardCtrl,
+                           Pair<ConfirmUsernameCtrl, Parent> confirmUsername) {
 
         this.primaryStage = primaryStage;
 
