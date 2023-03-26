@@ -34,6 +34,8 @@ public class BoardCtrl implements Initializable {
 
     @FXML
     private HBox firstRow;
+    @FXML
+    private Label boardName;
 
     List<VBox> listContainers;
     List<AnchorPane> listCards;
@@ -525,5 +527,14 @@ public class BoardCtrl implements Initializable {
 
     public HBox getFirstRow() {
         return firstRow;
+    }
+
+    /**
+     * Sets the name of the board that will be displayed to the user
+     *
+     * @param boardName The string containing the name of the board
+     */
+    public void setBoardName(String boardName) {
+        this.boardName.setText(boardName);
     }
 }

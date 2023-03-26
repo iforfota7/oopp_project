@@ -35,6 +35,7 @@ public class MainCtrl {
     private ConfirmUsernameCtrl confirmUsernameCtrl;
     private BoardOverviewCtrl boardOverviewCtrl;
     private SelectServerCtrl selectServerCtrl;
+    private BoardCtrl boardCtrl;
 
     public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> selectServer,
                            Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl, Parent> deleteList,
@@ -78,8 +79,9 @@ public class MainCtrl {
         primaryStage.setScene(selectServer);
     }
 
-    public void showBoard() {
+    public void showBoard(String boardName) {
         primaryStage.setTitle("Start");
+        boardCtrl.setBoardName(boardName);
         primaryStage.setScene(board);
     }
 
@@ -87,9 +89,10 @@ public class MainCtrl {
      * Sets scene of stage to passed board
      * @param board the scene to be displayed
      */
-    public void setBoard(Pair<BoardCtrl, Parent> board){
+    public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
         this.board = new Scene(board.getValue());
-        showBoard();
+        this.boardCtrl = board.getKey();
+        showBoard(boardName);
     }
 
     /**

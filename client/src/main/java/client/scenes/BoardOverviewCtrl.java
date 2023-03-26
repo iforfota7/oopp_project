@@ -3,6 +3,7 @@ package client.scenes;
 import client.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
@@ -64,7 +65,7 @@ public class BoardOverviewCtrl implements Initializable {
      * @param event Object that contains information about the mouse event
      */
     public void goToBoard(MouseEvent event) {
-        Main.setSceneToBoard();
+        Main.setSceneToBoard(((Label)event.getSource()).getText());
     }
 
     public void disconnect() {
