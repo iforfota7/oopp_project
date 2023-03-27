@@ -5,6 +5,7 @@ import commons.Boards;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -91,18 +92,22 @@ public class BoardOverviewCtrl implements Initializable {
 
         Label newBoard = createNewBoard(b.getName());
 
-        if(positionInColumn == 0){
+        gridPane.add(newBoard, positionInColumn, row);
+        gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
+                new Insets(10, 10 , 10 ,10));
+
+        /*if(positionInColumn == 0){
             //gridPane.addRow(row, newBoard, null, null);
             gridPane.add(newBoard, positionInColumn, row);
         }
         else{
             gridPane.add(newBoard, positionInColumn, row);
-        }
+        }*/
     }
 
     public Label createNewBoard(String title) {
         Label newBoard = new Label(title);
-        newBoard.setStyle("-fx-margin: 10 10 10 10; -fx-font-size: 15px; -fx-alignment: CENTER;" +
+        newBoard.setStyle("-fx-font-size: 15px; -fx-alignment: CENTER;" +
                 "-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3px");
         newBoard.setPrefWidth(170);
         newBoard.setPrefHeight(128);
