@@ -40,7 +40,6 @@ public class ListController {
      */
     @GetMapping(path = "/all/{boardName}")
     public List<Lists> getAllInBoard(@PathVariable String boardName){
-        System.out.println(repo.findAllByOrderByPositionInsideBoardAsc(boardName));
         return repo.findAllByOrderByPositionInsideBoardAsc("'" + boardName + "'");
     }
 

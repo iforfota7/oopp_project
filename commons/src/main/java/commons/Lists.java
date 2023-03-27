@@ -59,7 +59,7 @@ public class Lists {
         Lists lists = (Lists) o;
         return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
                 Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards) &&
-                Objects.equals(board, lists.board);
+                Objects.equals(board.name, lists.board.name);
     }
 
     /**
@@ -83,7 +83,7 @@ public class Lists {
                 ", title='" + title + '\'' +
                 ", positionInsideBoard=" + positionInsideBoard +
                 ", cards=" + cards +
-                ", board=" + board +
+                ", board=" + board.name +
                 '}';
     }
 }

@@ -143,6 +143,7 @@ public class BoardCtrl implements Initializable {
     public void refresh(){
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(boardName.getText());
+        System.out.println(lists);
         //lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
