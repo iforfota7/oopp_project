@@ -124,7 +124,7 @@ public class ServerUtils {
 
     public List<Boards> getBoards() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/boards")
+                .target(SERVER).path("api/boards/all")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});

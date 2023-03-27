@@ -89,26 +89,15 @@ public class BoardOverviewCtrl implements Initializable {
     }
 
     public void addNewBoard(Boards b){
-        numberOfBoards++;
         positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
         Label newBoard = createNewBoard(b.getName());
-        //newBoard.setText("Board");
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
 
         gridPane.add(newBoard, positionInColumn, row);
-
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
                 new Insets(10, 10 , 10 ,10));
-
-        /*if(positionInColumn == 0){
-            //gridPane.addRow(row, newBoard, null, null);
-            gridPane.add(newBoard, positionInColumn, row);
-        }
-        else{
-            gridPane.add(newBoard, positionInColumn, row);
-        }*/
     }
 
     public Label createNewBoard(String title) {
@@ -119,9 +108,10 @@ public class BoardOverviewCtrl implements Initializable {
         newBoard.setPrefWidth(165);
         newBoard.setPrefHeight(75);
         newBoard.setAlignment(Pos.CENTER);
-        newBoard.setText("Board");
+        newBoard.setText(title);
         newBoard.setFont(new Font(15));
         newBoard.setOnMouseClicked(this::goToBoard);
+        numberOfBoards++;
         return newBoard;
     }
 
@@ -132,6 +122,8 @@ public class BoardOverviewCtrl implements Initializable {
     public void refresh(){
         gridPane.getChildren().clear();
         boardsList = server.getBoards();
+        numberOfBoards = boardsList.size();
+        System.out.println(numberOfBoards);
         for (Boards boards : boardsList) {
             addNewBoard(boards);
         }

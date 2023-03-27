@@ -37,7 +37,6 @@ public class AdListCtrl {
         int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
         server.addList(new Lists(newListName.getText(), positionInsideBoard));
         newListName.setText("");
-
         mainCtrl.closeADList();
     }
 

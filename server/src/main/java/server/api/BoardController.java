@@ -17,9 +17,8 @@ public class BoardController {
         this.repo = repo;
     }
 
-    @GetMapping(path = {"", "/"})
+    @GetMapping(path = "/all")
     public List<Boards> getAll() {
-        System.out.println("laaaaaaaaaa");
         return repo.findAll();
     }
 
