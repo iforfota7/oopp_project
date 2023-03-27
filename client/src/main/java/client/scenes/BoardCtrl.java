@@ -61,8 +61,10 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    addNewList(l);
-                    refreshData();
+                    if(l.board.name.equals(boardName.getText())) {
+                        addNewList(l);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -71,9 +73,11 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
-                    title.setText(l.title);
-                    refreshData();
+                    if(l.board.name.equals(boardName.getText())) {
+                        Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
+                        title.setText(l.title);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -82,9 +86,11 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    VBox list = (VBox)rootContainer.lookup("#list"+l.id);
-                    firstRow.getChildren().removeAll(list);
-                    refreshData();
+                    if(l.board.name.equals(boardName.getText())) {
+                        VBox list = (VBox)rootContainer.lookup("#list"+l.id);
+                        firstRow.getChildren().removeAll(list);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -95,11 +101,12 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-
-                    VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                    AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
-                    ((VBox) l.getChildren().get(0)).getChildren().remove(card);
-                    refreshData();
+                    if(c.list.board.name.equals(boardName.getText())) {
+                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
+                        AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
+                        ((VBox) l.getChildren().get(0)).getChildren().remove(card);
+                        refreshData();
+                    }
 
                 }
             });
@@ -109,9 +116,11 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
-                            getChildren().get(0)).setText(c.title);
-                    refreshData();
+                    if(c.list.board.name.equals(boardName.getText())) {
+                        ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
+                                getChildren().get(0)).setText(c.title);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -120,9 +129,11 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                    addNewCard((VBox) l.getChildren().get(0), c);
-                    refreshData();
+                    if(c.list.board.name.equals(boardName.getText())) {
+                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
+                        addNewCard((VBox) l.getChildren().get(0), c);
+                        refreshData();
+                    }
                 }
             });
         });
