@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -86,6 +87,9 @@ public class BoardOverviewCtrl implements Initializable {
     }
     public  void removeCurrentBoard() {
         boards.remove(currentBoard);
+        Pane parent = (Pane) currentBoard.getParent();
+        parent.getChildren().remove(currentBoard);
+        mainCtrl.refreshBoards();
     }
 
     @FXML

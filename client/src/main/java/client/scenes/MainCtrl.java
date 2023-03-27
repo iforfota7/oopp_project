@@ -241,4 +241,8 @@ public class MainCtrl {
         showBoardOverview();
         boardOverviewCtrl.removeCurrentBoard();
     }
+
+    public void refreshBoards() {
+        boardOverview.getRoot().requestLayout();
+    }
 }
