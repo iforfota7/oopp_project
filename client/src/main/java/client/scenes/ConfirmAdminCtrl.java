@@ -29,6 +29,12 @@ public class ConfirmAdminCtrl {
         checkPassword(adminPassword.equals(inputPassword.getText()));
     }
 
+    /**
+     *Compare the current board password with the entered password to determine if they are equal.
+     * If they are equal, enable the admin function and display the relevant buttons.
+     * If they are not equal, show a prompt in the scene.
+     * @param b boolean answer of equals(input,currentPassword)
+     */
     public void checkPassword(boolean b) {
         if(b){
             errorLabel.setVisible(false);
