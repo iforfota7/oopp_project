@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.Main;
 import client.utils.ServerUtils;
-import com.sun.security.auth.callback.TextCallbackHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;

@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.Main;
 import commons.Boards;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
