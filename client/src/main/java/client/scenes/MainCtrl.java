@@ -197,11 +197,19 @@ public class MainCtrl {
     }
     public void closeNewCard(){secondaryStage.close();}
 
+    /**
+     * Method that sets the scene to the Board Overview scene
+     *
+     */
     public void showBoardOverview() {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(boardOverview);
     }
 
+    /**
+     * Method that sets the scene to the Select Server scene
+     *
+     */
     public void showSelectServer() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);
