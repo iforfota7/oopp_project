@@ -16,7 +16,7 @@ public class Boards {
     public String name;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    @OrderBy("positionInsideBoardASC")
+    @OrderBy("positionInsideBoard ASC")
     public List<Lists> lists;
 
     /**
@@ -67,5 +67,9 @@ public class Boards {
                 "name='" + name + '\'' +
                 ", lists=" + lists +
                 '}';
+    }
+
+    public String getName(){
+        return name;
     }
 }
