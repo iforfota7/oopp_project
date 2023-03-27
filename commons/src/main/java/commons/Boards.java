@@ -1,14 +1,22 @@
 package commons;
 
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "name")
 public class Boards {
     @Id
     public String name;
-    @OneToMany
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OrderBy("positionInsideBoardASC")
     public List<Lists> lists;
 
     /**
@@ -16,7 +24,7 @@ public class Boards {
      * @param name the name of the board (acts as unique id)
      * @param lists a list of lists contained in the board
      */
-    public Boards(String name, List<Lists> lists) {
+    public Boards(String name, List<Lists> lists){
         this.name = name;
         this.lists = lists;
     }

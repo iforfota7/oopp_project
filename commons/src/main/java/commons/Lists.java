@@ -1,27 +1,42 @@
 package commons;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Lists {
     @Id
-    public String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
+    public String title;
+    public int positionInsideBoard;
 
-    @OneToMany
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
+    @OrderBy("positionInsideList ASC")
     public List<Cards> cards;
+
+    @ManyToOne
+    public Boards board;
 
     /**
      * Constructor method for the lists class
-     * @param name the name of the list (acts as unique id)
-     * @param cards a list of cards contained in the list
+     * @param title the name of the list
+     * @param positionInsideBoard the position of list inside the board
      */
-    public Lists(String name, List<Cards> cards) {
-        this.name = name;
-        this.cards = cards;
+    public Lists(String title, int positionInsideBoard) {
+        this.title = title;
+        this.positionInsideBoard = positionInsideBoard;
+        this.cards = new ArrayList<>();
+        this.board = null; // change later please
     }
 
     /**
@@ -40,7 +55,8 @@ public class Lists {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
-        return Objects.equals(name, lists.name) && Objects.equals(cards, lists.cards);
+        return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
+                Objects.equals(title, lists.title);
     }
 
     /**
@@ -49,18 +65,20 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, cards);
+        return Objects.hash(id, title, positionInsideBoard);
     }
 
     /**
      * To string method to return human-readable format
+     *
      * @return a string of the lists information
      */
     @Override
     public String toString() {
         return "Lists{" +
-                "name='" + name + '\'' +
-                ", cards=" + cards +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", positionInsideBoard=" + positionInsideBoard +
                 '}';
     }
 }
