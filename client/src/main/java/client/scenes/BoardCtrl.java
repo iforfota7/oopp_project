@@ -34,6 +34,8 @@ public class BoardCtrl implements Initializable {
 
     @FXML
     private HBox firstRow;
+    @FXML
+    private Label boardName;
 
 
     List<VBox> listContainers;
@@ -46,6 +48,7 @@ public class BoardCtrl implements Initializable {
     private List<Lists> lists;
 
     private Draggable drag;
+
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
@@ -58,8 +61,6 @@ public class BoardCtrl implements Initializable {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         refresh();
-
-        webSocketLists(); webSocketCards();
     }
 
     private void webSocketLists() {
@@ -67,7 +68,7 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-
+                    System.out.println("Added a new list");
                     addNewList(l);
                     refreshData();
                 }
@@ -137,7 +138,7 @@ public class BoardCtrl implements Initializable {
 
     public void refresh(){
         firstRow.getChildren().clear();
-         lists = server.getLists();
+        lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
 
@@ -162,6 +163,7 @@ public class BoardCtrl implements Initializable {
             }
         }
     }
+
     public void refreshLists(List<Lists> l){
         int j = 0;
         for(Node i : firstRow.getChildren()){
@@ -185,6 +187,9 @@ public class BoardCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
+
+        webSocketLists();
+        webSocketCards();
     }
 
     /**
@@ -198,6 +203,7 @@ public class BoardCtrl implements Initializable {
         this.currentList = (VBox) popup.getOwnerNode().getParent().getParent();
         mainCtrl.showRenameList();
     }
+
     void rnList(String name) {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         l.title = name;
@@ -514,5 +520,18 @@ public class BoardCtrl implements Initializable {
 
     public HBox getFirstRow() {
         return firstRow;
+    }
+
+    /**
+     * Sets the name of the board that will be displayed to the user
+     *
+     * @param boardName The string containing the name of the board
+     */
+    public void setBoardName(String boardName) {
+        this.boardName.setText(boardName);
+    }
+
+    public void exitBoard() {
+        mainCtrl.showBoardOverview();
     }
 }

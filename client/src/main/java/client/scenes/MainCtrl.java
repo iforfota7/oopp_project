@@ -24,22 +24,37 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList, addList, cardDetails, newCard;
+    private Scene board, renameList, deleteList, addList;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview;
+    private Scene selectServer;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
     private NewCardCtrl newCardCtrl;
+    private ConfirmUsernameCtrl confirmUsernameCtrl;
+    private BoardOverviewCtrl boardOverviewCtrl;
+    private SelectServerCtrl selectServerCtrl;
+    private BoardCtrl boardCtrl;
 
     private int numberOfLists = 2;
 
     public void initializeBoard(Stage primaryStage,
-                                Pair<SelectServerCtrl, Parent> board) {
+                                Pair<SelectServerCtrl, Parent> selectServer,
+                                Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
+                                Pair<BoardOverviewCtrl, Parent> boardOverview) {
 
         this.primaryStage = primaryStage;
 
-        this.board = new Scene(board.getValue());
+        this.selectServer = new Scene(selectServer.getValue());
+        this.selectServerCtrl = selectServer.getKey();
+
+        this.confirmUsername = new Scene(confirmUsername.getValue());
+        this.confirmUsernameCtrl = confirmUsername.getKey();
+
+        this.boardOverview = new Scene(boardOverview.getValue());
+        this.boardOverviewCtrl = boardOverview.getKey();
 
         showStart();
         primaryStage.show();
@@ -58,7 +73,6 @@ public class MainCtrl {
         this.addList = new Scene(addList.getValue());
         this.addListCtrl = addList.getKey();
     }
-
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
             Pair<NewCardCtrl, Parent> newCardCtrl) {
 
@@ -71,16 +85,24 @@ public class MainCtrl {
 
     public void showStart() {
         primaryStage.setTitle("Start");
+        primaryStage.setScene(selectServer);
+    }
+
+    public void showBoard(String boardName) {
+        primaryStage.setTitle("Start");
+        boardCtrl.setBoardName(boardName);
         primaryStage.setScene(board);
     }
 
     /**
      * Sets scene of stage to passed board
      * @param board the scene to be displayed
+     * @param boardName used to display the title of the board
      */
-    public void setBoard(Pair<BoardCtrl, Parent> board){
+    public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
         this.board = new Scene(board.getValue());
-        showStart();
+        this.boardCtrl = board.getKey();
+        showBoard(boardName);
     }
 
     /**
@@ -113,6 +135,16 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Show confirmUsername scene
+     */
+    public void showConfirmUsername(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(confirmUsername);
+        secondaryStage.setTitle("Confirm Username!");
+        secondaryStage.show();
+    }
+
     public void closeRNList() {
         secondaryStage.close();
     }
@@ -125,12 +157,16 @@ public class MainCtrl {
     }
 
     /**
+     * Closes the confirmUsername scene
+     */
+    public void closeConfirmUsername() {secondaryStage.close();}
+
+    /**
      * Adds a new list to the board
      * @param list the list to be added to the board
      * @param row the hbox to which the list should be added (the row)
      */
     public void addNewList(VBox list, HBox row){
-        numberOfLists++;
         row.getChildren().add(list);
 
     }
@@ -160,5 +196,23 @@ public class MainCtrl {
         secondaryStage.close();
     }
     public void closeNewCard(){secondaryStage.close();}
+
+    /**
+     * Method that sets the scene to the Board Overview scene
+     *
+     */
+    public void showBoardOverview() {
+        primaryStage.setTitle("Board Overview");
+        primaryStage.setScene(boardOverview);
+    }
+
+    /**
+     * Method that sets the scene to the Select Server scene
+     *
+     */
+    public void showSelectServer() {
+        primaryStage.setTitle("Start");
+        primaryStage.setScene(selectServer);
+    }
 
 }

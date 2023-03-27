@@ -46,26 +46,32 @@ public class Main extends Application {
                 "client", "scenes", "SelectServer.fxml");
 
         // List rename&delete&add scene loader
-        var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RNList.fxml" );
-        var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DEList.fxml" );
-        var addList = FXML.load(AdListCtrl.class,"client", "scenes", "ADList.fxml" );
-        var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml");
+        var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RnList.fxml" );
+        var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
+        var addList = FXML.load(AdListCtrl.class,"client", "scenes", "AdList.fxml" );
+        var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
         var addCard = FXML.load(NewCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
+        var confirmUsername = FXML.load(ConfirmUsernameCtrl.class,
+                "client", "scenes", "ConfirmUsername.fxml");
+        var boardOverview = FXML.load(BoardOverviewCtrl.class,
+                "client", "scenes", "BoardOverview.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
-        mainCtrl.initializeBoard(primaryStage, selectServer);
+        mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername, boardOverview);
         mainCtrl.initializeLists(renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard);
     }
 
     /**
      * Sets main scene, displaying the board
+     *
+     * @param boardName Used to set the title of the displayed board
      */
-    public static void setSceneToBoard(){
+    public static void setSceneToBoard(String boardName){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.setBoard(board);
+        mainCtrl.setBoard(board, boardName);
     }
 
 }
