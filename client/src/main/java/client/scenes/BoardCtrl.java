@@ -62,9 +62,6 @@ public class BoardCtrl implements Initializable {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         refresh();
-
-        webSocketLists();
-        webSocketCards();
     }
 
     private void webSocketLists() {
@@ -72,7 +69,7 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-
+                    System.out.println("Added a new list");
                     addNewList(l);
                     refreshData();
                 }
@@ -194,6 +191,9 @@ public class BoardCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
+
+        webSocketLists();
+        webSocketCards();
     }
 
     /**
@@ -406,12 +406,10 @@ public class BoardCtrl implements Initializable {
      */
     @FXML
     void cardDetail(ActionEvent event) {
-        long mouseReleasedTime = System.currentTimeMillis();
-        long mouseDuration = mouseReleasedTime - mousePressedTime;
-        if(mouseDuration >= 2000) {
+
             this.currentCard = (Hyperlink) event.getTarget();
             mainCtrl.showCardDetail();
-        }
+
     }
 
     /**
@@ -546,5 +544,9 @@ public class BoardCtrl implements Initializable {
      */
     public void setBoardName(String boardName) {
         this.boardName.setText(boardName);
+    }
+
+    public void exitBoard() {
+        mainCtrl.showBoardOverview();
     }
 }

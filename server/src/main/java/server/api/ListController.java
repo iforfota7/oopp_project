@@ -36,6 +36,7 @@ public class ListController {
 
     /**
      * Method for retrieving all lists in the repo, sorted by their position inside the board
+     * @param boardName the name of the board for which lists should be found
      * @return all lists that are stored in repo
      */
     @GetMapping(path = "/all/{boardName}")
@@ -46,16 +47,18 @@ public class ListController {
     /**
      * Method for adding a list to the repo
      * @param list the list to be added to the repo
+     * @param boardName the name of the board to which the list is added
      * @return a 200 OK response for a successful http request
      */
     @Transactional
     @PostMapping(path="/{boardName}")
     public ResponseEntity<Lists> addList(@RequestBody Lists list, @PathVariable String boardName) {
-        Boards board = new Boards(boardName, null); // not sure whether lists being null will cause problems
-        list.board = board;
 
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
+
+        Boards board = new Boards(boardName, null);
+        list.board = board;
 
         // if the instance exists in the repository, the client gets returned a bad request
         if(repo.existsById(list.id))

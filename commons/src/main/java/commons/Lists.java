@@ -33,6 +33,7 @@ public class Lists {
      * Constructor method for the lists class
      * @param title the name of the list
      * @param positionInsideBoard the position of list inside the board
+     * @param board the board containing the list
      */
     public Lists(String title, int positionInsideBoard, Boards board) {
         this.title = title;

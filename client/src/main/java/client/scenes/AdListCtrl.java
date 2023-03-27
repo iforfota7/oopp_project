@@ -1,15 +1,12 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.Boards;
-import commons.Lists;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  *  Controller for Add List

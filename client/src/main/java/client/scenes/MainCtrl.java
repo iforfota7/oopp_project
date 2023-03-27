@@ -24,8 +24,10 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
-    private Scene board, renameList, deleteList,
-            addList, cardDetails, newCard, confirmUsername, boardOverview;
+
+    private Scene board, renameList, deleteList, addList;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview;
+
     private Scene selectServer;
 
     private RnListCtrl rnListCtrl;
@@ -38,32 +40,17 @@ public class MainCtrl {
     private SelectServerCtrl selectServerCtrl;
     private BoardCtrl boardCtrl;
 
-    public void initialize(Stage primaryStage, Pair<SelectServerCtrl, Parent> selectServer,
-                           Pair<RnListCtrl,Parent> renameList, Pair<DeListCtrl, Parent> deleteList,
-                           Pair<AdListCtrl, Parent> addList, Pair<CardDetailsCtrl,
-                            Parent>cardDetails, Pair<NewCardCtrl, Parent> newCardCtrl,
-                           Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
-                           Pair<BoardOverviewCtrl, Parent> boardOverview) {
+    private int numberOfLists = 2;
 
+
+    public void initializeBoard(Stage primaryStage,
+                                Pair<SelectServerCtrl, Parent> selectServer,
+                                Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
+                                Pair<BoardOverviewCtrl, Parent> boardOverview) {
         this.primaryStage = primaryStage;
 
         this.selectServer = new Scene(selectServer.getValue());
         this.selectServerCtrl = selectServer.getKey();
-
-        this.renameList = new Scene(renameList.getValue());
-        this.rnListCtrl = renameList.getKey();
-
-        this.deleteList = new Scene(deleteList.getValue());
-        this.deListCtrl = deleteList.getKey();
-
-        this.addList = new Scene(addList.getValue());
-        this.addListCtrl = addList.getKey();
-
-        this.cardDetails = new Scene(cardDetails.getValue());
-        this.cardDetailsCtrl = cardDetails.getKey();
-
-        this.newCard= new Scene(newCardCtrl.getValue());
-        this.newCardCtrl = newCardCtrl.getKey();
 
         this.confirmUsername = new Scene(confirmUsername.getValue());
         this.confirmUsernameCtrl = confirmUsername.getKey();
@@ -73,6 +60,29 @@ public class MainCtrl {
 
         showStart();
         primaryStage.show();
+    }
+
+    public void initializeLists( Pair<RnListCtrl,Parent> renameList,
+                Pair<DeListCtrl, Parent> deleteList,
+                Pair<AdListCtrl, Parent> addList) {
+
+        this.renameList = new Scene(renameList.getValue());
+        this.rnListCtrl = renameList.getKey();
+
+        this.deleteList = new Scene(deleteList.getValue());
+        this.deListCtrl = deleteList.getKey();
+
+        this.addList = new Scene(addList.getValue());
+        this.addListCtrl = addList.getKey();
+    }
+    public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
+            Pair<NewCardCtrl, Parent> newCardCtrl) {
+
+        this.cardDetails = new Scene(cardDetails.getValue());
+        this.cardDetailsCtrl = cardDetails.getKey();
+
+        this.newCard = new Scene(newCardCtrl.getValue());
+        this.newCardCtrl = newCardCtrl.getKey();
     }
 
     public void showStart() {
@@ -89,7 +99,7 @@ public class MainCtrl {
     /**
      * Sets scene of stage to passed board
      * @param board the scene to be displayed
-     * @param boardName the name of the board
+     * @param boardName used to display the title of the board
      */
     public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
         this.board = new Scene(board.getValue());
@@ -189,11 +199,19 @@ public class MainCtrl {
     }
     public void closeNewCard(){secondaryStage.close();}
 
+    /**
+     * Method that sets the scene to the Board Overview scene
+     *
+     */
     public void showBoardOverview() {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(boardOverview);
     }
 
+    /**
+     * Method that sets the scene to the Select Server scene
+     *
+     */
     public void showSelectServer() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);

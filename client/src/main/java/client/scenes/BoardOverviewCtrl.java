@@ -67,6 +67,11 @@ public class BoardOverviewCtrl implements Initializable {
         Main.setSceneToBoard(((Label)event.getSource()).getText());
     }
 
+    /**
+     * When the user clicks the button, they are sent back
+     * to the Board Overview scene
+     *
+     */
     public void disconnect() {
         mainCtrl.showSelectServer();
     }

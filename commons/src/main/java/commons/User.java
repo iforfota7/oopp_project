@@ -42,8 +42,8 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return isAdmin == user.isAdmin && Objects.equals(username,
-                user.username) && Objects.equals(boards, user.boards);
+        return isAdmin == user.isAdmin &&
+                Objects.equals(username, user.username) && Objects.equals(boards, user.boards);
     }
 
     /**
