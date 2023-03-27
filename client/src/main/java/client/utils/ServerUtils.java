@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import commons.User;
@@ -115,6 +116,12 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public Boards addBoard(Boards board){
+        System.out.println(board.toString());
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 
     /**
      * Setter method for the server attribute

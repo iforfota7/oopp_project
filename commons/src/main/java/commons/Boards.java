@@ -68,4 +68,8 @@ public class Boards {
                 ", lists=" + lists +
                 '}';
     }
+
+    public String getName(){
+        return name;
+    }
 }

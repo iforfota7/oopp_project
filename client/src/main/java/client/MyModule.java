@@ -34,5 +34,6 @@ public class MyModule implements Module {
         binder.bind(RnListCtrl.class).in(Scopes.SINGLETON);
         binder.bind(SelectServerCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfirmUsernameCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddBoardCtrl.class).in(Scopes.SINGLETON);
     }
 }

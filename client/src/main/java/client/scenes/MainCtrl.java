@@ -25,7 +25,7 @@ import javafx.util.Pair;
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
     private Scene selectServer;
 
     private RnListCtrl rnListCtrl;
@@ -37,13 +37,15 @@ public class MainCtrl {
     private BoardOverviewCtrl boardOverviewCtrl;
     private SelectServerCtrl selectServerCtrl;
     private BoardCtrl boardCtrl;
+    private AddBoardCtrl addBoardCtrl;
 
     private int numberOfLists = 2;
 
     public void initializeBoard(Stage primaryStage,
                                 Pair<SelectServerCtrl, Parent> selectServer,
                                 Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
-                                Pair<BoardOverviewCtrl, Parent> boardOverview) {
+                                Pair<BoardOverviewCtrl, Parent> boardOverview,
+                                Pair<AddBoardCtrl, Parent> addBoard) {
 
         this.primaryStage = primaryStage;
 
@@ -55,6 +57,9 @@ public class MainCtrl {
 
         this.boardOverview = new Scene(boardOverview.getValue());
         this.boardOverviewCtrl = boardOverview.getKey();
+
+        this.addBoard = new Scene(addBoard.getValue());
+        this.addBoardCtrl = addBoard.getKey();
 
         showStart();
         primaryStage.show();
@@ -205,6 +210,17 @@ public class MainCtrl {
     public void showSelectServer() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);
+    }
+
+    public void showAddBoard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(addBoard);
+        secondaryStage.setTitle("Add a new Board!");
+        secondaryStage.show();
+    }
+
+    public void closeAddBoard(){
+        secondaryStage.close();
     }
 
 }

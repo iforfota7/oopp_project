@@ -49,15 +49,18 @@ public class Main extends Application {
         var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RnList.fxml" );
         var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
         var addList = FXML.load(AdListCtrl.class,"client", "scenes", "AdList.fxml" );
-        var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes", "CardDetails.fxml" );
+        var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes",
+                "CardDetails.fxml" );
         var addCard = FXML.load(NewCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
         var confirmUsername = FXML.load(ConfirmUsernameCtrl.class,
                 "client", "scenes", "ConfirmUsername.fxml");
         var boardOverview = FXML.load(BoardOverviewCtrl.class,
                 "client", "scenes", "BoardOverview.fxml");
+        var addBoard = FXML.load(AddBoardCtrl.class, "client", "scenes",
+                "AddNewBoard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
-        mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername, boardOverview);
+        mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername, boardOverview, addBoard);
         mainCtrl.initializeLists(renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard);
     }
