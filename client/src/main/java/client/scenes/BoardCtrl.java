@@ -442,10 +442,10 @@ public class BoardCtrl implements Initializable {
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
         Boards board = new Boards(boardName.getText(), lists);
-        Lists list = new Lists(text, position, board);
+        Lists list = new Lists(text, position, null);
         board.lists.add(list);
         try {
-            server.addList(list);
+            server.addList(list, board);
         }
         catch(Exception e){
             System.out.println(e);

@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Boards;
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -39,9 +40,11 @@ public class ListController {
      * @return a 200 OK response for a successful http request
      */
     @Transactional
-    @PostMapping(path={"", "/"})
-    public ResponseEntity<Lists> addList(@RequestBody Lists list) {
-        System.out.println(list);
+    @PostMapping(path="/{boardName}")
+    public ResponseEntity<Lists> addList(@RequestBody Lists list, @PathVariable String boardName) {
+        Boards board = new Boards(boardName, null); // not sure whether lists being null will cause problems
+        list.board = board;
+
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 

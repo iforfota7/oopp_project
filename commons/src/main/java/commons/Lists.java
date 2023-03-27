@@ -26,6 +26,7 @@ public class Lists {
     public List<Cards> cards;
 
     @ManyToOne
+    @JsonIgnore
     public Boards board;
 
     /**
