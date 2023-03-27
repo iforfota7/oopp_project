@@ -116,6 +116,14 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public List<Lists> getListsByBoard(String boardName) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/lists/all/" + boardName) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Lists>>() {});
+    }
+
 
     /**
      * Setter method for the server attribute

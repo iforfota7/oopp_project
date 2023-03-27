@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 
 
 import javafx.event.ActionEvent;
-import javassist.bytecode.ExceptionTable;
 
 import javax.inject.Inject;
 
@@ -143,7 +142,8 @@ public class BoardCtrl implements Initializable {
 
     public void refresh(){
         firstRow.getChildren().clear();
-        lists = server.getLists();
+        lists = server.getListsByBoard(boardName.getText());
+        //lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
 
@@ -151,7 +151,8 @@ public class BoardCtrl implements Initializable {
     }
 
     public void refreshData(){
-        lists = server.getLists();
+        lists = server.getListsByBoard(boardName.getText());
+        //lists = server.getLists();
         refreshLists(lists);
     }
 

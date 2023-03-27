@@ -35,6 +35,16 @@ public class ListController {
     }
 
     /**
+     * Method for retrieving all lists in the repo, sorted by their position inside the board
+     * @return all lists that are stored in repo
+     */
+    @GetMapping(path = "/all/{boardName}")
+    public List<Lists> getAllInBoard(@PathVariable String boardName){
+        System.out.println(repo.findAllByOrderByPositionInsideBoardAsc(boardName));
+        return repo.findAllByOrderByPositionInsideBoardAsc("'" + boardName + "'");
+    }
+
+    /**
      * Method for adding a list to the repo
      * @param list the list to be added to the repo
      * @return a 200 OK response for a successful http request
