@@ -19,11 +19,10 @@ public class BoardController {
     @Transactional
     @PostMapping(path={"", "/"})
     public ResponseEntity<Boards> addBoard(@RequestBody Boards board){
-        System.out.println("LAAAAAAALALALLAALLALA");
         if(board == null || isNullOrEmpty(board.getName()))
             return ResponseEntity.badRequest().build();
 
-        if(repo.existsById(Long.valueOf(board.name)))
+        if(repo.existsById(board.name))
             return ResponseEntity.badRequest().build();
 
         Boards saved = repo.save(board);

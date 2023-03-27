@@ -60,7 +60,8 @@ public class Main extends Application {
                 "AddNewBoard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
-        mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername, boardOverview, addBoard);
+        mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername,
+                boardOverview, addBoard);
         mainCtrl.initializeLists(renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard);
     }

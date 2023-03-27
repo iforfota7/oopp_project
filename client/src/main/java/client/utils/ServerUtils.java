@@ -117,7 +117,6 @@ public class ServerUtils {
     }
 
     public Boards addBoard(Boards board){
-        System.out.println(board.toString());
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);

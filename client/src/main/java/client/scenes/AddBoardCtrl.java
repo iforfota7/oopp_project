@@ -25,9 +25,8 @@ public class AddBoardCtrl {
 
     @FXML
     void saveNewBoard(ActionEvent event){
-        int position = boardOverviewCtrl.getNumberOfBoards();
         System.out.println(boardName.getText());
-       // server.addBoard(new Boards(boardName.getText(), null));
+        server.addBoard(new Boards(boardName.getText(), null));
         boardName.setText("");
 
         mainCtrl.closeAddBoard();
