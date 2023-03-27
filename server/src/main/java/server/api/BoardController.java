@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import server.database.BoardsRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/boards")
@@ -14,6 +15,12 @@ public class BoardController {
 
     public BoardController(BoardsRepository repo) {
         this.repo = repo;
+    }
+
+    @GetMapping(path = {"", "/"})
+    public List<Boards> getAll() {
+        System.out.println("laaaaaaaaaa");
+        return repo.findAll();
     }
 
     @Transactional

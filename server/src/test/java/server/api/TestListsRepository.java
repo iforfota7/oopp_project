@@ -70,13 +70,13 @@ public class TestListsRepository implements ListsRepository {
 
         call("maxPositionInsideBoard");
         int max=-1;
-        for(int i=0; i<lists.size(); i++) {
+        for(int i = 0; i < lists.size(); i++) {
 
             if(lists.get(i).positionInsideBoard>max)
                 max=lists.get(i).positionInsideBoard;
         }
 
-        if(max==-1) return null;
+        if(max == -1) return null;
 
         return max;
     }
@@ -92,17 +92,17 @@ public class TestListsRepository implements ListsRepository {
 
         call("findAllByOrderByPositionInsideBoardAsc");
         List<Lists> res = new ArrayList<>();
-        for(int i=0; i<lists.size(); i++) {
+        for(int i = 0; i < lists.size(); i++) {
 
             res.add(lists.get(i));
             //sort using insertion sort
-            for(int j=res.size()-1; j>0; j--) {
+            for(int j = res.size() - 1; j > 0; j--) {
 
                 if(res.get(j).positionInsideBoard<res.get(j-1).positionInsideBoard) {
 
                     Lists temp = res.get(j);
-                    res.set(j, res.get(j-1));
-                    res.set(j-1, temp);
+                    res.set(j, res.get(j - 1));
+                    res.set(j - 1, temp);
                 }
                 else break;
             }
