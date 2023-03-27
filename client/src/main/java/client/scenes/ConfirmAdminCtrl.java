@@ -26,10 +26,10 @@ public class ConfirmAdminCtrl {
     @FXML
     void adminLogin() {
         String adminPassword = boardCtrl.getAdminPassword();
-        checkBack(adminPassword.equals(inputPassword.getText()));
+        checkPassword(adminPassword.equals(inputPassword.getText()));
     }
 
-    public void checkBack(boolean b) {
+    public void checkPassword(boolean b) {
         if(b){
             errorLabel.setVisible(false);
             inputPassword.setStyle("-fx-border-color: #D3D3D3;");

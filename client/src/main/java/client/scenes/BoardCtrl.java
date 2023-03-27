@@ -539,7 +539,10 @@ public class BoardCtrl implements Initializable {
     }
 
     /**
-     *
+     *The method here implements the functionality of the admin button,
+     *  allowing users to enter a password to verify their admin privileges.
+     *  If the password is correct, the corresponding button functionality will be displayed,
+     *  allowing the user to upgrade to an admin and perform renaming and deletion functions.
      */
     @FXML
     private Button lockBtu;
@@ -551,6 +554,7 @@ public class BoardCtrl implements Initializable {
     void adminLogin() {mainCtrl.showConfirmAdmin();}
     public String getAdminPassword(){return adminPassword;}
     public void openAdminFeatures() {
+        adminLock.set(true);
         removeBoard.setVisible(true);
         mainCtrl.closeConfirmAdmin();
         lockBtu.setStyle("-fx-border-color: green");
@@ -561,7 +565,9 @@ public class BoardCtrl implements Initializable {
         alert.showAndWait();
     }
     /**
-     *
+     *The functionality of the delete current board button will be displayed
+     * after obtaining admin privileges.
+     *  It returns to the board overview interface and deletes the current board.
      */
     @FXML
     void removeBoard() {
