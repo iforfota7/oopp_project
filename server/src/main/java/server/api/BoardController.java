@@ -30,6 +30,19 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     * A method used to find a board by its ID
+     * @param boardID the ID of the board
+     * @return the board corresponding to the specified ID if it exists, otherwise null
+     */
+    @GetMapping(path = {"/find/{boardID}"})
+    @ResponseBody
+    public Boards findBoard(@PathVariable String boardID) {
+
+        if(repo.findById(boardID).isEmpty()) return null;
+        return repo.findById(boardID).get();
+    }
+
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }

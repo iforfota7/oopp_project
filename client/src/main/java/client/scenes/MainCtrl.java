@@ -26,7 +26,7 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
-    private Scene selectServer;
+    private Scene selectServer, joinBoardByID;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
@@ -36,6 +36,7 @@ public class MainCtrl {
     private ConfirmUsernameCtrl confirmUsernameCtrl;
     private BoardOverviewCtrl boardOverviewCtrl;
     private SelectServerCtrl selectServerCtrl;
+    private JoinBoardByIDCtrl joinBoardByIDCtrl;
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
 
@@ -45,7 +46,8 @@ public class MainCtrl {
                                 Pair<SelectServerCtrl, Parent> selectServer,
                                 Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
                                 Pair<BoardOverviewCtrl, Parent> boardOverview,
-                                Pair<AddBoardCtrl, Parent> addBoard) {
+                                Pair<AddBoardCtrl, Parent> addBoard,
+                                Pair<JoinBoardByIDCtrl, Parent> joinBoardByID) {
 
         this.primaryStage = primaryStage;
 
@@ -60,6 +62,9 @@ public class MainCtrl {
 
         this.addBoard = new Scene(addBoard.getValue());
         this.addBoardCtrl = addBoard.getKey();
+
+        this.joinBoardByID = new Scene(joinBoardByID.getValue());
+        this.joinBoardByIDCtrl = joinBoardByID.getKey();
 
         showStart();
         primaryStage.show();
@@ -97,6 +102,7 @@ public class MainCtrl {
         primaryStage.setTitle("Start");
         boardCtrl.setBoardName(boardName);
         primaryStage.setScene(board);
+        secondaryStage.close();
     }
 
     /**
@@ -223,4 +229,18 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
+    /**
+     * Open a new window that displays the joinBoardByID scene
+     */
+    public void showJoinBoardByID() {
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Join board by ID");
+        secondaryStage.setScene(joinBoardByID);
+        secondaryStage.show();
+    }
+
+    /**
+     * Closes the window that displays the joinBoardByID scene
+     */
+    public void closeJoinBoardByID() { secondaryStage.close(); }
 }

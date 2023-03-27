@@ -56,7 +56,7 @@ public class Lists {
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
         return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
-                Objects.equals(title, lists.title);
+                Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards);
     }
 
     /**
@@ -65,7 +65,7 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideBoard);
+        return Objects.hash(id, title, positionInsideBoard, cards);
     }
 
     /**

@@ -76,12 +76,17 @@ public class BoardOverviewCtrl implements Initializable {
         Main.setSceneToBoard(((Label)event.getSource()).getText());
     }
 
+    /**
+     * Opens the joinBoardByID scene.
+     */
+    public void joinBoardByID() { mainCtrl.showJoinBoardByID(); }
+
     public void disconnect() {
         mainCtrl.showSelectServer();
     }
 
     @FXML
-    public void addBoard(ActionEvent event){
+    public void addBoard(){
         mainCtrl.showAddBoard();
     }
 
