@@ -1,10 +1,14 @@
 package client.scenes;
 
 import client.Main;
+import commons.Boards;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -16,6 +20,11 @@ public class BoardOverviewCtrl implements Initializable {
 
     private MainCtrl mainCtrl;
     private List<Label> boards;
+    private int numberOfBoards = 3;
+    private int positionInColumn;
+
+    @FXML
+    GridPane gridPane;
     @FXML
     private Label board1;
     @FXML
@@ -48,7 +57,6 @@ public class BoardOverviewCtrl implements Initializable {
         boards.add(board2);
         boards.add(board3);
 
-
         for(Label board : boards)
             board.setOnMouseClicked(this::goToBoard);
     }
@@ -79,4 +87,43 @@ public class BoardOverviewCtrl implements Initializable {
     public  void removeCurrentBoard() {
         boards.remove(currentBoard);
     }
+
+    @FXML
+    public void addBoard(ActionEvent event){
+        mainCtrl.showAddBoard();
+    }
+
+    public void addNewBoard(Boards b){
+        numberOfBoards++;
+        positionInColumn = (numberOfBoards - 1) % 3;
+        int row = (numberOfBoards - 1) / 3;
+
+        Label newBoard = createNewBoard(b.getName());
+
+        gridPane.add(newBoard, positionInColumn, row);
+        gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
+                new Insets(10, 10 , 10 ,10));
+
+        /*if(positionInColumn == 0){
+            //gridPane.addRow(row, newBoard, null, null);
+            gridPane.add(newBoard, positionInColumn, row);
+        }
+        else{
+            gridPane.add(newBoard, positionInColumn, row);
+        }*/
+    }
+
+    public Label createNewBoard(String title) {
+        Label newBoard = new Label(title);
+        newBoard.setStyle("-fx-font-size: 15px; -fx-alignment: CENTER;" +
+                "-fx-background-color: #ffffff; -fx-border-color: #8d78a6; -fx-border-radius: 3px");
+        newBoard.setPrefWidth(170);
+        newBoard.setPrefHeight(128);
+        return newBoard;
+    }
+
+    public int getNumberOfBoards(){
+        return  numberOfBoards;
+    }
+
 }
