@@ -281,7 +281,7 @@ class CardControllerTest {
     }
 
     @Test
-    void CardDoesNotExistRename() {
+    void cardDoesNotExistRename() {
         Lists list = new Lists("todo", 0);
         list.id = 0;
 
@@ -291,7 +291,7 @@ class CardControllerTest {
     }
 
     @Test
-    void CardWrongListIDRename() {
+    void cardWrongListIDRename() {
         Lists list = new Lists("todo", 0);
         list.id = 0;
 
@@ -306,7 +306,7 @@ class CardControllerTest {
     }
 
     @Test
-    void CardWrongPositionRename() {
+    void cardWrongPositionRename() {
         Lists list = new Lists("todo", 0);
         list.id = 0;
 
@@ -319,13 +319,13 @@ class CardControllerTest {
     }
 
     @Test
-    void MovedCardDoesNotExist() {
+    void movedCardDoesNotExist() {
         Cards card = getCard("My Card", 0, null);
         assertEquals(ResponseEntity.badRequest().build(), sut.moveCard(card));
     }
 
     @Test
-    void MoveCardAddFailed() {
+    void moveCardAddFailed() {
         Lists list = new Lists("My List", 0);
         Cards oldCard = getCard("My Card", 0, list);
         sut.addCard(oldCard);

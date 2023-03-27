@@ -17,6 +17,7 @@ public class CardController {
     /**
      * Constructor for CardController
      * @param repo - Repository for cards entities
+     * @param msgs - used for websockets
      */
     public CardController(CardsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
@@ -68,7 +69,8 @@ public class CardController {
     @PostMapping(path = {"/rename","/rename/"})
     public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
 
-        if(card == null || card.list==null || isNullOrEmpty(card.title) || card.positionInsideList<0){
+        if(card == null || card.list==null
+                || isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();
         }
 
@@ -101,7 +103,8 @@ public class CardController {
         }
 
         if(repo.existsById(card.id)) {
-            // only remove and decrement card positions if the entry with the provided id actually exists
+            // only remove and decrement card positions
+            // if the entry with the provided id actually exists
             repo.delete(card);
             repo.decrementCardPosition(card.positionInsideList, card.list.id);
             msgs.convertAndSend("/topic/cards/remove", card);

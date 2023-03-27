@@ -26,9 +26,10 @@ import java.util.List;
 public interface ListsRepository extends JpaRepository<Lists, Long> {
 
     /**
-     * Custom update query that decreases the position of lists inside the board after a list gets removed
-     * E.g. If the list at position 3 is deleted, all lists that had a position > 3 will get their positions decreased by 1
-     *
+     * Custom update query that decreases the position of lists
+     * inside the board after a list gets removed
+     * E.g. If the list at position 3 is deleted, all lists
+     * that had a position > 3 will get their positions decreased by 1
      * @param deletedListPosition The index of the deleted list
      */
     @Modifying
@@ -39,9 +40,9 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
     void decrementListPositions(int deletedListPosition);
 
     /**
-     * Custom update query that increases the position of lists inside the board after a list gets inserted
-     * E.g. If the list is inserted at position 3, all lists that had a position >= 3 will get their positions increased by 1
-     *
+     * Custom update query that increases the position of lists inside
+     * the board after a list gets inserted E.g. If the list is inserted
+     * at position 3, all lists that had a position >= 3 will get their positions increased by 1
      * @param positionInBoard The index of the deleted list
      */
     @Modifying
@@ -63,8 +64,8 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
 
     /**
      * Retrieves all Lists from the repository, ordered by their position inside board
-     * Note that this method does not need implementation and is handled by JPA since it adhered to the naming conventions
-     *
+     * Note that this method does not need implementation and is handled by JPA
+     * since it adhered to the naming conventions
      * @return A List containing all sorted Lists entries
      */
     List<Lists> findAllByOrderByPositionInsideBoardAsc();
