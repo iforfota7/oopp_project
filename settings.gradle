@@ -1,5 +1,0 @@
-rootProject.name = 'quizzzz'
-
-include 'client'
-include 'server'
-include 'commons'

@@ -1,7 +1,0 @@
-
-
-dependencies {
-	implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '2.2.3'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
-
-}
