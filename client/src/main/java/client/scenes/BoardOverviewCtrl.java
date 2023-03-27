@@ -89,6 +89,7 @@ public class BoardOverviewCtrl implements Initializable {
     }
 
     public void addNewBoard(Boards b){
+        numberOfBoards++;
         positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
@@ -111,7 +112,6 @@ public class BoardOverviewCtrl implements Initializable {
         newBoard.setText(title);
         newBoard.setFont(new Font(15));
         newBoard.setOnMouseClicked(this::goToBoard);
-        numberOfBoards++;
         return newBoard;
     }
 
@@ -122,8 +122,7 @@ public class BoardOverviewCtrl implements Initializable {
     public void refresh(){
         gridPane.getChildren().clear();
         boardsList = server.getBoards();
-        numberOfBoards = boardsList.size();
-        System.out.println(numberOfBoards);
+        numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
         }
