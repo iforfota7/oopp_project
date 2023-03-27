@@ -1,7 +1,6 @@
 package commons;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -26,7 +25,7 @@ public class Lists {
     public List<Cards> cards;
 
     @ManyToOne
-    @JsonIgnore
+
     public Boards board;
 
     /**
@@ -59,8 +58,8 @@ public class Lists {
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
         return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
-                Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards);
-//                Objects.equals(board.name, lists.board.name);
+                Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards) &&
+                Objects.equals(board.name, lists.board.name);
     }
 
     /**
