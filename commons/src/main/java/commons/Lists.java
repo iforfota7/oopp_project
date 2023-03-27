@@ -59,8 +59,8 @@ public class Lists {
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
         return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
-                Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards) &&
-                Objects.equals(board.name, lists.board.name);
+                Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards);
+//                Objects.equals(board.name, lists.board.name);
     }
 
     /**

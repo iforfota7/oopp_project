@@ -91,9 +91,10 @@ public class MainCtrl {
     }
 
     public void showBoard(String boardName) {
-        primaryStage.setTitle("Start");
         boardCtrl.setBoardName(boardName);
+        primaryStage.setTitle("Start");
         primaryStage.setScene(board);
+        boardCtrl.initialize();
     }
 
     /**

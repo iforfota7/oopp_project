@@ -26,7 +26,7 @@ import javafx.event.ActionEvent;
 
 import javax.inject.Inject;
 
-public class BoardCtrl implements Initializable {
+public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
 
@@ -44,7 +44,6 @@ public class BoardCtrl implements Initializable {
 
     private VBox currentList;
     private Hyperlink currentCard;
-    private long mousePressedTime;
 
     private List<Lists> lists;
 
@@ -53,12 +52,8 @@ public class BoardCtrl implements Initializable {
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
-     * @param url            The location used to resolve relative paths for the root object, or
-     *                       {@code null} if the location is not known.
-     * @param resourceBundle The resources used to localize the root object, or {@code null} if
-     *                       the root object was not localized.
      */
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize() {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         refresh();
@@ -69,7 +64,6 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Added a new list");
                     addNewList(l);
                     refreshData();
                 }
@@ -140,7 +134,6 @@ public class BoardCtrl implements Initializable {
     public void refresh(){
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(boardName.getText());
-        System.out.println(lists);
         //lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
@@ -442,7 +435,7 @@ public class BoardCtrl implements Initializable {
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
         Boards board = new Boards(boardName.getText(), lists);
-        Lists list = new Lists(text, position, null);
+        Lists list = new Lists(text, position, board);
         board.lists.add(list);
         try {
             server.addList(list, board);
