@@ -1,10 +1,10 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 
@@ -23,16 +23,24 @@ public class AdListCtrl {
     }
     @FXML
     private TextField newListName;
-
     @FXML
-    private TextField newListOrder;
+    private Text warning;
 
     /**
-     * the initialization and customization of the
+     * The initialization and customization of the
      * List display name is only achieved through creating a new window.
+     * A warning is displayed if the input field is empty.
      */
     @FXML
-    void saveNewList(ActionEvent event){
+    void saveNewList() {
+        warning.setVisible(false);
+
+        if(newListName.getText().isBlank()) {
+
+            warning.setVisible(true);
+            return;
+        }
+
         int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
 
         boardCtrl.addListToBoard(newListName.getText(), positionInsideBoard);
