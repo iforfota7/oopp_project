@@ -107,14 +107,6 @@ public class BoardOverviewCtrl implements Initializable {
         gridPane.add(newBoard, positionInColumn, row);
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
                 new Insets(10, 10 , 10 ,10));
-
-        /*if(positionInColumn == 0){
-            //gridPane.addRow(row, newBoard, null, null);
-            gridPane.add(newBoard, positionInColumn, row);
-        }
-        else{
-            gridPane.add(newBoard, positionInColumn, row);
-        }*/
     }
 
     public Label createNewBoard(String title) {
