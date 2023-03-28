@@ -2,13 +2,13 @@ package client.scenes;
 
 import client.scenes.config.Draggable;
 import client.utils.ServerUtils;
+import commons.Boards;
 import commons.Lists;
 import commons.Cards;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -17,17 +17,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 
 import javafx.event.ActionEvent;
 
 import javax.inject.Inject;
 
-public class BoardCtrl implements Initializable {
+public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     @FXML
@@ -44,7 +42,6 @@ public class BoardCtrl implements Initializable {
 
     private VBox currentList;
     private Hyperlink currentCard;
-    private long mousePressedTime;
 
     private List<Lists> lists;
 
@@ -54,12 +51,8 @@ public class BoardCtrl implements Initializable {
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
-     * @param url            The location used to resolve relative paths for the root object, or
-     *                       {@code null} if the location is not known.
-     * @param resourceBundle The resources used to localize the root object, or {@code null} if
-     *                       the root object was not localized.
      */
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize() {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         refresh();
@@ -70,9 +63,10 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Added a new list");
-                    addNewList(l);
-                    refreshData();
+                    if(l.board.name.equals(boardName.getText())) {
+                        addNewList(l);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -81,9 +75,11 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
-                    title.setText(l.title);
-                    refreshData();
+                    if(l.board.name.equals(boardName.getText())) {
+                        Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
+                        title.setText(l.title);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -92,9 +88,11 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    VBox list = (VBox)rootContainer.lookup("#list"+l.id);
-                    firstRow.getChildren().removeAll(list);
-                    refreshData();
+                    if(l.board.name.equals(boardName.getText())) {
+                        VBox list = (VBox)rootContainer.lookup("#list"+l.id);
+                        firstRow.getChildren().removeAll(list);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -105,11 +103,12 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-
-                    VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                    AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
-                    ((VBox) l.getChildren().get(0)).getChildren().remove(card);
-                    refreshData();
+                    if(c.list.board.name.equals(boardName.getText())) {
+                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
+                        AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
+                        ((VBox) l.getChildren().get(0)).getChildren().remove(card);
+                        refreshData();
+                    }
 
                 }
             });
@@ -119,9 +118,11 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
-                            getChildren().get(0)).setText(c.title);
-                    refreshData();
+                    if(c.list.board.name.equals(boardName.getText())) {
+                        ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
+                                getChildren().get(0)).setText(c.title);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -130,9 +131,11 @@ public class BoardCtrl implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                    addNewCard((VBox) l.getChildren().get(0), c);
-                    refreshData();
+                    if(c.list.board.name.equals(boardName.getText())) {
+                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
+                        addNewCard((VBox) l.getChildren().get(0), c);
+                        refreshData();
+                    }
                 }
             });
         });
@@ -140,7 +143,8 @@ public class BoardCtrl implements Initializable {
 
     public void refresh(){
         firstRow.getChildren().clear();
-        lists = server.getLists();
+        lists = server.getListsByBoard(boardName.getText());
+        //lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
 
@@ -148,7 +152,8 @@ public class BoardCtrl implements Initializable {
     }
 
     public void refreshData(){
-        lists = server.getLists();
+        lists = server.getListsByBoard(boardName.getText());
+        //lists = server.getLists();
         refreshLists(lists);
     }
 
@@ -438,7 +443,18 @@ public class BoardCtrl implements Initializable {
         //Cards
     }
 
-
+    public void addListToBoard(String text, int position){
+        // the following two lines causes a stack overflow
+        Boards board = new Boards(boardName.getText(), lists);
+        Lists list = new Lists(text, position, board);
+        board.lists.add(list);
+        try {
+            server.addList(list, board);
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+    }
 
     public void addNewCard(VBox anchor, Cards c){
 

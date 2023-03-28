@@ -24,6 +24,7 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage;
+
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
     private Scene selectServer;
@@ -41,6 +42,7 @@ public class MainCtrl {
     private AddBoardCtrl addBoardCtrl;
 
     private int numberOfLists = 2;
+
 
     public void initializeBoard(Stage primaryStage,
                                 Pair<SelectServerCtrl, Parent> selectServer,
@@ -98,9 +100,10 @@ public class MainCtrl {
     }
 
     public void showBoard(String boardName) {
-        primaryStage.setTitle("Start");
         boardCtrl.setBoardName(boardName);
+        primaryStage.setTitle("Start");
         primaryStage.setScene(board);
+        boardCtrl.initialize();
     }
 
     /**
@@ -206,11 +209,19 @@ public class MainCtrl {
     }
     public void closeNewCard(){secondaryStage.close();}
 
+    /**
+     * Method that sets the scene to the Board Overview scene
+     *
+     */
     public void showBoardOverview() {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(boardOverview);
     }
 
+    /**
+     * Method that sets the scene to the Select Server scene
+     *
+     */
     public void showSelectServer() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);
