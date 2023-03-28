@@ -597,7 +597,7 @@ public class BoardCtrl {
     @FXML
     void removeBoard() {
         server.removeBoard(new Boards(boardName.getText(), null));
-//        mainCtrl.removeCurrentBoard();
+        exitBoard();
     }
 
 

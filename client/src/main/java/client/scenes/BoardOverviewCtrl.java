@@ -34,7 +34,7 @@ public class BoardOverviewCtrl{
 
     private Label currentBoard;
 
-    private final ServerUtils server;
+
     private BooleanProperty adminLock = new SimpleBooleanProperty(false);
 
     public boolean getAdminLock() {
@@ -89,7 +89,6 @@ public class BoardOverviewCtrl{
         mainCtrl.showSelectServer();
     }
     public  void removeCurrentBoard() {
-        boards.remove(currentBoard);
         Pane parent = (Pane) currentBoard.getParent();
         parent.getChildren().remove(currentBoard);
         mainCtrl.refreshBoards();
