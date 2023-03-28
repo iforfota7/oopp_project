@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ class CardControllerTest {
     @Test
     void getAllCards() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
 
         Cards c1 = getCard("a",0, list);
         Cards c2 = getCard("b",1, list);
@@ -67,8 +68,8 @@ class CardControllerTest {
     @Test
     void getCardsByListId() {
 
-        Lists list = new Lists("todo", 0);
-        Lists list2 = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
+        Lists list2 = new Lists("todo", 0, new Boards("test", null));
 
         Cards c1 = getCard("a",0, list);
         Cards c2 = getCard("b",1, list2);
@@ -91,8 +92,8 @@ class CardControllerTest {
     @Test
     void getCardsByListIdInAscOrder() {
 
-        Lists list = new Lists("todo", 0);
-        Lists list2 = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
+        Lists list2 = new Lists("todo", 0, new Boards("test", null));
 
         Cards c1 = getCard("a", 0, list);
         Cards c2 = getCard("b", 1, list2);
@@ -124,7 +125,7 @@ class CardControllerTest {
     @Test
     void addCardNullTitleTest() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         Cards c1 = getCard(null, 0, list);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c1));
@@ -133,7 +134,7 @@ class CardControllerTest {
     @Test
     void addCardEmptyTitleTest() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         Cards c1 = getCard( "", 0, list);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c1));
@@ -142,7 +143,7 @@ class CardControllerTest {
     @Test
     void addCardNegativePositionTest() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         Cards c1 = getCard( "", Integer.MIN_VALUE, list);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addCard(c1));
@@ -151,7 +152,7 @@ class CardControllerTest {
     @Test
     void addCardAlreadyExistsTest() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         Cards c1 = getCard("asdasd", 0, list);
         sut.addCard(c1);
 
@@ -161,7 +162,7 @@ class CardControllerTest {
     @Test
     void addCardInvalidPositivePositionTest() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         Cards c1 = getCard("asdasd", 0, list);
         Cards c2 = getCard("asdasd", 5, list);
         sut.addCard(c1);
@@ -172,7 +173,7 @@ class CardControllerTest {
     @Test
     void addCardIncrementPositionTest() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
 
         Cards c1 = getCard("a", 0, list);
         Cards c2 = getCard("b", 1, list);
@@ -199,7 +200,7 @@ class CardControllerTest {
     @Test
     void removeCard() {
 
-        Lists list = new Lists("wae", 0);
+        Lists list = new Lists("wae", 0, new Boards("test", null));
         Cards c1 = getCard("asdasd", 0, list);
         sut.addCard(c1);
         sut.removeCard(c1);
@@ -220,7 +221,7 @@ class CardControllerTest {
     @Test
     void removeCardInvalidIdTest() {
 
-        Lists list = new Lists("wae", 0);
+        Lists list = new Lists("wae", 0, new Boards("test", null));
         Cards c1 = getCard("asdasd", 0, list);
 
         //c1 wasn't added, therefore it's ID is invalid inside the repository
@@ -230,7 +231,7 @@ class CardControllerTest {
     @Test
     void removeCardDecrementsPositionOfOtherCardsTest() {
 
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         list.id = 0;
 
         Cards c1 = getCard("a", 0, list);
@@ -258,7 +259,7 @@ class CardControllerTest {
 
     @Test
     void renameCardSuccessfully() {
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         list.id = 0;
 
         Cards c = getCard("a", 0, list);
@@ -282,7 +283,7 @@ class CardControllerTest {
 
     @Test
     void cardDoesNotExistRename() {
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         list.id = 0;
 
         Cards c = getCard("a", 0, list);
@@ -292,13 +293,13 @@ class CardControllerTest {
 
     @Test
     void cardWrongListIDRename() {
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         list.id = 0;
 
         Cards c = getCard("a", 0, list);
         sut.addCard(c);
 
-        Lists list2 = new Lists("todo", 0);
+        Lists list2 = new Lists("todo", 0, new Boards("test", null));
         Cards c2 = getCard("b", 0, list2);
         c2.id = c.id;
         list2.id = 5;
@@ -307,7 +308,7 @@ class CardControllerTest {
 
     @Test
     void cardWrongPositionRename() {
-        Lists list = new Lists("todo", 0);
+        Lists list = new Lists("todo", 0, new Boards("test", null));
         list.id = 0;
 
         Cards c = getCard("a", 0, list);
@@ -326,7 +327,7 @@ class CardControllerTest {
 
     @Test
     void moveCardAddFailed() {
-        Lists list = new Lists("My List", 0);
+        Lists list = new Lists("My List", 0, new Boards("test", null));
         Cards oldCard = getCard("My Card", 0, list);
         sut.addCard(oldCard);
 
@@ -340,8 +341,8 @@ class CardControllerTest {
 
     @Test
     void moveCardDifferentList() {
-        Lists list1 = new Lists("My List", 0);
-        Lists list2 = new Lists("My Second List", 1);
+        Lists list1 = new Lists("My List", 0, new Boards("test", null));
+        Lists list2 = new Lists("My Second List", 1, new Boards("test", null));
         list2.id = 1;
         Cards oldCard = getCard("My Card", 0, list1);
         Cards secondCard = getCard("My Second Card", 0, list2);
@@ -365,7 +366,7 @@ class CardControllerTest {
 
     @Test
     void moveCardSameListAbove() {
-        Lists list = new Lists("My List", 0);
+        Lists list = new Lists("My List", 0, new Boards("test", null));
         Cards oldCard = getCard("My Card", 0, list);
         Cards secondCard = getCard("My Second Card", 1, list);
         sut.addCard(oldCard);
@@ -388,7 +389,7 @@ class CardControllerTest {
 
     @Test
     void moveCardSameListBelow() {
-        Lists list = new Lists("My List", 0);
+        Lists list = new Lists("My List", 0, new Boards("test", null));
         Cards secondCard = getCard("My Second Card", 0, list);
         Cards oldCard = getCard("My Card", 1, list);
         sut.addCard(secondCard);
