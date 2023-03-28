@@ -62,10 +62,12 @@ public class Main extends Application {
                 "AddNewBoard.fxml");
         var joinBoard = FXML.load(JoinBoardByIDCtrl.class,
                 "client","scenes","JoinBoardByID.fxml");
+        var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
+                "UserDetails.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
         mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername,
-                boardOverview, addBoard, joinBoard);
+                boardOverview, addBoard, joinBoard, userDetails);
         mainCtrl.initializeLists(renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard);
         mainCtrl.initializeAdmin(confirmAdmin);

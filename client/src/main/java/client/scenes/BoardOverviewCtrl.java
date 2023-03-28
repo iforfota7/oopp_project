@@ -22,11 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardOverviewCtrl{
-
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private List<Boards> boardsList;
-    private int numberOfBoards = 3;
+    private int numberOfBoards = 0;
     private int positionInColumn;
 
     @FXML
@@ -141,9 +140,7 @@ public class BoardOverviewCtrl{
     /**
      * Refreshes the Board Overview, by fetching the Boards
      * from the database
-     *
      */
-
     public void refresh(){
         gridPane.getChildren().clear();
         boardsList = server.getBoards();
@@ -154,6 +151,14 @@ public class BoardOverviewCtrl{
     }
     @FXML
     private Button lockBtu;
+
+    /**
+     * Opens a new window with userDetails scene
+     */
+    @FXML
+    public void showUserDetails(){
+        mainCtrl.showUserDetails();
+    }
 
     private String adminPassword = "6464";
     @FXML

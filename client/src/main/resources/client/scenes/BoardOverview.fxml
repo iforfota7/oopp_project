@@ -61,7 +61,7 @@
        </Button>
       <Button layoutX="372.0" layoutY="358.0" mnemonicParsing="false" onAction="#addBoard" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Create Board" AnchorPane.bottomAnchor="14.800000000000011" AnchorPane.rightAnchor="140.8" />
       <Button layoutX="468.0" layoutY="358.0" mnemonicParsing="false" onAction="#joinBoardByID" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Join a Board" AnchorPane.bottomAnchor="14.800000000000011" AnchorPane.rightAnchor="48.8" />
-      <Button layoutX="562.0" layoutY="25.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="23.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 3; -fx-background-radius: 3;" text="i" AnchorPane.rightAnchor="14.799999999999955" AnchorPane.topAnchor="25.0">
+      <Button layoutX="562.0" layoutY="25.0" mnemonicParsing="false" onAction="#showUserDetails" prefHeight="22.0" prefWidth="23.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 3; -fx-background-radius: 3;" text="i" AnchorPane.rightAnchor="14.799999999999955" AnchorPane.topAnchor="25.0">
          <font>
             <Font name="Bodoni MT Bold" size="11.0" />
          </font>
