@@ -48,30 +48,23 @@ public class SelectServerCtrl {
         String address = inputServer.getText();
         String username = inputUsername.getText();
         boolean exists = false;
-
         //if address is empty do nothing
         if(address == null || address.equals("")){
             return;
         }
-
         // transforms to complete url
         // if begins with colon assumed to be localhost address with specified port
         if(address.startsWith("http://")) ServerUtils.setServer(address);
         else if(address.startsWith(":")) ServerUtils.setServer("http://localhost" + address);
         else ServerUtils.setServer("http://" + address);
-
         // if you can connect to the specified server address
         if(ServerUtils.checkServer()){
             serverWarning.setVisible(false);
-
             // set the username in the frontend
             ServerUtils.setUsername(username);
-
             // create user from information
             User user = new User(username, new ArrayList<>(), false);
-
             exists = server.existsUser(user);
-
             if(!exists){
                 try{
                     server.addUser(user); // try to add user if not already in database
@@ -83,7 +76,6 @@ public class SelectServerCtrl {
            this.currentUser = user;
         }
         else serverWarning.setVisible(true);
-
         // if server exists
         if(!serverWarning.isVisible()){
             // if user does not exist, continue
@@ -93,9 +85,7 @@ public class SelectServerCtrl {
                 mainCtrl.showConfirmUsername();
             }
         }
-
     }
-
     public void setAdmin() {
         currentUser.setAdmin(true);
         server.upUserToAdmin(currentUser);
