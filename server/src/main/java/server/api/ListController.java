@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Boards;
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -34,15 +35,30 @@ public class ListController {
     }
 
     /**
+     * Method for retrieving all lists in the repo, sorted by their position inside the board
+     * @param boardName the name of the board for which lists should be found
+     * @return all lists that are stored in repo
+     */
+    @GetMapping(path = "/all/{boardName}")
+    public List<Lists> getAllInBoard(@PathVariable String boardName){
+        return repo.findAllByOrderByPositionInsideBoardAsc(boardName);
+    }
+
+    /**
      * Method for adding a list to the repo
      * @param list the list to be added to the repo
+     * @param boardName the name of the board to which the list is added
      * @return a 200 OK response for a successful http request
      */
     @Transactional
-    @PostMapping(path={"", "/"})
-    public ResponseEntity<Lists> addList(@RequestBody Lists list) {
+    @PostMapping(path="/{boardName}")
+    public ResponseEntity<Lists> addList(@RequestBody Lists list, @PathVariable String boardName) {
+
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
+
+        Boards board = new Boards(boardName, null);
+        list.board = board;
 
         // if the instance exists in the repository, the client gets returned a bad request
         if(repo.existsById(list.id))
@@ -68,7 +84,7 @@ public class ListController {
     }
 
     /**
-     * Method for updating the title of a list.
+     * Method for updating the title of a list.local
      * A list can only be renamed if it or any of its fields (excluding cards) are not null,
      * if it already exists in the repo
      * and lastly if it's position is the same as the version of the list in the repo
@@ -92,6 +108,7 @@ public class ListController {
 
         Lists saved = repo.save(repo.findById(list.id).get());
         msgs.convertAndSend("/topic/lists/rename", saved);
+
         return ResponseEntity.ok(saved);
     }
 
@@ -120,7 +137,7 @@ public class ListController {
             // the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
-
+            msgs.convertAndSend("/topic/lists/remove",list);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

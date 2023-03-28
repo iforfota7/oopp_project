@@ -18,11 +18,11 @@
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, COMPACT_CTOR_DEF"/>
             <property name="max" value="50"/>
         </module>
-        <!-- maximum parameter number of 6 -->
+        <!-- maximum parameter number of 8 -->
         <module name="ParameterNumber">
             <property name="severity" value="warning"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
-            <property name="max" value="6"/>
+            <property name="max" value="8"/>
         </module>
         <!-- maximum cyclomatic complexity of 9 -->
         <module name="CyclomaticComplexity">

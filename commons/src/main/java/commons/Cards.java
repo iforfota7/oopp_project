@@ -1,11 +1,14 @@
 package commons;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Cards {
 
     @Id
@@ -14,9 +17,11 @@ public class Cards {
     public String title;
     public int positionInsideList;
 
-    @JsonBackReference
+
     @ManyToOne
     public Lists list;
+
+
 
     /**
      * Constructor method for the cards class
@@ -47,7 +52,7 @@ public class Cards {
         if (o == null || getClass() != o.getClass()) return false;
         Cards cards = (Cards) o;
         return id == cards.id && positionInsideList == cards.positionInsideList
-                && Objects.equals(title, cards.title) && Objects.equals(list, cards.list);
+                && Objects.equals(title, cards.title) && list.id==cards.list.id;
     }
 
     /**
@@ -61,7 +66,6 @@ public class Cards {
 
     /**
      * To string method to return cards object in human-readable format
-     *
      * @return a string with the cards information
      */
     @Override

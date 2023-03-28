@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-public class CardDetailsCtrl {
+public class NewCardCtrl {
     @FXML
     private TextField cardTitleInput;
     @FXML
@@ -14,14 +14,15 @@ public class CardDetailsCtrl {
     private final BoardCtrl boardCtrl;
 
     @Inject
-    public CardDetailsCtrl(BoardCtrl boardCtrl){
+    public NewCardCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
     }
 
     /**
-     * The redefinition of the card name on the board is achieved
-     * through setting the display properties. This method sends the
-     * information entered in cardDetails to the board to display the card name.
+     * The redefinition of the card name on the board
+     * is achieved through setting the display properties.
+     * This method sends the information entered in cardDetail
+     * to the board to display the card name.
      * A warning is displayed if the input field is empty.
      */
     @FXML
@@ -29,10 +30,12 @@ public class CardDetailsCtrl {
         warning.setVisible(false);
 
         if(cardTitleInput.getText().isBlank()) {
+
             warning.setVisible(true);
             return;
         }
 
-        boardCtrl.refreshCard(cardTitleInput.getText());
+        boardCtrl.addCardToList(cardTitleInput.getText());
+        cardTitleInput.clear();
     }
 }
