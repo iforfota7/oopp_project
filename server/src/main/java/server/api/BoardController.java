@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import server.database.BoardsRepository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/boards")
@@ -32,5 +33,22 @@ public class BoardController {
 
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+    @Transactional
+    @DeleteMapping("/removeBoard")
+    public ResponseEntity<Void> removeBoard(@PathVariable String boardName) {
+        if (boardName == null || boardName.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<Boards> optionalBoard = repo.findById(boardName);
+
+        if (!optionalBoard.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repo.deleteById(boardName);
+
+        return ResponseEntity.noContent().build();
     }
 }
