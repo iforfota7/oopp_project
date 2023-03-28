@@ -71,6 +71,19 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
     List<Lists> findAllByOrderByPositionInsideBoardAsc();
 
     /**
+     * Retrieves all lists in specific board
+     * from the repository, ordered by their position inside board
+     * @param boardName the name of the board for which lists should be retrieved
+     * @return A List containing relevant Lists entries
+     */
+    @Modifying
+    @Query(value = "SELECT * " +
+                    "FROM LISTS " +
+                    "WHERE LISTS.BOARD_NAME = ?1",
+                    nativeQuery = true)
+    List<Lists> findAllByOrderByPositionInsideBoardAsc(String boardName);
+
+    /**
      * Remove all cards that are inside a List
      *
      * @param listID ID of the list from where to remove the cards

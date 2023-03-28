@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import commons.User;
@@ -64,9 +65,9 @@ public class ServerUtils {
         return true;
     }
 
-    public Lists addList(Lists list){
+    public Lists addList(Lists list, Boards board){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/lists").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                path("api/lists/" + board.name).request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
@@ -110,6 +111,14 @@ public class ServerUtils {
     public List<Lists> getLists() {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/lists") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Lists>>() {});
+    }
+
+    public List<Lists> getListsByBoard(String boardName) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/lists/all/" + boardName) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
