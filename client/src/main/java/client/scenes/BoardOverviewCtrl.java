@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.Main;
+import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,7 +35,7 @@ public class BoardOverviewCtrl implements Initializable {
 
     private Label currentBoard;
 
-
+    private final ServerUtils server;
 
     /**
      * Creates a list of boards holding all labels
@@ -65,10 +66,12 @@ public class BoardOverviewCtrl implements Initializable {
      * Constructor for the BoardOverviewCtrl
      *
      * @param mainCtrl Used for navigating through the scenes
+     * @param server
      */
     @Inject
-    public BoardOverviewCtrl(MainCtrl mainCtrl) {
+    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server) {
         this.mainCtrl = mainCtrl;
+        this.server = server;
     }
 
     /**
@@ -95,6 +98,8 @@ public class BoardOverviewCtrl implements Initializable {
         mainCtrl.showSelectServer();
     }
     public  void removeCurrentBoard() {
+        Boards board= server.findBoardByID(currentBoard.getId());
+        server.removeBoard(board);
         boards.remove(currentBoard);
         Pane parent = (Pane) currentBoard.getParent();
         parent.getChildren().remove(currentBoard);

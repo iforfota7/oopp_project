@@ -48,7 +48,7 @@ public class BoardController {
         return s == null || s.isEmpty();
     }
     @Transactional
-    @DeleteMapping("/removeBoard")
+    @DeleteMapping("/removeBoard/{boardID}")
     public ResponseEntity<Void> removeBoard(@PathVariable String boardName) {
         if (boardName == null || boardName.isEmpty()) {
             return ResponseEntity.badRequest().build();

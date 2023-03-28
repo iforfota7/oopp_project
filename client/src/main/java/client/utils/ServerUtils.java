@@ -212,6 +212,12 @@ public class ServerUtils {
                 path("api/user/upAdmin").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
+    public Boards findBoardByID(String boardID) {
+        return  ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/find/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).get(Boards.class);
+
+    }
     public Boards removeBoard(Boards board){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/boards/removeBoard").request(APPLICATION_JSON).accept(APPLICATION_JSON).
