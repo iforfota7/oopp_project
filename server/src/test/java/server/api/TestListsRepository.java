@@ -110,6 +110,11 @@ public class TestListsRepository implements ListsRepository {
         return res;
     }
 
+    @Override
+    public List<Lists> findAllByOrderByPositionInsideBoardAsc(String boardName){
+        return null; // needs to be implemented properly
+    }
+
     /**
      * Remove all cards that are inside a List
      *
