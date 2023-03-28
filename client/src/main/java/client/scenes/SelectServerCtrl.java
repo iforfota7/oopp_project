@@ -79,7 +79,7 @@ public class SelectServerCtrl {
                     System.out.println(e); // probably need a better way of communicating the error
                 }
             }
-           this.currentUser = user;
+            this.currentUser = user;
         }
         else serverWarning.setVisible(true);
         // if server exists

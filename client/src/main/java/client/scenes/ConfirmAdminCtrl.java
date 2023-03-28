@@ -2,6 +2,7 @@ package client.scenes;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 
@@ -18,6 +19,7 @@ public class ConfirmAdminCtrl {
 
     private MainCtrl mainCtrl;
 
+
     @Inject
     public ConfirmAdminCtrl(BoardCtrl boardCtrl, BoardOverviewCtrl boardOverviewCtrl,
                             SelectServerCtrl selectServerCtrl, MainCtrl mainCtrl){
@@ -27,6 +29,8 @@ public class ConfirmAdminCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    @FXML
+    private Button adminLogin;
     @FXML
     private PasswordField inputPassword;
     @FXML
@@ -58,7 +62,5 @@ public class ConfirmAdminCtrl {
             errorLabel.setVisible(true);
         }
     }
-
-
 
 }

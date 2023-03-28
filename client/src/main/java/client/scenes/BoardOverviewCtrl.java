@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import javax.inject.Inject;
@@ -56,7 +57,7 @@ public class BoardOverviewCtrl{
     private BooleanProperty adminLock = new SimpleBooleanProperty(false);
 
     public boolean getAdminLock() {
-        adminLock.set(selectServerCtrl.getCurrentUser().isAdmin());
+        adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
         return adminLock.get();
     }
 
@@ -117,7 +118,7 @@ public class BoardOverviewCtrl{
         positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
-        Label newBoard = createNewBoard(b.getName());
+        StackPane newBoard = createNewBoard(b.getName());
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
 
         gridPane.add(newBoard, positionInColumn, row);
@@ -132,7 +133,7 @@ public class BoardOverviewCtrl{
      * @return The Label controller that will be displayed
      */
 
-    public Label createNewBoard(String title) {
+    public StackPane createNewBoard(String title) {
         Label newBoard = new Label(title);
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
@@ -143,14 +144,19 @@ public class BoardOverviewCtrl{
         newBoard.setText(title);
         newBoard.setFont(new Font(15));
         newBoard.setOnMouseClicked(this::goToBoard);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(newBoard);
+
         Button removeBoardButton = new Button("X");
-        removeBoardButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff;");
+        removeBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
-        removeBoardButton.setLayoutX(newBoard.getWidth() - 15);
-        removeBoardButton.setLayoutY(-5);
         removeBoardButton.setUserData(title);
-        removeBoardButton.setVisible(true);
-        return newBoard;
+        removeBoardButton.setVisible(adminLock.get());
+        stackPane.getChildren().add(removeBoardButton);
+        StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
+        return stackPane;
     }
     /**
      *The functionality of the delete current board button will be displayed
@@ -161,6 +167,7 @@ public class BoardOverviewCtrl{
         Button removeButton = (Button) mouseEvent.getSource();
         String boardTitle = (String) removeButton.getUserData();
         server.removeBoard(new Boards(boardTitle, null));
+        refresh();
     }
 
     /**

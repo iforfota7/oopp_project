@@ -225,4 +225,14 @@ public class ServerUtils {
                 path("api/boards/remove/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
+
+    public boolean checkAdmin(User user) {
+        if(!ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + user.username).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>() {
+                }).isAdmin()) return false;
+        return true;
+    }
+
 }
