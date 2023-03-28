@@ -28,6 +28,8 @@ public class SelectServerCtrl {
     @FXML
     private Button connect;
 
+    private User currentUser;
+
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
@@ -78,6 +80,7 @@ public class SelectServerCtrl {
                     System.out.println(e); // probably need a better way of communicating the error
                 }
             }
+           this.currentUser = user;
         }
         else serverWarning.setVisible(true);
 
@@ -91,5 +94,10 @@ public class SelectServerCtrl {
             }
         }
 
+    }
+
+    public void setAdmin() {
+        currentUser.setAdmin(true);
+        server.upUserToAdmin(currentUser);
     }
 }

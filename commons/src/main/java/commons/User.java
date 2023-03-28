@@ -67,4 +67,15 @@ public class User {
                 ", isAdmin=" + isAdmin +
                 '}';
     }
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public String getUsername(){
+        return username;
+    }
 }

@@ -551,7 +551,17 @@ public class BoardCtrl implements Initializable {
     @FXML
     private Button removeBoard;
     @FXML
-    void adminLogin() {mainCtrl.showConfirmAdmin();}
+    void adminLogin() {
+        if (adminLock.getValue()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Admin!");
+            alert.setHeaderText(null);
+            alert.setContentText("Admin has been unlocked!");
+            alert.showAndWait();
+        } else {
+            mainCtrl.showConfirmAdmin();
+        }
+    }
     public String getAdminPassword(){return adminPassword;}
     public void openAdminFeatures() {
         adminLock.set(true);
