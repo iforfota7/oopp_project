@@ -25,12 +25,11 @@ public class AddBoardCtrl {
 
     @FXML
     void saveNewBoard(ActionEvent event){
-        System.out.println(boardName.getText());
         server.addBoard(new Boards(boardName.getText(), null));
         boardName.setText("");
 
         mainCtrl.closeAddBoard();
-        boardOverviewCtrl.addNewBoard(new Boards(boardName.getText(), null));
+        boardOverviewCtrl.refresh();
     }
 
 }

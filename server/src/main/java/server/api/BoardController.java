@@ -7,6 +7,7 @@ import server.database.BoardsRepository;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/boards")
@@ -15,6 +16,11 @@ public class BoardController {
 
     public BoardController(BoardsRepository repo) {
         this.repo = repo;
+    }
+
+    @GetMapping(path = "/all")
+    public List<Boards> getAll() {
+        return repo.findAll();
     }
 
     @Transactional
