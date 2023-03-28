@@ -29,7 +29,6 @@ import client.scenes.SelectServerCtrl;
 
 
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
 import javafx.stage.Stage;
 
 public class Main extends Application {
