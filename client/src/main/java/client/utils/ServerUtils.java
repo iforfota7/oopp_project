@@ -128,7 +128,7 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
-    public Boards addBoard(Boards board){
+    public Boards addBoard(Boards board) {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
@@ -139,6 +139,14 @@ public class ServerUtils {
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
+    }
+
+    public List<Boards> getBoards() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/all")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Boards>>() {});
     }
 
     /**
