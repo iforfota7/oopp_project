@@ -16,7 +16,8 @@ public class ConfirmAdminCtrl {
     private SelectServerCtrl selectServerCtrl;
 
     @Inject
-    public ConfirmAdminCtrl(BoardCtrl boardCtrl, BoardOverviewCtrl boardOverviewCtrl, SelectServerCtrl selectServerCtrl){
+    public ConfirmAdminCtrl(BoardCtrl boardCtrl, BoardOverviewCtrl boardOverviewCtrl,
+                            SelectServerCtrl selectServerCtrl){
         this.boardCtrl = boardCtrl;
         this.boardOverviewCtrl = boardOverviewCtrl;
         this.selectServerCtrl = selectServerCtrl;

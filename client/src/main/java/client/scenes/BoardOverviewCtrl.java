@@ -57,7 +57,6 @@ public class BoardOverviewCtrl{
      *
      * @param mainCtrl Used for navigating through the scenes
      * @param server Used for sending request to the server
-     * @param server
      */
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server) {
