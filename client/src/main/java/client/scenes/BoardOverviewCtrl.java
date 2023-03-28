@@ -9,7 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 
@@ -27,14 +26,6 @@ public class BoardOverviewCtrl{
 
     @FXML
     GridPane gridPane;
-    @FXML
-    AnchorPane anchorPane;
-    @FXML
-    private Label board1;
-    @FXML
-    private Label board2;
-    @FXML
-    private Label board3;
 
     /**
      * Creates a list of boards holding all labels
@@ -87,6 +78,12 @@ public class BoardOverviewCtrl{
         mainCtrl.showAddBoard();
     }
 
+    /**
+     * Renders a new Board in the overview
+     *
+     * @param b The board object to be displayed
+     */
+
     public void addNewBoard(Boards b){
         numberOfBoards++;
         positionInColumn = (numberOfBoards - 1) % 3;
@@ -99,6 +96,13 @@ public class BoardOverviewCtrl{
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
                 new Insets(10, 10 , 10 ,10));
     }
+
+    /**
+     * Creates the board element in FXML
+     *
+     * @param title The title of the board
+     * @return The Label controller that will be displayed
+     */
 
     public Label createNewBoard(String title) {
         Label newBoard = new Label(title);
@@ -114,9 +118,11 @@ public class BoardOverviewCtrl{
         return newBoard;
     }
 
-    public int getNumberOfBoards(){
-        return  numberOfBoards;
-    }
+    /**
+     * Refreshes the Board Overview, by fetching the Boards
+     * from the database
+     *
+     */
 
     public void refresh(){
         gridPane.getChildren().clear();
