@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.Main;
 import commons.Boards;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -83,6 +82,11 @@ public class BoardOverviewCtrl implements Initializable {
     }
 
     /**
+     * Opens the joinBoardByID scene.
+     */
+    public void joinBoardByID() { mainCtrl.showJoinBoardByID(); }
+
+    /**
      * When the user clicks the button, they are sent back
      * to the Board Overview scene
      *
@@ -98,7 +102,7 @@ public class BoardOverviewCtrl implements Initializable {
     }
 
     @FXML
-    public void addBoard(ActionEvent event){
+    public void addBoard(){
         mainCtrl.showAddBoard();
     }
 

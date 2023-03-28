@@ -18,7 +18,8 @@ public class Boards {
     public String name;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    @OrderBy("positionInsideBoardASC")
+
+    @OrderBy("positionInsideBoard ASC")
     @JsonIgnore
     public List<Lists> lists;
 
