@@ -7,7 +7,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.geometry.Pos;
 import javafx.scene.AccessibleRole;
@@ -24,19 +23,40 @@ import java.util.List;
 public class BoardOverviewCtrl{
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
+    private SelectServerCtrl selectServerCtrl;
     private List<Boards> boardsList;
     private int numberOfBoards = 0;
     private int positionInColumn;
+    /**
+     * Constructor for the BoardOverviewCtrl
+     *
+     * @param mainCtrl         Used for navigating through the scenes
+     * @param server           Used for sending request to the server
+     * @param selectServerCtrl Used for sending request to the serverServerCtrl
+     */
 
+    @Inject
+    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server,
+                             SelectServerCtrl selectServerCtrl) {
+        this.mainCtrl = mainCtrl;
+        this.server = server;
+        this.selectServerCtrl = selectServerCtrl;
+    }
     @FXML
     GridPane gridPane;
 
     private Label currentBoard;
 
+    @FXML
+    private Label adminLabel;
+    @FXML
+    private Label userLabel;
+
 
     private BooleanProperty adminLock = new SimpleBooleanProperty(false);
 
     public boolean getAdminLock() {
+        adminLock.set(selectServerCtrl.getCurrentUser().isAdmin());
         return adminLock.get();
     }
 
@@ -47,21 +67,10 @@ public class BoardOverviewCtrl{
      */
     public void init() {
         boardsList = new ArrayList<>();
-
         refresh();
     }
 
-    /**
-     * Constructor for the BoardOverviewCtrl
-     *
-     * @param mainCtrl Used for navigating through the scenes
-     * @param server Used for sending request to the server
-     */
-    @Inject
-    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server) {
-        this.mainCtrl = mainCtrl;
-        this.server = server;
-    }
+
 
     /**
      * Go to a specific board when a board label has been clicked
@@ -134,7 +143,24 @@ public class BoardOverviewCtrl{
         newBoard.setText(title);
         newBoard.setFont(new Font(15));
         newBoard.setOnMouseClicked(this::goToBoard);
+        Button removeBoardButton = new Button("X");
+        removeBoardButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff;");
+        removeBoardButton.setOnMouseClicked(this::removeBoard);
+        removeBoardButton.setLayoutX(newBoard.getWidth() - 15);
+        removeBoardButton.setLayoutY(-5);
+        removeBoardButton.setUserData(title);
+        removeBoardButton.setVisible(true);
         return newBoard;
+    }
+    /**
+     *The functionality of the delete current board button will be displayed
+     * after obtaining admin privileges.
+     *  It returns to the board overview interface and deletes the current board.
+     */
+    private void removeBoard(MouseEvent mouseEvent) {
+        Button removeButton = (Button) mouseEvent.getSource();
+        String boardTitle = (String) removeButton.getUserData();
+        server.removeBoard(new Boards(boardTitle, null));
     }
 
     /**
@@ -149,38 +175,22 @@ public class BoardOverviewCtrl{
             addNewBoard(boards);
         }
     }
-    @FXML
-    private Button lockBtu;
-
     /**
      * Opens a new window with userDetails scene
      */
     @FXML
     public void showUserDetails(){
-        mainCtrl.showUserDetails();
-    }
-
-    private String adminPassword = "6464";
-    @FXML
-    void adminLogin() {
-        if (adminLock.getValue()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Admin!");
-            alert.setHeaderText(null);
-            alert.setContentText("Admin has been unlocked!");
-            alert.showAndWait();
-        } else {
-            mainCtrl.showConfirmAdmin();
-        }
+        mainCtrl.showUserDetails(selectServerCtrl.getCurrentUser());
     }
     public void openAdminFeatures() {
         adminLock.set(true);
         mainCtrl.closeConfirmAdmin();
-        lockBtu.setStyle("-fx-border-color: green");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Login successful!");
-        alert.setHeaderText(null);
-        alert.setContentText("Welcome admin!");
-        alert.showAndWait();
+        adminLabel.setVisible(true);
+        userLabel.setVisible(false);
+    }
+    public void closeAdminFeatures(){
+        adminLabel.setVisible(false);
+        userLabel.setVisible(true);
+
     }
 }

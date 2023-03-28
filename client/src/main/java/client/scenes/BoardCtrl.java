@@ -564,40 +564,13 @@ public class BoardCtrl {
     private Button lockBtu;
     private BooleanProperty adminLock = new SimpleBooleanProperty(false);
     private String adminPassword = "6464";
-    @FXML
-    private Button removeBoard;
-    @FXML
-    void adminLogin() {
-        if (adminLock.getValue()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Admin!");
-            alert.setHeaderText(null);
-            alert.setContentText("Admin has been unlocked!");
-            alert.showAndWait();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Admin!");
-            alert.setHeaderText(null);
-            alert.setContentText("Please return to the board overview to log in!");
-            alert.showAndWait();
-        }
-    }
+
     public String getAdminPassword(){return adminPassword;}
     public void openAdminFeatures() {
         adminLock.set(true);
-        removeBoard.setVisible(true);
+
         mainCtrl.closeConfirmAdmin();
         lockBtu.setStyle("-fx-border-color: green");
-    }
-    /**
-     *The functionality of the delete current board button will be displayed
-     * after obtaining admin privileges.
-     *  It returns to the board overview interface and deletes the current board.
-     */
-    @FXML
-    void removeBoard() {
-        server.removeBoard(new Boards(boardName.getText(), null));
-        exitBoard();
     }
 
 

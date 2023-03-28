@@ -33,10 +33,16 @@ public class SelectServerCtrl {
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
+    private BoardOverviewCtrl boardOverviewCtrl;
     @Inject
-    public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl){
+    public SelectServerCtrl(AnchorPane container, ServerUtils server, MainCtrl mainCtrl){
+        this.container = container;
         this.server = server;
         this.mainCtrl = mainCtrl;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     /**
@@ -82,6 +88,9 @@ public class SelectServerCtrl {
             // otherwise show confirmation scene
             if(!exists) mainCtrl.showBoardOverview();
             else{
+                if(currentUser.isAdmin()){
+                    boardOverviewCtrl.openAdminFeatures();
+                }
                 mainCtrl.showConfirmUsername();
             }
         }
@@ -89,5 +98,9 @@ public class SelectServerCtrl {
     public void setAdmin() {
         currentUser.setAdmin(true);
         server.upUserToAdmin(currentUser);
+    }
+
+    public void refreshUserDetails() {
+        mainCtrl.showUserDetails(currentUser);
     }
 }

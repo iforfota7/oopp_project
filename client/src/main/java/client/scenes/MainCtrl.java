@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -110,9 +111,6 @@ public class MainCtrl {
     }
 
     public void showBoard(String boardName) {
-        if(boardOverviewCtrl.getAdminLock()){
-            boardCtrl.openAdminFeatures();
-        }
         boardCtrl.setBoardName(boardName);
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
@@ -228,8 +226,16 @@ public class MainCtrl {
      *
      */
     public void showBoardOverview() {
+        String titleLabel;
+        if(boardOverviewCtrl.getAdminLock()){
+            boardOverviewCtrl.openAdminFeatures();
+            titleLabel = " (Admin)";
+        }else {
+            boardOverviewCtrl.closeAdminFeatures();
+            titleLabel = " (User)";
+        }
         boardOverviewCtrl.init();
-        primaryStage.setTitle("Board Overview");
+        primaryStage.setTitle("Board Overview"+titleLabel);
         primaryStage.setScene(boardOverview);
     }
 
@@ -294,8 +300,10 @@ public class MainCtrl {
 
     /**
      * Open a new window that displays the userDetails scene
+     * @param currentUser currentUser form selectServer
      */
-    public void showUserDetails(){
+    public void showUserDetails(User currentUser){
+        userDetailsCtrl.setUser(currentUser);
         secondaryStage = new Stage();
         secondaryStage.setScene(userDetails);
         secondaryStage.setTitle("User Details");
