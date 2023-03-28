@@ -64,7 +64,7 @@ public class BoardController {
 
         Optional<Boards> optionalBoard = repo.findById(boardName);
 
-        if (!optionalBoard.isPresent()) {
+        if (optionalBoard.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
