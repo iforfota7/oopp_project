@@ -4,7 +4,6 @@ import client.Main;
 import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.AccessibleRole;
@@ -15,12 +14,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 
 import javax.inject.Inject;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class BoardOverviewCtrl implements Initializable {
+public class BoardOverviewCtrl{
 
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
@@ -43,25 +40,18 @@ public class BoardOverviewCtrl implements Initializable {
      * Creates a list of boards holding all labels
      * Initializes the onMouseClicked event for these labels
      *
-     * @param url
-     * The location used to resolve relative paths for the root object, or
-     * {@code null} if the location is not known.
-     *
-     * @param resourceBundle
-     * The resources used to localize the root object, or {@code null} if
-     * the root object was not localized.
      */
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void init() {
         boardsList = new ArrayList<>();
 
-     //   refresh();
+        refresh();
     }
 
     /**
      * Constructor for the BoardOverviewCtrl
      *
      * @param mainCtrl Used for navigating through the scenes
+     * @param server Used for sending request to the server
      */
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server) {

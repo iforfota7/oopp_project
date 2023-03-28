@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 public class AddBoardCtrl {
     private final BoardOverviewCtrl boardOverviewCtrl;
