@@ -18,6 +18,7 @@ public class UserDetailsCtrl {
 
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
+    private final SelectServerCtrl selectServerCtrl;
 
     @FXML
     private Label username;
@@ -26,11 +27,16 @@ public class UserDetailsCtrl {
     @FXML
     private Label isAdmin;
     @FXML
+    private Button adminLogout;
+
+    @FXML
     private Button adminLogin;
     @Inject
-    public UserDetailsCtrl(MainCtrl mainCtrl, ServerUtils server){
+    public UserDetailsCtrl(MainCtrl mainCtrl, ServerUtils server,
+                           SelectServerCtrl selectServerCtrl){
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.selectServerCtrl = selectServerCtrl;
     }
     private BooleanProperty adminLock = new SimpleBooleanProperty(false);
 
@@ -43,20 +49,28 @@ public class UserDetailsCtrl {
         mainCtrl.showBoardOverview();
     }
 
+    /**
+     * Display different button prompts and button colors based on the logged-in user.
+     * @param currentUser Current user element
+     */
     public void setUser(User currentUser) {
-        this.adminLock.set(currentUser.isAdmin());
+        this.adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
         this.username.setText(currentUser.getUsername());
-        if(currentUser.isAdmin()){
+        if(adminLock.get()){
             this.isAdmin.setText("Yes!");
-            adminLogin.setStyle("-fx-border-color: green");
-            adminLogin.setText("The admin has been unlocked !");
+            adminLogin.setVisible(false);
+            adminLogout.setVisible(true);
         }else {
             this.isAdmin.setText("No!");
-            adminLogin.setStyle("-fx-border-color: black");
+            adminLogin.setVisible(true);
             adminLogin.setText("Input password to become admin");
+            adminLogout.setVisible(false);
         }
     }
-    private String adminPassword = "6464";
+
+    /**
+     * show the login admin scene.
+     */
     @FXML
     void adminLogin() {
         if (adminLock.getValue()) {
@@ -69,5 +83,16 @@ public class UserDetailsCtrl {
             mainCtrl.closeUserDetails();
             mainCtrl.showConfirmAdmin();
         }
+    }
+
+    /**
+     * Click the button to synchronize and modify
+     * the 'admin' attribute of the user in the frontend of the database, and set it to false.
+     */
+    @FXML
+    void adminLogout() {
+        selectServerCtrl.removeAdmin();
+        mainCtrl.closeUserDetails();
+        mainCtrl.showSelectServer();
     }
 }

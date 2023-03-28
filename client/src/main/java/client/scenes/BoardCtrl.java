@@ -6,8 +6,6 @@ import commons.Boards;
 import commons.Lists;
 import commons.Cards;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -45,7 +43,7 @@ public class BoardCtrl {
 
     private List<Lists> lists;
 
-    private Draggable drag;
+    private final Draggable drag;
 
 
     /**
@@ -553,25 +551,4 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
-
-    /**
-     *The method here implements the functionality of the admin button,
-     *  allowing users to enter a password to verify their admin privileges.
-     *  If the password is correct, the corresponding button functionality will be displayed,
-     *  allowing the user to upgrade to an admin and perform renaming and deletion functions.
-     */
-    @FXML
-    private Button lockBtu;
-    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
-    private String adminPassword = "6464";
-
-    public String getAdminPassword(){return adminPassword;}
-    public void openAdminFeatures() {
-        adminLock.set(true);
-
-        mainCtrl.closeConfirmAdmin();
-        lockBtu.setStyle("-fx-border-color: green");
-    }
-
-
 }

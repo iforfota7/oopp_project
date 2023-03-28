@@ -2,7 +2,6 @@ package client.scenes;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 
@@ -13,36 +12,32 @@ import javax.inject.Inject;
  * and open a part of display functions to specific users.
  */
 public class ConfirmAdminCtrl {
-    private BoardCtrl boardCtrl;
-    private BoardOverviewCtrl boardOverviewCtrl;
-    private SelectServerCtrl selectServerCtrl;
+    private  BoardOverviewCtrl boardOverviewCtrl;
+    private  SelectServerCtrl selectServerCtrl;
 
     private MainCtrl mainCtrl;
 
 
     @Inject
-    public ConfirmAdminCtrl(BoardCtrl boardCtrl, BoardOverviewCtrl boardOverviewCtrl,
+    public ConfirmAdminCtrl(BoardOverviewCtrl boardOverviewCtrl,
                             SelectServerCtrl selectServerCtrl, MainCtrl mainCtrl){
-        this.boardCtrl = boardCtrl;
         this.boardOverviewCtrl = boardOverviewCtrl;
         this.selectServerCtrl = selectServerCtrl;
         this.mainCtrl = mainCtrl;
     }
-
-    @FXML
-    private Button adminLogin;
     @FXML
     private PasswordField inputPassword;
     @FXML
     private Label errorLabel;
     /**
-     *Compare the current board password with the entered password to determine if they are equal.
-     * If they are equal, enable the admin function and display the relevant buttons.
-     * If they are not equal, show a prompt in the scene.
+     *The method here implements the functionality of the admin button,
+     *  allowing users to enter a password to verify their admin privileges.
+     *  If the password is correct, the corresponding button functionality will be displayed,
+     *  allowing the user to upgrade to an admin and perform renaming and deletion functions.
      */
     @FXML
     void adminLogin() {
-        String adminPassword = boardCtrl.getAdminPassword();
+        String adminPassword = "6464";
         if(adminPassword.equals(inputPassword.getText())){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Login successful!");

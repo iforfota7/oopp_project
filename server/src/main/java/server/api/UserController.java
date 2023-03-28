@@ -53,9 +53,9 @@ public class UserController {
      * @param user the user to be added
      * @return response entity of user
      */
-    @PostMapping(path = "upAdmin")
+    @PostMapping(path = "refreshAdmin")
     @ResponseBody
-    public ResponseEntity<Object> upAdmin(@RequestBody User user){
+    public ResponseEntity<Object> refreshAdmin(@RequestBody User user){
         if (user == null || user.getUsername() == null || user.getUsername().equals("")) {
             return ResponseEntity.badRequest().build();
         }

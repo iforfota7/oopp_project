@@ -13,7 +13,6 @@ import javafx.scene.AccessibleRole;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
@@ -27,7 +26,7 @@ public class BoardOverviewCtrl{
     private SelectServerCtrl selectServerCtrl;
     private List<Boards> boardsList;
     private int numberOfBoards = 0;
-    private int positionInColumn;
+
     /**
      * Constructor for the BoardOverviewCtrl
      *
@@ -45,8 +44,6 @@ public class BoardOverviewCtrl{
     }
     @FXML
     GridPane gridPane;
-
-    private Label currentBoard;
 
     @FXML
     private Label adminLabel;
@@ -80,7 +77,7 @@ public class BoardOverviewCtrl{
      */
     public void goToBoard(MouseEvent event) {
         Main.setSceneToBoard(((Label)event.getSource()).getText());
-        this.currentBoard = (Label) event.getSource();
+        Label currentBoard = (Label) event.getSource();
     }
 
     /**
@@ -96,12 +93,6 @@ public class BoardOverviewCtrl{
     public void disconnect() {
         mainCtrl.showSelectServer();
     }
-    public  void removeCurrentBoard() {
-        Pane parent = (Pane) currentBoard.getParent();
-        parent.getChildren().remove(currentBoard);
-        mainCtrl.refreshBoards();
-    }
-
     @FXML
     public void addBoard(){
         mainCtrl.showAddBoard();
@@ -115,7 +106,7 @@ public class BoardOverviewCtrl{
 
     public void addNewBoard(Boards b){
         numberOfBoards++;
-        positionInColumn = (numberOfBoards - 1) % 3;
+        int positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
         StackPane newBoard = createNewBoard(b.getName());
@@ -189,15 +180,24 @@ public class BoardOverviewCtrl{
     public void showUserDetails(){
         mainCtrl.showUserDetails(selectServerCtrl.getCurrentUser());
     }
+
+    /**
+     * Show admin-specific buttons and features based on the user's admin permissions.
+     * Unveiled hidden delete buttons.
+     */
     public void openAdminFeatures() {
         adminLock.set(true);
         mainCtrl.closeConfirmAdmin();
         adminLabel.setVisible(true);
         userLabel.setVisible(false);
     }
+
+    /**
+     * Hide admin-specific buttons and related features based on user's admin privileges.
+     * Hide delete buttons.
+     */
     public void closeAdminFeatures(){
         adminLabel.setVisible(false);
         userLabel.setVisible(true);
-
     }
 }

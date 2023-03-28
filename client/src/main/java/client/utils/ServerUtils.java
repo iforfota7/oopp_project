@@ -215,9 +215,9 @@ public class ServerUtils {
     }
 
 
-    public User upUserToAdmin(User user) {
+    public User refreshAdmin(User user) {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/user/upAdmin").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                path("api/user/refreshAdmin").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
     public Boards removeBoard(Boards board){
@@ -227,12 +227,11 @@ public class ServerUtils {
     }
 
     public boolean checkAdmin(User user) {
-        if(!ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user/find/" + user.username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
-                }).isAdmin()) return false;
-        return true;
+                }).isAdmin();
     }
 
 }

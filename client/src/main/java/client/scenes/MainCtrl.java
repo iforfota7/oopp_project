@@ -265,7 +265,9 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
-
+    /**
+     * show admin password input window
+     */
     public void showConfirmAdmin() {
         secondaryStage = new Stage();
         secondaryStage.setScene(confirmAdmin);
@@ -273,16 +275,10 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * closes the secondary stage
+     */
     public void closeConfirmAdmin() {secondaryStage.close();}
-
-    public void removeCurrentBoard() {
-        showBoardOverview();
-        boardOverviewCtrl.removeCurrentBoard();
-    }
-
-    public void refreshBoards() {
-        boardOverview.getRoot().requestLayout();
-    }
     /**
      * Open a new window that displays the joinBoardByID scene
      */

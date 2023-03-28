@@ -95,12 +95,28 @@ public class SelectServerCtrl {
             }
         }
     }
+
+    /**
+     * Set user's permission level to admin in the database.
+     */
     public void setAdmin() {
         currentUser.setAdmin(true);
-        server.upUserToAdmin(currentUser);
+        server.refreshAdmin(currentUser);
     }
 
+    /**
+     * Set user's permission level back to user in the database.
+     */
+    public void removeAdmin() {
+        currentUser.setAdmin(false);
+        server.refreshAdmin(currentUser);
+    }
+    /**
+     * Display the updated user information after refresh.
+     */
     public void refreshUserDetails() {
         mainCtrl.showUserDetails(currentUser);
     }
+
+
 }
