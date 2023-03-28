@@ -102,7 +102,7 @@ public class MainCtrl {
         primaryStage.setTitle("Start");
         boardCtrl.setBoardName(boardName);
         primaryStage.setScene(board);
-        secondaryStage.close();
+        if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
     }
 
     /**
