@@ -29,6 +29,7 @@ import client.scenes.SelectServerCtrl;
 
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -77,7 +78,6 @@ public class Main extends Application {
      */
     public static void setSceneToBoard(String boardName){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
-
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.setBoard(board, boardName);
     }

@@ -575,7 +575,11 @@ public class BoardCtrl {
             alert.setContentText("Admin has been unlocked!");
             alert.showAndWait();
         } else {
-            mainCtrl.showConfirmAdmin();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Admin!");
+            alert.setHeaderText(null);
+            alert.setContentText("Please return to the board overview to log in!");
+            alert.showAndWait();
         }
     }
     public String getAdminPassword(){return adminPassword;}
@@ -584,11 +588,6 @@ public class BoardCtrl {
         removeBoard.setVisible(true);
         mainCtrl.closeConfirmAdmin();
         lockBtu.setStyle("-fx-border-color: green");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Login successful!");
-        alert.setHeaderText(null);
-        alert.setContentText("Welcome admin!");
-        alert.showAndWait();
     }
     /**
      *The functionality of the delete current board button will be displayed
@@ -597,7 +596,8 @@ public class BoardCtrl {
      */
     @FXML
     void removeBoard() {
-        mainCtrl.removeCurrentBoard();
+        server.removeBoard(new Boards(boardName.getText(), null));
+//        mainCtrl.removeCurrentBoard();
     }
 
 

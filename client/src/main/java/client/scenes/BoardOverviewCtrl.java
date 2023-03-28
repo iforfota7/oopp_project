@@ -3,9 +3,13 @@ package client.scenes;
 import client.Main;
 import client.utils.ServerUtils;
 import commons.Boards;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -36,6 +40,11 @@ public class BoardOverviewCtrl implements Initializable {
     private Label currentBoard;
 
     private final ServerUtils server;
+    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
+
+    public boolean getAdminLock() {
+        return adminLock.get();
+    }
 
     /**
      * Creates a list of boards holding all labels
@@ -98,8 +107,6 @@ public class BoardOverviewCtrl implements Initializable {
         mainCtrl.showSelectServer();
     }
     public  void removeCurrentBoard() {
-        Boards board= server.findBoardByID(currentBoard.getId());
-        server.removeBoard(board);
         boards.remove(currentBoard);
         Pane parent = (Pane) currentBoard.getParent();
         parent.getChildren().remove(currentBoard);
@@ -135,5 +142,30 @@ public class BoardOverviewCtrl implements Initializable {
     public int getNumberOfBoards(){
         return  numberOfBoards;
     }
+    @FXML
+    private Button lockBtu;
 
+    private String adminPassword = "6464";
+    @FXML
+    void adminLogin() {
+        if (adminLock.getValue()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Admin!");
+            alert.setHeaderText(null);
+            alert.setContentText("Admin has been unlocked!");
+            alert.showAndWait();
+        } else {
+            mainCtrl.showConfirmAdmin();
+        }
+    }
+    public void openAdminFeatures() {
+        adminLock.set(true);
+        mainCtrl.closeConfirmAdmin();
+        lockBtu.setStyle("-fx-border-color: green");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Login successful!");
+        alert.setHeaderText(null);
+        alert.setContentText("Welcome admin!");
+        alert.showAndWait();
+    }
 }

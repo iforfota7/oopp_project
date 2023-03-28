@@ -105,6 +105,9 @@ public class MainCtrl {
     }
 
     public void showBoard(String boardName) {
+        if(boardOverviewCtrl.getAdminLock()){
+            boardCtrl.openAdminFeatures();
+        }
         boardCtrl.setBoardName(boardName);
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);

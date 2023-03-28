@@ -12,11 +12,13 @@ import javax.inject.Inject;
  */
 public class ConfirmAdminCtrl {
     private BoardCtrl boardCtrl;
+    private BoardOverviewCtrl boardOverviewCtrl;
     private SelectServerCtrl selectServerCtrl;
 
     @Inject
-    public ConfirmAdminCtrl(BoardCtrl boardCtrl, SelectServerCtrl selectServerCtrl){
+    public ConfirmAdminCtrl(BoardCtrl boardCtrl, BoardOverviewCtrl boardOverviewCtrl, SelectServerCtrl selectServerCtrl){
         this.boardCtrl = boardCtrl;
+        this.boardOverviewCtrl = boardOverviewCtrl;
         this.selectServerCtrl = selectServerCtrl;
     }
 
@@ -41,7 +43,7 @@ public class ConfirmAdminCtrl {
         if(b){
             errorLabel.setVisible(false);
             inputPassword.setStyle("-fx-border-color: #D3D3D3;");
-            boardCtrl.openAdminFeatures();
+            boardOverviewCtrl.openAdminFeatures();
             inputPassword.clear();
             selectServerCtrl.setAdmin();
         }

@@ -48,8 +48,10 @@ public class BoardController {
         return s == null || s.isEmpty();
     }
     @Transactional
-    @DeleteMapping("/removeBoard/{boardID}")
-    public ResponseEntity<Void> removeBoard(@PathVariable String boardName) {
+    @PostMapping(path = {"/remove", "/remove/"})
+    public ResponseEntity<Void> removeBoard(@RequestBody Boards boards) {
+        String boardName = boards.name;
+        System.out.println(boardName);
         if (boardName == null || boardName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -57,11 +59,11 @@ public class BoardController {
         Optional<Boards> optionalBoard = repo.findById(boardName);
 
         if (!optionalBoard.isPresent()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
 
         repo.deleteById(boardName);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
