@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import commons.User;
@@ -64,9 +65,21 @@ public class ServerUtils {
         return true;
     }
 
-    public Lists addList(Lists list){
+    /**
+     * Find whether a board exists or not using its ID
+     * @param boardID the id of the board that is being searched for
+     * @return true if the board is in the database, otherwise false
+     */
+    public boolean existsBoardByID(String boardID) {
+        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/find/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){}) == null) return false;
+        return true;
+    }
+    public Lists addList(Lists list, Boards board){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/lists").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                path("api/lists/" + board.name).request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
@@ -115,6 +128,26 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public Boards addBoard(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+    public List<Lists> getListsByBoard(String boardName) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/lists/all/" + boardName) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Lists>>() {});
+    }
+
+    public List<Boards> getBoards() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/all")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Boards>>() {});
+    }
 
     /**
      * Setter method for the server attribute

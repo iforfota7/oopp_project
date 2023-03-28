@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.Lists;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.TextField;
@@ -43,9 +42,9 @@ public class AdListCtrl {
         }
 
         int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
-        server.addList(new Lists(newListName.getText(), positionInsideBoard));
-        newListName.setText("");
 
+        boardCtrl.addListToBoard(newListName.getText(), positionInsideBoard);
+        newListName.setText("");
         mainCtrl.closeADList();
     }
 
