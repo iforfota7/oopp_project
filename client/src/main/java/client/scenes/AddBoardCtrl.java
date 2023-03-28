@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
 public class AddBoardCtrl {
     private final BoardOverviewCtrl boardOverviewCtrl;
@@ -25,12 +26,11 @@ public class AddBoardCtrl {
 
     @FXML
     void saveNewBoard(ActionEvent event){
-        System.out.println(boardName.getText());
         server.addBoard(new Boards(boardName.getText(), null));
         boardName.setText("");
 
         mainCtrl.closeAddBoard();
-        boardOverviewCtrl.addNewBoard(new Boards(boardName.getText(), null));
+        boardOverviewCtrl.refresh();
     }
 
 }
