@@ -1,6 +1,7 @@
 package commons;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,26 +10,35 @@ import java.util.Objects;
 
 
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Lists {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     public String title;
     public int positionInsideBoard;
-    @JsonManagedReference
+
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
     @OrderBy("positionInsideList ASC")
     public List<Cards> cards;
+
+    @ManyToOne
+
+    public Boards board;
 
     /**
      * Constructor method for the lists class
      * @param title the name of the list
      * @param positionInsideBoard the position of list inside the board
+     * @param board the board containing the list
      */
-    public Lists(String title, int positionInsideBoard) {
+    public Lists(String title, int positionInsideBoard, Boards board) {
         this.title = title;
         this.positionInsideBoard = positionInsideBoard;
         this.cards = new ArrayList<>();
+        this.board = board;
     }
 
     /**
@@ -48,7 +58,8 @@ public class Lists {
         if (o == null || getClass() != o.getClass()) return false;
         Lists lists = (Lists) o;
         return id == lists.id && positionInsideBoard == lists.positionInsideBoard &&
-                Objects.equals(title, lists.title);
+                Objects.equals(title, lists.title) && Objects.equals(cards, lists.cards) &&
+                Objects.equals(board.name, lists.board.name);
     }
 
     /**
@@ -57,7 +68,7 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideBoard);
+        return Objects.hash(id, title, positionInsideBoard, cards, board);
     }
 
     /**
@@ -68,9 +79,11 @@ public class Lists {
     @Override
     public String toString() {
         return "Lists{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", positionInsideBoard=" + positionInsideBoard +
+                ", cards=" + cards +
+                ", board=" + board.name +
                 '}';
     }
 }
