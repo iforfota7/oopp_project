@@ -52,8 +52,7 @@ public class Cards {
         if (o == null || getClass() != o.getClass()) return false;
         Cards cards = (Cards) o;
         return id == cards.id && positionInsideList == cards.positionInsideList
-                && Objects.equals(title, cards.title);
-//                && Objects.equals(list, cards.list);
+                && Objects.equals(title, cards.title) && list.id==cards.list.id;
     }
 
     /**

@@ -26,9 +26,8 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview;
-
-    private Scene selectServer;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
+    private Scene selectServer, joinBoardByID;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
@@ -38,7 +37,9 @@ public class MainCtrl {
     private ConfirmUsernameCtrl confirmUsernameCtrl;
     private BoardOverviewCtrl boardOverviewCtrl;
     private SelectServerCtrl selectServerCtrl;
+    private JoinBoardByIDCtrl joinBoardByIDCtrl;
     private BoardCtrl boardCtrl;
+    private AddBoardCtrl addBoardCtrl;
 
     private int numberOfLists = 2;
 
@@ -46,7 +47,10 @@ public class MainCtrl {
     public void initializeBoard(Stage primaryStage,
                                 Pair<SelectServerCtrl, Parent> selectServer,
                                 Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
-                                Pair<BoardOverviewCtrl, Parent> boardOverview) {
+                                Pair<BoardOverviewCtrl, Parent> boardOverview,
+                                Pair<AddBoardCtrl, Parent> addBoard,
+                                Pair<JoinBoardByIDCtrl, Parent> joinBoardByID) {
+
         this.primaryStage = primaryStage;
 
         this.selectServer = new Scene(selectServer.getValue());
@@ -57,6 +61,12 @@ public class MainCtrl {
 
         this.boardOverview = new Scene(boardOverview.getValue());
         this.boardOverviewCtrl = boardOverview.getKey();
+
+        this.addBoard = new Scene(addBoard.getValue());
+        this.addBoardCtrl = addBoard.getKey();
+
+        this.joinBoardByID = new Scene(joinBoardByID.getValue());
+        this.joinBoardByIDCtrl = joinBoardByID.getKey();
 
         showStart();
         primaryStage.show();
@@ -94,6 +104,7 @@ public class MainCtrl {
         boardCtrl.setBoardName(boardName);
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
+        if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
         boardCtrl.initialize();
     }
 
@@ -218,4 +229,29 @@ public class MainCtrl {
         primaryStage.setScene(selectServer);
     }
 
+    public void showAddBoard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(addBoard);
+        secondaryStage.setTitle("Add a new Board!");
+        secondaryStage.show();
+    }
+
+    public void closeAddBoard(){
+        secondaryStage.close();
+    }
+
+    /**
+     * Open a new window that displays the joinBoardByID scene
+     */
+    public void showJoinBoardByID() {
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Join board by ID");
+        secondaryStage.setScene(joinBoardByID);
+        secondaryStage.show();
+    }
+
+    /**
+     * Closes the window that displays the joinBoardByID scene
+     */
+    public void closeJoinBoardByID() { secondaryStage.close(); }
 }

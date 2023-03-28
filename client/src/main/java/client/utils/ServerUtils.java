@@ -65,6 +65,18 @@ public class ServerUtils {
         return true;
     }
 
+    /**
+     * Find whether a board exists or not using its ID
+     * @param boardID the id of the board that is being searched for
+     * @return true if the board is in the database, otherwise false
+     */
+    public boolean existsBoardByID(String boardID) {
+        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/find/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){}) == null) return false;
+        return true;
+    }
     public Lists addList(Lists list, Boards board){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/lists/" + board.name).request(APPLICATION_JSON).accept(APPLICATION_JSON).
@@ -116,6 +128,11 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public Boards addBoard(Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
     public List<Lists> getListsByBoard(String boardName) {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/lists/all/" + boardName) //
@@ -123,7 +140,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
     }
-
 
     /**
      * Setter method for the server attribute
