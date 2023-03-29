@@ -26,7 +26,6 @@ import javax.inject.Inject;
 public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
-
     @FXML
     private AnchorPane rootContainer;
 
@@ -44,7 +43,8 @@ public class BoardCtrl {
 
     private List<Lists> lists;
 
-    private Draggable drag;
+    private final Draggable drag;
+
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -183,9 +183,10 @@ public class BoardCtrl {
 
     /**
      * Auxiliary call to mainCtrl Inject function
-     * @param mainCtrl The master controller, which will later be replaced
-     *                by a class of window controllers
-     * @param server Used for connection to backend and websockets to function
+     *
+     * @param mainCtrl         The master controller, which will later be replaced
+     *                         by a class of window controllers
+     * @param server           Used for connection to backend and websockets to function
      */
     @Inject
     public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConfirmAdminCtrl">
+   <effect>
+      <DropShadow />
+   </effect>
+   <Button fx:id="adminLogin" layoutX="195.0" layoutY="100.0" mnemonicParsing="false" onAction="#adminLogin" style="-fx-background-color: #FFFFCC;" text="Log In" />
+   <Label layoutX="71.0" layoutY="31.0" text="Input admin password">
+      <font>
+         <Font name="Avenir Book" size="16.0" />
+      </font>
+   </Label>
+   <PasswordField fx:id="inputPassword" layoutX="51.0" layoutY="100.0" prefHeight="26.0" prefWidth="133.0" />
+   <Label fx:id="errorLabel" layoutX="71.0" layoutY="126.0" prefHeight="17.0" prefWidth="125.0" text="Password incorrect!" textFill="#f50000" visible="false">
+      <font>
+         <Font size="11.0" />
+      </font>
+   </Label>
+</AnchorPane>

@@ -1,5 +1,8 @@
 image: gradle:7.6.0-jdk19-alpine
 
+before_script:
+  - chmod +x ./gradlew
+
 variables:
   # Disable the Gradle daemon to ensure isolated runs of the CI pipeline.
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"

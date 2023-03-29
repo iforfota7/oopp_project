@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -28,13 +29,14 @@ public class MainCtrl {
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
     private Scene selectServer, joinBoardByID, userDetails;
-
+    private Scene confirmAdmin;
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
     private NewCardCtrl newCardCtrl;
     private ConfirmUsernameCtrl confirmUsernameCtrl;
+    private ConfirmAdminCtrl confirmAdminCtrl;
     private BoardOverviewCtrl boardOverviewCtrl;
     private SelectServerCtrl selectServerCtrl;
     private JoinBoardByIDCtrl joinBoardByIDCtrl;
@@ -99,7 +101,10 @@ public class MainCtrl {
         this.newCard = new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
     }
-
+    public void initializeAdmin(Pair<ConfirmAdminCtrl, Parent> confirmAdmin) {
+        this.confirmAdmin = new Scene(confirmAdmin.getValue());
+        this.confirmAdminCtrl = confirmAdmin.getKey();
+    }
     public void showStart() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);
@@ -221,8 +226,16 @@ public class MainCtrl {
      *
      */
     public void showBoardOverview() {
+        String titleLabel;
+        if(boardOverviewCtrl.getAdminLock()){
+            boardOverviewCtrl.openAdminFeatures();
+            titleLabel = " (Admin)";
+        }else {
+            boardOverviewCtrl.closeAdminFeatures();
+            titleLabel = " (User)";
+        }
         boardOverviewCtrl.init();
-        primaryStage.setTitle("Board Overview");
+        primaryStage.setTitle("Board Overview"+titleLabel);
         primaryStage.setScene(boardOverview);
     }
 
@@ -253,6 +266,20 @@ public class MainCtrl {
     }
 
     /**
+     * show admin password input window
+     */
+    public void showConfirmAdmin() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(confirmAdmin);
+        secondaryStage.setTitle("Admin LogIn");
+        secondaryStage.show();
+    }
+
+    /**
+     * closes the secondary stage
+     */
+    public void closeConfirmAdmin() {secondaryStage.close();}
+    /**
      * Open a new window that displays the joinBoardByID scene
      */
     public void showJoinBoardByID() {
@@ -269,8 +296,10 @@ public class MainCtrl {
 
     /**
      * Open a new window that displays the userDetails scene
+     * @param currentUser currentUser form selectServer
      */
-    public void showUserDetails(){
+    public void showUserDetails(User currentUser){
+        userDetailsCtrl.setUser(currentUser);
         secondaryStage = new Stage();
         secondaryStage.setScene(userDetails);
         secondaryStage.setTitle("User Details");

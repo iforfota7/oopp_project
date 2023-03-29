@@ -77,7 +77,8 @@
             <Font name="Bell MT" size="17.0" />
          </font>
       </Label>
-      <Button layoutX="52.0" layoutY="303.0" mnemonicParsing="false" style="-fx-background-color: #e6f0ff; -fx-border-color: #00134d; -fx-border-radius: 3;" text="Input password to become admin" />
+      <Button fx:id="adminLogin" layoutX="52.0" layoutY="303.0" mnemonicParsing="false" onAction="#adminLogin" style="-fx-background-color: #e6f0ff; -fx-border-color: #00134d; -fx-border-radius: 3;" text="Input password to become admin" />
       <Button layoutX="111.0" layoutY="344.0" mnemonicParsing="false" onAction="#closeUserDetails" prefHeight="27.0" prefWidth="78.0" style="-fx-background-color: #eee6ff; -fx-border-color: #3d004d; -fx-border-radius: 3;" text="Close" />
+      <Button fx:id="adminLogout" layoutX="96.0" layoutY="267.0" mnemonicParsing="false" onAction="#adminLogout" style="-fx-background-color: #e6f0ff; -fx-border-color: #00134d; -fx-border-radius: 3;" text="Logout of admin " textFill="RED" />
    </children>
 </AnchorPane>

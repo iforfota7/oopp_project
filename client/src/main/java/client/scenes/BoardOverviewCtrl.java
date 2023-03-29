@@ -3,13 +3,17 @@ package client.scenes;
 import client.Main;
 import client.utils.ServerUtils;
 import commons.Boards;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.geometry.Pos;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import javax.inject.Inject;
@@ -19,12 +23,40 @@ import java.util.List;
 public class BoardOverviewCtrl{
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
+    private SelectServerCtrl selectServerCtrl;
     private List<Boards> boardsList;
     private int numberOfBoards = 0;
-    private int positionInColumn;
 
+    /**
+     * Constructor for the BoardOverviewCtrl
+     *
+     * @param mainCtrl         Used for navigating through the scenes
+     * @param server           Used for sending request to the server
+     * @param selectServerCtrl Used for sending request to the serverServerCtrl
+     */
+
+    @Inject
+    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server,
+                             SelectServerCtrl selectServerCtrl) {
+        this.mainCtrl = mainCtrl;
+        this.server = server;
+        this.selectServerCtrl = selectServerCtrl;
+    }
     @FXML
     GridPane gridPane;
+
+    @FXML
+    private Label adminLabel;
+    @FXML
+    private Label userLabel;
+
+
+    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
+
+    public boolean getAdminLock() {
+        adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
+        return adminLock.get();
+    }
 
     /**
      * Creates a list of boards holding all labels
@@ -33,21 +65,10 @@ public class BoardOverviewCtrl{
      */
     public void init() {
         boardsList = new ArrayList<>();
-
         refresh();
     }
 
-    /**
-     * Constructor for the BoardOverviewCtrl
-     *
-     * @param mainCtrl Used for navigating through the scenes
-     * @param server Used for sending request to the server
-     */
-    @Inject
-    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server) {
-        this.mainCtrl = mainCtrl;
-        this.server = server;
-    }
+
 
     /**
      * Go to a specific board when a board label has been clicked
@@ -56,6 +77,7 @@ public class BoardOverviewCtrl{
      */
     public void goToBoard(MouseEvent event) {
         Main.setSceneToBoard(((Label)event.getSource()).getText());
+        Label currentBoard = (Label) event.getSource();
     }
 
     /**
@@ -71,7 +93,6 @@ public class BoardOverviewCtrl{
     public void disconnect() {
         mainCtrl.showSelectServer();
     }
-
     @FXML
     public void addBoard(){
         mainCtrl.showAddBoard();
@@ -85,10 +106,10 @@ public class BoardOverviewCtrl{
 
     public void addNewBoard(Boards b){
         numberOfBoards++;
-        positionInColumn = (numberOfBoards - 1) % 3;
+        int positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
-        Label newBoard = createNewBoard(b.getName());
+        StackPane newBoard = createNewBoard(b.getName());
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
 
         gridPane.add(newBoard, positionInColumn, row);
@@ -103,7 +124,7 @@ public class BoardOverviewCtrl{
      * @return The Label controller that will be displayed
      */
 
-    public Label createNewBoard(String title) {
+    public StackPane createNewBoard(String title) {
         Label newBoard = new Label(title);
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
@@ -114,7 +135,30 @@ public class BoardOverviewCtrl{
         newBoard.setText(title);
         newBoard.setFont(new Font(15));
         newBoard.setOnMouseClicked(this::goToBoard);
-        return newBoard;
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(newBoard);
+
+        Button removeBoardButton = new Button("X");
+        removeBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        removeBoardButton.setOnMouseClicked(this::removeBoard);
+        removeBoardButton.setUserData(title);
+        removeBoardButton.setVisible(adminLock.get());
+        stackPane.getChildren().add(removeBoardButton);
+        StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
+        return stackPane;
+    }
+    /**
+     *The functionality of the delete current board button will be displayed
+     * after obtaining admin privileges.
+     *  It returns to the board overview interface and deletes the current board.
+     */
+    private void removeBoard(MouseEvent mouseEvent) {
+        Button removeButton = (Button) mouseEvent.getSource();
+        String boardTitle = (String) removeButton.getUserData();
+        server.removeBoard(new Boards(boardTitle, null));
+        refresh();
     }
 
     /**
@@ -129,13 +173,31 @@ public class BoardOverviewCtrl{
             addNewBoard(boards);
         }
     }
-
     /**
      * Opens a new window with userDetails scene
      */
     @FXML
     public void showUserDetails(){
-        mainCtrl.showUserDetails();
+        mainCtrl.showUserDetails(selectServerCtrl.getCurrentUser());
     }
 
+    /**
+     * Show admin-specific buttons and features based on the user's admin permissions.
+     * Unveiled hidden delete buttons.
+     */
+    public void openAdminFeatures() {
+        adminLock.set(true);
+        mainCtrl.closeConfirmAdmin();
+        adminLabel.setVisible(true);
+        userLabel.setVisible(false);
+    }
+
+    /**
+     * Hide admin-specific buttons and related features based on user's admin privileges.
+     * Hide delete buttons.
+     */
+    public void closeAdminFeatures(){
+        adminLabel.setVisible(false);
+        userLabel.setVisible(true);
+    }
 }

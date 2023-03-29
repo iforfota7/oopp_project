@@ -47,4 +47,21 @@ public class UserController {
         if(repo.findById(username).isEmpty()) return null;
         return repo.findById(username).get();
     }
+
+    /**
+     * Change the isAdmin of a user in the database to ture
+     * @param user the user to be added
+     * @return response entity of user
+     */
+    @PostMapping(path = "refreshAdmin")
+    @ResponseBody
+    public ResponseEntity<Object> refreshAdmin(@RequestBody User user){
+        if (user == null || user.getUsername() == null || user.getUsername().equals("")) {
+            return ResponseEntity.badRequest().build();
+        }
+        boolean isAdmin = user.isAdmin();
+        user.setAdmin(isAdmin);
+        repo.save(user);
+        return ResponseEntity.ok().build();
+    }
 }
