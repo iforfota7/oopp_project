@@ -28,6 +28,7 @@ public class Cards {
      * @param title the name of the card
      * @param positionInsideList the position of card inside its list container
      * @param list the list in which the card is
+     * @param description The description of the card
      */
     public Cards(String title, int positionInsideList, Lists list, String description) {
         this.title = title;

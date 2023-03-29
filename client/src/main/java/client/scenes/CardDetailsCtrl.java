@@ -5,14 +5,11 @@ import com.google.inject.Inject;
 import commons.Cards;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import org.apache.tomcat.util.net.jsse.JSSEUtil;
 
 public class CardDetailsCtrl {
     @FXML

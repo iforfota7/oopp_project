@@ -218,19 +218,19 @@ public class ListControllerTest {
         sut.addList(l1);
         sut.addList(l2);
 
-        repo.cards.add(new Cards("t",0,l1));
-        repo.cards.add(new Cards("e",1,l1));
-        repo.cards.add(new Cards("a",2,l1));
-        repo.cards.add(new Cards("b",0,l2));
-        repo.cards.add(new Cards("o",1,l2));
-        repo.cards.add(new Cards("l",2,l2));
+        repo.cards.add(new Cards("t",0,l1,"Test description"));
+        repo.cards.add(new Cards("e",1,l1,"Test description"));
+        repo.cards.add(new Cards("a",2,l1,"Test description"));
+        repo.cards.add(new Cards("b",0,l2,"Test description"));
+        repo.cards.add(new Cards("o",1,l2,"Test description"));
+        repo.cards.add(new Cards("l",2,l2,"Test description"));
 
         sut.removeList(l1);
 
         List<Cards> cards = new ArrayList<>();
-        cards.add(new Cards("b",0,l2));
-        cards.add(new Cards("o",1,l2));
-        cards.add(new Cards("l",2,l2));
+        cards.add(new Cards("b",0,l2,"Test description"));
+        cards.add(new Cards("o",1,l2,"Test description"));
+        cards.add(new Cards("l",2,l2,"Test description"));
 
         assertEquals(cards, repo.cards);
     }
