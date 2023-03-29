@@ -3,12 +3,16 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Cards;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.apache.tomcat.util.net.jsse.JSSEUtil;
 
 public class CardDetailsCtrl {
     @FXML
@@ -37,6 +41,26 @@ public class CardDetailsCtrl {
     public CardDetailsCtrl(ServerUtils server, MainCtrl mainCtrl){
         this.server = server;
         this.mainCtrl = mainCtrl;
+        websocketConfig();
+    }
+
+    /**
+     * Configures websockets for the Card Details scene
+     *
+     */
+    public void websocketConfig() {
+
+        // When a client modifies card details, this scene gets modified
+        // so that clients that see this scene will see the details changing
+        server.registerForMessages("/topic/cards/rename", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(c.id == openedCard.id)
+                        setOpenedCard(c);
+                }
+            });
+        });
     }
 
     /**
@@ -55,6 +79,7 @@ public class CardDetailsCtrl {
         }
 
         openedCard.title = cardTitleInput.getText();
+        openedCard.description = description.getText();
         server.renameCard(openedCard);
         mainCtrl.closeCardDetails();
     }
@@ -69,5 +94,6 @@ public class CardDetailsCtrl {
         this.openedCard = card;
 
         cardTitleInput.setText(card.title);
+        description.setText(card.description);
     }
 }

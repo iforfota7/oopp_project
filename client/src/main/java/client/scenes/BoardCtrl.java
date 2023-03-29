@@ -425,7 +425,7 @@ public class BoardCtrl {
 
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
-        Cards c = new Cards(text, l.cards.size(), l);
+        Cards c = new Cards(text, l.cards.size(), l, "");
         c.list = l;
         server.addCard(c);
         mainCtrl.closeNewCard();
