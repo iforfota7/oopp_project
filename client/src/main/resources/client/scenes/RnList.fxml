@@ -6,16 +6,18 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RnListCtrl">
    <effect>
       <DropShadow />
    </effect>
    <TextField fx:id="newName" layoutX="39.0" layoutY="87.0" />
-   <Button fx:id="saveName" layoutX="212.0" layoutY="87.0" mnemonicParsing="false" onAction="#saveNewName" style="-fx-background-color: #FFFFCC;" text="Save" />
+   <Button fx:id="saveName" layoutX="212.0" layoutY="87.0" mnemonicParsing="false" onAction="#saveNewName" text="Save" />
    <Label layoutX="89.0" layoutY="29.0" text="Input New Name">
       <font>
          <Font name="Avenir Book" size="16.0" />
       </font>
    </Label>
+   <Text fx:id="warning" fill="RED" layoutX="87.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
 </AnchorPane>

@@ -225,7 +225,8 @@ public class Draggable {
      */
     public void dragOver(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource()){
+                ((Hyperlink)event.getGestureSource())
+                        .getParent()!=event.getSource()){
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
 
