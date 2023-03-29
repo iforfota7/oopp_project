@@ -34,6 +34,7 @@ public class BoardCtrl {
     @FXML
     private Label boardName;
 
+    private Boards board;
 
     List<VBox> listContainers;
     List<AnchorPane> listCards;
@@ -49,10 +50,12 @@ public class BoardCtrl {
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
+     * @param b - board
      */
-    public void initialize() {
+    public void initialize(Boards b) {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
+        board = b;
         refresh();
     }
 
@@ -141,7 +144,7 @@ public class BoardCtrl {
 
     public void refresh(){
         firstRow.getChildren().clear();
-        lists = server.getListsByBoard(boardName.getText());
+        lists = server.getListsByBoard(board.id);
         //lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
@@ -150,7 +153,7 @@ public class BoardCtrl {
     }
 
     public void refreshData(){
-        lists = server.getListsByBoard(boardName.getText());
+        lists = server.getListsByBoard(board.id);
         //lists = server.getLists();
         refreshLists(lists);
     }
@@ -244,6 +247,9 @@ public class BoardCtrl {
     void addList(){
         mainCtrl.showAddList();
     }
+
+   // @FXML
+    //void renameBoard(){mainCtrl.showRenameBoard();}
 
     /**
      * Adds a new list to the board by creating all of its elements
@@ -443,11 +449,11 @@ public class BoardCtrl {
 
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
-        Boards board = new Boards(boardName.getText(), lists);
+        System.out.println(board);
         Lists list = new Lists(text, position, board);
-        board.lists.add(list);
+
         try {
-            server.addList(list, board);
+            server.addList(list);
         }
         catch(Exception e){
             System.out.println(e);
@@ -542,10 +548,12 @@ public class BoardCtrl {
     /**
      * Sets the name of the board that will be displayed to the user
      *
-     * @param boardName The string containing the name of the board
+     * @param b The string containing the name of the board
      */
-    public void setBoardName(String boardName) {
-        this.boardName.setText(boardName);
+    public void setBoardName(Boards b) {
+        this.boardName.setText(b.name);
+
+        this.board = b;
     }
 
     public void exitBoard() {

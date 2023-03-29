@@ -16,6 +16,7 @@
 package client.scenes;
 
 import commons.User;
+import commons.Boards;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -27,9 +28,10 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard;
     private Scene selectServer, joinBoardByID, userDetails;
     private Scene confirmAdmin;
+
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
@@ -43,6 +45,8 @@ public class MainCtrl {
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
     private UserDetailsCtrl userDetailsCtrl;
+
+    private RenameBoardCtrl renameBoardCtrl;
 
     private int numberOfLists = 2;
 
@@ -110,23 +114,23 @@ public class MainCtrl {
         primaryStage.setScene(selectServer);
     }
 
-    public void showBoard(String boardName) {
-        boardCtrl.setBoardName(boardName);
+    public void showBoard(Boards b) {
+        boardCtrl.setBoardName(b);
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
-        boardCtrl.initialize();
+        boardCtrl.initialize(b);
     }
 
     /**
      * Sets scene of stage to passed board
      * @param board the scene to be displayed
-     * @param boardName used to display the title of the board
+     * @param b used to display the title of the board
      */
-    public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
+    public void setBoard(Pair<BoardCtrl, Parent> board, Boards b){
         this.board = new Scene(board.getValue());
         this.boardCtrl = board.getKey();
-        showBoard(boardName);
+        showBoard(b);
     }
 
     /**
