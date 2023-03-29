@@ -20,8 +20,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import commons.Boards;
 import commons.Cards;
 import commons.Lists;
+import commons.User;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -37,10 +39,47 @@ import static jakarta.ws.rs.core.MediaType.*;
 public class ServerUtils {
 
     private static String SERVER;
+    private static String USERNAME;
 
-    public Lists addList(Lists list){
+    /**
+     * Method that adds a user to the database
+     * @param user the user to be added
+     * @return the response object
+     */
+    public User addUser(User user){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/lists").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                path("api/user").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
+     * Find whether a user exists or not
+     * @param user a user which should be checked
+     * @return true if user already in database, otherwise false
+     */
+    public boolean existsUser(User user){
+        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + user.username).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){}) == null) return false;
+        return true;
+    }
+
+    /**
+     * Find whether a board exists or not using its ID
+     * @param boardID the id of the board that is being searched for
+     * @return true if the board is in the database, otherwise false
+     */
+    public boolean existsBoardByID(String boardID) {
+        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/find/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){}) == null) return false;
+        return true;
+    }
+    public Lists addList(Lists list, Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists/" + board.name).request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
@@ -89,6 +128,26 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public Boards addBoard(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+    public List<Lists> getListsByBoard(String boardName) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/lists/all/" + boardName) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Lists>>() {});
+    }
+
+    public List<Boards> getBoards() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/all")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Boards>>() {});
+    }
 
     /**
      * Setter method for the server attribute
@@ -97,6 +156,12 @@ public class ServerUtils {
     public static void setServer(String server){
         SERVER = server;
     }
+
+    /**
+     * Setter method for the username attribute
+     * @param username the username to be set
+     */
+    public static void setUsername(String username) { USERNAME = username;}
 
     /**
      * Sends a simple get request to /api/test-connection in order to check if the
@@ -150,6 +215,23 @@ public class ServerUtils {
     }
 
 
+    public User refreshAdmin(User user) {
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/refreshAdmin").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+    public Boards removeBoard(Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/remove/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 
+    public boolean checkAdmin(User user) {
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + user.username).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>() {
+                }).isAdmin();
+    }
 
 }

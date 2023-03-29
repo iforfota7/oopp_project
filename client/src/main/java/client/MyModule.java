@@ -15,12 +15,11 @@
  */
 package client;
 
-import client.scenes.BoardCtrl;
+import client.scenes.*;
+import client.scenes.UserDetailsCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
-
-import client.scenes.MainCtrl;
 
 public class MyModule implements Module {
 
@@ -28,5 +27,16 @@ public class MyModule implements Module {
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(BoardCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(BoardOverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AdListCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(CardDetailsCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(DeListCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(NewCardCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(RnListCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(SelectServerCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(ConfirmUsernameCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddBoardCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(JoinBoardByIDCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(UserDetailsCtrl.class).in(Scopes.SINGLETON);
     }
 }
