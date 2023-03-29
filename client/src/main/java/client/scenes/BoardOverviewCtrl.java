@@ -76,8 +76,9 @@ public class BoardOverviewCtrl{
      * @param event Object that contains information about the mouse event
      */
     public void goToBoard(MouseEvent event) {
-        Main.setSceneToBoard(((Label)event.getSource()).getText());
-        Label currentBoard = (Label) event.getSource();
+
+        System.out.println((Boards)((Label)event.getSource()).getProperties().get("board"));
+        Main.setSceneToBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
     }
 
     /**
@@ -109,7 +110,9 @@ public class BoardOverviewCtrl{
         int positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
-        StackPane newBoard = createNewBoard(b.getName());
+
+        StackPane newBoard = createNewBoard(b);
+
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
 
         gridPane.add(newBoard, positionInColumn, row);
@@ -120,30 +123,33 @@ public class BoardOverviewCtrl{
     /**
      * Creates the board element in FXML
      *
-     * @param title The title of the board
+     * @param b The title of the board
      * @return The Label controller that will be displayed
      */
 
-    public StackPane createNewBoard(String title) {
-        Label newBoard = new Label(title);
+    public StackPane createNewBoard(Boards b) {
+        Label newBoard = new Label(b.name);
+
+
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
         newBoard.setPrefWidth(165);
         newBoard.setPrefHeight(75);
         newBoard.setAlignment(Pos.CENTER);
-        newBoard.setText(title);
+        newBoard.setText(b.name);
+        newBoard.getProperties().put("board", b);
         newBoard.setFont(new Font(15));
         newBoard.setOnMouseClicked(this::goToBoard);
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().add(newBoard);
-
+        stackPane.getProperties().put("board", b);
         Button removeBoardButton = new Button("X");
         removeBoardButton.setStyle("-fx-background-color: #f08080;" +
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
-        removeBoardButton.setUserData(title);
+        removeBoardButton.setUserData(b.name);
         removeBoardButton.setVisible(adminLock.get());
         stackPane.getChildren().add(removeBoardButton);
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
@@ -156,8 +162,8 @@ public class BoardOverviewCtrl{
      */
     private void removeBoard(MouseEvent mouseEvent) {
         Button removeButton = (Button) mouseEvent.getSource();
-        String boardTitle = (String) removeButton.getUserData();
-        server.removeBoard(new Boards(boardTitle, null));
+        Boards board = (Boards) removeButton.getParent().getProperties().get("board");
+        server.removeBoard(board);
         refresh();
     }
 
