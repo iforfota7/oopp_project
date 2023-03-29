@@ -2,7 +2,10 @@ package client.scenes;
 
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class CardDetailsCtrl {
@@ -10,6 +13,12 @@ public class CardDetailsCtrl {
     private TextField cardTitleInput;
     @FXML
     private Text warning;
+    @FXML
+    private TextArea description;
+    @FXML
+    private VBox taskList;
+    @FXML
+    private GridPane tagList;
 
     private final BoardCtrl boardCtrl;
 
