@@ -70,16 +70,16 @@ public class ServerUtils {
      * @param boardID the id of the board that is being searched for
      * @return true if the board is in the database, otherwise false
      */
-    public boolean existsBoardByID(String boardID) {
-        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/boards/find/"+boardID).
-                request(APPLICATION_JSON).accept(APPLICATION_JSON).
-                get(new GenericType<Boards>(){}) == null) return false;
-        return true;
-    }
-    public Lists addList(Lists list, Boards board){
+    public Boards existsBoardByName(String boardName) {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/lists/" + board.name).request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                path("api/boards/find/"+boardName).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){});
+
+    }
+    public Lists addList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/lists/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
@@ -133,7 +133,7 @@ public class ServerUtils {
                 path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
-    public List<Lists> getListsByBoard(String boardName) {
+    public List<Lists> getListsByBoard(long boardName) {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/lists/all/" + boardName) //
                 .request(APPLICATION_JSON) //

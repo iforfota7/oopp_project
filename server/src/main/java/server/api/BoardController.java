@@ -28,7 +28,7 @@ public class BoardController {
         if(board == null || isNullOrEmpty(board.getName()))
             return ResponseEntity.badRequest().build();
 
-        if(repo.existsById(board.name))
+        if(!repo.findByName(board.name).isEmpty())
             return ResponseEntity.badRequest().build();
 
         Boards saved = repo.save(board);
@@ -36,17 +36,19 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
+
+
     /**
      * A method used to find a board by its ID
-     * @param boardID the ID of the board
+     * @param boardName the ID of the board
      * @return the board corresponding to the specified ID if it exists, otherwise null
      */
-    @GetMapping(path = {"/find/{boardID}"})
+    @GetMapping(path = {"/find/{boardName}"})
     @ResponseBody
-    public Boards findBoard(@PathVariable String boardID) {
+    public Boards findBoard(@PathVariable String boardName) {
 
-        if(repo.findById(boardID).isEmpty()) return null;
-        return repo.findById(boardID).get();
+        if(repo.findByName(boardName).isEmpty()) return null;
+        return repo.findByName(boardName).get();
     }
 
     private static boolean isNullOrEmpty(String s) {

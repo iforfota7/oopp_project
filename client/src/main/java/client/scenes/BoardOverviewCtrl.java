@@ -56,7 +56,8 @@ public class BoardOverviewCtrl{
      * @param event Object that contains information about the mouse event
      */
     public void goToBoard(MouseEvent event) {
-        Main.setSceneToBoard(((Label)event.getSource()).getText());
+        System.out.println((Boards)((Label)event.getSource()).getProperties().get("board"));
+        Main.setSceneToBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
     }
 
     /**
@@ -89,7 +90,7 @@ public class BoardOverviewCtrl{
         positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
-        Label newBoard = createNewBoard(b.getName());
+        Label newBoard = createNewBoard(b);
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
 
         gridPane.add(newBoard, positionInColumn, row);
@@ -100,19 +101,20 @@ public class BoardOverviewCtrl{
     /**
      * Creates the board element in FXML
      *
-     * @param title The title of the board
+     * @param b The title of the board
      * @return The Label controller that will be displayed
      */
 
-    public Label createNewBoard(String title) {
-        Label newBoard = new Label(title);
+    public Label createNewBoard(Boards b) {
+        Label newBoard = new Label(b.name);
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
         newBoard.setPrefWidth(165);
         newBoard.setPrefHeight(75);
         newBoard.setAlignment(Pos.CENTER);
-        newBoard.setText(title);
+        newBoard.setText(b.name);
+        newBoard.getProperties().put("board", b);
         newBoard.setFont(new Font(15));
         newBoard.setOnMouseClicked(this::goToBoard);
         return newBoard;

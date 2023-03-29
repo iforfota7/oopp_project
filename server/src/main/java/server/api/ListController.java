@@ -40,25 +40,23 @@ public class ListController {
      * @return all lists that are stored in repo
      */
     @GetMapping(path = "/all/{boardName}")
-    public List<Lists> getAllInBoard(@PathVariable String boardName){
+    public List<Lists> getAllInBoard(@PathVariable long boardName){
         return repo.findAllByOrderByPositionInsideBoardAsc(boardName);
     }
 
     /**
      * Method for adding a list to the repo
      * @param list the list to be added to the repo
-     * @param boardName the name of the board to which the list is added
+     * @param boardID the name of the board to which the list is added
      * @return a 200 OK response for a successful http request
      */
     @Transactional
-    @PostMapping(path="/{boardName}")
-    public ResponseEntity<Lists> addList(@RequestBody Lists list, @PathVariable String boardName) {
-
+    @PostMapping(path="/")
+    public ResponseEntity<Lists> addList(@RequestBody Lists list) {
+        System.out.println(list.board);
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 
-        Boards board = new Boards(boardName, null);
-        list.board = board;
 
         // if the instance exists in the repository, the client gets returned a bad request
         if(repo.existsById(list.id))
