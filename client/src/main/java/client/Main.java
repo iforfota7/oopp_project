@@ -71,7 +71,7 @@ public class Main extends Application {
 
     /**
      * Sets main scene, displaying the board
-     * @param boardName Used to set the title of the displayed board
+     * @param b Used to set the title of the displayed board
      */
     public static void setSceneToBoard(Boards b){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");

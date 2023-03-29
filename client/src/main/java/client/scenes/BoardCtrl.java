@@ -50,6 +50,7 @@ public class BoardCtrl {
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
+     * @param b - board
      */
     public void initialize(Boards b) {
         listContainers = new ArrayList<>();

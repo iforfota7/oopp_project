@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.Boards;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -17,7 +16,8 @@ public class RenameBoardCtrl {
     private TextField boardName;
 
     @Inject
-    public RenameBoardCtrl(BoardOverviewCtrl boardOverviewCtrl, MainCtrl mainCtrl, ServerUtils server){
+    public RenameBoardCtrl(BoardOverviewCtrl boardOverviewCtrl,
+                           MainCtrl mainCtrl, ServerUtils server){
         this.boardOverviewCtrl = boardOverviewCtrl;
         this.mainCtrl = mainCtrl;
         this.server = server;

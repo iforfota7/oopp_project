@@ -1,6 +1,5 @@
 package server.api;
 
-import commons.Boards;
 import commons.Lists;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -47,13 +46,12 @@ public class ListController {
     /**
      * Method for adding a list to the repo
      * @param list the list to be added to the repo
-     * @param boardID the name of the board to which the list is added
      * @return a 200 OK response for a successful http request
      */
     @Transactional
     @PostMapping(path="/")
     public ResponseEntity<Lists> addList(@RequestBody Lists list) {
-        System.out.println(list.board);
+
         if(list == null || isNullOrEmpty(list.title) || list.positionInsideBoard<0)
             return ResponseEntity.badRequest().build();
 

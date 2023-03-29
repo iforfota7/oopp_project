@@ -67,7 +67,7 @@ public class ServerUtils {
 
     /**
      * Find whether a board exists or not using its ID
-     * @param boardID the id of the board that is being searched for
+     * @param boardName the id of the board that is being searched for
      * @return true if the board is in the database, otherwise false
      */
     public Boards existsBoardByName(String boardName) {

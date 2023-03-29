@@ -2,7 +2,6 @@ package commons;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -41,23 +40,25 @@ public class Boards {
     @SuppressWarnings("unused")
     public Boards(){}
 
-    /**
-     * Equals method for boards class
-     * @param o an object to be compared to a board
-     * @return whether the object and board are equal
-     */
+
 
 
     public String getName(){
         return name;
     }
 
+    /**
+     * Equals method for boards class
+     * @param o an object to be compared to a board
+     * @return whether the object and board are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Boards boards = (Boards) o;
-        return id == boards.id && Objects.equals(name, boards.name) && Objects.equals(lists, boards.lists);
+        return id == boards.id && Objects.equals(name, boards.name)
+                && Objects.equals(lists, boards.lists);
     }
 
     @Override
