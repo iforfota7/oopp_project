@@ -311,8 +311,8 @@ public class BoardCtrl {
      */
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
-        refactorButtonList.setText("Refactor List");
-        refactorButtonList.setPrefWidth(75.2);
+        refactorButtonList.setText("Edit List");
+        refactorButtonList.setPrefWidth(60);
         refactorButtonList.setPrefHeight(22);
         refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
 
