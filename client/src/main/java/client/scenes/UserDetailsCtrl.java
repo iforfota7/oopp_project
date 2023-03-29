@@ -93,6 +93,6 @@ public class UserDetailsCtrl {
     void adminLogout() {
         selectServerCtrl.removeAdmin();
         mainCtrl.closeUserDetails();
-        mainCtrl.showSelectServer();
+        mainCtrl.showBoardOverview();
     }
 }
