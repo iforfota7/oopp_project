@@ -26,9 +26,9 @@ import javax.inject.Inject;
 public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
+    private final CardDetailsCtrl cardDetailsCtrl;
     @FXML
     private AnchorPane rootContainer;
-
     @FXML
     private HBox firstRow;
     @FXML
@@ -40,7 +40,6 @@ public class BoardCtrl {
     List<AnchorPane> listCards;
 
     private VBox currentList;
-    private Hyperlink currentCard;
 
     private List<Lists> lists;
 
@@ -76,11 +75,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
-                        title.setText(l.title);
-                        refreshData();
-                    }
+                        initialize(board);
                 }
             });
         });
@@ -190,12 +185,15 @@ public class BoardCtrl {
      * @param mainCtrl         The master controller, which will later be replaced
      *                         by a class of window controllers
      * @param server           Used for connection to backend and websockets to function
+     * @param cardDetailsCtrl  Used for calling methods that have to do with opening
+     *                         the card details scene for a card
      */
     @Inject
-    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
+    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server, CardDetailsCtrl cardDetailsCtrl){
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
+        this.cardDetailsCtrl = cardDetailsCtrl;
 
         webSocketLists();
         webSocketCards();
@@ -414,22 +412,9 @@ public class BoardCtrl {
      */
     @FXML
     void cardDetail(ActionEvent event) {
-
-            this.currentCard = (Hyperlink) event.getTarget();
-            mainCtrl.showCardDetail();
-
-    }
-
-    /**
-     * Save new card details to board scene
-     * When the function returns from mainCtrl,
-     * it will update the card name displayed on the board and refresh the pointer to currentCard.
-     */
-    void refreshCard(String text) {
-        Cards c  = (Cards) this.currentCard.getParent().getProperties().get("card");
-        c.title = text;
-        server.renameCard(c);
-        mainCtrl.closeCardDetails();
+        Hyperlink currentCard = (Hyperlink) event.getTarget();
+        cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
+        mainCtrl.showCardDetail();
     }
 
     void openAddNewCard(ActionEvent event){
@@ -472,14 +457,14 @@ public class BoardCtrl {
 
         // append the card to the list
 
-        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        Hyperlink currentCard = (Hyperlink) newCard.getChildren().get(0);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
         currentCard.setOnDragExited(drag::dragExited);
         currentCard.setOnDragEntered(drag::dragEntered);
         currentCard.setOnDragDropped(drag::dragDropped);
         currentCard.setOnDragOver(drag::dragOver);
-        this.currentCard.setText(c.title);
+        currentCard.setText(c.title);
 
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
 
