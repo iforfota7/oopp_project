@@ -26,7 +26,7 @@ public class BoardController {
     @Transactional
     @PostMapping(path={"", "/"})
     public ResponseEntity<Boards> addBoard(@RequestBody Boards board){
-        if(board == null || isNullOrEmpty(board.getName()))
+        if(board == null || isNullOrEmpty(board.name))
             return ResponseEntity.badRequest().build();
 
         if(!repo.findByName(board.name).isEmpty())
