@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 2023-03-28 01:42:39 database: flush
 org.h2.message.DbException: General error: "java.lang.IllegalStateException: The file is locked: nio:C:/Users/itwd7/oopp-team-64/quizzzz.mv.db [1.4.200/7]" [50000-200]
 	at org.h2.message.DbException.get(DbException.java:194)
@@ -272,6 +273,8 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/itw
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Cannot drop "BOARDS" because "FKGMUWAPCGVTR1A90HAODTVSI75" depends on it; SQL statement:
 DROP TABLE BOARDS [90107-200]
 =======
+=======
+>>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
 2023-03-29 09:57:59 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "BOARDS1_.ID" not found; SQL statement:
 select boards0_.user_username as user_use1_4_0_, boards0_.boards_id as boards_i2_4_0_, boards1_.id as id1_0_1_, boards1_.name as name2_0_1_ from user_boards boards0_ inner join boards boards1_ on boards0_.boards_id=boards1_.id where boards0_.user_username=? [42122-200]
@@ -931,6 +934,9 @@ DROP TABLE IF IT EXISTS BOARDS [42001-200]
 2023-03-29 10:10:32 jdbc[14]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Cannot drop "BOARDS" because "FKGMUWAPCGVTR1A90HAODTVSI75, FKJEJ0G3Q3KR0Y7NCKN7KNXOOQP, FK8IFJQYKLDHGVUJ4NT7QQN2TTN, FKKH451CBC3IG0SDT1XFHAI8BUB" depends on it; SQL statement:
 DROP TABLE IF EXISTS BOARDS [90107-200]
+<<<<<<< HEAD
+>>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
+=======
 >>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
@@ -983,11 +989,14 @@ DROP TABLE IF EXISTS BOARDS [90107-200]
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 <<<<<<< HEAD
+<<<<<<< HEAD
 	at java.base/java.lang.Thread.run(Thread.java:833)
 2023-03-28 15:00:52 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Cannot drop "USER" because "FKK46BXXJHGG8M3Q9MJT0WMMCKP" depends on it; SQL statement:
 DROP TABLE USER [90107-200]
 =======
+=======
+>>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
 	at java.base/java.lang.Thread.run(Thread.java:1589)
 2023-03-29 10:13:02 jdbc[14]: exception
 org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'Test' (LISTS: ""BOARD_ID"" INTEGER)"; SQL statement:
@@ -1049,6 +1058,9 @@ DROP TABLE IF EXISTS BOARDS [90107-200]
 2023-03-29 10:16:04 jdbc[14]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Cannot drop "USER" because "FKK46BXXJHGG8M3Q9MJT0WMMCKP" depends on it; SQL statement:
 DROP TABLE IF EXISTS USER [90107-200]
+<<<<<<< HEAD
+>>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
+=======
 >>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
@@ -1100,6 +1112,7 @@ DROP TABLE IF EXISTS USER [90107-200]
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+<<<<<<< HEAD
 <<<<<<< HEAD
 	at java.base/java.lang.Thread.run(Thread.java:833)
 2023-03-28 15:02:59 jdbc[3]: exception
@@ -1913,6 +1926,8 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/itw
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:381)
 	... 61 more
 =======
+=======
+>>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
 	at java.base/java.lang.Thread.run(Thread.java:1589)
 2023-03-29 10:23:44 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "LISTS.BOARD_NAME" not found; SQL statement:
@@ -2140,4 +2155,7 @@ SELECT * FROM LISTS WHERE LISTS.BOARD_NAME = ? [42122-200]
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
+<<<<<<< HEAD
+>>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208
+=======
 >>>>>>> 42fee07ff53e51bf07ec77f8f20e4f12df0a9208

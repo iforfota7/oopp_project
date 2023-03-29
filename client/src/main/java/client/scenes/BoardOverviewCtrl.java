@@ -77,8 +77,8 @@ public class BoardOverviewCtrl{
      */
     public void goToBoard(MouseEvent event) {
 
+        System.out.println((Boards)((Label)event.getSource()).getProperties().get("board"));
         Main.setSceneToBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
-
     }
 
     /**
@@ -112,6 +112,7 @@ public class BoardOverviewCtrl{
 
 
         StackPane newBoard = createNewBoard(b);
+
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
 
         gridPane.add(newBoard, positionInColumn, row);
@@ -128,6 +129,7 @@ public class BoardOverviewCtrl{
 
     public StackPane createNewBoard(Boards b) {
         Label newBoard = new Label(b.name);
+
 
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +

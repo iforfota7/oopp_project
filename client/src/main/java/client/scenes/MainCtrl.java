@@ -48,6 +48,7 @@ public class MainCtrl {
 
     private RenameBoardCtrl renameBoardCtrl;
 
+
     private int numberOfLists = 2;
 
 
