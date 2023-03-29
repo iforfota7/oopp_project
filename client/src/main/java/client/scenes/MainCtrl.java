@@ -27,7 +27,7 @@ public class MainCtrl {
 
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
-    private Scene selectServer, joinBoardByID;
+    private Scene selectServer, joinBoardByID, userDetails;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
@@ -40,6 +40,7 @@ public class MainCtrl {
     private JoinBoardByIDCtrl joinBoardByIDCtrl;
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
+    private UserDetailsCtrl userDetailsCtrl;
 
     private int numberOfLists = 2;
 
@@ -49,7 +50,8 @@ public class MainCtrl {
                                 Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
                                 Pair<BoardOverviewCtrl, Parent> boardOverview,
                                 Pair<AddBoardCtrl, Parent> addBoard,
-                                Pair<JoinBoardByIDCtrl, Parent> joinBoardByID) {
+                                Pair<JoinBoardByIDCtrl, Parent> joinBoardByID,
+                                Pair<UserDetailsCtrl, Parent> userDetails) {
 
         this.primaryStage = primaryStage;
 
@@ -67,6 +69,9 @@ public class MainCtrl {
 
         this.joinBoardByID = new Scene(joinBoardByID.getValue());
         this.joinBoardByIDCtrl = joinBoardByID.getKey();
+
+        this.userDetails = new Scene(userDetails.getValue());
+        this.userDetailsCtrl = userDetails.getKey();
 
         showStart();
         primaryStage.show();
@@ -230,6 +235,9 @@ public class MainCtrl {
         primaryStage.setScene(selectServer);
     }
 
+    /**
+     * creates a secondary stage which asks for a title for the new board
+     */
     public void showAddBoard(){
         secondaryStage = new Stage();
         secondaryStage.setScene(addBoard);
@@ -237,6 +245,9 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * closes the secondary stage
+     */
     public void closeAddBoard(){
         secondaryStage.close();
     }
@@ -255,4 +266,21 @@ public class MainCtrl {
      * Closes the window that displays the joinBoardByID scene
      */
     public void closeJoinBoardByID() { secondaryStage.close(); }
+
+    /**
+     * Open a new window that displays the userDetails scene
+     */
+    public void showUserDetails(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(userDetails);
+        secondaryStage.setTitle("User Details");
+        secondaryStage.show();
+    }
+
+    /**
+     * Closes the window that displays the userDetails scene
+     */
+    public void closeUserDetails(){
+        secondaryStage.close();
+    }
 }
