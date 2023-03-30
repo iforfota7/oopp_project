@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.Main;
 import client.utils.ServerUtils;
+import commons.Boards;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -37,11 +38,11 @@ public class JoinBoardByIDCtrl {
             warning.setVisible(true);
             return;
         }
-
-        if(server.existsBoardByID(inputBoardID.getText())) {
+        Boards b = server.existsBoardByName(inputBoardID.getText());
+        if(b!=null) {
 
             warning.setVisible(false);
-            Main.setSceneToBoard(inputBoardID.getText());
+            Main.setSceneToBoard(b);
             inputBoardID.clear();
         }
         else {

@@ -111,7 +111,7 @@ public class TestListsRepository implements ListsRepository {
     }
 
     @Override
-    public List<Lists> findAllByOrderByPositionInsideBoardAsc(String boardName){
+    public List<Lists> findAllByOrderByPositionInsideBoardAsc(long boardName){
         return null; // needs to be implemented properly
     }
 

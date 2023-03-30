@@ -25,7 +25,6 @@ public class Lists {
     public List<Cards> cards;
 
     @ManyToOne
-
     public Boards board;
 
     /**
@@ -82,7 +81,7 @@ public class Lists {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", positionInsideBoard=" + positionInsideBoard +
-                ", cards=" + cards +
+                ", cards="  +
                 ", board=" + board.name +
                 '}';
     }
