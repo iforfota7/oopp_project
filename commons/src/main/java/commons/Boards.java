@@ -43,9 +43,7 @@ public class Boards {
 
 
 
-    public String getName(){
-        return name;
-    }
+
 
     /**
      * Equals method for boards class
