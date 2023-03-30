@@ -77,7 +77,6 @@ public class BoardOverviewCtrl{
      */
     public void goToBoard(MouseEvent event) {
 
-        System.out.println((Boards)((Label)event.getSource()).getProperties().get("board"));
         Main.setSceneToBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
     }
 
