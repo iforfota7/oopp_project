@@ -399,10 +399,14 @@ public class BoardCtrl {
 
     void deleteCard() {
         server.removeCard(currentTotalCard);
-        mainCtrl.closeDEList();
+        mainCtrl.closeDeleteCard();
     }
     void undeleteCard() {
-        mainCtrl.closeDEList();
+        mainCtrl.closeDeleteCard();
+    }
+
+    public void showHelpScene(){
+        mainCtrl.showHelpScene();
     }
 
     /**

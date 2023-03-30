@@ -27,7 +27,7 @@ public class MainCtrl {
 
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
-    private Scene selectServer, joinBoardByID, deleteCard;
+    private Scene selectServer, joinBoardByID, deleteCard, help;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
@@ -41,9 +41,11 @@ public class MainCtrl {
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
 
+    private HelpCtrl helpCtrl;
+
     private DeCardCtrl deCardCtrl;
 
-    private int numberOfLists = 2;
+    private int numberOfList;
 
 
     public void initializeBoard(Stage primaryStage,
@@ -99,6 +101,11 @@ public class MainCtrl {
 
         this.deleteCard = new Scene(deCardCtrl.getValue());
         this.deCardCtrl = deCardCtrl.getKey();
+    }
+
+    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl){
+        this.help = new Scene(helpCtrl.getValue());
+        this.helpCtrl = helpCtrl.getKey();
     }
 
     public void showStart() {
@@ -272,4 +279,15 @@ public class MainCtrl {
      * Closes the window that displays the joinBoardByID scene
      */
     public void closeJoinBoardByID() { secondaryStage.close(); }
+
+    public void closeHelpScene(){
+        secondaryStage.close();
+    }
+
+    public void showHelpScene(){
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Help");
+        secondaryStage.setScene(help);
+        secondaryStage.show();
+    }
 }
