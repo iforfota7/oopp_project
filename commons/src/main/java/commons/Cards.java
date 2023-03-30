@@ -28,6 +28,12 @@ public class Cards {
 
 
     /**
+     * Default constructor method for the object mapper
+     */
+    @SuppressWarnings("unused")
+    public Cards(){}
+
+    /**
      * Constructor method for the cards class
      * @param title the name of the card
      * @param positionInsideList the position of card inside its list container
@@ -43,12 +49,6 @@ public class Cards {
         this.description = description;
         this.subtasks = subtasks;
     }
-
-    /**
-     * Default constructor method for the object mapper
-     */
-    @SuppressWarnings("unused")
-    public Cards(){}
 
     /**
      * Equals method to compare card to another object

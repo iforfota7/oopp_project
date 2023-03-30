@@ -18,7 +18,6 @@ public class Subtask {
     public String title;
     public boolean checked;
 
-
     @ManyToOne
     public Cards card;
 
@@ -36,7 +35,10 @@ public class Subtask {
         this.checked = checked;
         this.card = card;
     }
-
+    /**
+     * Default constructor method for the object mapper
+     */
+    @SuppressWarnings("unused")
     public Subtask(){}
 
     /**
