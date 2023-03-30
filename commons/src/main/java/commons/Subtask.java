@@ -23,14 +23,12 @@ public class Subtask {
 
     /**
      * Constructor method for the Subtask class
-     * @param id unique id of a subtask
      * @param title the title of the card
      * @param checked a boolean which defines the state of the checkbox
      *                of the subtask-> finished or not
      * @param card the parent card of the subtask
      */
-    public Subtask(long id, String title, boolean checked, Cards card) {
-        this.id = id;
+    public Subtask(String title, boolean checked, Cards card) {
         this.title = title;
         this.checked = checked;
         this.card = card;
