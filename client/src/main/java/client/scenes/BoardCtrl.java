@@ -49,12 +49,12 @@ public class BoardCtrl {
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
-     * @param b - board
+     * @param board - sets variable board from class to specific board
      */
-    public void initialize(Boards b) {
+    public void initialize(Boards board) {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
-        board = b;
+        this.board = board;
         refresh();
     }
 
@@ -433,7 +433,6 @@ public class BoardCtrl {
 
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
-        System.out.println(board);
         Lists list = new Lists(text, position, board);
 
         try {
