@@ -66,29 +66,24 @@ public class Main extends Application {
         var addCard = FXML.load(NewCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
         var confirmUsername = FXML.load(ConfirmUsernameCtrl.class,
                 "client", "scenes", "ConfirmUsername.fxml");
+        var confirmAdmin = FXML.load(ConfirmAdminCtrl.class,
+                "client", "scenes", "ConfirmAdmin.fxml");
         var boardOverview = FXML.load(BoardOverviewCtrl.class,
                 "client", "scenes", "BoardOverview.fxml");
         var addBoard = FXML.load(AddBoardCtrl.class, "client", "scenes",
                 "AddNewBoard.fxml");
         var joinBoard = FXML.load(JoinBoardByIDCtrl.class,
                 "client","scenes","JoinBoardByID.fxml");
-        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-
-        mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername,
-                boardOverview, addBoard, joinBoard);
-        mainCtrl.initializeLists(renameList, deleteList, addList);
-        mainCtrl.initializeCards(cardDetails, addCard);
-    }
-
-    /**
-     * Sets main scene, displaying the board
-     * @param boardName Used to set the title of the displayed board
-     */
-    public static void setSceneToBoard(String boardName){
+        var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
+                "UserDetails.fxml");
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
-
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.setBoard(board, boardName);
+
+        mainCtrl.initializeBoard(board, selectServer, confirmUsername,
+                boardOverview, addBoard, joinBoard, userDetails);
+        mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
+        mainCtrl.initializeCards(cardDetails, addCard);
+        mainCtrl.initializeAdmin(confirmAdmin);
     }
 
 }

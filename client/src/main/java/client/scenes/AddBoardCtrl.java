@@ -7,6 +7,9 @@ import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
 
+/**
+ *  Controller for Add Board
+ */
 public class AddBoardCtrl {
     private final BoardOverviewCtrl boardOverviewCtrl;
     private final MainCtrl mainCtrl;
@@ -29,14 +32,15 @@ public class AddBoardCtrl {
     }
 
     /**
-     * Save a newly created board in server, close the scene and refresh board overview scene
+     * the initialization and customization of the
+     * Board display name is only achieved through creating a new window.
      */
     @FXML
     void saveNewBoard(){
         server.addBoard(new Boards(boardName.getText(), null));
         boardName.setText("");
 
-        mainCtrl.closeAddBoard();
+        mainCtrl.closeSecondaryStage();
         boardOverviewCtrl.refresh();
     }
 

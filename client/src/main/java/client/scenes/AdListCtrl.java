@@ -52,7 +52,7 @@ public class AdListCtrl {
 
         boardCtrl.addListToBoard(newListName.getText(), positionInsideBoard);
         newListName.setText("");
-        mainCtrl.closeADList();
+        mainCtrl.closeSecondaryStage();
     }
 
 }
