@@ -16,6 +16,7 @@
 package client.utils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -234,8 +235,6 @@ public class ServerUtils {
         }catch(Exception e) {
             return false;
         }
-
-
     }
 
     private final StompSession session =  connect("ws://localhost:8080/websocket");
@@ -305,15 +304,45 @@ public class ServerUtils {
 
     /**
      * Method that checks whether a user is an admin
-     * @param user the user to be checked
      * @return true if the user is admin, false otherwise
      */
-    public boolean checkAdmin(User user) {
+    public boolean checkAdmin() {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/user/find/" + user.username).
+                path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
                 }).isAdmin;
+    }
+
+    /**
+     * Method that adds the current board to the user
+     * @param board the current board
+     * @return the response entity
+     */
+    public void addBoardToUser(Boards board){
+        User user = ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>() {});
+        if(user.boards == null || user.boards.size() == 0) user.boards = new ArrayList<>(){};
+
+        user.boards.add(board);
+
+        ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
+     * Method that retrieves all boards a user has viewed
+     * @return the list of boards a user has seen
+     */
+    public List<Boards> viewedBoards(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/user/boards/" + USERNAME)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Boards>>() {});
     }
 
 }

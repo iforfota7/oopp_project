@@ -591,6 +591,10 @@ public class BoardCtrl {
         this.board = b;
     }
 
+    public void addBoardToList(Boards board){
+        server.addBoardToUser(board);
+    }
+
     /**
      * Exits the specific board to show board overview
      */

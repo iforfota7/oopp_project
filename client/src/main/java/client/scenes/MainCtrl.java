@@ -155,6 +155,7 @@ public class MainCtrl {
      */
     public void showBoard(Boards b) {
         boardCtrl.setBoardName(b);
+        boardCtrl.addBoardToList(b);
         primaryStage.setTitle("Start");
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
@@ -166,7 +167,6 @@ public class MainCtrl {
      * @param b used to display the title of the board
      */
     public void setBoard(Boards b){
-        System.out.println(b);
         showBoard(b);
     }
 

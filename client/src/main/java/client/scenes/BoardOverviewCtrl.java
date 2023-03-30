@@ -56,7 +56,7 @@ public class BoardOverviewCtrl{
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
+        adminLock.set(server.checkAdmin());
         return adminLock.get();
     }
 
@@ -170,7 +170,17 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boardsList = server.getBoards();
+        boolean isAdmin = server.checkAdmin();
+
+        if(isAdmin){
+            boardsList = server.getBoards();
+        }
+        else{
+            boardsList = server.viewedBoards();
+        }
+
+        System.out.println(boardsList);
+
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
