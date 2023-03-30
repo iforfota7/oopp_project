@@ -412,7 +412,7 @@ class CardControllerTest {
 
     public Cards getCard(String t, int p, Lists list) {
 
-        Cards card = new Cards(t,p,list, "Test description");
+        Cards card = new Cards(t,p,list, "Test description", null);
         card.id = cardCount;
         cardCount++;
         return card;
