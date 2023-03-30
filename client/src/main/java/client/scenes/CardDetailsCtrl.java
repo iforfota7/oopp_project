@@ -5,11 +5,15 @@ import com.google.inject.Inject;
 import commons.Cards;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
 
 public class CardDetailsCtrl {
     @FXML
@@ -92,5 +96,58 @@ public class CardDetailsCtrl {
 
         cardTitleInput.setText(card.title);
         description.setText(card.description);
+        renderSubtask();
+    }
+
+    /**
+     * Method used for rendering a subtask in the subtask list
+     *
+     */
+    public void renderSubtask() {
+        HBox subtaskContainer = new HBox();
+        subtaskContainer.setPrefWidth(214);
+        subtaskContainer.setPrefHeight(32);
+        subtaskContainer.setAlignment(Pos.CENTER);
+
+        MenuButton menuButton = new MenuButton();
+        menuButton.setPrefWidth(25);
+        menuButton.setPrefHeight(18);
+        String menuButtonStyle = "-fx-padding: -5 -22 -5 -5; -fx-background-color:  #fff2cc; " +
+                "-fx-border-color:  #f0cca8; -fx-background-radius:  4; -fx-border-radius: 4;";
+        menuButton.setStyle(menuButtonStyle);
+        menuButton.setPopupSide(Side.LEFT);
+        menuButton.setText("\uD83D\uDD8A");
+
+        MenuItem rename = new MenuItem();
+        rename.setText("Rename");
+        MenuItem delete = new MenuItem();
+        delete.setText("Delete");
+        menuButton.getItems().addAll(rename, delete);
+        subtaskContainer.getChildren().add(menuButton);
+        HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
+
+        CheckBox checkBox = new CheckBox();
+        checkBox.setStyle("-fx-padding: 0 0 0 2; -fx-font-size: 13; -fx-font-family: 'Bell MT';");
+        checkBox.setText("Task");
+        checkBox.setPrefWidth(174);
+        checkBox.setPrefHeight(32);
+        subtaskContainer.getChildren().add(checkBox);
+
+        Button upArrow = new Button();
+        upArrow.setText("\uD83D\uDD3C");
+        upArrow.setPrefWidth(23);
+        upArrow.setStyle("-fx-margin: 1 1 0 0; -fx-padding: 0 2 0 2;");
+
+        subtaskContainer.getChildren().add(upArrow);
+        HBox.setMargin(upArrow, new Insets(1, 1, 0, 0));
+
+        Button downArrow = new Button();
+        downArrow.setText("\uD83D\uDD3D");
+        downArrow.setPrefWidth(23);
+        downArrow.setStyle("-fx-margin: 1 4 0 0; -fx-padding: 0 2 0 2;");
+        subtaskContainer.getChildren().add(downArrow);
+        HBox.setMargin(downArrow, new Insets(1, 4, 0, 0));
+
+        taskList.getChildren().add(subtaskContainer);
     }
 }
