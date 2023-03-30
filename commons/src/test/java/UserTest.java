@@ -65,11 +65,21 @@ public class UserTest {
 
     @Test
     void testToString(){
-        String stringUser1 = "User{username='iforfota7', boards=[Boards{id=0, name='Board 1', lists=null}], isAdmin=true}";
-        String stringUser11 = "User{username='iforfota7', boards=[Boards{id=0, name='Board 1', lists=null}], isAdmin=true}";
-        String stringUser2 = "User{username='iforfota77', boards=[Boards{id=0, name='Board 1', lists=null}], isAdmin=true}";
-        String stringUser3 = "User{username='iforfota7', boards=[Boards{id=0, name='Board 2', lists=null}], isAdmin=true}";
-        String stringUser4 = "User{username='iforfota7', boards=[Boards{id=0, name='Board 1', lists=null}], isAdmin=false}";
+        String stringUser1 = "User{username='iforfota7', " +
+                "boards=[Boards{id=0, name='Board 1', " +
+                "lists=null}], isAdmin=true}";
+        String stringUser11 = "User{username='iforfota7', " +
+                "boards=[Boards{id=0, name='Board 1', " +
+                "lists=null}], isAdmin=true}";
+        String stringUser2 = "User{username='iforfota77', " +
+                "boards=[Boards{id=0, name='Board 1', " +
+                "lists=null}], isAdmin=true}";
+        String stringUser3 = "User{username='iforfota7', " +
+                "boards=[Boards{id=0, name='Board 2', " +
+                "lists=null}], isAdmin=true}";
+        String stringUser4 = "User{username='iforfota7', " +
+                "boards=[Boards{id=0, name='Board 1', " +
+                "lists=null}], isAdmin=false}";
 
         assertEquals(user1.toString(), stringUser1);
         assertEquals(user1.toString(), stringUser11);

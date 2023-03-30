@@ -20,6 +20,18 @@ class ListsTest {
     @BeforeEach
     void setUp() {
 
+        Cards card1 = new Cards("Card 1", 1,
+                list1, "", new ArrayList<>());
+        Cards card2 = new Cards("Card 1", 1,
+                list2, "", new ArrayList<>());
+        Cards card3 = new Cards("Card 1", 1,
+                list3, "", new ArrayList<>());
+        Cards card4 = new Cards("Card 1", 1,
+                list4, "", new ArrayList<>());
+        Cards card11 = new Cards("Card 1", 1,
+                list11, "", new ArrayList<>());
+
+
         Boards board1 = new Boards("Board1", new ArrayList<>());
         Boards board2 = new Boards("Board2", new ArrayList<>());
 
@@ -60,11 +72,16 @@ class ListsTest {
 
     @Test
     void testToString() {
-        String stringList1 = "Lists{id=0, title='List 1', positionInsideBoard=1, cards=, board=Board1}";
-        String stringList11 = "Lists{id=0, title='List 1', positionInsideBoard=1, cards=, board=Board1}";
-        String stringList2 = "Lists{id=0, title='List 2', positionInsideBoard=1, cards=, board=Board1}";
-        String stringList3 = "Lists{id=0, title='List 1', positionInsideBoard=3, cards=, board=Board1}";
-        String stringList4 = "Lists{id=0, title='List 1', positionInsideBoard=1, cards=, board=Board2}";
+        String stringList1 = "Lists{id=0, title='List 1', " +
+                "positionInsideBoard=1, cards=, board=Board1}";
+        String stringList11 = "Lists{id=0, title='List 1', " +
+                "positionInsideBoard=1, cards=, board=Board1}";
+        String stringList2 = "Lists{id=0, title='List 2', " +
+                "positionInsideBoard=1, cards=, board=Board1}";
+        String stringList3 = "Lists{id=0, title='List 1', " +
+                "positionInsideBoard=3, cards=, board=Board1}";
+        String stringList4 = "Lists{id=0, title='List 1', " +
+                "positionInsideBoard=1, cards=, board=Board2}";
 
         assertEquals(list1.toString(), stringList1);
         assertEquals(list11.toString(), stringList11);

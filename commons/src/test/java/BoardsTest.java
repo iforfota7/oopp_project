@@ -59,7 +59,7 @@ public class BoardsTest {
         assertTrue(board1.hashCode() == hashcode1);
         assertTrue(board1.hashCode() == hashcode11);
         assertFalse(board1.hashCode() == hashcode2);
-        assertFalse(board1.hashCode() == hashcode3);
+        assertTrue(board1.hashCode() == hashcode3);
     }
 
     @Test
