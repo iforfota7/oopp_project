@@ -215,7 +215,7 @@ public class BoardCtrl {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         l.title = name;
         server.renameList(l);
-        mainCtrl.closeRNList();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**
@@ -231,11 +231,11 @@ public class BoardCtrl {
 
     }
     void deleteL() {
-          mainCtrl.closeDEList();
+        mainCtrl.closeSecondaryStage();
         server.removeList((Lists) currentList.getProperties().get("list"));
     }
     void undeleteL() {
-        mainCtrl.closeDEList();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**
@@ -428,8 +428,7 @@ public class BoardCtrl {
         Cards c = new Cards(text, l.cards.size(), l, "", null);
         c.list = l;
         server.addCard(c);
-        mainCtrl.closeNewCard();
-        //Cards
+        mainCtrl.closeSecondaryStage();
     }
 
     public void addListToBoard(String text, int position){

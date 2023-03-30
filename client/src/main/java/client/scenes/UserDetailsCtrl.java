@@ -45,7 +45,7 @@ public class UserDetailsCtrl {
      */
     @FXML
     void closeUserDetails(){
-        mainCtrl.closeUserDetails();
+        mainCtrl.closeSecondaryStage();
         mainCtrl.showBoardOverview();
     }
 
@@ -80,7 +80,7 @@ public class UserDetailsCtrl {
             alert.setContentText("Admin has been unlocked!");
             alert.showAndWait();
         } else {
-            mainCtrl.closeUserDetails();
+            mainCtrl.closeSecondaryStage();
             mainCtrl.showConfirmAdmin();
         }
     }
@@ -92,7 +92,7 @@ public class UserDetailsCtrl {
     @FXML
     void adminLogout() {
         selectServerCtrl.removeAdmin();
-        mainCtrl.closeUserDetails();
+        mainCtrl.closeSecondaryStage();
         mainCtrl.showBoardOverview();
     }
 }

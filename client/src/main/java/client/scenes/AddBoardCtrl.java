@@ -36,7 +36,7 @@ public class AddBoardCtrl {
         server.addBoard(new Boards(boardName.getText(), null));
         boardName.setText("");
 
-        mainCtrl.closeAddBoard();
+        mainCtrl.closeSecondaryStage();
         boardOverviewCtrl.refresh();
     }
 

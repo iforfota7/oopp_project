@@ -49,7 +49,7 @@ public class ConfirmAdminCtrl {
             boardOverviewCtrl.openAdminFeatures();
             inputPassword.clear();
             selectServerCtrl.setAdmin();
-            mainCtrl.closeConfirmAdmin();
+            mainCtrl.closeSecondaryStage();
             selectServerCtrl.refreshUserDetails();
         }else {
             inputPassword.clear();
