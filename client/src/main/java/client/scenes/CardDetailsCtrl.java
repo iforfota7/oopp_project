@@ -57,7 +57,7 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.id == openedCard.id)
+                    if(openedCard != null && c.id == openedCard.id)
                         setOpenedCard(c);
                 }
             });
