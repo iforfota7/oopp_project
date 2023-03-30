@@ -141,8 +141,8 @@ public class BoardCtrl {
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(board.id);
         //lists = server.getLists();
-        for(int i = 0; i<lists.size(); i++){
-            addNewList(lists.get(i));
+        for (Lists list : lists) {
+            addNewList(list);
 
         }
     }
@@ -425,7 +425,7 @@ public class BoardCtrl {
 
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
-        Cards c = new Cards(text, l.cards.size(), l, "");
+        Cards c = new Cards(text, l.cards.size(), l, "", null);
         c.list = l;
         server.addCard(c);
         mainCtrl.closeNewCard();
