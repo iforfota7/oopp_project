@@ -28,6 +28,7 @@ public class AddBoardCtrl {
      * @param boardOverviewCtrl board overview controller instance
      * @param mainCtrl main controller instance
      * @param server serverUtils instance
+     * @param boardCtrl instance of BoardCtrl
      */
     @Inject
     public AddBoardCtrl(BoardOverviewCtrl boardOverviewCtrl, MainCtrl mainCtrl, ServerUtils server,

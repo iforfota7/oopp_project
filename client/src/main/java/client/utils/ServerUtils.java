@@ -317,7 +317,6 @@ public class ServerUtils {
     /**
      * Method that adds the current board to the user
      * @param board the current board
-     * @return the response entity
      */
     public void addBoardToUser(Boards board){
         User user = ClientBuilder.newClient(new ClientConfig()).target(SERVER).

@@ -78,6 +78,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Get all the boards that a user has joined
+     * @param username the username of the user
+     * @return a list of boards the user has joined
+     */
     @GetMapping (path = "/boards/{username}")
     @ResponseBody
     public List<Boards> getAllBoards(@PathVariable String username) {
