@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -15,6 +14,12 @@ public class RenameBoardCtrl {
     @FXML
     private TextField boardName;
 
+    /**
+     * Constructor method for RenameBoardCtrl
+     * @param boardOverviewCtrl instance of BoardOverviewCtrl
+     * @param mainCtrl instance of MainCtrl
+     * @param server instance of ServerUtils
+     */
     @Inject
     public RenameBoardCtrl(BoardOverviewCtrl boardOverviewCtrl,
                            MainCtrl mainCtrl, ServerUtils server){
@@ -23,12 +28,15 @@ public class RenameBoardCtrl {
         this.server = server;
     }
 
+    /**
+     * Method that saves new board
+     */
     @FXML
-    void saveNewBoard(ActionEvent event){
+    void saveNewBoard(){
 
       //  server.renameBoard();
         boardName.setText("");
-        mainCtrl.closeAddBoard();
+        mainCtrl.closeSecondaryStage();
 
     }
 }

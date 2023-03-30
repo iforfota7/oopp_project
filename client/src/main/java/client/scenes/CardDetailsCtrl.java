@@ -35,7 +35,6 @@ public class CardDetailsCtrl {
 
     /**
      * Initializes the card details controller object
-     *
      * @param server Used for sending requests to the server
      * @param mainCtrl Used for navigating through different scenes
      */
@@ -83,7 +82,7 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         server.renameCard(openedCard);
-        mainCtrl.closeCardDetails();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**

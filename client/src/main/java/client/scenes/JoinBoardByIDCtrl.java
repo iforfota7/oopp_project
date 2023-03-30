@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.Main;
 import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.fxml.FXML;
@@ -18,6 +17,11 @@ public class JoinBoardByIDCtrl {
     @FXML
     private Text warning;
 
+    /**
+     * Constructor method for JoinBoardByIDCtrl
+     * @param server instance of ServerUtils
+     * @param mainCtrl instance of MainCtrl
+     */
     @Inject
     public JoinBoardByIDCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server=server;
@@ -42,7 +46,7 @@ public class JoinBoardByIDCtrl {
         if(b!=null) {
 
             warning.setVisible(false);
-            Main.setSceneToBoard(b);
+            mainCtrl.showBoard(b);
             inputBoardID.clear();
         }
         else {
@@ -60,6 +64,6 @@ public class JoinBoardByIDCtrl {
 
         warning.setVisible(false);
         inputBoardID.clear();
-        mainCtrl.closeJoinBoardByID();
+        mainCtrl.closeSecondaryStage();
     }
 }

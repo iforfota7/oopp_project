@@ -40,11 +40,6 @@ public class Boards {
     @SuppressWarnings("unused")
     public Boards(){}
 
-
-
-
-
-
     /**
      * Equals method for boards class
      * @param o an object to be compared to a board
@@ -59,11 +54,19 @@ public class Boards {
                 && Objects.equals(lists, boards.lists);
     }
 
+    /**
+     * Hashcode method for Boards class
+     * @return the hashcode of the board
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, name, lists);
     }
 
+    /**
+     * To string method for the board
+     * @return human readable format of board information
+     */
     @Override
     public String toString() {
         return "Boards{" +

@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.Main;
 import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.beans.property.BooleanProperty;
@@ -34,7 +33,6 @@ public class BoardOverviewCtrl{
      * @param server           Used for sending request to the server
      * @param selectServerCtrl Used for sending request to the serverServerCtrl
      */
-
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils server,
                              SelectServerCtrl selectServerCtrl) {
@@ -53,6 +51,10 @@ public class BoardOverviewCtrl{
 
     private BooleanProperty adminLock = new SimpleBooleanProperty(false);
 
+    /**
+     * Sets lock for admin
+     * @return the lock
+     */
     public boolean getAdminLock() {
         adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
         return adminLock.get();
@@ -61,7 +63,6 @@ public class BoardOverviewCtrl{
     /**
      * Creates a list of boards holding all labels
      * Initializes the onMouseClicked event for these labels
-     *
      */
     public void init() {
         boardsList = new ArrayList<>();
@@ -72,12 +73,10 @@ public class BoardOverviewCtrl{
 
     /**
      * Go to a specific board when a board label has been clicked
-     *
      * @param event Object that contains information about the mouse event
      */
     public void goToBoard(MouseEvent event) {
-
-        Main.setSceneToBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
+        mainCtrl.showBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
     }
 
     /**
@@ -88,11 +87,14 @@ public class BoardOverviewCtrl{
     /**
      * When the user clicks the button, they are sent back
      * to the Board Overview scene
-     *
      */
     public void disconnect() {
         mainCtrl.showSelectServer();
     }
+
+    /**
+     * When the user tries to add a new board, the relevant scene is opened
+     */
     @FXML
     public void addBoard(){
         mainCtrl.showAddBoard();
@@ -100,10 +102,8 @@ public class BoardOverviewCtrl{
 
     /**
      * Renders a new Board in the overview
-     *
      * @param b The board object to be displayed
      */
-
     public void addNewBoard(Boards b){
         numberOfBoards++;
         int positionInColumn = (numberOfBoards - 1) % 3;
@@ -121,11 +121,9 @@ public class BoardOverviewCtrl{
 
     /**
      * Creates the board element in FXML
-     *
      * @param b The title of the board
      * @return The Label controller that will be displayed
      */
-
     public StackPane createNewBoard(Boards b) {
         Label newBoard = new Label(b.name);
 
@@ -192,7 +190,7 @@ public class BoardOverviewCtrl{
      */
     public void openAdminFeatures() {
         adminLock.set(true);
-        mainCtrl.closeConfirmAdmin();
+        mainCtrl.closeSecondaryStage();
         adminLabel.setVisible(true);
         userLabel.setVisible(false);
     }
