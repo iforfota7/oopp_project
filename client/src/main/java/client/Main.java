@@ -64,6 +64,8 @@ public class Main extends Application {
                 "client","scenes","JoinBoardByID.fxml");
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
+        var customization = FXML.load(CustomizationCtrl.class,
+                "client","scenes","Customization.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
         mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername,
@@ -71,6 +73,7 @@ public class Main extends Application {
         mainCtrl.initializeLists(renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard);
         mainCtrl.initializeAdmin(confirmAdmin);
+        mainCtrl.initializeCustomization(customization);
     }
 
     /**

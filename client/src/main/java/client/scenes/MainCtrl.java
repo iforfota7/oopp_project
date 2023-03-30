@@ -30,6 +30,7 @@ public class MainCtrl {
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
     private Scene selectServer, joinBoardByID, userDetails;
     private Scene confirmAdmin;
+    private Scene customization;
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
@@ -43,6 +44,8 @@ public class MainCtrl {
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
     private UserDetailsCtrl userDetailsCtrl;
+
+    private CustomizationCtrl customizationCtrl;
 
     private int numberOfLists = 2;
 
@@ -104,6 +107,10 @@ public class MainCtrl {
     public void initializeAdmin(Pair<ConfirmAdminCtrl, Parent> confirmAdmin) {
         this.confirmAdmin = new Scene(confirmAdmin.getValue());
         this.confirmAdminCtrl = confirmAdmin.getKey();
+    }
+    public void initializeCustomization(Pair<CustomizationCtrl, Parent> customization) {
+        this.customization = new Scene(customization.getValue());
+        this.customizationCtrl = customization.getKey();
     }
     public void showStart() {
         primaryStage.setTitle("Start");
@@ -310,6 +317,24 @@ public class MainCtrl {
      * Closes the window that displays the userDetails scene
      */
     public void closeUserDetails(){
+        secondaryStage.close();
+    }
+
+    /**
+     * Open a new window that displays the customization scene
+     * @param name current board name
+     */
+    public void showCustomization(String name) {
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Customization for "+name);
+        secondaryStage.setScene(customization);
+        secondaryStage.show();
+    }
+
+    /**
+     * Closes the window that displays the customization scene
+     */
+    public void closeCustomization() {
         secondaryStage.close();
     }
 }
