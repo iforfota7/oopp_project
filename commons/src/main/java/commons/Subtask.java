@@ -53,7 +53,7 @@ public class Subtask {
         Subtask subtask = (Subtask) o;
         return id == subtask.id && checked == subtask.checked
                 && Objects.equals(title, subtask.title)
-                && Objects.equals(card, subtask.card);
+                && Objects.equals(card.id, subtask.card.id);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Subtask {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", checked=" + checked +
-                ", card=" + card +
+                ", card.id=" + card.id +
                 '}';
     }
 }

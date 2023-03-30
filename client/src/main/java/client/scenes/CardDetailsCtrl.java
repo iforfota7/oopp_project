@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Cards;
+import commons.Subtask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -96,14 +97,24 @@ public class CardDetailsCtrl {
 
         cardTitleInput.setText(card.title);
         description.setText(card.description);
-        renderSubtask();
+
+
+        HBox header = (HBox) taskList.getChildren().get(0);
+        taskList.getChildren().clear();
+
+        taskList.getChildren().add(header);
+        for(Subtask subtask : card.subtasks)
+            renderSubtask(subtask);
+
+
     }
 
     /**
      * Method used for rendering a subtask in the subtask list
      *
+     * @param subtask Object containing information about
      */
-    public void renderSubtask() {
+    public void renderSubtask(Subtask subtask) {
         HBox subtaskContainer = new HBox();
         subtaskContainer.setPrefWidth(214);
         subtaskContainer.setPrefHeight(32);
@@ -128,10 +139,11 @@ public class CardDetailsCtrl {
 
         CheckBox checkBox = new CheckBox();
         checkBox.setStyle("-fx-padding: 0 0 0 2; -fx-font-size: 13; -fx-font-family: 'Bell MT';");
-        checkBox.setText("Task");
+        checkBox.setText(subtask.title);
         checkBox.setPrefWidth(174);
         checkBox.setPrefHeight(32);
         subtaskContainer.getChildren().add(checkBox);
+        checkBox.setSelected(subtask.checked);
 
         Button upArrow = new Button();
         upArrow.setText("\uD83D\uDD3C");
