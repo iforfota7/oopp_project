@@ -123,6 +123,23 @@
                </Button>
             </children>
          </HBox>
+         <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="174.0">
+            <children>
+               <TextField prefHeight="20.0" prefWidth="182.0">
+                  <HBox.margin>
+                     <Insets left="5.0" />
+                  </HBox.margin>
+               </TextField>
+               <Button mnemonicParsing="false" prefHeight="18.4" prefWidth="20.0" style="-fx-border-radius: 4; -fx-background-radius: 4; -fx-background-color: #d0fbd0; -fx-border-color: #8cd98c;" text="✔">
+                  <padding>
+                     <Insets bottom="-3.0" left="-3.0" right="-3.0" top="-4.0" />
+                  </padding>
+                  <HBox.margin>
+                     <Insets left="18.0" />
+                  </HBox.margin>
+               </Button>
+            </children>
+         </HBox>
       </children>
    </VBox>
    <GridPane fx:id="tagList" layoutX="35.0" layoutY="255.0" prefHeight="94.0" prefWidth="258.0" style="-fx-background-color: #ecf9ee; -fx-border-color: #b8e0b8; -fx-background-radius: 4; -fx-border-radius: 4;" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="35.0">
