@@ -3,6 +3,7 @@ package commons;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +22,9 @@ public class Cards {
     @ManyToOne
     public Lists list;
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    public List<Subtask> subtasks;
+
 
 
     /**
@@ -29,12 +33,15 @@ public class Cards {
      * @param positionInsideList the position of card inside its list container
      * @param list the list in which the card is
      * @param description The description of the card
+     * @param subtasks The list of subtasks of a card
      */
-    public Cards(String title, int positionInsideList, Lists list, String description) {
+    public Cards(String title, int positionInsideList, Lists list, String description,
+                 List<Subtask> subtasks) {
         this.title = title;
         this.positionInsideList = positionInsideList;
         this.list = list;
         this.description = description;
+        this.subtasks = subtasks;
     }
 
     /**
@@ -55,7 +62,8 @@ public class Cards {
         Cards cards = (Cards) o;
         return id == cards.id && positionInsideList == cards.positionInsideList
                 && Objects.equals(title, cards.title) && list.id==cards.list.id
-                && Objects.equals(description, cards.description);
+                && Objects.equals(description, cards.description)
+                && Objects.equals(subtasks, cards.subtasks);
     }
 
     /**
@@ -64,7 +72,7 @@ public class Cards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideList, list);
+        return Objects.hash(id, title, positionInsideList, list, subtasks);
     }
 
     /**
@@ -80,6 +88,7 @@ public class Cards {
                 ", positionInsideList=" + positionInsideList +
                 ", description='" + description + '\'' +
                 ", list=" + list +
+                ", subtasks=" + subtasks.toString() +
                 '}';
     }
 }
