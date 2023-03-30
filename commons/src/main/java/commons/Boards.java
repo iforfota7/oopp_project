@@ -22,7 +22,12 @@ public class Boards {
     @OrderBy("positionInsideBoard ASC")
     @JsonIgnore
     public List<Lists> lists;
-
+    public String boardBgColor;
+    public String boardFtColor;
+    public String listBgColor;
+    public String listFtColor;
+    public String cardBgColor;
+    public String cardFtColor;
     /**
      * Constructor method for a board
      * @param name the name of the board (acts as unique id)
@@ -31,6 +36,12 @@ public class Boards {
     public Boards(String name, List<Lists> lists){
         this.name = name;
         this.lists = lists;
+        this.boardBgColor = "#E6E6FA";
+        this.boardFtColor = "#000000";
+        this.listBgColor = "#E6E6FA";
+        this.listFtColor = "#000000";
+        this.cardBgColor = "#FFFFFF";
+        this.cardFtColor = "#000000";
     }
 
     /**

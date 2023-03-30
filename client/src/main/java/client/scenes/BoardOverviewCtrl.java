@@ -77,7 +77,6 @@ public class BoardOverviewCtrl{
      */
     public void goToBoard(MouseEvent event) {
         Main.setSceneToBoard(((Label)event.getSource()).getText());
-        Label currentBoard = (Label) event.getSource();
     }
 
     /**

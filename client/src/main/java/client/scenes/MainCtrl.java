@@ -134,6 +134,7 @@ public class MainCtrl {
         this.board = new Scene(board.getValue());
         this.boardCtrl = board.getKey();
         showBoard(boardName);
+        boardCtrl.refreshCustomization();
     }
 
     /**

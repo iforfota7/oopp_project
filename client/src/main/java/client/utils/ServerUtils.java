@@ -233,5 +233,16 @@ public class ServerUtils {
                 .get(new GenericType<User>() {
                 }).isAdmin();
     }
+    public Boards getBoardByID(String boardID) {
+        return  ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/get/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){});
+    }
 
+    public Boards setBoardCss(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/setCss/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 }

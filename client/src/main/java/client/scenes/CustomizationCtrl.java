@@ -47,7 +47,7 @@ public class CustomizationCtrl {
         colorPickers.add(cardFtColor);
         colorPickers.add(listBgColor);
         colorPickers.add(listFtColor);
-        revertCustomization();
+        setColorPickersButton("customization");
     }
     @Inject
     public CustomizationCtrl(MainCtrl mainCtrl, BoardCtrl boardCtrl) {
@@ -58,6 +58,7 @@ public class CustomizationCtrl {
     @FXML
     void saveCustomization() {
         readCustomization();
+        boardCtrl.setBoardToDB();
         boardCtrl.refreshCustomization();
         mainCtrl.closeCustomization();
     }
@@ -75,12 +76,16 @@ public class CustomizationCtrl {
             e.printStackTrace();
         }
     }
-
     @FXML
     void revertCustomization() {
+        setColorPickersButton("customization(default)");
+    }
+
+    void setColorPickersButton(String name) {
         try {
+            String fileName = "client/src/main/resources/client/scenes/"+name;
             List<String> lines = Files.readAllLines(Paths.get(
-                    "client/src/main/resources/client/scenes/customization(default)"));
+                    fileName));
             Map<String, String> idToColorMap = lines.stream()
                     .map(line -> line.split(":"))
                     .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
