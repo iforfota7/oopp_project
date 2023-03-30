@@ -41,6 +41,7 @@ public class BoardCtrl {
 
     private VBox currentList;
     private Hyperlink currentCard;
+    private Cards currentTotalCard;
 
     private List<Lists> lists;
 
@@ -229,7 +230,7 @@ public class BoardCtrl {
 
     }
     void deleteL() {
-          mainCtrl.closeDEList();
+        mainCtrl.closeDEList();
         server.removeList((Lists) currentList.getProperties().get("list"));
     }
     void undeleteL() {
@@ -237,7 +238,7 @@ public class BoardCtrl {
     }
 
     /**
-     *Trigger function for adding a List with a button //ActionEvent event
+     * Trigger function for adding a List with a button //ActionEvent event
      */
     @FXML
     void addList(){
@@ -391,9 +392,17 @@ public class BoardCtrl {
     @FXML
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
-       // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
-        server.removeCard(c);
+        currentTotalCard = c;
+        mainCtrl.showDeleteCard();
+    }
+
+    void deleteCard() {
+        server.removeCard(currentTotalCard);
+        mainCtrl.closeDEList();
+    }
+    void undeleteCard() {
+        mainCtrl.closeDEList();
     }
 
     /**

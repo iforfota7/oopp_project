@@ -27,7 +27,7 @@ public class MainCtrl {
 
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
-    private Scene selectServer, joinBoardByID;
+    private Scene selectServer, joinBoardByID, deleteCard;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
@@ -40,6 +40,8 @@ public class MainCtrl {
     private JoinBoardByIDCtrl joinBoardByIDCtrl;
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
+
+    private DeCardCtrl deCardCtrl;
 
     private int numberOfLists = 2;
 
@@ -86,13 +88,17 @@ public class MainCtrl {
         this.addListCtrl = addList.getKey();
     }
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
-            Pair<NewCardCtrl, Parent> newCardCtrl) {
+            Pair<NewCardCtrl, Parent> newCardCtrl,
+            Pair<DeCardCtrl, Parent> deCardCtrl) {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
 
         this.newCard = new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
+
+        this.deleteCard = new Scene(deCardCtrl.getValue());
+        this.deCardCtrl = deCardCtrl.getKey();
     }
 
     public void showStart() {
@@ -210,6 +216,17 @@ public class MainCtrl {
         secondaryStage.close();
     }
     public void closeNewCard(){secondaryStage.close();}
+
+    public void showDeleteCard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(deleteCard);
+        secondaryStage.setTitle("Delete Card");
+        secondaryStage.show();
+    }
+
+    public void closeDeleteCard(){
+        secondaryStage.close();
+    }
 
     /**
      * Method that sets the scene to the Board Overview scene
