@@ -28,7 +28,6 @@ import client.scenes.MainCtrl;
 import client.scenes.SelectServerCtrl;
 
 
-import commons.Boards;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

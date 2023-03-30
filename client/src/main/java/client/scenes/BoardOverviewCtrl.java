@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.Main;
 import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.beans.property.BooleanProperty;

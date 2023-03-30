@@ -270,6 +270,9 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * This method closes any general secondary stage
+     */
     public void closeSecondaryStage(){
         secondaryStage.close();
     }
