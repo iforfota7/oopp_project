@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
@@ -396,25 +397,23 @@ public class BoardCtrl {
     @FXML
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
-       // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
         server.removeCard(c);
     }
 
     /**
-     * open the Card Detail scene and modify all information about the card, including its name.....
-     * In order to prevent it from opening while dragging,
-     * the code here sets a time delay between pressing and releasing the left mouse button.
-     * If the time delay is greater than a certain value,
-     * the click option will not be triggered, so the cardDetail won't open during dragging.
+     * Opens the Card Detail scene and modify all information about the card
+     * Event is triggered by double-clicking on a card
      *
-     * @param event a button (Hyperlink)
+     * @param event Object containing information about the mouse event
      */
     @FXML
-    void cardDetail(ActionEvent event) {
-        Hyperlink currentCard = (Hyperlink) event.getTarget();
-        cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
-        mainCtrl.showCardDetail();
+    void cardDetail(MouseEvent event) {
+        if(event.getClickCount() == 2) {
+            Hyperlink currentCard = (Hyperlink) event.getSource();
+            cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
+            mainCtrl.showCardDetail();
+        }
     }
 
     void openAddNewCard(ActionEvent event){
@@ -429,7 +428,6 @@ public class BoardCtrl {
         c.list = l;
         server.addCard(c);
         mainCtrl.closeNewCard();
-        //Cards
     }
 
     public void addListToBoard(String text, int position){
@@ -503,7 +501,8 @@ public class BoardCtrl {
 
         card.setOnDragDone(drag::dragDone);
         // set the card to execute cardDetail on action
-        card.setOnAction(this::cardDetail);
+//        card.setOnAction(this::cardDetail);
+        card.setOnMouseClicked(this::cardDetail);
         return card;
     }
 
