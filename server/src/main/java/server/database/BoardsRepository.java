@@ -8,10 +8,10 @@ import java.util.Optional;
 
 public interface BoardsRepository extends JpaRepository<Boards, Long> {
 
-    /**
-     * Query to find a board by name
-     * @param name the name of the board
-     * @return a board with that name, if it exists
+
+    /** FindByName searches for board with specific name...
+     * @param name - String name
+     * @return - Board with that name, null otherwise
      */
     @Query(value = "SELECT * FROM BOARDS WHERE BOARDS.NAME = ?1",
             nativeQuery = true)
