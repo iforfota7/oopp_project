@@ -262,7 +262,7 @@ public class BoardCtrl {
     }
 
     /**
-     * 
+     *
      */
     void undeleteL() {
         mainCtrl.closeDEList();
