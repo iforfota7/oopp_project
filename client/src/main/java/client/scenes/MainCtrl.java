@@ -236,7 +236,7 @@ public class MainCtrl {
         secondaryStage.setTitle("Add a new Board!");
         secondaryStage.show();
     }
-
+    
     public void closeAddBoard(){
         secondaryStage.close();
     }

@@ -19,6 +19,10 @@ public class ConfirmUsernameCtrl {
 
     private MainCtrl mainCtrl;
 
+    /**
+     * Constructor method for ConfirmUsernameCtrl
+     * @param mainCtrl instance of MainCtrl
+     */
     @Inject
     public ConfirmUsernameCtrl(MainCtrl mainCtrl){
         this.mainCtrl = mainCtrl;

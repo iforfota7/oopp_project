@@ -15,16 +15,23 @@ public class AdListCtrl {
     private final BoardCtrl boardCtrl;
     private final ServerUtils server;
     private final MainCtrl   mainCtrl;
+    @FXML
+    private TextField newListName;
+    @FXML
+    private Text warning;
+
+    /**
+     * Constructor method for the AdListCtrl class
+     * @param boardCtrl instance of BoardCtrl
+     * @param server instance of ServerUtils
+     * @param mainCtrl instance of MainCtrl
+     */
     @Inject
     public AdListCtrl(BoardCtrl boardCtrl, ServerUtils server, MainCtrl mainCtrl){
         this.boardCtrl = boardCtrl;
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
-    @FXML
-    private TextField newListName;
-    @FXML
-    private Text warning;
 
     /**
      * The initialization and customization of the

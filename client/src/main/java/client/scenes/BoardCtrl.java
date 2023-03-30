@@ -262,14 +262,14 @@ public class BoardCtrl {
     }
 
     /**
-     *
+     * Method closes the secondary scene, cancelling the delete
      */
     void undeleteL() {
         mainCtrl.closeDEList();
     }
 
     /**
-     *Trigger function for adding a List with a button //ActionEvent event
+     * Trigger function for adding a List with a button //ActionEvent event
      */
     @FXML
     void addList(){
@@ -457,21 +457,33 @@ public class BoardCtrl {
         mainCtrl.closeCardDetails();
     }
 
+    /**
+     * Method opens the secondary scene for adding a new card
+     * @param event button click indicating new card should be added
+     */
     void openAddNewCard(ActionEvent event){
         this.currentList = (VBox)((Node)event.getSource()).getParent().getParent();
         mainCtrl.showAddCard();
     }
 
 
+    /**
+     * Adds a card of name text to a list
+     * @param text the name of the new card
+     */
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
         Cards c = new Cards(text, l.cards.size(), l);
         c.list = l;
         server.addCard(c);
         mainCtrl.closeNewCard();
-        //Cards
     }
 
+    /**
+     * Adds a list of name text to a board
+     * @param text the name of the list
+     * @param position the position of the list
+     */
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
         Boards board = new Boards(boardName.getText(), lists);
@@ -485,6 +497,11 @@ public class BoardCtrl {
         }
     }
 
+    /**
+     * Method that creates a new card and adds it
+     * @param anchor the anchor to which the card should be added
+     * @param c the card to be added
+     */
     public void addNewCard(VBox anchor, Cards c){
 
 
@@ -566,6 +583,10 @@ public class BoardCtrl {
         return button;
     }
 
+    /**
+     * Method that returns the first row of lists
+     * @return the first row of lists
+     */
     public HBox getFirstRow() {
         return firstRow;
     }
@@ -579,6 +600,9 @@ public class BoardCtrl {
         this.boardName.setText(boardName);
     }
 
+    /**
+     * Exits the specific board to show board overview
+     */
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }

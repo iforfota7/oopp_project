@@ -67,12 +67,14 @@ public class BoardOverviewCtrl{
     /**
      * When the user clicks the button, they are sent back
      * to the Board Overview scene
-     *
      */
     public void disconnect() {
         mainCtrl.showSelectServer();
     }
 
+    /**
+     * When the user tries to add a new board, the relevant scene is opened
+     */
     @FXML
     public void addBoard(){
         mainCtrl.showAddBoard();
