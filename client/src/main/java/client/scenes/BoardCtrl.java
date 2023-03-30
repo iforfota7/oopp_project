@@ -411,7 +411,8 @@ public class BoardCtrl {
     void cardDetail(MouseEvent event) {
         if(event.getClickCount() == 2) {
             Hyperlink currentCard = (Hyperlink) event.getSource();
-            cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
+            Cards openedCard = (Cards) currentCard.getParent().getProperties().get("card");
+            cardDetailsCtrl.setOpenedCard(openedCard);
             mainCtrl.showCardDetail();
         }
     }
