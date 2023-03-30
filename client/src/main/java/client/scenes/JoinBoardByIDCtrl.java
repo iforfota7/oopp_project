@@ -17,6 +17,11 @@ public class JoinBoardByIDCtrl {
     @FXML
     private Text warning;
 
+    /**
+     * Constructor method for JoinBoardByIDCtrl
+     * @param server instance of ServerUtils
+     * @param mainCtrl instance of MainCtrl
+     */
     @Inject
     public JoinBoardByIDCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server=server;

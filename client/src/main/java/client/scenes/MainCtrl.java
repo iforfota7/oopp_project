@@ -51,7 +51,16 @@ public class MainCtrl {
 
     private int numberOfLists = 2;
 
-
+    /**
+     * Initialize method for board related scenes
+     * @param board boardCtrl parent pair for board scene
+     * @param selectServer selectServerCtrl parent pair for selectServer scene
+     * @param confirmUsername confirmUsernameCtrl parent pair for confirmUsername scene
+     * @param boardOverview boardOverviewCtrl parent pair for boardOverview scene
+     * @param addBoard addBoardCtrl parent pair for addBoard scene
+     * @param joinBoardByID joinBoardByIDCtrl parent pair for joinBoardByID scene
+     * @param userDetails userDetailsCtrl parent pair for userDetails scene
+     */
     public void initializeBoard(Pair<BoardCtrl, Parent> board,
                                 Pair<SelectServerCtrl, Parent> selectServer,
                                 Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
@@ -82,6 +91,13 @@ public class MainCtrl {
         this.userDetailsCtrl = userDetails.getKey();
     }
 
+    /**
+     * Initialize method for list related scenes
+     * @param primaryStage primaryStageCtrl initializer
+     * @param renameList renameListCtrl parent pair for renameList scene
+     * @param deleteList deleteListCtrl parent pair for deleteList scene
+     * @param addList addListCtrl parent pair for addList scene
+     */
     public void initializeLists( Stage primaryStage, Pair<RnListCtrl,Parent> renameList,
                 Pair<DeListCtrl, Parent> deleteList,
                 Pair<AdListCtrl, Parent> addList) {
@@ -100,6 +116,12 @@ public class MainCtrl {
         showStart();
         primaryStage.show();
     }
+
+    /**
+     * Initialize method for card related scenes
+     * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
+     * @param newCardCtrl newCardCtrl parent pair for newCard scene
+     */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
             Pair<NewCardCtrl, Parent> newCardCtrl) {
 
@@ -109,15 +131,28 @@ public class MainCtrl {
         this.newCard = new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
     }
+
+    /**
+     * Initialize method for admin related scenes
+     * @param confirmAdmin confirmAdminCtrl parent pair for confirmAdmin scene
+     */
     public void initializeAdmin(Pair<ConfirmAdminCtrl, Parent> confirmAdmin) {
         this.confirmAdmin = new Scene(confirmAdmin.getValue());
         this.confirmAdminCtrl = confirmAdmin.getKey();
     }
+
+    /**
+     * Show selectServer scene
+     */
     public void showStart() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);
     }
 
+    /**
+     * Show board scene
+     * @param b the board to be shown
+     */
     public void showBoard(Boards b) {
         boardCtrl.setBoardName(b);
         primaryStage.setTitle("Start");
@@ -194,6 +229,9 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Show addCard scene
+     */
     public void showAddCard(){
         secondaryStage = new Stage();
         secondaryStage.setScene(newCard);
@@ -203,7 +241,6 @@ public class MainCtrl {
 
     /**
      * Method that sets the scene to the Board Overview scene
-     *
      */
     public void showBoardOverview() {
         String titleLabel;
@@ -221,7 +258,6 @@ public class MainCtrl {
 
     /**
      * Method that sets the scene to the Select Server scene
-     *
      */
     public void showSelectServer() {
         primaryStage.setTitle("Start");
@@ -237,6 +273,7 @@ public class MainCtrl {
         secondaryStage.setTitle("Add a new Board!");
         secondaryStage.show();
     }
+
 
     /**
      * show admin password input window

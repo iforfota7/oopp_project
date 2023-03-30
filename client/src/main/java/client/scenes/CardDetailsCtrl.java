@@ -30,7 +30,6 @@ public class CardDetailsCtrl {
 
     /**
      * Initializes the card details controller object
-     *
      * @param server Used for sending requests to the server
      * @param mainCtrl Used for navigating through different scenes
      */

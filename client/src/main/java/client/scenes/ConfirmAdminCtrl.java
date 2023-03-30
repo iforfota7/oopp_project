@@ -17,7 +17,12 @@ public class ConfirmAdminCtrl {
 
     private MainCtrl mainCtrl;
 
-
+    /**
+     * Constructor method for ConfirmAdminCtrl
+     * @param boardOverviewCtrl instance of BoardOverviewCtrl
+     * @param selectServerCtrl instance of SelectServerCtrl
+     * @param mainCtrl instance of MainCtrl
+     */
     @Inject
     public ConfirmAdminCtrl(BoardOverviewCtrl boardOverviewCtrl,
                             SelectServerCtrl selectServerCtrl, MainCtrl mainCtrl){
@@ -29,6 +34,7 @@ public class ConfirmAdminCtrl {
     private PasswordField inputPassword;
     @FXML
     private Label errorLabel;
+
     /**
      *The method here implements the functionality of the admin button,
      *  allowing users to enter a password to verify their admin privileges.

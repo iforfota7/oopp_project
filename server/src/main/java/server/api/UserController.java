@@ -56,11 +56,11 @@ public class UserController {
     @PostMapping(path = "refreshAdmin")
     @ResponseBody
     public ResponseEntity<Object> refreshAdmin(@RequestBody User user){
-        if (user == null || user.getUsername() == null || user.getUsername().equals("")) {
+        if (user == null || user.username == null || user.username.equals("")) {
             return ResponseEntity.badRequest().build();
         }
-        boolean isAdmin = user.isAdmin();
-        user.setAdmin(isAdmin);
+        boolean admin = user.isAdmin;
+        user.isAdmin = admin;
         repo.save(user);
         return ResponseEntity.ok().build();
     }
