@@ -78,7 +78,7 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         server.renameCard(openedCard);
-        mainCtrl.closeCardDetails();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**

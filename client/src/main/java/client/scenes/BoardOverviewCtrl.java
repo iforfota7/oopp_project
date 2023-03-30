@@ -76,9 +76,7 @@ public class BoardOverviewCtrl{
      * @param event Object that contains information about the mouse event
      */
     public void goToBoard(MouseEvent event) {
-
-        System.out.println((Boards)((Label)event.getSource()).getProperties().get("board"));
-        Main.setSceneToBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
+        mainCtrl.showBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
     }
 
     /**
@@ -193,7 +191,7 @@ public class BoardOverviewCtrl{
      */
     public void openAdminFeatures() {
         adminLock.set(true);
-        mainCtrl.closeConfirmAdmin();
+        mainCtrl.closeSecondaryStage();
         adminLabel.setVisible(true);
         userLabel.setVisible(false);
     }

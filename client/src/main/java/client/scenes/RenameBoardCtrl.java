@@ -28,7 +28,7 @@ public class RenameBoardCtrl {
 
       //  server.renameBoard();
         boardName.setText("");
-        mainCtrl.closeAddBoard();
+        mainCtrl.closeSecondaryStage();
 
     }
 }

@@ -42,7 +42,7 @@ public class JoinBoardByIDCtrl {
         if(b!=null) {
 
             warning.setVisible(false);
-            Main.setSceneToBoard(b);
+            mainCtrl.showBoard(b);
             inputBoardID.clear();
         }
         else {
@@ -60,6 +60,6 @@ public class JoinBoardByIDCtrl {
 
         warning.setVisible(false);
         inputBoardID.clear();
-        mainCtrl.closeJoinBoardByID();
+        mainCtrl.closeSecondaryStage();
     }
 }
