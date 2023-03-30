@@ -15,8 +15,8 @@
  */
 package client.scenes;
 
-import commons.User;
 import commons.Boards;
+import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -133,14 +133,14 @@ public class MainCtrl {
     /**
      * Sets scene of stage to passed board
      * @param board the scene to be displayed
-     * @param boardName used to display the title of the board
+     * @param b used to display the title of the board
      */
-    public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
+    public void setBoard(Pair<BoardCtrl, Parent> board, Boards b){
         this.board = new Scene(board.getValue());
         this.boardCtrl = board.getKey();
-        showBoard(boardName);
-        boardCtrl.refreshCustomization();
+        showBoard(b);
     }
+
 
     /**
      * Show scene of Rename List

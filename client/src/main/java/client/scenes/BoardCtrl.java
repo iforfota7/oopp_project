@@ -144,6 +144,7 @@ public class BoardCtrl {
 
     public void refresh(){
         this.currentBoard = server.getBoardByID(boardName.getText());
+        refreshCustomization();
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(board.id);
         //lists = server.getLists();
@@ -280,7 +281,6 @@ public class BoardCtrl {
         VBox headerList = new VBox(6);
         HBox footerList = new HBox(30);
 
-        list.setId("list");
         headerList.setId("header");
         footerList.setId("footer");
 
@@ -500,7 +500,6 @@ public class BoardCtrl {
      */
     public Hyperlink newHyperlink(){
         Hyperlink card = new Hyperlink();
-        card.setId("card");
         // set positioning, sizing, text alignment, and background color of the hyperlink
         card.setLayoutX(41);
         card.setLayoutY(1);
@@ -599,10 +598,10 @@ public class BoardCtrl {
         boardName.setStyle("-fx-text-fill: " + currentBoard.boardFtColor  + ";");
 
         //list color CSS setting
-        boardName.getScene().getRoot().lookup("#header")
-                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
-        boardName.getScene().getRoot().lookup("#footer")
-                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
+//        boardName.getScene().getRoot().lookup("#header")
+//                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
+//        boardName.getScene().getRoot().lookup("#footer")
+//                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
 //        boardName.getScene().getRoot().lookup("#list")
 //                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
 //        boardName.getScene().getRoot().lookup("#listName")

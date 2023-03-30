@@ -74,16 +74,16 @@ public class BoardController {
 
         return ResponseEntity.ok().build();
     }
-    @GetMapping(path = {"/get/{boardID}"})
+    @GetMapping(path = {"/get/{boardName}"})
     @ResponseBody
-    public Boards getBoard(@PathVariable String boardID) {
+    public Boards getBoard(@PathVariable String boardName) {
 
-        if(repo.findById(boardID).isEmpty()) return null;
-        return repo.findById(boardID).get();
+        if(repo.findByName(boardName).isEmpty()) return null;
+        return repo.findByName(boardName).get();
     }
     @PostMapping(path = {"/setCss","/setCss/"})
     public ResponseEntity<Boards> setCss(@RequestBody Boards boards) {
-        Optional<Boards> optionalBoard = repo.findById(boards.name);
+        Optional<Boards> optionalBoard = repo.findByName(boards.name);
         if (optionalBoard.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
