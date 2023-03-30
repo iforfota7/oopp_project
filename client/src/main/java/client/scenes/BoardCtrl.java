@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
@@ -58,6 +59,9 @@ public class BoardCtrl {
         refresh();
     }
 
+    /**
+     * This method configures websockets for lists
+     */
     private void webSocketLists() {
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
@@ -94,6 +98,9 @@ public class BoardCtrl {
         });
     }
 
+    /**
+     * This method configures websockets for cards
+     */
     private void webSocketCards() {
         server.registerForMessages("/topic/cards/remove", Cards.class, c->{
             Platform.runLater(new Runnable() {
@@ -137,22 +144,31 @@ public class BoardCtrl {
         });
     }
 
+    /**
+     * Method that refreshes the board by getting all lists from the
+     * server and displaying them
+     */
     public void refresh(){
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(board.id);
-        //lists = server.getLists();
         for (Lists list : lists) {
             addNewList(list);
-
         }
     }
 
+    /**
+     * Method that gets lists for a specific board
+     */
     public void refreshData(){
         lists = server.getListsByBoard(board.id);
-        //lists = server.getLists();
         refreshLists(lists);
     }
 
+    /**
+     * Method that refreshes all the cards in a list
+     * @param listContainer the container of the list
+     * @param c the list of cards
+     */
     public void refreshCards(VBox listContainer, List<Cards> c){
         int j = 0;
         for(Node i : listContainer.getChildren()){
@@ -167,6 +183,10 @@ public class BoardCtrl {
         }
     }
 
+    /**
+     * Method that refreshes all the lists in a board
+     * @param l a list of lists to be redrawn
+     */
     public void refreshLists(List<Lists> l){
         int j = 0;
         for(Node i : firstRow.getChildren()){
@@ -211,15 +231,19 @@ public class BoardCtrl {
         mainCtrl.showRenameList();
     }
 
+    /**
+     * Method that renames a list to a given name and saves it to the database
+     * @param name the new name of the list
+     */
     void rnList(String name) {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         l.title = name;
         server.renameList(l);
-        mainCtrl.closeRNList();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**
-     *Trigger function for deleting List option in the drop-down options button
+     * Trigger function for deleting List option in the drop-down options button
      * @param event List delete process
      */
     @FXML
@@ -230,16 +254,24 @@ public class BoardCtrl {
         mainCtrl.showDeleteList();
 
     }
+
+    /**
+     * Closes delete card scene and deletes card from database
+     */
     void deleteL() {
-          mainCtrl.closeDEList();
+        mainCtrl.closeSecondaryStage();
         server.removeList((Lists) currentList.getProperties().get("list"));
-    }
-    void undeleteL() {
-        mainCtrl.closeDEList();
     }
 
     /**
-     *Trigger function for adding a List with a button //ActionEvent event
+     * Method closes the secondary scene, cancelling the delete
+     */
+    void undeleteL() {
+        mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * Trigger function for adding a List with a button //ActionEvent event
      */
     @FXML
     void addList(){
@@ -396,42 +428,53 @@ public class BoardCtrl {
     @FXML
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
-       // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
         server.removeCard(c);
     }
 
     /**
-     * open the Card Detail scene and modify all information about the card, including its name.....
-     * In order to prevent it from opening while dragging,
-     * the code here sets a time delay between pressing and releasing the left mouse button.
-     * If the time delay is greater than a certain value,
-     * the click option will not be triggered, so the cardDetail won't open during dragging.
+     * Opens the Card Detail scene and modify all information about the card
+     * Event is triggered by double-clicking on a card
      *
-     * @param event a button (Hyperlink)
+     * @param event Object containing information about the mouse event
      */
     @FXML
-    void cardDetail(ActionEvent event) {
-        Hyperlink currentCard = (Hyperlink) event.getTarget();
-        cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
-        mainCtrl.showCardDetail();
+    void cardDetail(MouseEvent event) {
+        if(event.getClickCount() == 2) {
+            Hyperlink currentCard = (Hyperlink) event.getSource();
+            Cards openedCard = (Cards) currentCard.getParent().getProperties().get("card");
+            cardDetailsCtrl.setOpenedCard(openedCard);
+            mainCtrl.showCardDetail();
+        }
     }
 
+    /**
+     * Method opens the secondary scene for adding a new card
+     * @param event button click indicating new card should be added
+     */
     void openAddNewCard(ActionEvent event){
         this.currentList = (VBox)((Node)event.getSource()).getParent().getParent();
         mainCtrl.showAddCard();
     }
 
 
+    /**
+     * Adds a card of name text to a list
+     * @param text the name of the new card
+     */
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
         Cards c = new Cards(text, l.cards.size(), l, "", null);
         c.list = l;
         server.addCard(c);
-        mainCtrl.closeNewCard();
-        //Cards
+        mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * Adds a list of name text to a board
+     * @param text the name of the list
+     * @param position the position of the list
+     */
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
         Lists list = new Lists(text, position, board);
@@ -444,6 +487,11 @@ public class BoardCtrl {
         }
     }
 
+    /**
+     * Method that creates a new card and adds it
+     * @param anchor the anchor to which the card should be added
+     * @param c the card to be added
+     */
     public void addNewCard(VBox anchor, Cards c){
 
 
@@ -500,9 +548,9 @@ public class BoardCtrl {
 
         card.setOnDragDetected(drag::dragDetected);
 
-        card.setOnDragDone(drag::dragDone);
         // set the card to execute cardDetail on action
-        card.setOnAction(this::cardDetail);
+//        card.setOnAction(this::cardDetail);
+        card.setOnMouseClicked(this::cardDetail);
         return card;
     }
 
@@ -525,6 +573,10 @@ public class BoardCtrl {
         return button;
     }
 
+    /**
+     * Method that returns the first row of lists
+     * @return the first row of lists
+     */
     public HBox getFirstRow() {
         return firstRow;
     }
@@ -540,6 +592,9 @@ public class BoardCtrl {
         this.board = b;
     }
 
+    /**
+     * Exits the specific board to show board overview
+     */
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }

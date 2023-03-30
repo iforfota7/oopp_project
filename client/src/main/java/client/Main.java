@@ -28,7 +28,6 @@ import client.scenes.MainCtrl;
 import client.scenes.SelectServerCtrl;
 
 
-import commons.Boards;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -37,10 +36,22 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
+    /**
+     * Main method that runs client side application
+     * @param args any arguments
+     * @throws URISyntaxException possibly throws this exception
+     * @throws IOException possibly throws this exception
+     */
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();
     }
 
+    /**
+     * Initialisation of the fxml files
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * @throws IOException possibly throws this exception
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         var selectServer = FXML.load(SelectServerCtrl.class,
@@ -65,23 +76,14 @@ public class Main extends Application {
                 "client","scenes","JoinBoardByID.fxml");
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
-        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-
-        mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername,
-                boardOverview, addBoard, joinBoard, userDetails);
-        mainCtrl.initializeLists(renameList, deleteList, addList);
-        mainCtrl.initializeCards(cardDetails, addCard);
-        mainCtrl.initializeAdmin(confirmAdmin);
-    }
-
-    /**
-     * Sets main scene, displaying the board
-     * @param b Used to set the title of the displayed board
-     */
-    public static void setSceneToBoard(Boards b){
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.setBoard(board, b);
+
+        mainCtrl.initializeBoard(board, selectServer, confirmUsername,
+                boardOverview, addBoard, joinBoard, userDetails);
+        mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
+        mainCtrl.initializeCards(cardDetails, addCard);
+        mainCtrl.initializeAdmin(confirmAdmin);
     }
 
 }
