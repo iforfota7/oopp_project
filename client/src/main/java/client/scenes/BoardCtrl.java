@@ -15,8 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 import javafx.event.ActionEvent;
@@ -26,6 +29,7 @@ import javax.inject.Inject;
 public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
+    private CustomizationCtrl customizationCtrl;
     private final CardDetailsCtrl cardDetailsCtrl;
     @FXML
     private AnchorPane rootContainer;
@@ -41,10 +45,10 @@ public class BoardCtrl {
 
     private VBox currentList;
 
+    private Boards currentBoard;
     private List<Lists> lists;
 
     private final Draggable drag;
-
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -54,6 +58,7 @@ public class BoardCtrl {
     public void initialize(Boards board) {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
+        this.currentBoard = server.getBoardByID(boardName.getText());
         this.board = board;
         refresh();
     }
@@ -138,6 +143,7 @@ public class BoardCtrl {
     }
 
     public void refresh(){
+        this.currentBoard = server.getBoardByID(boardName.getText());
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(board.id);
         //lists = server.getLists();
@@ -274,7 +280,9 @@ public class BoardCtrl {
         VBox headerList = new VBox(6);
         HBox footerList = new HBox(30);
 
+        list.setId("list");
         headerList.setId("header");
+        footerList.setId("footer");
 
         headerList.setMinSize(150, 235);
         footerList.setMinSize(150, 25);
@@ -371,6 +379,7 @@ public class BoardCtrl {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
+        listName.setId("listName");
         listName.setStyle("-fx-font-size: 13px; -fx-content-display: " +
                 "CENTER; -fx-padding: 5 10 0 10;");
         listName.setAlignment(Pos.CENTER);
@@ -402,7 +411,8 @@ public class BoardCtrl {
     }
 
     /**
-     * open the Card Detail scene and modify all information about the card, including its name.....
+     * open the Card Detail scene and modify all information about the card,
+     * including its name.....
      * In order to prevent it from opening while dragging,
      * the code here sets a time delay between pressing and releasing the left mouse button.
      * If the time delay is greater than a certain value,
@@ -490,7 +500,7 @@ public class BoardCtrl {
      */
     public Hyperlink newHyperlink(){
         Hyperlink card = new Hyperlink();
-
+        card.setId("card");
         // set positioning, sizing, text alignment, and background color of the hyperlink
         card.setLayoutX(41);
         card.setLayoutY(1);
@@ -543,4 +553,85 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+
+    /**
+     * Open a Customization window to modify the color and font of this board.
+     */
+    @FXML
+    void openCustomization() {
+        setCssButton();
+        mainCtrl.showCustomization(boardName.getText());
+    }
+
+    private void setCssButton() {
+        try {
+            Map<String, String> idToColorMap = new HashMap<>();
+            idToColorMap.put("boardBgColor", currentBoard.boardBgColor);
+            idToColorMap.put("boardFtColor", currentBoard.boardFtColor);
+            idToColorMap.put("listBgColor", currentBoard.listBgColor);
+            idToColorMap.put("listFtColor", currentBoard.listFtColor);
+            idToColorMap.put("cardBgColor", currentBoard.cardBgColor);
+            idToColorMap.put("cardFtColor", currentBoard.cardFtColor);
+
+            List<String> lines = idToColorMap.entrySet().stream()
+                    .map(entry -> entry.getKey() + ":" + entry.getValue())
+                    .collect(Collectors.toList());
+
+            Files.write(Paths.get("client/src/main/resources/client/scenes/customization"), lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *Read the CSS from the file and set them.
+     */
+
+    /**
+     *Read the CSS from the file and set them.
+     */
+    public void refreshCustomization() {
+        //boards color CSS setting
+        boardName.getScene().getRoot().lookup("#firstRow").
+                setStyle("-fx-background-color: " + currentBoard.boardBgColor + ";");
+        boardName.getScene().getRoot()
+                .setStyle("-fx-background-color: " + currentBoard.boardBgColor + ";");
+        boardName.setStyle("-fx-text-fill: " + currentBoard.boardFtColor  + ";");
+
+        //list color CSS setting
+        boardName.getScene().getRoot().lookup("#header")
+                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
+        boardName.getScene().getRoot().lookup("#footer")
+                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
+//        boardName.getScene().getRoot().lookup("#list")
+//                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
+//        boardName.getScene().getRoot().lookup("#listName")
+//                .setStyle("-fx-text-fill: " + currentBoard.listFtColor + ";");
+        //card color CSS setting
+//        boardName.getScene().getRoot().lookup("#card")
+//                .setStyle("-fx-background-color: " + currentBoard.cardBgColor + ";");
+//        boardName.getScene().getRoot().lookup("#card")
+//                .setStyle("-fx-text-fill: " + currentBoard.cardFtColor + ";");
+    }
+
+    public void setBoardToDB() {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(
+                    "client/src/main/resources/client/scenes/customization"));
+            Map<String, String> idToColorMap = lines.stream()
+                    .map(line -> line.split(":"))
+                    .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
+            currentBoard.boardBgColor = idToColorMap.get("boardBgColor");
+            currentBoard.boardFtColor = idToColorMap.get("boardFtColor");
+            currentBoard.listBgColor = idToColorMap.get("listBgColor");
+            currentBoard.listFtColor = idToColorMap.get("listFtColor");
+            currentBoard.cardBgColor = idToColorMap.get("cardBgColor");
+            currentBoard.cardFtColor = idToColorMap.get("cardFtColor");
+            server.setBoardCss(currentBoard);
+            refresh();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

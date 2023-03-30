@@ -76,7 +76,6 @@ public class BoardOverviewCtrl{
      * @param event Object that contains information about the mouse event
      */
     public void goToBoard(MouseEvent event) {
-
         Main.setSceneToBoard((Boards)((Label)event.getSource()).getProperties().get("board"));
     }
 

@@ -31,6 +31,7 @@ public class MainCtrl {
     private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard;
     private Scene selectServer, joinBoardByID, userDetails;
     private Scene confirmAdmin;
+    private Scene customization;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
@@ -45,6 +46,8 @@ public class MainCtrl {
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
     private UserDetailsCtrl userDetailsCtrl;
+
+    private CustomizationCtrl customizationCtrl;
 
     private RenameBoardCtrl renameBoardCtrl;
 
@@ -110,6 +113,10 @@ public class MainCtrl {
         this.confirmAdmin = new Scene(confirmAdmin.getValue());
         this.confirmAdminCtrl = confirmAdmin.getKey();
     }
+    public void initializeCustomization(Pair<CustomizationCtrl, Parent> customization) {
+        this.customization = new Scene(customization.getValue());
+        this.customizationCtrl = customization.getKey();
+    }
     public void showStart() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);
@@ -126,12 +133,13 @@ public class MainCtrl {
     /**
      * Sets scene of stage to passed board
      * @param board the scene to be displayed
-     * @param b used to display the title of the board
+     * @param boardName used to display the title of the board
      */
-    public void setBoard(Pair<BoardCtrl, Parent> board, Boards b){
+    public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
         this.board = new Scene(board.getValue());
         this.boardCtrl = board.getKey();
-        showBoard(b);
+        showBoard(boardName);
+        boardCtrl.refreshCustomization();
     }
 
     /**
@@ -315,6 +323,24 @@ public class MainCtrl {
      * Closes the window that displays the userDetails scene
      */
     public void closeUserDetails(){
+        secondaryStage.close();
+    }
+
+    /**
+     * Open a new window that displays the customization scene
+     * @param name current board name
+     */
+    public void showCustomization(String name) {
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Customization for "+name);
+        secondaryStage.setScene(customization);
+        secondaryStage.show();
+    }
+
+    /**
+     * Closes the window that displays the customization scene
+     */
+    public void closeCustomization() {
         secondaryStage.close();
     }
 }

@@ -74,4 +74,29 @@ public class BoardController {
 
         return ResponseEntity.ok().build();
     }
+    @GetMapping(path = {"/get/{boardID}"})
+    @ResponseBody
+    public Boards getBoard(@PathVariable String boardID) {
+
+        if(repo.findById(boardID).isEmpty()) return null;
+        return repo.findById(boardID).get();
+    }
+    @PostMapping(path = {"/setCss","/setCss/"})
+    public ResponseEntity<Boards> setCss(@RequestBody Boards boards) {
+        Optional<Boards> optionalBoard = repo.findById(boards.name);
+        if (optionalBoard.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Boards savedBoard = optionalBoard.get();
+        savedBoard.boardBgColor = boards.boardBgColor;
+        savedBoard.boardFtColor = boards.boardFtColor;
+        savedBoard.listBgColor = boards.listBgColor;
+        savedBoard.listFtColor = boards.listFtColor;
+        savedBoard.cardBgColor = boards.cardBgColor;
+        savedBoard.cardFtColor = boards.cardFtColor;
+
+        Boards saved = repo.save(savedBoard);
+        return ResponseEntity.ok(saved);
+    }
 }
+

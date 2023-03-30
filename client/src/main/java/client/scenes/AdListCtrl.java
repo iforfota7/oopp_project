@@ -1,11 +1,8 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-
 import javax.inject.Inject;
 
 /**
@@ -13,12 +10,11 @@ import javax.inject.Inject;
  */
 public class AdListCtrl {
     private final BoardCtrl boardCtrl;
-    private final ServerUtils server;
+
     private final MainCtrl   mainCtrl;
     @Inject
-    public AdListCtrl(BoardCtrl boardCtrl, ServerUtils server, MainCtrl mainCtrl){
+    public AdListCtrl(BoardCtrl boardCtrl, MainCtrl mainCtrl){
         this.boardCtrl = boardCtrl;
-        this.server = server;
         this.mainCtrl = mainCtrl;
     }
     @FXML
