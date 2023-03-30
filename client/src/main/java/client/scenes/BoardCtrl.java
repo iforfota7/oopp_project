@@ -56,6 +56,9 @@ public class BoardCtrl {
         refresh();
     }
 
+    /**
+     * This method configures websockets for lists
+     */
     private void webSocketLists() {
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
@@ -96,6 +99,9 @@ public class BoardCtrl {
         });
     }
 
+    /**
+     * This method configures websockets for cards
+     */
     private void webSocketCards() {
         server.registerForMessages("/topic/cards/remove", Cards.class, c->{
             Platform.runLater(new Runnable() {
@@ -139,22 +145,32 @@ public class BoardCtrl {
         });
     }
 
+    /**
+     * Method that refreshes the board by getting all lists from the
+     * server and displaying them
+     */
     public void refresh(){
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(boardName.getText());
-        //lists = server.getLists();
         for(int i = 0; i<lists.size(); i++){
             addNewList(lists.get(i));
 
         }
     }
 
+    /**
+     * Method that gets lists for a specific board
+     */
     public void refreshData(){
         lists = server.getListsByBoard(boardName.getText());
-        //lists = server.getLists();
         refreshLists(lists);
     }
 
+    /**
+     * Method that refreshes all the cards in a list
+     * @param listContainer the container of the list
+     * @param c the list of cards
+     */
     public void refreshCards(VBox listContainer, List<Cards> c){
         int j = 0;
         for(Node i : listContainer.getChildren()){
@@ -169,6 +185,10 @@ public class BoardCtrl {
         }
     }
 
+    /**
+     * Method that refreshes all the lists in a board
+     * @param l a list of lists to be redrawn
+     */
     public void refreshLists(List<Lists> l){
         int j = 0;
         for(Node i : firstRow.getChildren()){
@@ -209,6 +229,10 @@ public class BoardCtrl {
         mainCtrl.showRenameList();
     }
 
+    /**
+     * Method that renames a list to a given name and saves it to the database
+     * @param name the new name of the list
+     */
     void rnList(String name) {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         l.title = name;
@@ -217,7 +241,7 @@ public class BoardCtrl {
     }
 
     /**
-     *Trigger function for deleting List option in the drop-down options button
+     * Trigger function for deleting List option in the drop-down options button
      * @param event List delete process
      */
     @FXML
@@ -228,10 +252,18 @@ public class BoardCtrl {
         mainCtrl.showDeleteList();
 
     }
+
+    /**
+     * Closes delete card scene and deletes card from database
+     */
     void deleteL() {
-          mainCtrl.closeDEList();
+        mainCtrl.closeDEList();
         server.removeList((Lists) currentList.getProperties().get("list"));
     }
+
+    /**
+     * 
+     */
     void undeleteL() {
         mainCtrl.closeDEList();
     }

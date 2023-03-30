@@ -36,10 +36,22 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
+    /**
+     * Main method that runs client side application
+     * @param args any arguments
+     * @throws URISyntaxException possibly throws this exception
+     * @throws IOException possibly throws this exception
+     */
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();
     }
 
+    /**
+     * Initialisation of the fxml files
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * @throws IOException possibly throws this exception
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         var selectServer = FXML.load(SelectServerCtrl.class,
