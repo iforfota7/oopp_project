@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import commons.Cards;
 import commons.Subtask;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import java.util.List;
 
 
 public class CardDetailsCtrl {
@@ -27,6 +30,14 @@ public class CardDetailsCtrl {
     private VBox taskList;
     @FXML
     private GridPane tagList;
+    @FXML
+    private HBox inputSubtask;
+    @FXML
+    private TextField subtaskName;
+    @FXML
+    private Text warningSubtask;
+    private int inputsOpen = 0;
+    private boolean changes = false;
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -73,6 +84,7 @@ public class CardDetailsCtrl {
     @FXML
     void save() {
         warning.setVisible(false);
+        changes = false;
 
         if(cardTitleInput.getText().isBlank()) {
             warning.setVisible(true);
@@ -82,6 +94,17 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         server.renameCard(openedCard);
+        mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * The user can close the card details without the modifications made
+     * to be saved by pressing the 'close' button
+     */
+    @FXML
+    void close(){
+        if(changes){
+        }
         mainCtrl.closeSecondaryStage();
     }
 
@@ -97,28 +120,33 @@ public class CardDetailsCtrl {
         cardTitleInput.setText(card.title);
         description.setText(card.description);
 
-
         HBox header = (HBox) taskList.getChildren().get(0);
         taskList.getChildren().clear();
 
         taskList.getChildren().add(header);
-        for(Subtask subtask : card.subtasks)
-            renderSubtask(subtask);
+        for(int i=0; i<openedCard.subtasks.size(); i++)
+            if(openedCard.subtasks.get(i) != null) {
+                openedCard.subtasks.get(i).position = i;
+                renderSubtask(openedCard.subtasks.get(i), i);
+            }
 
-
+        inputsOpen = 0;
     }
 
     /**
      * Method used for rendering a subtask in the subtask list
      *
      * @param subtask Object containing information about
+     * @param position The position of the Subtask in the list of subtasks
      */
-    public void renderSubtask(Subtask subtask) {
+
+    public void renderSubtask(Subtask subtask, int position) {
         // styling for the subtask container
         HBox subtaskContainer = new HBox();
         subtaskContainer.setPrefWidth(214);
         subtaskContainer.setPrefHeight(32);
         subtaskContainer.setAlignment(Pos.CENTER);
+        subtaskContainer.getProperties().put("subtask", subtask);
 
         // styling for the menu button
         menuButtonStyling(subtaskContainer);
@@ -137,6 +165,8 @@ public class CardDetailsCtrl {
         upArrow.setText("\uD83D\uDD3C");
         upArrow.setPrefWidth(23);
         upArrow.setStyle("-fx-margin: 1 1 0 0; -fx-padding: 0 2 0 2;");
+        upArrow.setId(Integer.toString(position));
+        upArrow.setOnAction(this::swapSubtasks);
         subtaskContainer.getChildren().add(upArrow);
         HBox.setMargin(upArrow, new Insets(1, 1, 0, 0));
 
@@ -145,6 +175,8 @@ public class CardDetailsCtrl {
         downArrow.setText("\uD83D\uDD3D");
         downArrow.setPrefWidth(23);
         downArrow.setStyle("-fx-margin: 1 4 0 0; -fx-padding: 0 2 0 2;");
+        downArrow.setId(Integer.toString(position));
+        downArrow.setOnAction(this::swapSubtasks);
         subtaskContainer.getChildren().add(downArrow);
         HBox.setMargin(downArrow, new Insets(1, 4, 0, 0));
 
@@ -174,8 +206,102 @@ public class CardDetailsCtrl {
         rename.setText("Rename");
         MenuItem delete = new MenuItem();
         delete.setText("Delete");
+        delete.setOnAction(this::deleteSubtask);
         menuButton.getItems().addAll(rename, delete);
         subtaskContainer.getChildren().add(menuButton);
         HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
+    }
+
+    /**
+     * Method that is called when 2 subtasks will be swapped
+     *
+     * @param actionEvent Object containing information about the action event
+     */
+    public void swapSubtasks(ActionEvent actionEvent) {
+//        changes = true;
+        Button arrow = (Button)actionEvent.getTarget();
+        int position = Integer.parseInt(arrow.getId());
+        List<Subtask> subtaskList = openedCard.subtasks;
+
+        if(arrow.getText().equals("\uD83D\uDD3C")) {
+            // up arrow
+            if(position > 0) {
+                swapSubtasks(subtaskList, position, position - 1);
+            }
+        } else {
+            // down arrow
+            if(position < subtaskList.size() - 1) {
+                swapSubtasks(subtaskList, position, position + 1);
+            }
+        }
+
+        setOpenedCard(openedCard);
+    }
+
+    /**
+     * Swaps subtasks at positions i and j in the subtasks list
+     *
+     * @param subtaskList The list containing the subtasks
+     * @param i The position of the first subtask
+     * @param j The position of the second subtask
+     */
+    private void swapSubtasks(List<Subtask> subtaskList, int i, int j) {
+        Subtask tmp = subtaskList.get(i);
+        subtaskList.set(i, subtaskList.get(j));
+        subtaskList.set(j, tmp);
+    }
+
+    /**
+     * Opens a text field for the user to input the new subtask
+     */
+    @FXML
+    public void addSubtask(){
+//        changes = true;
+        inputsOpen++;
+
+        if(inputsOpen == 1){
+            taskList.getChildren().add(inputSubtask);
+        }
+    }
+
+    /**
+     * Closes the text field and creates the new Subtask, then adds it
+     * to the subtasks list and to the database
+     */
+    @FXML
+    public void createSubtask(){
+        if(subtaskName.getText().equals("")){
+            subtaskName.setStyle("-fx-background-color: #ffcccc; " +
+                    "-fx-border-color: #b30000; -fx-background-radius: 4; " +
+                    "-fx-border-radius: 4;");
+            warningSubtask.setVisible(true);
+        }
+        else {
+            int position = taskList.getChildren().size() - 1;
+            Subtask newSubtask = new Subtask(subtaskName.getText(),
+                    false, openedCard, position);
+            subtaskName.setStyle("");
+            warningSubtask.setVisible(false);
+            inputsOpen--;
+            subtaskName.setText("");
+
+            openedCard.subtasks.add(newSubtask);
+            setOpenedCard(openedCard);
+        }
+
+    }
+
+    /**
+     * Deletes the subtask from the list of subtasks and from the database
+     * @param event Object containing information about the action event
+     */
+    private void deleteSubtask(ActionEvent event){
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        HBox toDelete = (HBox) popup.getOwnerNode().getParent();
+
+        Subtask subtask = (Subtask) toDelete.getProperties().get("subtask");
+        openedCard.subtasks.remove(subtask);
+        setOpenedCard(openedCard);
     }
 }

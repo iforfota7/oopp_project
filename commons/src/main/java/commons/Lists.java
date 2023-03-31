@@ -67,7 +67,7 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideBoard, cards, board);
+        return Objects.hash(id, title, positionInsideBoard, board);
     }
 
     /**

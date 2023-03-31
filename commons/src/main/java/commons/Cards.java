@@ -22,7 +22,8 @@ public class Cards {
     @ManyToOne
     public Lists list;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
     public List<Subtask> subtasks;
 
 
@@ -72,7 +73,7 @@ public class Cards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideList, list, subtasks);
+        return Objects.hash(id, title, positionInsideList, list);
     }
 
     /**

@@ -21,20 +21,24 @@ public class Subtask {
     @ManyToOne
     public Cards card;
 
+    public int position;
+
     /**
      * Constructor method for the Subtask class
-     * @param id unique id of a subtask
      * @param title the title of the card
      * @param checked a boolean which defines the state of the checkbox
      *                of the subtask-> finished or not
      * @param card the parent card of the subtask
+     * @param position the position of the subtask is the subtasks list
+     *                 of a card
      */
-    public Subtask(long id, String title, boolean checked, Cards card) {
-        this.id = id;
+    public Subtask(String title, boolean checked, Cards card, int position) {
         this.title = title;
         this.checked = checked;
         this.card = card;
+        this.position = position;
     }
+
     /**
      * Default constructor method for the object mapper
      */
@@ -53,7 +57,8 @@ public class Subtask {
         Subtask subtask = (Subtask) o;
         return id == subtask.id && checked == subtask.checked
                 && Objects.equals(title, subtask.title)
-                && Objects.equals(card.id, subtask.card.id);
+                && Objects.equals(card.id, subtask.card.id)
+                && position == subtask.position;
     }
 
     /**
@@ -62,7 +67,7 @@ public class Subtask {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, checked, card);
+        return Objects.hash(id, title, checked, card, position);
     }
 
     /**
@@ -76,7 +81,8 @@ public class Subtask {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", checked=" + checked +
-                ", card.id=" + card.id +
+                ", card=" + card +
+                ", position=" + position +
                 '}';
     }
 }

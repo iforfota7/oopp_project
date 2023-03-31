@@ -60,12 +60,12 @@ public class Boards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lists);
+        return Objects.hash(id, name);
     }
 
     /**
      * To string method for the board
-     * @return human readable format of board information
+     * @return human-readable format of board information
      */
     @Override
     public String toString() {

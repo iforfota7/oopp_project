@@ -20,10 +20,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-import commons.Boards;
-import commons.Cards;
-import commons.Lists;
-import commons.User;
+import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -156,6 +153,28 @@ public class ServerUtils {
     }
 
     /**
+     * Method that adds Subtask to the database
+     * @param subtask the subtask to be added
+     * @return the response object
+     */
+    public Subtask addSubtask(Subtask subtask){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/subtask").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(subtask, APPLICATION_JSON), Subtask.class);
+    }
+
+    /**
+     * Method that removes subtask from the database
+     * @param subtask the subtask to be deleted
+     * @return the response object
+     */
+    public Subtask deleteSubtask(Subtask subtask){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/subtask/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(subtask, APPLICATION_JSON), Subtask.class);
+    }
+
+    /**
      * Method that retrieves all lists from the server
      * @return a list of all lists in the database
      */
@@ -238,7 +257,7 @@ public class ServerUtils {
 
     }
 
-    private final StompSession session =  connect("ws://localhost:8080/websocket");
+    private final StompSession session =  connect("ws://localhost:8081/websocket");
 
     /**
      * Connect method for websockets
