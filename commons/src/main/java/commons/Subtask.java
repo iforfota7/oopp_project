@@ -40,6 +40,23 @@ public class Subtask {
         this.card = card;
         this.position = position;
     }
+
+    /**
+     * Second constructor for a Subtask Object
+     * @param title the title of the card
+     * @param checked a boolean which defines the state of the checkbox
+     *                of the subtask-> finished or not
+     * @param card the parent card of the subtask
+     * @param position the position of the subtask is the subtasks list
+    ./*                 of a card
+     */
+    public Subtask(String title, boolean checked, Cards card, int position){
+        this.title = title;
+        this.checked = checked;
+        this.card = card;
+        this.position = position;
+    }
+
     /**
      * Default constructor method for the object mapper
      */

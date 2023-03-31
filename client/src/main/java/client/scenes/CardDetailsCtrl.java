@@ -30,6 +30,11 @@ public class CardDetailsCtrl {
     private VBox taskList;
     @FXML
     private GridPane tagList;
+    @FXML
+    private HBox inputSubtask;
+    @FXML
+    private TextField subtaskName;
+    private int inputsOpen = 0;
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -205,5 +210,35 @@ public class CardDetailsCtrl {
         Subtask tmp = subtaskList.get(i);
         subtaskList.set(i, subtaskList.get(j));
         subtaskList.set(j, tmp);
+    }
+
+    /**
+     * Opens a text field for the user to input the new subtask
+     */
+    @FXML
+    public void addSubtask(){
+        inputsOpen++;
+
+        if(inputsOpen == 1){
+            taskList.getChildren().add(inputSubtask);
+        }
+    }
+
+    /**
+     * Closes the text field and creates the new Subtask, then adds it
+     * to the subtasks list and to the database
+     */
+    @FXML
+    public void createSubtask(){
+        int position = taskList.getChildren().size() - 1;
+        Subtask newSubtask = new Subtask(subtaskName.getText(),
+                false, openedCard, position);
+
+        taskList.getChildren().remove(position);
+        renderSubtask(newSubtask, newSubtask.position);
+        inputsOpen--;
+        subtaskName.setText("");
+
+        server.addSubtask(newSubtask);
     }
 }
