@@ -103,6 +103,10 @@ public class CardDetailsCtrl {
         mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * The user can close the card details without the modifications made
+     * to be saved by pressing the 'close' button
+     */
     @FXML
     void close(){
         if(changes){
@@ -145,7 +149,7 @@ public class CardDetailsCtrl {
         subtaskContainer.setPrefWidth(214);
         subtaskContainer.setPrefHeight(32);
         subtaskContainer.setAlignment(Pos.CENTER);
-
+        subtaskContainer.getProperties().put("subtask", subtask);
         MenuButton menuButton = new MenuButton();
         menuButton.setPrefWidth(25);
         menuButton.setPrefHeight(18);
@@ -159,6 +163,7 @@ public class CardDetailsCtrl {
         rename.setText("Rename");
         MenuItem delete = new MenuItem();
         delete.setText("Delete");
+        delete.setOnAction(this::deleteSubtask);
         menuButton.getItems().addAll(rename, delete);
         subtaskContainer.getChildren().add(menuButton);
         HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
@@ -179,7 +184,6 @@ public class CardDetailsCtrl {
         upArrow.setOnAction(this::swapSubtasks);
         subtaskContainer.getChildren().add(upArrow);
         HBox.setMargin(upArrow, new Insets(1, 1, 0, 0));
-
         Button downArrow = new Button();
         downArrow.setText("\uD83D\uDD3D");
         downArrow.setPrefWidth(23);
@@ -272,5 +276,19 @@ public class CardDetailsCtrl {
             subtasks.add(newSubtask);
             //server.addSubtask(newSubtask);
         }
+
+    }
+
+    /**
+     * Deletes the subtask from the list of subtasks and from the database
+     * @param event Object containing information about the action event
+     */
+    private void deleteSubtask(ActionEvent event){
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        HBox toDelete = (HBox) popup.getOwnerNode().getParent();
+        taskList.getChildren().remove(toDelete);
+        Subtask subtask = (Subtask) toDelete.getProperties().get("subtask");
+        server.deleteSubtask(subtask);
     }
 }

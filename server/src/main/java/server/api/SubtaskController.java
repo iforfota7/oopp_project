@@ -43,6 +43,27 @@ public class SubtaskController {
     }
 
     /**
+     * Method to remove a subtask from the repo if the subtask exists
+     * @param subtask the subtask to be removed
+     * @return a 200 OK response for a successful http request
+     */
+    @Transactional
+    @PostMapping(path = {"/remove", "/remove/"})
+    public ResponseEntity<Subtask> removeSubtask(@RequestBody Subtask subtask){
+        if(subtask == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(repo.existsById(subtask.id)){
+            repo.delete(subtask);
+            return ResponseEntity.ok().build();
+        }
+        else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * Method for checking whether a String is null or empty
      * @param s the String to be checked
      * @return true if s is null or empty, false otherwise

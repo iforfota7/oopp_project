@@ -164,6 +164,17 @@ public class ServerUtils {
     }
 
     /**
+     * Method that removes subtask from the database
+     * @param subtask the subtask to be deleted
+     * @return the response object
+     */
+    public Subtask deleteSubtask(Subtask subtask){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/subtask/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(subtask, APPLICATION_JSON), Subtask.class);
+    }
+
+    /**
      * Method that retrieves all lists from the server
      * @return a list of all lists in the database
      */
