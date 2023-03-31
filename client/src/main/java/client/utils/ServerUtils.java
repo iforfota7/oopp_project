@@ -257,7 +257,7 @@ public class ServerUtils {
 
     }
 
-    private final StompSession session =  connect("ws://localhost:8081/websocket");
+    private final StompSession session =  connect("ws://localhost:8080/websocket");
 
     /**
      * Connect method for websockets
