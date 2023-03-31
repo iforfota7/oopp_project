@@ -100,23 +100,24 @@ public class CardDetailsCtrl {
         cardTitleInput.setText(card.title);
         description.setText(card.description);
 
-
         HBox header = (HBox) taskList.getChildren().get(0);
         taskList.getChildren().clear();
 
         taskList.getChildren().add(header);
-        for(Subtask subtask : card.subtasks)
-            renderSubtask(subtask);
-
-
+        for(int i=0; i<openedCard.subtasks.size(); i++)
+            if(openedCard.subtasks.get(i) != null) {
+                openedCard.subtasks.get(i).position = i;
+                renderSubtask(openedCard.subtasks.get(i), i);
+            }
     }
 
     /**
      * Method used for rendering a subtask in the subtask list
      *
      * @param subtask Object containing information about
+     * @param position The position of the Subtask in the list of subtasks
      */
-    public void renderSubtask(Subtask subtask) {
+    public void renderSubtask(Subtask subtask, int position) {
         // styling for the subtask container
         HBox subtaskContainer = new HBox();
         subtaskContainer.setPrefWidth(214);
@@ -140,6 +141,8 @@ public class CardDetailsCtrl {
         upArrow.setText("\uD83D\uDD3C");
         upArrow.setPrefWidth(23);
         upArrow.setStyle("-fx-margin: 1 1 0 0; -fx-padding: 0 2 0 2;");
+        upArrow.setId(Integer.toString(position));
+        upArrow.setOnAction(this::swapSubtasks);
         subtaskContainer.getChildren().add(upArrow);
         HBox.setMargin(upArrow, new Insets(1, 1, 0, 0));
 
@@ -148,6 +151,8 @@ public class CardDetailsCtrl {
         downArrow.setText("\uD83D\uDD3D");
         downArrow.setPrefWidth(23);
         downArrow.setStyle("-fx-margin: 1 4 0 0; -fx-padding: 0 2 0 2;");
+        downArrow.setId(Integer.toString(position));
+        downArrow.setOnAction(this::swapSubtasks);
         subtaskContainer.getChildren().add(downArrow);
         HBox.setMargin(downArrow, new Insets(1, 4, 0, 0));
 
