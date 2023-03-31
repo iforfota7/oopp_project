@@ -270,6 +270,8 @@ public class CardDetailsCtrl {
      */
     @FXML
     public void createSubtask(){
+        subtaskName.setStyle("");
+        warningSubtask.setVisible(false);
         if(subtaskName.getText().equals("")){
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
                     "-fx-border-color: #b30000; -fx-background-radius: 4; " +
