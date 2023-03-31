@@ -324,8 +324,7 @@ public class ServerUtils {
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
         if(user.boards == null || user.boards.size() == 0) user.boards = new ArrayList<>(){};
-
-        user.boards.add(board);
+        if(!user.boards.contains(board)) user.boards.add(board);
 
         ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
