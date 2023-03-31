@@ -1,7 +1,5 @@
 package client.scenes;
 
-import commons.Cards;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javax.inject.Inject;
@@ -12,20 +10,29 @@ import javax.inject.Inject;
 public class DeCardCtrl {
 
     private BoardCtrl boardCtrl;
-    private Cards card;
 
+    /**
+     * Constructor method for DeCardCtrl
+     * @param boardCtrl instance of BoardCtrl
+     */
     @Inject
-    public DeCardCtrl(BoardCtrl boardCtrl, Cards card){
+    public DeCardCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
-        this.card = card;
     }
+
+    /**
+     * Method to confirm the deletion of a card
+     */
     @FXML
-    void deleteCard(ActionEvent event) {
+    void deleteCard() {
         boardCtrl.deleteCard();
     }
 
+    /**
+     * Method that cancels the deletion of a card
+     */
     @FXML
-    void undeleteCard(ActionEvent event) {
+    void undeleteCard() {
         boardCtrl.undeleteCard();
     }
 

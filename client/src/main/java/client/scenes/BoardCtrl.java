@@ -434,14 +434,24 @@ public class BoardCtrl {
         mainCtrl.showDeleteCard();
     }
 
+    /**
+     * Method tha deletes the card from the database and closes the secondary scene
+     */
     void deleteCard() {
         server.removeCard(currentTotalCard);
         mainCtrl.closeSecondaryStage();
     }
+
+    /**
+     * Method that cancels the deletion and closes the secondary scene
+     */
     void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * Method that shows the help scene
+     */
     public void showHelpScene(){
         mainCtrl.showHelpScene();
     }
