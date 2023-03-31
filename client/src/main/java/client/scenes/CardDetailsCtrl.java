@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,7 +35,11 @@ public class CardDetailsCtrl {
     private HBox inputSubtask;
     @FXML
     private TextField subtaskName;
+    @FXML
+    private Text warningSubtask;
     private int inputsOpen = 0;
+    private List<Subtask> subtasks = new ArrayList<>();
+    private boolean changes = false;
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -81,6 +86,7 @@ public class CardDetailsCtrl {
     @FXML
     void save() {
         warning.setVisible(false);
+        changes = false;
 
         if(cardTitleInput.getText().isBlank()) {
             warning.setVisible(true);
@@ -90,6 +96,17 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         server.renameCard(openedCard);
+        for(Subtask s : subtasks){
+            server.addSubtask(s);
+        }
+        subtasks = new ArrayList<>();
+        mainCtrl.closeSecondaryStage();
+    }
+
+    @FXML
+    void close(){
+        if(changes){
+        }
         mainCtrl.closeSecondaryStage();
     }
 
@@ -180,6 +197,7 @@ public class CardDetailsCtrl {
      * @param actionEvent Object containing information about the action event
      */
     public void swapSubtasks(ActionEvent actionEvent) {
+        changes = true;
         Button arrow = (Button)actionEvent.getTarget();
         int position = Integer.parseInt(arrow.getId());
         List<Subtask> subtaskList = openedCard.subtasks;
@@ -217,6 +235,7 @@ public class CardDetailsCtrl {
      */
     @FXML
     public void addSubtask(){
+        changes = true;
         inputsOpen++;
 
         if(inputsOpen == 1){
@@ -230,15 +249,28 @@ public class CardDetailsCtrl {
      */
     @FXML
     public void createSubtask(){
-        int position = taskList.getChildren().size() - 1;
-        Subtask newSubtask = new Subtask(subtaskName.getText(),
-                false, openedCard, position);
 
-        taskList.getChildren().remove(position);
-        renderSubtask(newSubtask, newSubtask.position);
-        inputsOpen--;
-        subtaskName.setText("");
+        if(subtaskName.getText().equals("")){
+            subtaskName.setStyle("-fx-background-color: #ffcccc; " +
+                    "-fx-border-color: #b30000; -fx-background-radius: 4; " +
+                    "-fx-border-radius: 4;");
+            warningSubtask.setVisible(true);
+        }
+        else {
+            int position = taskList.getChildren().size() - 1;
+            Subtask newSubtask = new Subtask(subtaskName.getText(),
+                    false, openedCard, position);
 
-        server.addSubtask(newSubtask);
+            taskList.getChildren().remove(position);
+            subtaskName.setStyle("");
+            warningSubtask.setVisible(false);
+
+            renderSubtask(newSubtask, newSubtask.position);
+            inputsOpen--;
+            subtaskName.setText("");
+
+            subtasks.add(newSubtask);
+            //server.addSubtask(newSubtask);
+        }
     }
 }
