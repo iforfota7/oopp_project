@@ -30,6 +30,8 @@ public class Subtask {
      * @param checked a boolean which defines the state of the checkbox
      *                of the subtask-> finished or not
      * @param card the parent card of the subtask
+     * @param position the position of the subtask is the subtasks list
+     *                 of a card
      */
     public Subtask(long id, String title, boolean checked, Cards card, int position) {
         this.id = id;

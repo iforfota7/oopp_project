@@ -124,7 +124,8 @@ class CardsTest {
         String stringCard6 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
                 "description='This is Card 5', " +
                 "list=Lists{id=2, title='list 2', positionInsideBoard=2, " +
-                "cards=, board=Board1}, subtasks=[Subtask{id=2, title='Subtask 2', checked=false, " +
+                "cards=, board=Board1}, " +
+                "subtasks=[Subtask{id=2, title='Subtask 2', checked=false, " +
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, " +
                 "description='This is Card 1', " +
                 "list=Lists{id=1, title='list 1', positionInsideBoard=1, " +
@@ -137,6 +138,5 @@ class CardsTest {
         assertNotEquals(card1.toString(), stringCard4);
         assertNotEquals(card1.toString(), stringCard5);
         assertNotEquals(card1.toString(), stringCard6);
-
     }
 }
