@@ -54,7 +54,6 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
 
     /**
      * Gets the maximum value of the POSITION_INSIDE_BOARD among all Lists
-     *
      * @return The maximum value or null in case the repository contains no Lists
      */
     @Query(value = "SELECT MAX(POSITION_INSIDE_BOARD) " +
@@ -79,13 +78,12 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
     @Modifying
     @Query(value = "SELECT * " +
                     "FROM LISTS " +
-                    "WHERE LISTS.BOARD_NAME = ?1",
+                    "WHERE LISTS.BOARD_ID = ?1",
                     nativeQuery = true)
-    List<Lists> findAllByOrderByPositionInsideBoardAsc(String boardName);
+    List<Lists> findAllByOrderByPositionInsideBoardAsc(long boardName);
 
     /**
      * Remove all cards that are inside a List
-     *
      * @param listID ID of the list from where to remove the cards
      */
     @Modifying

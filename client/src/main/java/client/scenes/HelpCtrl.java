@@ -13,7 +13,7 @@ public class HelpCtrl {
 
     @FXML
     void close(){
-        mainCtrl.closeHelpScene();
+        mainCtrl.closeSecondaryStage();
     }
 
 }

@@ -2,12 +2,14 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
 
+/**
+ *  Controller for Add Board
+ */
 public class AddBoardCtrl {
     private final BoardOverviewCtrl boardOverviewCtrl;
     private final MainCtrl mainCtrl;
@@ -16,6 +18,12 @@ public class AddBoardCtrl {
     @FXML
     private TextField boardName;
 
+    /**
+     * Constructor method for controller
+     * @param boardOverviewCtrl board overview controller instance
+     * @param mainCtrl main controller instance
+     * @param server serverUtils instance
+     */
     @Inject
     public AddBoardCtrl(BoardOverviewCtrl boardOverviewCtrl, MainCtrl mainCtrl, ServerUtils server){
         this.boardOverviewCtrl = boardOverviewCtrl;
@@ -23,12 +31,16 @@ public class AddBoardCtrl {
         this.server = server;
     }
 
+    /**
+     * the initialization and customization of the
+     * Board display name is only achieved through creating a new window.
+     */
     @FXML
-    void saveNewBoard(ActionEvent event){
+    void saveNewBoard(){
         server.addBoard(new Boards(boardName.getText(), null));
         boardName.setText("");
 
-        mainCtrl.closeAddBoard();
+        mainCtrl.closeSecondaryStage();
         boardOverviewCtrl.refresh();
     }
 

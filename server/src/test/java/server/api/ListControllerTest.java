@@ -22,6 +22,9 @@ public class ListControllerTest {
     public TestListsRepository repo;
     public ListController sut;
 
+    /**
+     * Before each method for tests
+     */
     @BeforeEach
     public void setup() {
 
@@ -44,10 +47,10 @@ public class ListControllerTest {
         Lists l3 = getList("c",2);
         Lists l4 = getList("d",3);
 
-        sut.addList(l1, "test");
-        sut.addList(l2, "test");
-        sut.addList(l3, "test");
-        sut.addList(l4, "test");
+        sut.addList(l1);
+        sut.addList(l2);
+        sut.addList(l3);
+        sut.addList(l4);
 
         List<Lists> lists = new ArrayList<>();
         lists.add(l1);
@@ -73,11 +76,11 @@ public class ListControllerTest {
         Lists l4 = getList("d",3);
         Lists l5 = getList("e",1);
 
-        sut.addList(l1, "test");
-        sut.addList(l2, "test");
-        sut.addList(l3, "test");
-        sut.addList(l4, "test");
-        sut.addList(l5, "test");
+        sut.addList(l1);
+        sut.addList(l2);
+        sut.addList(l3);
+        sut.addList(l4);
+        sut.addList(l5);
 
         List<Lists> lists = new ArrayList<>();
         lists.add(l1);
@@ -93,9 +96,9 @@ public class ListControllerTest {
     void addListTest() {
 
         Lists l1 = getList("asdasd", 0);
-        sut.addList(l1, "test");
+        sut.addList(l1);
         Lists l2 = getList("asdasd", 1);
-        sut.addList(l2, "test");
+        sut.addList(l2);
 
         List<Lists> lists = new ArrayList<>();
         lists.add(l1);
@@ -107,7 +110,7 @@ public class ListControllerTest {
     @Test
     void addNullListTest() {
 
-        assertEquals(ResponseEntity.badRequest().build(), sut.addList(null, "test"));
+        assertEquals(ResponseEntity.badRequest().build(), sut.addList(null));
     }
 
     @Test
@@ -115,7 +118,7 @@ public class ListControllerTest {
 
         Lists l1 = getList(null, 0);
 
-        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1, "test"));
+        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
     }
 
     @Test
@@ -123,7 +126,7 @@ public class ListControllerTest {
 
         Lists l1 = getList( "", 0);
 
-        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1, "test"));
+        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
     }
 
 
@@ -132,16 +135,16 @@ public class ListControllerTest {
 
         Lists l1 = getList("asdasd", -91412);
 
-        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1, "test"));
+        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
     }
 
     @Test
     void addListAlreadyExistsTest() {
 
         Lists l1 = getList("asdasd", 0);
-        sut.addList(l1, "test");
+        sut.addList(l1);
 
-        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1, "test"));
+        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l1));
     }
 
     @Test
@@ -149,9 +152,9 @@ public class ListControllerTest {
 
         Lists l1 = getList("asdasd", 0);
         Lists l2 = getList("asdasd", 5);
-        sut.addList(l1, "test");
+        sut.addList(l1);
 
-        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l2, "test"));
+        assertEquals(ResponseEntity.badRequest().build(), sut.addList(l2));
     }
 
     @Test
@@ -163,11 +166,11 @@ public class ListControllerTest {
         Lists l4 = getList("d", 3);
         Lists l5 = getList("e", 1);
 
-        sut.addList(l1, "test");
-        sut.addList(l2, "test");
-        sut.addList(l3, "test");
-        sut.addList(l4, "test");
-        sut.addList(l5, "test");
+        sut.addList(l1);
+        sut.addList(l2);
+        sut.addList(l3);
+        sut.addList(l4);
+        sut.addList(l5);
 
         List<Integer> positions = new ArrayList<>();
         positions.add(l1.positionInsideBoard);
@@ -183,7 +186,7 @@ public class ListControllerTest {
     void removeListTest() {
 
         Lists l1 = getList("asdasd", 0);
-        sut.addList(l1, "test");
+        sut.addList(l1);
         sut.removeList(l1);
 
         assertTrue(repo.calledMethods.contains("existsById"));
@@ -215,22 +218,22 @@ public class ListControllerTest {
         Lists l1 = getList("hi", 0);
         Lists l2 = getList("hii", 1);
 
-        sut.addList(l1, "test");
-        sut.addList(l2, "test");
+        sut.addList(l1);
+        sut.addList(l2);
 
-        repo.cards.add(new Cards("t",0,l1));
-        repo.cards.add(new Cards("e",1,l1));
-        repo.cards.add(new Cards("a",2,l1));
-        repo.cards.add(new Cards("b",0,l2));
-        repo.cards.add(new Cards("o",1,l2));
-        repo.cards.add(new Cards("l",2,l2));
+        repo.cards.add(new Cards("t",0,l1,"Test description", null));
+        repo.cards.add(new Cards("e",1,l1,"Test description", null));
+        repo.cards.add(new Cards("a",2,l1,"Test description", null));
+        repo.cards.add(new Cards("b",0,l2,"Test description", null));
+        repo.cards.add(new Cards("o",1,l2,"Test description", null));
+        repo.cards.add(new Cards("l",2,l2,"Test description", null));
 
         sut.removeList(l1);
 
         List<Cards> cards = new ArrayList<>();
-        cards.add(new Cards("b",0,l2));
-        cards.add(new Cards("o",1,l2));
-        cards.add(new Cards("l",2,l2));
+        cards.add(new Cards("b",0,l2,"Test description", null));
+        cards.add(new Cards("o",1,l2,"Test description", null));
+        cards.add(new Cards("l",2,l2,"Test description", null));
 
         assertEquals(cards, repo.cards);
     }
@@ -243,10 +246,10 @@ public class ListControllerTest {
         Lists l3 = getList("c", 2);
         Lists l4 = getList("d", 3);
 
-        sut.addList(l1, "test");
-        sut.addList(l2, "test");
-        sut.addList(l3, "test");
-        sut.addList(l4, "test");
+        sut.addList(l1);
+        sut.addList(l2);
+        sut.addList(l3);
+        sut.addList(l4);
 
         sut.removeList(l2);
 
@@ -261,7 +264,7 @@ public class ListControllerTest {
     @Test
     void successfullyRenameList() {
         Lists l = getList("a", 0);
-        sut.addList(l, "test");
+        sut.addList(l);
 
         assertEquals(1, repo.lists.size());
         assertEquals("a", repo.lists.get(0).title);
@@ -277,7 +280,7 @@ public class ListControllerTest {
     @Test
     void renamedListDoesNotExist() {
         Lists l1 = getList("a", 0);
-        sut.addList(l1, "test");
+        sut.addList(l1);
         Lists l2 = getList("b", 1);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.renameList(l2));
@@ -286,7 +289,7 @@ public class ListControllerTest {
     @Test
     void renamedListWrongPosition() {
         Lists l1 = getList("a", 0);
-        sut.addList(l1, "test");
+        sut.addList(l1);
         Lists l2 = getList("b", 1);
         l2.id = l1.id;
 
@@ -298,6 +301,12 @@ public class ListControllerTest {
         assertEquals(ResponseEntity.badRequest().build(), sut.renameList(null));
     }
 
+    /**
+     * Creates a new list
+     * @param t the name of the list
+     * @param p the position of the list
+     * @return the list
+     */
     public Lists getList(String t, int p) {
 
         Lists list = new Lists(t,p, new Boards("test", null));

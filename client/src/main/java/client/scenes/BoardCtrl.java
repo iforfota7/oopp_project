@@ -26,37 +26,43 @@ import javax.inject.Inject;
 public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
-
+    private final CardDetailsCtrl cardDetailsCtrl;
     @FXML
     private AnchorPane rootContainer;
-
     @FXML
     private HBox firstRow;
     @FXML
     private Label boardName;
 
+    private Boards board;
 
     List<VBox> listContainers;
     List<AnchorPane> listCards;
 
     private VBox currentList;
-    private Hyperlink currentCard;
+
     private Cards currentTotalCard;
 
     private List<Lists> lists;
 
-    private Draggable drag;
+    private final Draggable drag;
+
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
      * them easier in the following methods
+     * @param board - sets variable board from class to specific board
      */
-    public void initialize() {
+    public void initialize(Boards board) {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
+        this.board = board;
         refresh();
     }
 
+    /**
+     * This method configures websockets for lists
+     */
     private void webSocketLists() {
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
@@ -74,11 +80,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        Label title = (Label) rootContainer.lookup("#list_title_"+l.id);
-                        title.setText(l.title);
-                        refreshData();
-                    }
+                        initialize(board);
                 }
             });
         });
@@ -97,6 +99,9 @@ public class BoardCtrl {
         });
     }
 
+    /**
+     * This method configures websockets for cards
+     */
     private void webSocketCards() {
         server.registerForMessages("/topic/cards/remove", Cards.class, c->{
             Platform.runLater(new Runnable() {
@@ -140,22 +145,31 @@ public class BoardCtrl {
         });
     }
 
+    /**
+     * Method that refreshes the board by getting all lists from the
+     * server and displaying them
+     */
     public void refresh(){
         firstRow.getChildren().clear();
-        lists = server.getListsByBoard(boardName.getText());
-        //lists = server.getLists();
-        for(int i = 0; i<lists.size(); i++){
-            addNewList(lists.get(i));
-
+        lists = server.getListsByBoard(board.id);
+        for (Lists list : lists) {
+            addNewList(list);
         }
     }
 
+    /**
+     * Method that gets lists for a specific board
+     */
     public void refreshData(){
-        lists = server.getListsByBoard(boardName.getText());
-        //lists = server.getLists();
+        lists = server.getListsByBoard(board.id);
         refreshLists(lists);
     }
 
+    /**
+     * Method that refreshes all the cards in a list
+     * @param listContainer the container of the list
+     * @param c the list of cards
+     */
     public void refreshCards(VBox listContainer, List<Cards> c){
         int j = 0;
         for(Node i : listContainer.getChildren()){
@@ -170,6 +184,10 @@ public class BoardCtrl {
         }
     }
 
+    /**
+     * Method that refreshes all the lists in a board
+     * @param l a list of lists to be redrawn
+     */
     public void refreshLists(List<Lists> l){
         int j = 0;
         for(Node i : firstRow.getChildren()){
@@ -184,15 +202,19 @@ public class BoardCtrl {
 
     /**
      * Auxiliary call to mainCtrl Inject function
-     * @param mainCtrl The master controller, which will later be replaced
-     *                by a class of window controllers
-     * @param server Used for connection to backend and websockets to function
+     *
+     * @param mainCtrl         The master controller, which will later be replaced
+     *                         by a class of window controllers
+     * @param server           Used for connection to backend and websockets to function
+     * @param cardDetailsCtrl  Used for calling methods that have to do with opening
+     *                         the card details scene for a card
      */
     @Inject
-    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server){
+    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server, CardDetailsCtrl cardDetailsCtrl){
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
+        this.cardDetailsCtrl = cardDetailsCtrl;
 
         webSocketLists();
         webSocketCards();
@@ -210,15 +232,19 @@ public class BoardCtrl {
         mainCtrl.showRenameList();
     }
 
+    /**
+     * Method that renames a list to a given name and saves it to the database
+     * @param name the new name of the list
+     */
     void rnList(String name) {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         l.title = name;
         server.renameList(l);
-        mainCtrl.closeRNList();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**
-     *Trigger function for deleting List option in the drop-down options button
+     * Trigger function for deleting List option in the drop-down options button
      * @param event List delete process
      */
     @FXML
@@ -229,12 +255,20 @@ public class BoardCtrl {
         mainCtrl.showDeleteList();
 
     }
+
+    /**
+     * Closes delete card scene and deletes card from database
+     */
     void deleteL() {
-        mainCtrl.closeDEList();
+        mainCtrl.closeSecondaryStage();
         server.removeList((Lists) currentList.getProperties().get("list"));
     }
+
+    /**
+     * Method closes the secondary scene, cancelling the delete
+     */
     void undeleteL() {
-        mainCtrl.closeDEList();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**
@@ -244,6 +278,9 @@ public class BoardCtrl {
     void addList(){
         mainCtrl.showAddList();
     }
+
+   // @FXML
+    //void renameBoard(){mainCtrl.showRenameBoard();}
 
     /**
      * Adds a new list to the board by creating all of its elements
@@ -399,10 +436,10 @@ public class BoardCtrl {
 
     void deleteCard() {
         server.removeCard(currentTotalCard);
-        mainCtrl.closeDeleteCard();
+        mainCtrl.closeSecondaryStage();
     }
     void undeleteCard() {
-        mainCtrl.closeDeleteCard();
+        mainCtrl.closeSecondaryStage();
     }
 
     public void showHelpScene(){
@@ -420,52 +457,55 @@ public class BoardCtrl {
      */
     @FXML
     void cardDetail(ActionEvent event) {
-
-            this.currentCard = (Hyperlink) event.getTarget();
-            mainCtrl.showCardDetail();
-
+        Hyperlink currentCard = (Hyperlink) event.getTarget();
+        cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
+        mainCtrl.showCardDetail();
     }
 
     /**
-     * Save new card details to board scene
-     * When the function returns from mainCtrl,
-     * it will update the card name displayed on the board and refresh the pointer to currentCard.
+     * Method opens the secondary scene for adding a new card
+     * @param event button click indicating new card should be added
      */
-    void refreshCard(String text) {
-        Cards c  = (Cards) this.currentCard.getParent().getProperties().get("card");
-        c.title = text;
-        server.renameCard(c);
-        mainCtrl.closeCardDetails();
-    }
-
     void openAddNewCard(ActionEvent event){
         this.currentList = (VBox)((Node)event.getSource()).getParent().getParent();
         mainCtrl.showAddCard();
     }
 
 
+    /**
+     * Adds a card of name text to a list
+     * @param text the name of the new card
+     */
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
-        Cards c = new Cards(text, l.cards.size(), l);
+        Cards c = new Cards(text, l.cards.size(), l, "", null);
         c.list = l;
         server.addCard(c);
-        mainCtrl.closeNewCard();
-        //Cards
+        mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * Adds a list of name text to a board
+     * @param text the name of the list
+     * @param position the position of the list
+     */
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
-        Boards board = new Boards(boardName.getText(), lists);
         Lists list = new Lists(text, position, board);
-        board.lists.add(list);
+
         try {
-            server.addList(list, board);
+            server.addList(list);
         }
         catch(Exception e){
             System.out.println(e);
         }
     }
 
+    /**
+     * Method that creates a new card and adds it
+     * @param anchor the anchor to which the card should be added
+     * @param c the card to be added
+     */
     public void addNewCard(VBox anchor, Cards c){
 
 
@@ -478,14 +518,14 @@ public class BoardCtrl {
 
         // append the card to the list
 
-        this.currentCard = (Hyperlink) newCard.getChildren().get(0);
+        Hyperlink currentCard = (Hyperlink) newCard.getChildren().get(0);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
         currentCard.setOnDragExited(drag::dragExited);
         currentCard.setOnDragEntered(drag::dragEntered);
         currentCard.setOnDragDropped(drag::dragDropped);
         currentCard.setOnDragOver(drag::dragOver);
-        this.currentCard.setText(c.title);
+        currentCard.setText(c.title);
 
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
 
@@ -522,7 +562,6 @@ public class BoardCtrl {
 
         card.setOnDragDetected(drag::dragDetected);
 
-        card.setOnDragDone(drag::dragDone);
         // set the card to execute cardDetail on action
         card.setOnAction(this::cardDetail);
         return card;
@@ -547,6 +586,10 @@ public class BoardCtrl {
         return button;
     }
 
+    /**
+     * Method that returns the first row of lists
+     * @return the first row of lists
+     */
     public HBox getFirstRow() {
         return firstRow;
     }
@@ -554,12 +597,17 @@ public class BoardCtrl {
     /**
      * Sets the name of the board that will be displayed to the user
      *
-     * @param boardName The string containing the name of the board
+     * @param b The string containing the name of the board
      */
-    public void setBoardName(String boardName) {
-        this.boardName.setText(boardName);
+    public void setBoardName(Boards b) {
+        this.boardName.setText(b.name);
+
+        this.board = b;
     }
 
+    /**
+     * Exits the specific board to show board overview
+     */
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
