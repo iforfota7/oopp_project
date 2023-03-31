@@ -26,12 +26,12 @@ public class SubtaskTest {
         Cards card2 = new Cards("Card 2", 2, list,
                 "", new ArrayList<>());
         card2.id = 1;
-        subtask1 = new Subtask(1, "Subtask 1", false, card1, 1);
-        subtask11 = new Subtask(1, "Subtask 1", false, card1, 1);
-        subtask2 = new Subtask(1, "Subtask 2", false, card1, 1);
-        subtask3 = new Subtask(1, "Subtask 1", true, card1, 1);
-        subtask4 = new Subtask(1, "Subtask 1", false, card2, 1);
-        subtask5 = new Subtask(1, "Subtask 1", false, card1, 5);
+        subtask1 = new Subtask("Subtask 1", false, card1, 1);
+        subtask11 = new Subtask("Subtask 1", false, card1, 1);
+        subtask2 = new Subtask("Subtask 2", false, card1, 1);
+        subtask3 = new Subtask("Subtask 1", true, card1, 1);
+        subtask4 = new Subtask("Subtask 1", false, card2, 1);
+        subtask5 = new Subtask("Subtask 1", false, card1, 5);
 
     }
 
@@ -67,27 +67,27 @@ public class SubtaskTest {
 
     @Test
     void testToString() {
-        String stringSubtask1 = "Subtask{id=1, title='Subtask 1', checked=false, " +
+        String stringSubtask1 = "Subtask{id=0, title='Subtask 1', checked=false, " +
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
                 "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask2 = "Subtask{id=1, title='Subtask 2', checked=false, " +
+        String stringSubtask2 = "Subtask{id=0, title='Subtask 2', checked=false, " +
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
                 "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask3 = "Subtask{id=1, title='Subtask 1', checked=true, " +
+        String stringSubtask3 = "Subtask{id=0, title='Subtask 1', checked=true, " +
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
                 "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask4 = "Subtask{id=1, title='Subtask 1', checked=false, " +
+        String stringSubtask4 = "Subtask{id=0, title='Subtask 1', checked=false, " +
                 "card=Cards{id=1, title='Card 2', positionInsideList=2, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
                 "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask11 = "Subtask{id=1, title='Subtask 1', checked=false, " +
+        String stringSubtask11 = "Subtask{id=0, title='Subtask 1', checked=false, " +
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
                 "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String  stringSubtask5 = "Subtask{id=1, title='Subtask 1', checked=false, " +
+        String  stringSubtask5 = "Subtask{id=0, title='Subtask 1', checked=false, " +
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
                 "cards=, board=Board1}, subtasks=[]}, position=5}";
