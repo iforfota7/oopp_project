@@ -114,11 +114,52 @@ public class CardDetailsCtrl {
      * @param subtask Object containing information about
      */
     public void renderSubtask(Subtask subtask) {
+        // styling for the subtask container
         HBox subtaskContainer = new HBox();
         subtaskContainer.setPrefWidth(214);
         subtaskContainer.setPrefHeight(32);
         subtaskContainer.setAlignment(Pos.CENTER);
 
+        // styling for the menu button
+        menuButtonStyling(subtaskContainer);
+
+        // styling for the text field and the checkbox
+        CheckBox checkBox = new CheckBox();
+        checkBox.setStyle("-fx-padding: 0 0 0 2; -fx-font-size: 13; -fx-font-family: 'Bell MT';");
+        checkBox.setText(subtask.title);
+        checkBox.setPrefWidth(174);
+        checkBox.setPrefHeight(32);
+        subtaskContainer.getChildren().add(checkBox);
+        checkBox.setSelected(subtask.checked);
+
+        // styling for the up arrow button
+        Button upArrow = new Button();
+        upArrow.setText("\uD83D\uDD3C");
+        upArrow.setPrefWidth(23);
+        upArrow.setStyle("-fx-margin: 1 1 0 0; -fx-padding: 0 2 0 2;");
+        subtaskContainer.getChildren().add(upArrow);
+        HBox.setMargin(upArrow, new Insets(1, 1, 0, 0));
+
+        // styling for the down arrow button
+        Button downArrow = new Button();
+        downArrow.setText("\uD83D\uDD3D");
+        downArrow.setPrefWidth(23);
+        downArrow.setStyle("-fx-margin: 1 4 0 0; -fx-padding: 0 2 0 2;");
+        subtaskContainer.getChildren().add(downArrow);
+        HBox.setMargin(downArrow, new Insets(1, 4, 0, 0));
+
+        // adding the current subtask container to the container of subtasks
+        taskList.getChildren().add(subtaskContainer);
+    }
+
+    /**
+     * Styling for the menu button and its menu items
+     * The menu button is that button on the left used for renaming/removing
+     *
+     * @param subtaskContainer Reference to the subtask container
+     */
+    public void menuButtonStyling(HBox subtaskContainer) {
+        // styling for the menu button with a 'pen' on it
         MenuButton menuButton = new MenuButton();
         menuButton.setPrefWidth(25);
         menuButton.setPrefHeight(18);
@@ -128,6 +169,7 @@ public class CardDetailsCtrl {
         menuButton.setPopupSide(Side.LEFT);
         menuButton.setText("\uD83D\uDD8A");
 
+        // styling for the menu items of the 'pen' button
         MenuItem rename = new MenuItem();
         rename.setText("Rename");
         MenuItem delete = new MenuItem();
@@ -135,30 +177,5 @@ public class CardDetailsCtrl {
         menuButton.getItems().addAll(rename, delete);
         subtaskContainer.getChildren().add(menuButton);
         HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
-
-        CheckBox checkBox = new CheckBox();
-        checkBox.setStyle("-fx-padding: 0 0 0 2; -fx-font-size: 13; -fx-font-family: 'Bell MT';");
-        checkBox.setText(subtask.title);
-        checkBox.setPrefWidth(174);
-        checkBox.setPrefHeight(32);
-        subtaskContainer.getChildren().add(checkBox);
-        checkBox.setSelected(subtask.checked);
-
-        Button upArrow = new Button();
-        upArrow.setText("\uD83D\uDD3C");
-        upArrow.setPrefWidth(23);
-        upArrow.setStyle("-fx-margin: 1 1 0 0; -fx-padding: 0 2 0 2;");
-
-        subtaskContainer.getChildren().add(upArrow);
-        HBox.setMargin(upArrow, new Insets(1, 1, 0, 0));
-
-        Button downArrow = new Button();
-        downArrow.setText("\uD83D\uDD3D");
-        downArrow.setPrefWidth(23);
-        downArrow.setStyle("-fx-margin: 1 4 0 0; -fx-padding: 0 2 0 2;");
-        subtaskContainer.getChildren().add(downArrow);
-        HBox.setMargin(downArrow, new Insets(1, 4, 0, 0));
-
-        taskList.getChildren().add(subtaskContainer);
     }
 }
