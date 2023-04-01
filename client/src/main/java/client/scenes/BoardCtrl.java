@@ -42,7 +42,7 @@ public class BoardCtrl {
 
     private VBox currentList;
 
-    private Cards currentTotalCard;
+    private Cards currentCard;
 
     private List<Lists> lists;
 
@@ -431,7 +431,7 @@ public class BoardCtrl {
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
-        currentTotalCard = c;
+        currentCard = c;
         mainCtrl.showDeleteCard();
     }
 
@@ -439,7 +439,7 @@ public class BoardCtrl {
      * Method tha deletes the card from the database and closes the secondary scene
      */
     void deleteCard() {
-        server.removeCard(currentTotalCard);
+        server.removeCard(currentCard);
         mainCtrl.closeSecondaryStage();
     }
 
