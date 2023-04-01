@@ -42,6 +42,8 @@ public class BoardCtrl {
 
     private VBox currentList;
 
+    private Cards currentTotalCard;
+
     private List<Lists> lists;
 
     private final Draggable drag;
@@ -348,8 +350,8 @@ public class BoardCtrl {
      */
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
-        refactorButtonList.setText("Refactor List");
-        refactorButtonList.setPrefWidth(75.2);
+        refactorButtonList.setText("Edit List");
+        refactorButtonList.setPrefWidth(60);
         refactorButtonList.setPrefHeight(22);
         refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
 
@@ -429,7 +431,20 @@ public class BoardCtrl {
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
-        server.removeCard(c);
+        currentTotalCard = c;
+        mainCtrl.showDeleteCard();
+    }
+
+    void deleteCard() {
+        server.removeCard(currentTotalCard);
+        mainCtrl.closeSecondaryStage();
+    }
+    void undeleteCard() {
+        mainCtrl.closeSecondaryStage();
+    }
+
+    public void showHelpScene(){
+        mainCtrl.showHelpScene();
     }
 
     /**

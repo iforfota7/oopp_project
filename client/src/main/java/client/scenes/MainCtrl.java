@@ -28,9 +28,9 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard, deleteCard;
     private Scene selectServer, joinBoardByID, userDetails;
-    private Scene confirmAdmin;
+    private Scene confirmAdmin, help;
 
     private RnListCtrl rnListCtrl;
     private DeListCtrl deListCtrl;
@@ -47,9 +47,11 @@ public class MainCtrl {
     private UserDetailsCtrl userDetailsCtrl;
 
     private RenameBoardCtrl renameBoardCtrl;
+    private HelpCtrl helpCtrl;
 
+    private DeCardCtrl deCardCtrl;
 
-    private int numberOfLists = 2;
+    private int numberOfList;
 
     /**
      * Initialize method for board related scenes
@@ -123,13 +125,22 @@ public class MainCtrl {
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
-            Pair<NewCardCtrl, Parent> newCardCtrl) {
+            Pair<NewCardCtrl, Parent> newCardCtrl,
+            Pair<DeCardCtrl, Parent> deCardCtrl) {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
 
         this.newCard = new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
+
+        this.deleteCard = new Scene(deCardCtrl.getValue());
+        this.deCardCtrl = deCardCtrl.getKey();
+    }
+
+    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl){
+        this.help = new Scene(helpCtrl.getValue());
+        this.helpCtrl = helpCtrl.getKey();
     }
 
     /**
@@ -245,6 +256,13 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    public void showDeleteCard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(deleteCard);
+        secondaryStage.setTitle("Delete Card");
+        secondaryStage.show();
+    }
+
     /**
      * Method that sets the scene to the Board Overview scene
      */
@@ -301,10 +319,13 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
-    /**
-     * Open a new window that displays the userDetails scene
-     * @param currentUser currentUser form selectServer
-     */
+
+    public void showHelpScene(){
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Help");
+        secondaryStage.setScene(help);
+        secondaryStage.show();
+    }
     public void showUserDetails(User currentUser){
         userDetailsCtrl.setUser(currentUser);
         secondaryStage = new Stage();
