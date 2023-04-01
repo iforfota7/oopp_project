@@ -24,6 +24,7 @@ import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import commons.User;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -38,7 +39,7 @@ import static jakarta.ws.rs.core.MediaType.*;
 
 public class ServerUtils {
 
-    private static String SERVER;
+    private String SERVER;
     private static String USERNAME;
 
     /**
@@ -207,7 +208,7 @@ public class ServerUtils {
      * Setter method for the server attribute
      * @param server the server address to be set
      */
-    public static void setServer(String server){
+    public void setServer(String server){
         SERVER = server;
     }
 
@@ -223,14 +224,14 @@ public class ServerUtils {
      *
      * @return True iff the client-server connection can be established
      */
-    public static boolean checkServer(){
+    public boolean checkServer(){
         try {
-            ClientBuilder.newClient(new ClientConfig())
+            Response response = ClientBuilder.newClient(new ClientConfig())
                     .target(SERVER).path("api/test-connection")
                     .request(TEXT_PLAIN)
                     .accept(TEXT_PLAIN)
                     .get();
-            return true;
+            return response.getStatus() == 200;
         }catch(Exception e) {
             return false;
         }

@@ -17,6 +17,7 @@ package client;
 
 import client.scenes.*;
 import client.scenes.UserDetailsCtrl;
+import client.utils.ServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -29,6 +30,7 @@ public class MyModule implements Module {
      */
     @Override
     public void configure(Binder binder) {
+        binder.bind(ServerUtils.class).in(Scopes.SINGLETON);
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(BoardCtrl.class).in(Scopes.SINGLETON);
         binder.bind(BoardOverviewCtrl.class).in(Scopes.SINGLETON);
