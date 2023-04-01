@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.scenes.config.Draggable;
+import client.scenes.config.Shortcuts;
 import client.utils.ServerUtils;
 import commons.Boards;
 import commons.Lists;
@@ -45,6 +46,7 @@ public class BoardCtrl {
     private List<Lists> lists;
 
     private Draggable drag;
+    private Shortcuts shortcuts;
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -192,6 +194,7 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
+        this.shortcuts = new Shortcuts();
 
         webSocketLists();
         webSocketCards();
@@ -508,8 +511,10 @@ public class BoardCtrl {
         card.setStyle("-fx-background-color:  #E6E6FA");
 
         card.setOnDragDetected(drag::dragDetected);
-
         card.setOnDragDone(drag::dragDone);
+
+        card.setOnMouseEntered(shortcuts::onMouseHover);
+
         // set the card to execute cardDetail on action
         card.setOnAction(this::cardDetail);
         return card;
