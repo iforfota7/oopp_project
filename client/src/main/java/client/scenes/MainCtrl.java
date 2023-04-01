@@ -156,7 +156,7 @@ public class MainCtrl {
      * Show selectServer scene
      */
     public void showStart() {
-        primaryStage.setTitle("Start");
+        primaryStage.setTitle("Select Server");
         primaryStage.setScene(selectServer);
     }
 
@@ -166,7 +166,7 @@ public class MainCtrl {
      */
     public void showBoard(Boards b) {
         boardCtrl.setBoardName(b);
-        primaryStage.setTitle("Start");
+        primaryStage.setTitle("Board");
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
         boardCtrl.initialize(b);

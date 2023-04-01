@@ -23,6 +23,7 @@ public class Cards {
     public Lists list;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @OrderBy("position ASC")
     public List<Subtask> subtasks;
 
 
