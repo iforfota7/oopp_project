@@ -34,7 +34,7 @@
             <Font size="10.0" />
          </font>
       </Button>
-      <Button fx:id="customization" alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="360.0" mnemonicParsing="false" onAction="#openCustomization" prefHeight="23.0" prefWidth="22.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #F08080; -fx-alignment: bottom-right; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 0);" text="C" textAlignment="CENTER">
+      <Button fx:id="customization" alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="360.0" mnemonicParsing="false" onAction="#openCustomization" prefHeight="23.0" prefWidth="75.0" style="-fx-background-color: #ffcccc; -fx-alignment: bottom-right; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 0);" text="Customization" textAlignment="CENTER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="25.0">
          <font>
             <Font size="10.0" />
          </font>
