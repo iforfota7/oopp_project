@@ -1,9 +1,11 @@
 package client.scenes;
 
 
+import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
+
 import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class CustomizationCtrl {
     private MainCtrl mainCtrl;
     private BoardCtrl boardCtrl;
+    private final ServerUtils server;
     @FXML
     private List<ColorPicker> colorPickers = new ArrayList<>();
     @FXML
@@ -41,6 +44,10 @@ public class CustomizationCtrl {
     @FXML
     private ColorPicker listFtColor;
     private Boards setBoard;
+
+    /**
+     * Initialize method for Customization related currentBoard
+     */
     @FXML
     public void initialize() {
         colorPickers.add(boardBgColor);
@@ -49,15 +56,17 @@ public class CustomizationCtrl {
         colorPickers.add(cardFtColor);
         colorPickers.add(listBgColor);
         colorPickers.add(listFtColor);
-        if(boardCtrl.getCurrentBoard()==null){
-            this.setBoard = boardCtrl.getCurrentBoard();
+        if(setBoard==null){
             revertCustomization();
-        }else {
             this.setBoard = boardCtrl.getCurrentBoard();
-            setColorPickers(setBoard);
         }
+        setColorPickers(setBoard);
     }
 
+    /**
+     *Set the initial color of each color picker based on the database storage of the current board
+     * @param currentBoard current board set previously by clicking the button customization
+     */
     private void setColorPickers(Boards currentBoard) {
         Map<String, String> idToColorMap = new HashMap<>();
         idToColorMap.put("boardBgColor", currentBoard.boardBgColor);
@@ -75,19 +84,34 @@ public class CustomizationCtrl {
         }
     }
 
+    /**
+     * Auxiliary call to mainCtrl Inject function
+     * @param mainCtrl The master controller, which will later be replaced
+     *                 by a class of window controllers
+     * @param boardCtrl instance of BoardCtrl
+     * @param server Used for connection to backend and websockets to function
+     */
     @Inject
-    public CustomizationCtrl(MainCtrl mainCtrl, BoardCtrl boardCtrl) {
+    public CustomizationCtrl(MainCtrl mainCtrl, BoardCtrl boardCtrl, ServerUtils server) {
         this.mainCtrl = mainCtrl;
         this.boardCtrl = boardCtrl;
+        this.server = server;
     }
-
+    /**
+     *Store all color information, then add it to the server,
+     * close this window, and finally refresh the displayed board colors.
+     */
     @FXML
     void saveCustomization() {
         readCustomizationChange();
-        boardCtrl.setBoardToDB();
+        setBoardToDB();
         boardCtrl.refreshCustomization();
-        mainCtrl.closeCustomization();
+        mainCtrl.closeSecondaryStage();
     }
+
+    /**
+     * Synchronize and save the user's modified colors, and synchronize them back to the board.
+     */
     private void readCustomizationChange() {
         this.setBoard = boardCtrl.getCurrentBoard();
         Map<String, String> idToColorMap = new HashMap<>();
@@ -104,6 +128,10 @@ public class CustomizationCtrl {
         setBoard.cardFtColor = idToColorMap.get("cardFtColor");
         boardCtrl.setCurrentBoard(setBoard);
     }
+
+    /**
+     * Reset all buttons to their initial values stored in a file on the client side.
+     */
     @FXML
     void revertCustomization() {
         try {
@@ -123,5 +151,13 @@ public class CustomizationCtrl {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Upload all new color modifications to the database.
+     */
+    public void setBoardToDB() {
+        server.setBoardCss(setBoard);
+        boardCtrl.refresh();
     }
 }
