@@ -73,7 +73,7 @@ public class Cards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, list.id, positionInsideList, subtasks);
+        return Objects.hash(id, title, list.id, positionInsideList, description, subtasks);
     }
 
     /**

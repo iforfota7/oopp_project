@@ -60,12 +60,10 @@ public class BoardsTest {
 
     @Test
     void testHashcode() {
-        int hashcode1 = board1.hashCode();
 
         list2 = new Lists("List 2", 2, board1);
         list3 = new Lists("List 3", 3, board1);
 
-        assertEquals(board1.hashCode(), hashcode1);
         assertEquals(board1.hashCode(), board11.hashCode());
         assertNotEquals(board1.hashCode(), board2.hashCode());
         assertEquals(board1.hashCode(), board3.hashCode());

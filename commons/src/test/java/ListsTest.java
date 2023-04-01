@@ -90,9 +90,7 @@ class ListsTest {
 
     @Test
     void testHashCode() {
-        int hashCode1 = list1.hashCode();
 
-        assertEquals(list1.hashCode(), hashCode1);
         assertEquals(list1.hashCode(), list11.hashCode());
         assertNotEquals(list1.hashCode(), list2.hashCode());
         assertNotEquals(list1.hashCode(), list3.hashCode());

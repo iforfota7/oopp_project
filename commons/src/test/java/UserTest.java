@@ -70,9 +70,7 @@ public class UserTest {
         user1.boards.add(board1);
         user3.boards.add(board2);
 
-        int hashCode1 = user1.hashCode();
 
-        assertEquals(user1.hashCode(), hashCode1);
         assertEquals(user1.hashCode(), user11.hashCode());
         assertNotEquals(user1.hashCode(), user2.hashCode());
         assertNotEquals(user1.hashCode(), user3.hashCode());

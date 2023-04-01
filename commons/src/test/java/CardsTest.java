@@ -95,20 +95,13 @@ class CardsTest {
     @Test
     void testHashCode(){
         int hashcode1 = card1.hashCode();
-        int hashcode11 = card11.hashCode();
-        int hashcode2 = card2.hashCode();
-        int hashcode3 = card3.hashCode();
-        int hashcode4 = card4.hashCode();
-        int hashcode5 = card5.hashCode();
-        int hashcode6 = card6.hashCode();
 
-        assertEquals(card1.hashCode(), hashcode1);
-        assertEquals(card1.hashCode(), hashcode11);
-        assertNotEquals(card1.hashCode(), hashcode2);
-        assertNotEquals(card1.hashCode(), hashcode3);
-        assertNotEquals(card1.hashCode(), hashcode4);
-        assertNotEquals(card1.hashCode(), hashcode5);
-        assertNotEquals(card1.hashCode(), hashcode6);
+        assertEquals(card1.hashCode(), card11.hashCode());
+        assertNotEquals(card1.hashCode(), card2.hashCode());
+        assertNotEquals(card1.hashCode(), card3.hashCode());
+        assertNotEquals(card1.hashCode(), card4.hashCode());
+        assertNotEquals(card1.hashCode(), card5.hashCode());
+        assertNotEquals(card1.hashCode(), card6.hashCode());
 
         long temp = card11.list.id;
         card11.list.id = 12321;
