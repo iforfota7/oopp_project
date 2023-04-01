@@ -29,7 +29,6 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final CardDetailsCtrl cardDetailsCtrl;
-    private final CustomizationCtrl customizationCtrl;
     @FXML
     private AnchorPane rootContainer;
     @FXML
@@ -213,17 +212,14 @@ public class BoardCtrl {
      * @param server            Used for connection to backend and websockets to function
      * @param cardDetailsCtrl   Used for calling methods that have to do with opening
      *                          the card details scene for a card
-     * @param customizationCtrl Used for connection to customization to function
      */
     @Inject
     public BoardCtrl(MainCtrl mainCtrl, ServerUtils server, CardDetailsCtrl
-            cardDetailsCtrl, CustomizationCtrl customizationCtrl){
+            cardDetailsCtrl){
         this.mainCtrl = mainCtrl;
         this.server = server;
-        this.customizationCtrl = customizationCtrl;
         this.drag = new Draggable(this.server);
         this.cardDetailsCtrl = cardDetailsCtrl;
-
         webSocketLists();
         webSocketCards();
     }

@@ -28,7 +28,7 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
     private Scene selectServer, joinBoardByID, userDetails;
     private Scene confirmAdmin;
     private Scene customization;
@@ -48,8 +48,6 @@ public class MainCtrl {
     private UserDetailsCtrl userDetailsCtrl;
 
     private CustomizationCtrl customizationCtrl;
-
-    private RenameBoardCtrl renameBoardCtrl;
 
 
     private int numberOfLists = 2;

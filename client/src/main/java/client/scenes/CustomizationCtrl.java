@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
  * Controller for customization
  */
 public class CustomizationCtrl {
-    private MainCtrl mainCtrl;
-    private BoardCtrl boardCtrl;
+    private final MainCtrl mainCtrl;
+    private final BoardCtrl boardCtrl;
     private final ServerUtils server;
     @FXML
     private List<ColorPicker> colorPickers = new ArrayList<>();
@@ -56,11 +56,12 @@ public class CustomizationCtrl {
         colorPickers.add(cardFtColor);
         colorPickers.add(listBgColor);
         colorPickers.add(listFtColor);
-        if(setBoard==null){
-            revertCustomization();
+        if(boardCtrl.getCurrentBoard()!=null){
+
             this.setBoard = boardCtrl.getCurrentBoard();
+        }else {
+            revertCustomization();
         }
-        setColorPickers(setBoard);
     }
 
     /**
