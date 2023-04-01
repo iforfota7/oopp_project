@@ -37,6 +37,7 @@ public class UserTest {
     void testConstructor(){
         assertNotNull(new User("iforfota", new ArrayList<>(), true));
         assertNotNull(board2);
+        assertNotNull(new User());
     }
 
     @Test

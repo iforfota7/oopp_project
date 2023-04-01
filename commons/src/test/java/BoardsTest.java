@@ -32,6 +32,7 @@ public class BoardsTest {
     @Test
     void testConstructor(){
         assertNotNull(new Boards("Board", new ArrayList<>()));
+        assertNotNull(new Boards());
         assertNotNull(board2);
     }
 

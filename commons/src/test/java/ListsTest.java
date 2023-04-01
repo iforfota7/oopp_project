@@ -44,6 +44,7 @@ class ListsTest {
     void testConstructor(){
         assertNotNull(new Lists("List", 1, board1));
         assertNotNull(list3);
+        assertNotNull(new Lists());
     }
 
     @Test

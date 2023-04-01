@@ -67,6 +67,7 @@ class CardsTest {
         assertNotNull(new Cards("Card", 1,list,
                 "This card", listSubtasks1));
         assertNotNull(card5);
+        assertNotNull(new Cards());
     }
 
     @Test

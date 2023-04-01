@@ -40,6 +40,7 @@ public class SubtaskTest {
     void testConstructor(){
         assertNotNull(new Subtask("Subtask", true, card1, 1));
         assertNotNull(subtask5);
+        assertNotNull(new Subtask());
     }
 
     @Test

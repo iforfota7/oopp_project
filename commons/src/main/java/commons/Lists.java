@@ -44,7 +44,7 @@ public class Lists {
      * Default constructor method for object mapper
      */
     @SuppressWarnings("unused")
-    private Lists(){}
+    public Lists(){}
 
     /**
      * Equals method for a list
