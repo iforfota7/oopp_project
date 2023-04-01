@@ -81,7 +81,8 @@ public class SubtaskTest {
 
     @Test
     void testToString() {
-        String stringSubtask1 = "Subtask{id=0, title='Subtask 1', checked=false, card.id=0, position=1}";
+        String stringSubtask1 = "Subtask{id=0, title='Subtask 1', " +
+                "checked=false, card.id=0, position=1}";
         String stringSubtask2 = subtask2.toString();
         String stringSubtask3 = subtask3.toString();
         String stringSubtask4 = subtask4.toString();
