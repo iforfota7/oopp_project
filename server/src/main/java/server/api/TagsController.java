@@ -51,7 +51,7 @@ import java.util.List;
                 return ResponseEntity.badRequest().build();
 
 
-            if (repo.existsById(tag.id))
+            if (!repo.existsById(tag.id))
                 return ResponseEntity.badRequest().build();
 
             Tags saved = repo.save(tag);

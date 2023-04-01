@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.Main;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Boards;
@@ -10,38 +9,43 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.apache.catalina.Server;
 
-
-public class NewTagCtrl {
+public class TagDetailsCtrl {
     @FXML
     private TextField cardTitleInput;
     @FXML
     private Text warning;
 
+
+
     @FXML
     private ColorPicker picker;
 
-    private final ServerUtils server;
+
+    private Tags tag;
+
+    private ServerUtils server;
 
     private MainCtrl mainCtrl;
 
-    private Boards board;
 
+    public void initialize(Tags t){
+        this.tag = t;
+        picker.setValue(Color.valueOf(this.tag.color));
+        cardTitleInput.setText(this.tag.title);
+    }
 
     @Inject
-    public NewTagCtrl(ServerUtils server, MainCtrl mainCtrl){
-
+    public TagDetailsCtrl(ServerUtils server, MainCtrl mainCtrl){
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
 
-    public void initialize(Boards b){this.board = b;}
-
     /**
-     * The redefinition of the card name on the board
-     * is achieved through setting the display properties.
-     * This method sends the information entered in cardDetail
-     * to the board to display the card name.
+     * The redefinition of the card name on the board is achieved
+     * through setting the display properties. This method sends the
+     * information entered in cardDetails to the board to display the card name.
      * A warning is displayed if the input field is empty.
      */
     @FXML
@@ -49,13 +53,16 @@ public class NewTagCtrl {
         warning.setVisible(false);
 
         if(cardTitleInput.getText().isBlank()) {
-
             warning.setVisible(true);
             return;
         }
-        System.out.println(board);
-        server.addTag(new Tags(cardTitleInput.getText(), picker.getValue().toString(), board));
-        cardTitleInput.clear();
-        this.mainCtrl.closeNewTag();
+
+        this.tag.title = cardTitleInput.getText();
+        this.tag.color = picker.getValue().toString();
+
+        server.renameTag(tag);
+
+        mainCtrl.closeNewTag();
+
     }
 }

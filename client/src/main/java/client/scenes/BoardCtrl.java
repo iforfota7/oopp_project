@@ -26,6 +26,9 @@ import javax.inject.Inject;
 public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
+
+    @FXML
+    private Button tags;
     @FXML
     private AnchorPane rootContainer;
 
@@ -512,10 +515,9 @@ public class BoardCtrl {
         card.setPrefSize(95, 23);
         card.setAlignment(Pos.CENTER);
         card.setStyle("-fx-background-color:  #E6E6FA");
-
         card.setOnDragDetected(drag::dragDetected);
 
-        card.setOnDragDone(drag::dragDone);
+
         // set the card to execute cardDetail on action
         card.setOnAction(this::cardDetail);
         return card;
@@ -558,4 +560,9 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+
+    public void openTag(){
+        mainCtrl.showTagControl(board);
+    }
+
 }

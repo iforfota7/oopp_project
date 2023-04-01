@@ -31,6 +31,8 @@ public class Tags {
         this.board = boards;
     }
 
+    private Tags(){}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

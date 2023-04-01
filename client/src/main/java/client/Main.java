@@ -65,13 +65,24 @@ public class Main extends Application {
                 "client","scenes","JoinBoardByID.fxml");
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
+        var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
+
+        var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
+
+        var addTag = FXML.load(NewTagCtrl.class, "client", "scenes", "addTag.fxml");
+
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+
+
 
         mainCtrl.initializeBoard(primaryStage, selectServer, confirmUsername,
                 boardOverview, addBoard, joinBoard, userDetails);
         mainCtrl.initializeLists(renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard);
         mainCtrl.initializeAdmin(confirmAdmin);
+        mainCtrl.initializeTags(tagsControl);
+        mainCtrl.initializeTags(tagDetails, addTag);
+
     }
 
     /**

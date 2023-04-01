@@ -26,9 +26,13 @@ public class RenameBoardCtrl {
     @FXML
     void saveNewBoard(ActionEvent event){
 
-      //  server.renameBoard();
+        
         boardName.setText("");
         mainCtrl.closeAddBoard();
 
     }
+
+
+
+
 }

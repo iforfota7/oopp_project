@@ -20,15 +20,15 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-import commons.Boards;
-import commons.Cards;
-import commons.Lists;
-import commons.User;
+import commons.*;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Application;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -141,6 +141,11 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public List<Tags> getTagsByBoard(long boardID){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).path("api/tags/all/" + boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).get(new GenericType<List<Tags>>(){});
+    }
+
     public List<Boards> getBoards() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/all")
@@ -224,6 +229,26 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/boards/remove/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    public Boards renameBoard(Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).path("api/boards/remove").
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    public Tags addTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).path("api/tags/").request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON).post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
+    }
+
+    public Tags renameTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).path("api/tags/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
+    }
+
+    public Tags removeTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).path("api/tags/remove").
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
     }
 
     public boolean checkAdmin(User user) {
