@@ -129,6 +129,10 @@ public class SelectServerCtrl {
         mainCtrl.showUserDetails(currentUser);
     }
 
+    /**
+     * Set the boards of the current user
+     * @param boards the new list of boards
+     */
     public void setBoardsOfCurrentUser(List<Boards> boards){
         this.currentUser.boards = boards;
     }

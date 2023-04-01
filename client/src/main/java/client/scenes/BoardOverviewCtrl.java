@@ -3,8 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Boards;
 import commons.User;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

@@ -55,7 +55,6 @@ public class ServerUtils {
 
     /**
      * Find whether a user exists or not
-     * @param user a user which should be checked
      * @return true if user already in database, otherwise false
      */
     public boolean existsUser(){
@@ -356,6 +355,7 @@ public class ServerUtils {
     /**
      * Update the users attributes to new ones posted
      * @param user the user to be updated
+     * @return the user that was updated
      */
     public User updateUser(User user){
         // send the updated user to the server so that the database is changed too
