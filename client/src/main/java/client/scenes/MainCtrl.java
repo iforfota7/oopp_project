@@ -155,7 +155,7 @@ public class MainCtrl {
      */
     public void showBoard(Boards b) {
         boardCtrl.setBoardName(b);
-        boardCtrl.addBoardToList(b);
+        boardCtrl.addBoardToUser(b);
         primaryStage.setTitle("Board");
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
