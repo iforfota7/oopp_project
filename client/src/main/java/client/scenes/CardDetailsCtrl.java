@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Boards;
 import commons.Cards;
 import commons.Subtask;
 import javafx.application.Platform;
@@ -43,6 +44,7 @@ public class CardDetailsCtrl {
     private final MainCtrl mainCtrl;
 
     private Cards openedCard;
+    private Boards board;
 
     /**
      * Initializes the card details controller object
@@ -70,6 +72,18 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id)
                         setOpenedCard(c);
+                }
+            });
+        });
+
+        // When another client removes this card, this client will be
+        // sent to the board scene
+        server.registerForMessages("/topic/cards/remove", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    mainCtrl.closeSecondaryStage();
+                    mainCtrl.showBoard(board);
                 }
             });
         });
@@ -325,6 +339,15 @@ public class CardDetailsCtrl {
         Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
         updatedSubtask.checked = checkBox.isSelected();
         setOpenedCard(openedCard);
+    }
+
+    /**
+     * Setter for the board property of the object
+     *
+     * @param board The new board object
+     */
+    public void setBoard(Boards board) {
+        this.board = board;
     }
 
 }
