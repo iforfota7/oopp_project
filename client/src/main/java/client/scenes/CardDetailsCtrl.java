@@ -108,6 +108,8 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
 
+        subtaskName.setText("");
+
         server.renameCard(openedCard);
         mainCtrl.closeSecondaryStage();
     }
