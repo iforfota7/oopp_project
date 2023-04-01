@@ -225,6 +225,12 @@ public class MainCtrl {
     public void showCardDetail() {
         secondaryStage = new Stage();
         secondaryStage.setScene(cardDetails);
+
+        // card details are not saved if the window is closed
+        // using the 'x' button
+        secondaryStage.setOnCloseRequest(event -> {
+            cardDetailsCtrl.close();
+        });
         secondaryStage.setTitle("Card Details");
         secondaryStage.show();
     }

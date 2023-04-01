@@ -118,9 +118,11 @@ public class CardDetailsCtrl {
      */
     @FXML
     void close(){
-        if(changes){
-        }
+//        if(changes){
+//        }
+//        mainCtrl.closeSecondaryStage();
         mainCtrl.closeSecondaryStage();
+        mainCtrl.showBoard(board);
     }
 
     /**
