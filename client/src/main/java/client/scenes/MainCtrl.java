@@ -140,6 +140,10 @@ public class MainCtrl {
         this.deCardCtrl = deCardCtrl.getKey();
     }
 
+    /**
+     * Initialise method for 'useful' scenes
+     * @param helpCtrl helpCtrl parent pair for Help scene
+     */
     public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl){
         this.help = new Scene(helpCtrl.getValue());
         this.helpCtrl = helpCtrl.getKey();
@@ -252,6 +256,10 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Opens a secondary window which asks for confirmation for
+     * deleting a card
+     */
     public void showDeleteCard(){
         secondaryStage = new Stage();
         secondaryStage.setScene(deleteCard);

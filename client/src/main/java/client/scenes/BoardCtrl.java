@@ -435,14 +435,26 @@ public class BoardCtrl {
         mainCtrl.showDeleteCard();
     }
 
+    /**
+     * Deletes a card from the database, after the user confirmed
+     * the deletion
+     */
     void deleteCard() {
         server.removeCard(currentTotalCard);
         mainCtrl.closeSecondaryStage();
     }
+
+    /**
+     * Closes the scene which asks for confirmation of deleting a card
+     */
     void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * Opens the Help Scene of a board when the button 'H' from
+     * bottom right is pushed
+     */
     public void showHelpScene(){
         mainCtrl.showHelpScene();
     }
