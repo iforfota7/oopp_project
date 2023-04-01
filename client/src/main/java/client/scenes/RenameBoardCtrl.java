@@ -50,4 +50,12 @@ public class RenameBoardCtrl {
             warning.setVisible(true);
         }
     }
+
+    @FXML
+    void cancel(){
+        warning.setVisible(false);
+        boardName.setText("");
+        mainCtrl.closeSecondaryStage();
+    }
+
 }
