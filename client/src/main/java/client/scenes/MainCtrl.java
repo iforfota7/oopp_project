@@ -28,7 +28,8 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard, deleteCard;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview,
+            addBoard, renameBoard, deleteCard;
     private Scene selectServer, joinBoardByID, userDetails;
     private Scene confirmAdmin, help;
 
@@ -123,6 +124,7 @@ public class MainCtrl {
      * Initialize method for card related scenes
      * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
+     * @param deCardCtrl deCardCtrl parent pair for deCard scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
             Pair<NewCardCtrl, Parent> newCardCtrl,
@@ -313,13 +315,22 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
-
+    /**
+     * Shows in a second window the guide to use the application
+     * after pressing the 'H' button -> help
+     */
     public void showHelpScene(){
         secondaryStage = new Stage();
         secondaryStage.setTitle("Help");
         secondaryStage.setScene(help);
         secondaryStage.show();
     }
+
+    /**
+     * Shows in a second window the user's details: username, server
+     * address and whether it is an admin or not
+     * @param currentUser the user whose details are shown
+     */
     public void showUserDetails(User currentUser){
         userDetailsCtrl.setUser(currentUser);
         secondaryStage = new Stage();
