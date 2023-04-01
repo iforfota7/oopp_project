@@ -67,7 +67,7 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideBoard, board);
+        return Objects.hash(id, title, positionInsideBoard, cards, board.name);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Lists {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", positionInsideBoard=" + positionInsideBoard +
-                ", cards="  +
+                ", cards="  + cards.toString() +
                 ", board=" + board.name +
                 '}';
     }

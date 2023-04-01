@@ -19,17 +19,23 @@ class CardsTest {
     Cards card4;
     Cards card5;
     Cards card6;
+    Subtask subtask1;
+    Subtask subtask2;
+    Subtask subtask3;
+    List<Subtask> listSubtasks1;
+    List<Subtask> listSubtasks2;
 
     @BeforeEach
     public void setUp(){
         Boards board = new Boards("Board1", new ArrayList<>());
+
         Lists list = new Lists("list 1", 1, board);
         list.id = 1;
         Lists list2 = new Lists("list 2", 2, board);
         list2.id = 2;
 
-        List<Subtask> listSubtasks1 = new ArrayList<>();
-        List<Subtask> listSubtasks2 = new ArrayList<>();
+        listSubtasks1 = new ArrayList<>();
+        listSubtasks2 = new ArrayList<>();
 
         card1 = new Cards("Card 1", 1, list,
                 "This is Card 1", listSubtasks1);
@@ -43,29 +49,47 @@ class CardsTest {
                 "This is Card 1", listSubtasks1);
         card5 = new Cards("Card 1", 1, list2,
                 "This is Card 5", listSubtasks1);
-        card6 = new Cards("Card 1", 1, list2,
-                "This is Card 5", listSubtasks2);
+        card6 = new Cards("Card 1", 1, list,
+                "This is Card 1", listSubtasks2);
 
-        Subtask subtask1 = new Subtask(1, "Subtask 1", false, card1, 1);
-        Subtask subtask2 = new Subtask(2, "Subtask 2", false, card1, 2);
+        subtask1 = new Subtask("Subtask 1", false, card1, 1);
+        subtask2 = new Subtask("Subtask 2", false, card2, 2);
+        subtask3 = new Subtask("Subtask 3", false, card2, 1);
 
         listSubtasks1.add(subtask1);
         listSubtasks2.add(subtask2);
-    }
-
-    @Test
-    void testEqualsFalse(){
-        assertFalse(card1.equals(card2));
-        assertFalse(card1.equals(card3));
-        assertFalse(card1.equals(card4));
-        assertFalse(card1.equals(card5));
-        assertFalse(card1.equals(card6));
+        listSubtasks2.add(subtask3);
     }
 
     @Test
     void testEqualsTrue(){
-        assertTrue(card1.equals(card1));
-        assertTrue(card1.equals(card11));
+        assertEquals(card1, card1);
+        assertEquals(card1, card11);
+
+        card11.subtasks.add(subtask3);
+        assertEquals(card1, card11);
+
+        listSubtasks2.clear();
+        listSubtasks2.add(subtask1);
+        card11.subtasks.remove(subtask3);
+        assertEquals(card1, card6);
+
+        listSubtasks2.add(subtask2);
+        listSubtasks2.add(subtask3);
+
+        long temp = card11.list.id;
+        card11.list.id = 12435;
+        assertEquals(card1, card11);
+        card11.list.id = temp;
+    }
+
+    @Test
+    void testEqualsFalse(){
+        assertNotEquals(card1, card2);
+        assertNotEquals(card1, card3);
+        assertNotEquals(card1, card4);
+        assertNotEquals(card1, card5);
+        assertNotEquals(card1, card6);
     }
 
     @Test
@@ -78,65 +102,55 @@ class CardsTest {
         int hashcode5 = card5.hashCode();
         int hashcode6 = card6.hashCode();
 
-        assertTrue(card1.hashCode() == hashcode1);
-        assertTrue(card1.hashCode() == hashcode11);
-        assertFalse(card1.hashCode() == hashcode2);
-        assertFalse(card1.hashCode() == hashcode3);
-        assertFalse(card1.hashCode() == hashcode4);
-        assertFalse(card1.hashCode() == hashcode5);
-        assertFalse(card1.hashCode() == hashcode6);
+        assertEquals(card1.hashCode(), hashcode1);
+        assertEquals(card1.hashCode(), hashcode11);
+        assertNotEquals(card1.hashCode(), hashcode2);
+        assertNotEquals(card1.hashCode(), hashcode3);
+        assertNotEquals(card1.hashCode(), hashcode4);
+        assertNotEquals(card1.hashCode(), hashcode5);
+        assertNotEquals(card1.hashCode(), hashcode6);
 
+        long temp = card11.list.id;
+        card11.list.id = 12321;
+        assertNotEquals(hashcode1, card11.hashCode());
+        card11.list.id = temp;
+
+        listSubtasks1.add(subtask3);
+        assertNotEquals(hashcode1, card1.hashCode());
+
+        listSubtasks1.add(subtask2);
+        listSubtasks2.add(subtask1);
+        assertNotEquals(card6.hashCode(), card1.hashCode());
+
+        listSubtasks1.clear(); listSubtasks2.clear();
+        listSubtasks1.add(subtask1);
+        listSubtasks2.add(subtask1);
+        assertEquals(card1.hashCode(), card6.hashCode());
+
+        listSubtasks2.remove(subtask1);
+        listSubtasks2.add(subtask3);
+        listSubtasks2.add(subtask2);
     }
 
     @Test
     void testToString(){
-        card1.subtasks = new ArrayList<>();
-        card11.subtasks = new ArrayList<>();
-        card2.subtasks = new ArrayList<>();
-        card3.subtasks = new ArrayList<>();
-        card4.subtasks = new ArrayList<>();
-        card5.subtasks = new ArrayList<>();
 
         String stringCard1 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
-                "description='This is Card 1', " +
-                "list=Lists{id=1, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}";
-        String stringCard11 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
-                "description='This is Card 1', " +
-                "list=Lists{id=1, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}";
-        String stringCard3 = "Cards{id=0, title='Card 1', positionInsideList=3, " +
-                "description='This is Card 1', " +
-                "list=Lists{id=1, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}";
-        String stringCard2 = "Cards{id=0, title='Card 2', positionInsideList=1, " +
-                "description='This is Card 1', " +
-                "list=Lists{id=1, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}";
-        String stringCard4 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
-                "description='This is Card 1', " +
-                "list=Lists{id=2, title='list 2', positionInsideBoard=2, " +
-                "cards=, board=Board1}, subtasks=[]}";
-        String stringCard5 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
-                "description='This is Card 5', " +
-                "list=Lists{id=2, title='list 2', positionInsideBoard=2, " +
-                "cards=, board=Board1}, subtasks=[]}";
-        String stringCard6 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
-                "description='This is Card 5', " +
-                "list=Lists{id=2, title='list 2', positionInsideBoard=2, " +
-                "cards=, board=Board1}, " +
-                "subtasks=[Subtask{id=2, title='Subtask 2', checked=false, " +
-                "card=Cards{id=0, title='Card 1', positionInsideList=1, " +
-                "description='This is Card 1', " +
-                "list=Lists{id=1, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}, position=2}]}";
+                "description='This is Card 1', list.id=1, " +
+                "subtasks=[Subtask{id=0, title='Subtask 1', checked=false, card.id=0, position=1}]}";
 
         assertEquals(card1.toString(), stringCard1);
-        assertEquals(card1.toString(), stringCard11);
-        assertNotEquals(card1.toString(), stringCard2);
-        assertNotEquals(card1.toString(), stringCard3);
-        assertNotEquals(card1.toString(), stringCard4);
-        assertNotEquals(card1.toString(), stringCard5);
-        assertNotEquals(card1.toString(), stringCard6);
+        assertEquals(card1.toString(), card11.toString());
+        assertNotEquals(card1.toString(), card2.toString());
+
+        listSubtasks2.clear();
+        listSubtasks2.add(subtask2);
+        listSubtasks2.add(subtask1);
+        listSubtasks1.add(subtask2);
+        assertNotEquals(card1.toString(), card6.toString());
+
+        assertNotEquals(card1.toString(), card6.toString());
+        card6.subtasks = listSubtasks1;
+        assertEquals(card1.toString(), card6.toString());
     }
 }

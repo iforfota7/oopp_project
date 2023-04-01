@@ -60,7 +60,7 @@ public class Boards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, lists);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Boards {
         return "Boards{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lists=" + lists +
+                ", lists=" + lists.toString() +
                 '}';
     }
 }
