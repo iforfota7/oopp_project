@@ -58,12 +58,20 @@ public class ServerUtils {
      * @param user a user which should be checked
      * @return true if user already in database, otherwise false
      */
-    public boolean existsUser(User user){
-        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/user/find/" + user.username).
-                request(APPLICATION_JSON).accept(APPLICATION_JSON)
-                .get(new GenericType<User>(){}) == null) return false;
+    public boolean existsUser(){
+        if(findUser()== null) return false;
         return true;
+    }
+
+    /**
+     * Find whether current user is in the database
+     * @return the user if they exist
+     */
+    public User findUser(){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){});
     }
 
     /**
@@ -330,10 +338,7 @@ public class ServerUtils {
         // add the current board to the users list of boards if it isn't already in the list
         if(!user.boards.contains(board)) user.boards.add(board);
 
-        // send the updated user to the server so that the database is changed too
-        ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-                post(Entity.entity(user, APPLICATION_JSON), User.class);
+        updateUser(user);
     }
 
     /**
@@ -346,6 +351,17 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
+    }
+
+    /**
+     * Update the users attributes to new ones posted
+     * @param user the user to be updated
+     */
+    public User updateUser(User user){
+        // send the updated user to the server so that the database is changed too
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
 }

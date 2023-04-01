@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
+import commons.User;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -49,15 +50,15 @@ public class BoardOverviewCtrl{
     private Label userLabel;
 
 
-    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
+    private boolean adminLock;
 
     /**
      * Sets lock for admin
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock.set(server.checkAdmin());
-        return adminLock.get();
+        adminLock = server.checkAdmin();
+        return adminLock;
     }
 
     /**
@@ -89,6 +90,8 @@ public class BoardOverviewCtrl{
      * to the Board Overview scene
      */
     public void disconnect() {
+        User s = server.updateUser(selectServerCtrl.getCurrentUser());
+        System.out.println(s);
         mainCtrl.showSelectServer();
     }
 
@@ -147,7 +150,7 @@ public class BoardOverviewCtrl{
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
         removeBoardButton.setUserData(b.name);
-        removeBoardButton.setVisible(adminLock.get());
+        removeBoardButton.setVisible(adminLock);
         stackPane.getChildren().add(removeBoardButton);
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
         return stackPane;
@@ -170,10 +173,9 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boolean isAdmin = server.checkAdmin();
-        adminLock.set(isAdmin);
+        adminLock = server.checkAdmin();
 
-        if(isAdmin){
+        if(adminLock){
             boardsList = server.getBoards();
         }
         else{
@@ -199,7 +201,7 @@ public class BoardOverviewCtrl{
      * Unveiled hidden delete buttons.
      */
     public void openAdminFeatures() {
-        adminLock.set(true);
+        adminLock = true;
         mainCtrl.closeSecondaryStage();
         adminLabel.setVisible(true);
         userLabel.setVisible(false);

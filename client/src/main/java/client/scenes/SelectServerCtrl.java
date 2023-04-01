@@ -32,7 +32,6 @@ public class SelectServerCtrl {
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
-    private BoardOverviewCtrl boardOverviewCtrl;
 
     /**
      * Constructor method for SelectServerCtrl
@@ -77,17 +76,23 @@ public class SelectServerCtrl {
             // set the username in the frontend
             ServerUtils.setUsername(username);
             // create user from information
-            User user = new User(username, new ArrayList<>(), false);
-            exists = server.existsUser(user);
+
+            exists = server.existsUser();
             if(!exists){
                 try{
+                    User user = new User(username, new ArrayList<>(), false);
                     server.addUser(user); // try to add user if not already in database
+                    this.currentUser = user;
                 }
                 catch(Exception e){
                     System.out.println(e); // probably need a better way of communicating the error
                 }
             }
-            this.currentUser = user;
+            else{
+                User user = server.findUser();
+                this.currentUser = user;
+            }
+
         }
         else serverWarning.setVisible(true);
         // if server exists
@@ -96,9 +101,6 @@ public class SelectServerCtrl {
             // otherwise show confirmation scene
             if(!exists) mainCtrl.showBoardOverview();
             else{
-                if(currentUser.isAdmin){
-                    boardOverviewCtrl.openAdminFeatures();
-                }
                 mainCtrl.showConfirmUsername();
             }
         }
