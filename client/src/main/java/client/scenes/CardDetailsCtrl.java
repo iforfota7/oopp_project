@@ -93,6 +93,7 @@ public class CardDetailsCtrl {
 
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
+
         server.renameCard(openedCard);
         mainCtrl.closeSecondaryStage();
     }
@@ -157,6 +158,7 @@ public class CardDetailsCtrl {
         checkBox.setText(subtask.title);
         checkBox.setPrefWidth(174);
         checkBox.setPrefHeight(32);
+        checkBox.setOnAction(this::checkboxClicked);
         subtaskContainer.getChildren().add(checkBox);
         checkBox.setSelected(subtask.checked);
 
@@ -306,4 +308,23 @@ public class CardDetailsCtrl {
         openedCard.subtasks.remove(subtask);
         setOpenedCard(openedCard);
     }
+
+    /**
+     * Changes the completion state of a subtask when
+     * its corresponding checkbox is clicked
+     *
+     * @param event Object storing information about the action event
+     */
+
+    private void checkboxClicked(ActionEvent event) {
+        CheckBox checkBox = (CheckBox) event.getSource();
+        HBox subtaskContainer = (HBox) checkBox.getParent();
+
+        Subtask subtask = (Subtask) subtaskContainer.getProperties().get("subtask");
+        int subtaskIndex = openedCard.subtasks.indexOf(subtask);
+        Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
+        updatedSubtask.checked = checkBox.isSelected();
+        setOpenedCard(openedCard);
+    }
+
 }
