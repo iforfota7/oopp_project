@@ -69,7 +69,6 @@ public class BoardOverviewCtrl{
     }
 
 
-
     /**
      * Go to a specific board when a board label has been clicked
      * @param event Object that contains information about the mouse event
