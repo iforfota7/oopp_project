@@ -58,8 +58,8 @@ public class CardController {
     }
 
     /**
-     * Method for updating the title of a card.
-     * A card can only be renamed if it or any of its fields are not null
+     * Method for updating information of a card that is related to card details.
+     * A card can only be updated if it or any of its fields are not null
      * if it already exists in the repo,
      * if it's position is the same as the version of the card in the repo
      * and lastly if the card's list is the same as the list of the card specified in the repo
