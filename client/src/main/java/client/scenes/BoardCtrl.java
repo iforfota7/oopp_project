@@ -6,7 +6,6 @@ import commons.Boards;
 import commons.Lists;
 import commons.Cards;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
