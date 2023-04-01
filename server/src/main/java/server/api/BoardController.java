@@ -94,6 +94,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
+        repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
         return ResponseEntity.ok().build();
