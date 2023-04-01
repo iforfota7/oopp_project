@@ -14,19 +14,17 @@ public class UserTest {
     User user2;
     User user3;
     User user4;
-    Boards board1;
-    Boards board2;
+    Boards board1, board2, board3;
 
     @BeforeEach
     void setUp(){
 
-        board1 = new Boards("Board 1", null);
-        board2 = new Boards("Board 2", null);
+        board1 = new Boards("Board 1", new ArrayList<>());
+        board2 = new Boards("Board 2", new ArrayList<>());
+        board3 = new Boards("Board 1", new ArrayList<>());
 
         List<Boards> boards1 = new ArrayList<>();
-        boards1.add(board1);
         List<Boards> boards2 = new ArrayList<>();
-        boards2.add(board2);
 
         user1 = new User("iforfota7", boards1, true);
         user11 = new User("iforfota7", boards1, true);
@@ -37,54 +35,94 @@ public class UserTest {
 
     @Test
     void testEqualsTrue(){
-        assertTrue(user1.equals(user1));
-        assertTrue(user1.equals(user11));
+        user1.boards.add(board1);
+
+        assertEquals(user1, user1);
+        assertEquals(user1, user11);
+
+        user3.boards.add(board3);
+        assertEquals(user1, user3);
     }
 
     @Test
     void testEqualsFalse(){
-        assertFalse(user1.equals(user2));
-        assertFalse(user1.equals(user3));
-        assertFalse(user1.equals(user4));
+        user1.boards.add(board1);
+        user3.boards.add(board2);
+
+        assertNotEquals(user1, user2);
+        assertNotEquals(user1, user3);
+        assertNotEquals(user1, user4);
+
+        user1.boards.add(board2);
+        user3.boards.add(board1);
+        assertNotEquals(user1, user3);
+
+        user1.boards = new ArrayList<>();
+        user3.boards = null;
+        assertNotEquals(user1, user3);
+
+        user1.boards.add(board1);
+        assertNotEquals(user1, user11);
     }
 
     @Test
     void testHashCode(){
-        int hashCode1 = user1.hashCode();
-        int hashCode11 = user11.hashCode();
-        int hashCode2 = user2.hashCode();
-        int hashCode3 = user3.hashCode();
-        int hashCode4 = user4.hashCode();
+        user1.boards.add(board1);
+        user3.boards.add(board2);
 
-        assertTrue(user1.hashCode() == hashCode1);
-        assertTrue(user1.hashCode() == hashCode11);
-        assertFalse(user1.hashCode() == hashCode2);
-        assertFalse(user1.hashCode() == hashCode3);
-        assertFalse(user1.hashCode() == hashCode4);
+        int hashCode1 = user1.hashCode();
+
+        assertEquals(user1.hashCode(), hashCode1);
+        assertEquals(user1.hashCode(), user11.hashCode());
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+        assertNotEquals(user1.hashCode(), user3.hashCode());
+        assertNotEquals(user1.hashCode(), user4.hashCode());
+
+        user3.boards.add(board3);
+        user1.boards.add(board2);
+        assertNotEquals(user1.hashCode(), user3.hashCode());
+
+        user3.boards.remove(board2);
+        user3.boards.add(board2);
+        assertEquals(user1.hashCode(), user3.hashCode());
+
+        user3.boards.remove(board2);
+        user3.boards.add(board1);
+        user1.boards.remove(board2);
+        user1.boards.add(board3);
+        assertEquals(user1.hashCode(), user3.hashCode());
     }
 
     @Test
     void testToString(){
+
+        user1.boards.add(board1);
+        user3.boards.add(board2);
+
         String stringUser1 = "User{username='iforfota7', " +
-                "boards=[Boards{id=0, name='Board 1', " +
-                "lists=null}], isAdmin=true}";
-        String stringUser11 = "User{username='iforfota7', " +
-                "boards=[Boards{id=0, name='Board 1', " +
-                "lists=null}], isAdmin=true}";
-        String stringUser2 = "User{username='iforfota77', " +
-                "boards=[Boards{id=0, name='Board 1', " +
-                "lists=null}], isAdmin=true}";
-        String stringUser3 = "User{username='iforfota7', " +
-                "boards=[Boards{id=0, name='Board 2', " +
-                "lists=null}], isAdmin=true}";
-        String stringUser4 = "User{username='iforfota7', " +
-                "boards=[Boards{id=0, name='Board 1', " +
-                "lists=null}], isAdmin=false}";
+                "boards=[Boards{id=0, name='Board 1', lists=[]}], isAdmin=true}";
 
         assertEquals(user1.toString(), stringUser1);
-        assertEquals(user1.toString(), stringUser11);
-        assertNotEquals(user1.toString(), stringUser2);
-        assertNotEquals(user1.toString(), stringUser3);
-        assertNotEquals(user1.toString(), stringUser4);
+        assertEquals(user1.toString(), user11.toString());
+        assertNotEquals(user1.toString(), user2.toString());
+        assertNotEquals(user1.toString(), user3.toString());
+
+        user3.boards.add(board1);
+        user1.boards.add(board2);
+        assertNotEquals(user1.toString(), user3.toString());
+
+        user3.boards.remove(board2);
+        user3.boards.add(board2);
+        assertEquals(user1.toString(), user3.toString());
+
+        user3.boards.clear();
+        user3.boards.add(board3);
+        user3.boards.add(board2);
+        assertEquals(user1.toString(), user3.toString());
+
+        user3.boards = null;
+        user1.boards = new ArrayList<>();
+        assertNotEquals(user1.toString(), user3.toString());
+
     }
 }
