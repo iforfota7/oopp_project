@@ -54,7 +54,7 @@ public class BoardOverviewCtrl{
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock = server.checkAdmin(selectServerCtrl.getCurrentUser());
+        adminLock = server.checkAdmin();
         return adminLock;
     }
 
@@ -146,16 +146,18 @@ public class BoardOverviewCtrl{
         removeBoardButton.setOnMouseClicked(this::removeBoard);
         removeBoardButton.setUserData(b.name);
         removeBoardButton.setVisible(adminLock);
-
-        Button hideBoardButton = new Button("hide");
-        removeBoardButton.setStyle("-fx-background-color: #f08080;" +
-                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
-        removeBoardButton.setOnMouseClicked(this::hideBoard);
-        removeBoardButton.setUserData(b.name);
-        removeBoardButton.setVisible(!adminLock);
-
         stackPane.getChildren().add(removeBoardButton);
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
+
+        Button hideBoardButton = new Button("hide");
+        hideBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        hideBoardButton.setOnMouseClicked(this::hideBoard);
+        hideBoardButton.setUserData(b.name);
+        hideBoardButton.setVisible(!adminLock);
+        stackPane.getChildren().add(hideBoardButton);
+        StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
+
         return stackPane;
     }
     /**
@@ -188,7 +190,15 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boardsList = server.getBoards();
+        boolean isAdmin = server.checkAdmin();
+
+        if(isAdmin){
+            boardsList = server.getBoards();
+        }
+        else{
+            boardsList = server.viewedBoards();
+        }
+
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
