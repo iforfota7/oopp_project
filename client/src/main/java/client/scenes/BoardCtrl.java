@@ -61,6 +61,7 @@ public class BoardCtrl {
         this.currentBoard = server.getBoardByID(boardName.getText());
         this.board = board;
         refresh();
+        refreshCustomization();
     }
 
     private void webSocketLists() {
@@ -144,7 +145,6 @@ public class BoardCtrl {
 
     public void refresh(){
         this.currentBoard = server.getBoardByID(boardName.getText());
-        refreshCustomization();
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(board.id);
         //lists = server.getLists();
@@ -152,12 +152,14 @@ public class BoardCtrl {
             addNewList(list);
 
         }
+        refreshCustomization();
     }
 
     public void refreshData(){
         lists = server.getListsByBoard(board.id);
         //lists = server.getLists();
         refreshLists(lists);
+        refreshCustomization();
     }
 
     public void refreshCards(VBox listContainer, List<Cards> c){
@@ -172,6 +174,7 @@ public class BoardCtrl {
               j++;
             }
         }
+        refreshCustomization();
     }
 
     public void refreshLists(List<Lists> l){
@@ -184,6 +187,7 @@ public class BoardCtrl {
                 j++;
             }
         }
+        refreshCustomization();
     }
 
     /**
@@ -581,11 +585,6 @@ public class BoardCtrl {
             e.printStackTrace();
         }
     }
-
-    /**
-     *Read the CSS from the file and set them.
-     */
-
     /**
      *Read the CSS from the file and set them.
      */
@@ -598,21 +597,40 @@ public class BoardCtrl {
         boardName.setStyle("-fx-text-fill: " + currentBoard.boardFtColor  + ";");
 
         //list color CSS setting
-//        boardName.getScene().getRoot().lookup("#header")
-//                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
-//        boardName.getScene().getRoot().lookup("#footer")
-//                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
-//        boardName.getScene().getRoot().lookup("#list")
-//                .setStyle("-fx-background-color: " + currentBoard.listBgColor + ";");
-//        boardName.getScene().getRoot().lookup("#listName")
-//                .setStyle("-fx-text-fill: " + currentBoard.listFtColor + ";");
+        List<VBox> vBoxes = findVBoxes((Pane) boardName.getScene().getRoot());
+        for (VBox vBox : vBoxes) {
+            vBox.setStyle("-fx-background-color: " + currentBoard.listBgColor + ";"
+                    + "-fx-text-fill: " + currentBoard.listFtColor + ";");
+        }
         //card color CSS setting
-//        boardName.getScene().getRoot().lookup("#card")
-//                .setStyle("-fx-background-color: " + currentBoard.cardBgColor + ";");
-//        boardName.getScene().getRoot().lookup("#card")
-//                .setStyle("-fx-text-fill: " + currentBoard.cardFtColor + ";");
+        List<Hyperlink> hyperlinks = findHyperlinks((Pane) boardName.getScene().getRoot());
+        for (Hyperlink link : hyperlinks) {
+            link.setStyle("-fx-background-color: " + currentBoard.cardBgColor + ";"
+                    + "-fx-text-fill: " + currentBoard.cardFtColor + ";");
+        }
     }
-
+    private List<VBox> findVBoxes(Pane root) {
+        List<VBox> vBoxes = new ArrayList<>();
+        for (Node node : root.getChildren()) {
+            if (node instanceof VBox) {
+                vBoxes.add((VBox) node);
+            } else if (node instanceof Pane) {
+                vBoxes.addAll(findVBoxes((Pane) node));
+            }
+        }
+        return vBoxes;
+    }
+    private List<Hyperlink> findHyperlinks(Pane root) {
+        List<Hyperlink> hyperlinks = new ArrayList<>();
+        for (Node node : root.getChildren()) {
+            if (node instanceof Hyperlink) {
+                hyperlinks.add((Hyperlink) node);
+            } else if (node instanceof Pane) {
+                hyperlinks.addAll(findHyperlinks((Pane) node));
+            }
+        }
+        return hyperlinks;
+    }
     public void setBoardToDB() {
         try {
             List<String> lines = Files.readAllLines(Paths.get(
