@@ -171,12 +171,14 @@ public class BoardOverviewCtrl{
     public void refresh(){
         gridPane.getChildren().clear();
         boolean isAdmin = server.checkAdmin();
+        adminLock.set(isAdmin);
 
         if(isAdmin){
             boardsList = server.getBoards();
         }
         else{
             boardsList = server.viewedBoards();
+            selectServerCtrl.setBoardsOfCurrentUser(boardsList);
         }
 
         numberOfBoards = 0;

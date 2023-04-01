@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Boards;
 import commons.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,6 +10,7 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SelectServerCtrl {
 
@@ -125,5 +127,7 @@ public class SelectServerCtrl {
         mainCtrl.showUserDetails(currentUser);
     }
 
-
+    public void setBoardsOfCurrentUser(List<Boards> boards){
+        this.currentUser.boards = boards;
+    }
 }
