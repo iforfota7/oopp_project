@@ -213,6 +213,23 @@ public class ServerUtils {
     }
 
     /**
+     * Getter for the serverAddress property
+     *
+     * @return the serverAddress property
+     */
+    public String getServer() {
+        return serverAddress;
+    }
+
+    /**
+     * Method for connecting websockets to a particular Talio server
+     *
+     */
+    public void setWebsockets() {
+        session = connect(serverAddress.replaceFirst("http", "ws") + "/websocket");
+    }
+
+    /**
      * Setter method for the username attribute
      * @param username the username to be set
      */
@@ -239,7 +256,7 @@ public class ServerUtils {
 
     }
 
-    private final StompSession session =  connect("ws://localhost:8080/websocket");
+    private StompSession session =  null;
 
     /**
      * Connect method for websockets

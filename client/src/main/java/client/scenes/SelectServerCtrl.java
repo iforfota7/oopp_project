@@ -72,6 +72,8 @@ public class SelectServerCtrl {
         // if you can connect to the specified server address
         if(server.checkServer()){
             serverWarning.setVisible(false);
+            server.setWebsockets();
+
             // set the username in the frontend
             ServerUtils.setUsername(username);
             // create user from information
