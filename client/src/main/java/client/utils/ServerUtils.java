@@ -304,6 +304,29 @@ public class ServerUtils {
     }
 
     /**
+     * Method that removes Board from user
+     * @param board the board to be removed
+     * @return the response object
+     */
+    public User hideBoardFromUser(Boards board){
+        // get the current user using the saved USERNAME
+        User user = ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>() {});
+
+        // if the user has the board in their list of boards, remove it
+        if(user.boards != null && user.boards.size() != 0 && user.boards.contains(board)){
+            user.boards.remove(board);
+        }
+
+        // send the updated user to the server so that the database is changed too
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
      * Method that checks whether a user is an admin
      * @param user the user to be checked
      * @return true if the user is admin, false otherwise

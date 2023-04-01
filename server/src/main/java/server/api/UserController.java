@@ -1,11 +1,13 @@
 package server.api;
 
+import commons.Boards;
 import commons.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")

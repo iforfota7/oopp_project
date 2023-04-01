@@ -83,7 +83,7 @@ public class BoardController {
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Void> removeBoard(@RequestBody Boards boards) {
         String boardName = boards.name;
-        System.out.println(boardName);
+
         if (boardName == null) {
             return ResponseEntity.badRequest().build();
         }
