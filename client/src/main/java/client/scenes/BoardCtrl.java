@@ -15,11 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 import javafx.event.ActionEvent;
@@ -549,7 +545,6 @@ public class BoardCtrl {
      */
     public void setBoardName(Boards b) {
         this.boardName.setText(b.name);
-
         this.board = b;
     }
 
@@ -562,28 +557,16 @@ public class BoardCtrl {
      */
     @FXML
     void openCustomization() {
-        setCssButton();
+        this.currentBoard = server.getBoardByID(boardName.getText());
         mainCtrl.showCustomization(boardName.getText());
     }
 
-    private void setCssButton() {
-        try {
-            Map<String, String> idToColorMap = new HashMap<>();
-            idToColorMap.put("boardBgColor", currentBoard.boardBgColor);
-            idToColorMap.put("boardFtColor", currentBoard.boardFtColor);
-            idToColorMap.put("listBgColor", currentBoard.listBgColor);
-            idToColorMap.put("listFtColor", currentBoard.listFtColor);
-            idToColorMap.put("cardBgColor", currentBoard.cardBgColor);
-            idToColorMap.put("cardFtColor", currentBoard.cardFtColor);
+    public Boards getCurrentBoard() {
+        return currentBoard;
+    }
 
-            List<String> lines = idToColorMap.entrySet().stream()
-                    .map(entry -> entry.getKey() + ":" + entry.getValue())
-                    .collect(Collectors.toList());
-
-            Files.write(Paths.get("client/src/main/resources/client/scenes/customization"), lines);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setCurrentBoard(Boards currentBoard) {
+        this.currentBoard = currentBoard;
     }
     /**
      *Read the CSS from the file and set them.
@@ -632,23 +615,8 @@ public class BoardCtrl {
         return hyperlinks;
     }
     public void setBoardToDB() {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(
-                    "client/src/main/resources/client/scenes/customization"));
-            Map<String, String> idToColorMap = lines.stream()
-                    .map(line -> line.split(":"))
-                    .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
-            currentBoard.boardBgColor = idToColorMap.get("boardBgColor");
-            currentBoard.boardFtColor = idToColorMap.get("boardFtColor");
-            currentBoard.listBgColor = idToColorMap.get("listBgColor");
-            currentBoard.listFtColor = idToColorMap.get("listFtColor");
-            currentBoard.cardBgColor = idToColorMap.get("cardBgColor");
-            currentBoard.cardFtColor = idToColorMap.get("cardFtColor");
-            server.setBoardCss(currentBoard);
-            refresh();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        server.setBoardCss(currentBoard);
+        refresh();
     }
 
 }
