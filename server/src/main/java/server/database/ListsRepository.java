@@ -54,7 +54,6 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
 
     /**
      * Gets the maximum value of the POSITION_INSIDE_BOARD among all Lists
-     *
      * @return The maximum value or null in case the repository contains no Lists
      */
     @Query(value = "SELECT MAX(POSITION_INSIDE_BOARD) " +
@@ -85,7 +84,6 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
 
     /**
      * Remove all cards that are inside a List
-     *
      * @param listID ID of the list from where to remove the cards
      */
     @Modifying

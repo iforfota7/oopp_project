@@ -23,12 +23,7 @@ public class Boards {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @OrderBy("positionInsideBoard ASC")
     public List<Lists> lists;
-    public String boardBgColor;
-    public String boardFtColor;
-    public String listBgColor;
-    public String listFtColor;
-    public String cardBgColor;
-    public String cardFtColor;
+
     /**
      * Constructor method for a board
      * @param name the name of the board (acts as unique id)
@@ -37,12 +32,6 @@ public class Boards {
     public Boards(String name, List<Lists> lists){
         this.name = name;
         this.lists = lists;
-        this.boardBgColor = "#E6E6FA";
-        this.boardFtColor = "#000000";
-        this.listBgColor = "#E6E6FA";
-        this.listFtColor = "#000000";
-        this.cardBgColor = "#FFFFFF";
-        this.cardFtColor = "#000000";
     }
 
     /**
@@ -50,11 +39,6 @@ public class Boards {
      */
     @SuppressWarnings("unused")
     public Boards(){}
-
-
-
-
-
 
     /**
      * Equals method for boards class
@@ -70,11 +54,19 @@ public class Boards {
                 && Objects.equals(lists, boards.lists);
     }
 
+    /**
+     * Hashcode method for Boards class
+     * @return the hashcode of the board
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, name, lists);
     }
 
+    /**
+     * To string method for the board
+     * @return human readable format of board information
+     */
     @Override
     public String toString() {
         return "Boards{" +

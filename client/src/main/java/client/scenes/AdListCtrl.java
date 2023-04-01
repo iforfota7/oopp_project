@@ -1,8 +1,11 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
 import javafx.fxml.FXML;
+
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+
 import javax.inject.Inject;
 
 /**
@@ -10,17 +13,25 @@ import javax.inject.Inject;
  */
 public class AdListCtrl {
     private final BoardCtrl boardCtrl;
-
+    private final ServerUtils server;
     private final MainCtrl   mainCtrl;
-    @Inject
-    public AdListCtrl(BoardCtrl boardCtrl, MainCtrl mainCtrl){
-        this.boardCtrl = boardCtrl;
-        this.mainCtrl = mainCtrl;
-    }
     @FXML
     private TextField newListName;
     @FXML
     private Text warning;
+
+    /**
+     * Constructor method for the AdListCtrl class
+     * @param boardCtrl instance of BoardCtrl
+     * @param server instance of ServerUtils
+     * @param mainCtrl instance of MainCtrl
+     */
+    @Inject
+    public AdListCtrl(BoardCtrl boardCtrl, ServerUtils server, MainCtrl mainCtrl){
+        this.boardCtrl = boardCtrl;
+        this.server = server;
+        this.mainCtrl = mainCtrl;
+    }
 
     /**
      * The initialization and customization of the
@@ -41,7 +52,7 @@ public class AdListCtrl {
 
         boardCtrl.addListToBoard(newListName.getText(), positionInsideBoard);
         newListName.setText("");
-        mainCtrl.closeADList();
+        mainCtrl.closeSecondaryStage();
     }
 
 }

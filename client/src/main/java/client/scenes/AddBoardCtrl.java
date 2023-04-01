@@ -18,6 +18,12 @@ public class AddBoardCtrl {
     @FXML
     private TextField boardName;
 
+    /**
+     * Constructor method for controller
+     * @param boardOverviewCtrl board overview controller instance
+     * @param mainCtrl main controller instance
+     * @param server serverUtils instance
+     */
     @Inject
     public AddBoardCtrl(BoardOverviewCtrl boardOverviewCtrl, MainCtrl mainCtrl, ServerUtils server){
         this.boardOverviewCtrl = boardOverviewCtrl;
@@ -33,7 +39,8 @@ public class AddBoardCtrl {
     void saveNewBoard(){
         server.addBoard(new Boards(boardName.getText(), null));
         boardName.setText("");
-        mainCtrl.closeAddBoard();
+
+        mainCtrl.closeSecondaryStage();
         boardOverviewCtrl.refresh();
     }
 
