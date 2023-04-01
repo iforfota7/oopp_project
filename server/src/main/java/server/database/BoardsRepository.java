@@ -18,6 +18,10 @@ public interface BoardsRepository extends JpaRepository<Boards, Long> {
             nativeQuery = true)
     Optional<Boards> findByName(String name);
 
+    /**
+     * Remove all the references to a board in User_Boards table
+     * @param boardId the id of the board
+     */
     @Modifying
     @Query (value = "DELETE FROM USER_BOARDS WHERE BOARDS_ID = ?1",
             nativeQuery = true)
