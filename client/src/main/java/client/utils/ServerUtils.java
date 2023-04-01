@@ -319,13 +319,18 @@ public class ServerUtils {
      * @param board the current board
      */
     public void addBoardToUser(Boards board){
+        // get the current user using the saved USERNAME
         User user = ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
+
+        // if the user has no boards, make a new list
         if(user.boards == null || user.boards.size() == 0) user.boards = new ArrayList<>(){};
+        // add the current board to the users list of boards if it isn't already in the list
         if(!user.boards.contains(board)) user.boards.add(board);
 
+        // send the updated user to the server so that the database is changed too
         ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);

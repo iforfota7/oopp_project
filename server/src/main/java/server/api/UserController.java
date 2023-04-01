@@ -56,7 +56,7 @@ public class UserController {
      * @return a response entity
      */
     @Transactional
-    @PostMapping (path = "/update")
+    @PostMapping (path = {"/update", "/update/"})
     public User updateUser(@RequestBody User user){
         return repo.save(user);
     }
@@ -66,7 +66,7 @@ public class UserController {
      * @param user the user to be added
      * @return response entity of user
      */
-    @PostMapping(path = "/refreshAdmin")
+    @PostMapping(path = {"/refreshAdmin", "/refreshAdmin/"})
     @ResponseBody
     public ResponseEntity<Object> refreshAdmin(@RequestBody User user){
         if (user == null || user.username == null || user.username.equals("")) {

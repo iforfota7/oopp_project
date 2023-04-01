@@ -179,8 +179,6 @@ public class BoardOverviewCtrl{
             boardsList = server.viewedBoards();
         }
 
-        System.out.println(boardsList);
-
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
