@@ -58,7 +58,6 @@ public class BoardCtrl {
         listCards = new ArrayList<>();
         this.board = board;
         refresh();
-        refreshCustomization();
     }
 
     /**
@@ -164,7 +163,6 @@ public class BoardCtrl {
     public void refreshData(){
         lists = server.getListsByBoard(board.id);
         refreshLists(lists);
-        refreshCustomization();
     }
 
     /**
@@ -184,7 +182,6 @@ public class BoardCtrl {
               j++;
             }
         }
-        refreshCustomization();
     }
 
     /**
@@ -201,7 +198,6 @@ public class BoardCtrl {
                 j++;
             }
         }
-        refreshCustomization();
     }
 
     /**
@@ -343,6 +339,8 @@ public class BoardCtrl {
         list.getChildren().addAll(headerList, footerList);
         list.setId("list"+Long.toString(l.id));
         list.getProperties().put("list", l);
+        listName.setStyle("-fx-text-fill: " + board.listFtColor + ";");
+        list.setStyle("-fx-background-color: " + board.listBgColor + ";");
         return list;
     }
 
@@ -517,7 +515,8 @@ public class BoardCtrl {
         currentCard.setOnDragDropped(drag::dragDropped);
         currentCard.setOnDragOver(drag::dragOver);
         currentCard.setText(c.title);
-
+        currentCard.setStyle("-fx-background-color: " + board.cardBgColor + ";"
+                + "-fx-text-fill: " + board.cardFtColor + ";");
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
 
         // show card detail scene to be able to set details of card
@@ -637,63 +636,5 @@ public class BoardCtrl {
         boardName.getScene().getRoot()
                 .setStyle("-fx-background-color: " + board.boardBgColor + ";");
         boardName.setStyle("-fx-text-fill: " + board.boardFtColor  + ";");
-
-        //list color CSS setting
-        List<VBox> vBoxes = findVBoxes((Pane) boardName.getScene().getRoot());
-        for (VBox vBox : vBoxes) {
-            vBox.setStyle("-fx-background-color: " + board.listBgColor + ";");
-
-
-            ObservableList<Node> children = vBox.getChildren();
-            for (Node child : children) {
-                if (child instanceof Label) {
-                    child.setStyle("-fx-text-fill: " + board.listFtColor + ";");
-                }
-            }
-        }
-        //card color CSS setting
-        List<Hyperlink> hyperlinks = findHyperlinks((Pane) boardName.getScene().getRoot());
-        for (Hyperlink link : hyperlinks) {
-            link.setStyle("-fx-background-color: " + board.cardBgColor + ";"
-                    + "-fx-text-fill: " + board.cardFtColor + ";");
-        }
     }
-
-    /**
-     * Find and return all elements with the property 'Vbox' in the collection.
-     * @param root all elements of the current board by searching
-     *             for the LabelName element in the current board.
-     * @return Collection of elements that only contain Vbox.
-     */
-    private List<VBox> findVBoxes(Pane root) {
-        List<VBox> vBoxes = new ArrayList<>();
-        for (Node node : root.getChildren()) {
-            if (node instanceof VBox) {
-                vBoxes.add((VBox) node);
-            } else if (node instanceof Pane) {
-                vBoxes.addAll(findVBoxes((Pane) node));
-            }
-        }
-        return vBoxes;
-    }
-
-    /**
-     * Find and return all elements with the property 'Hyperlink' in the collection.
-     * @param root all elements of the current board by searching
-     *               for the LabelName element in the current board.
-     * @return Collection of elements that only contain Hyperlink.
-     */
-    private List<Hyperlink> findHyperlinks(Pane root) {
-        List<Hyperlink> hyperlinks = new ArrayList<>();
-        for (Node node : root.getChildren()) {
-            if (node instanceof Hyperlink) {
-                hyperlinks.add((Hyperlink) node);
-            } else if (node instanceof Pane) {
-                hyperlinks.addAll(findHyperlinks((Pane) node));
-            }
-        }
-        return hyperlinks;
-    }
-
-
 }
