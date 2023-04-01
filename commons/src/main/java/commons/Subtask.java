@@ -25,15 +25,14 @@ public class Subtask {
 
     /**
      * Constructor method for the Subtask class
-     * @param id unique id of a subtask
      * @param title the title of the card
      * @param checked a boolean which defines the state of the checkbox
      *                of the subtask-> finished or not
      * @param card the parent card of the subtask
-     * @param position the position of the subtask inside the card
+     * @param position the position of the subtask is the subtasks list
+     *                 of a card
      */
-    public Subtask(long id, String title, boolean checked, Cards card, int position) {
-        this.id = id;
+    public Subtask(String title, boolean checked, Cards card, int position) {
         this.title = title;
         this.checked = checked;
         this.card = card;
@@ -67,7 +66,7 @@ public class Subtask {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, checked, card, position);
+        return Objects.hash(id, title, checked, card.id, position);
     }
 
     /**
@@ -81,7 +80,7 @@ public class Subtask {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", checked=" + checked +
-                ", card=" + card +
+                ", card.id=" + card.id +
                 ", position=" + position +
                 '}';
     }

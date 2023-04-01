@@ -65,14 +65,14 @@ public class Boards {
 
     /**
      * To string method for the board
-     * @return human readable format of board information
+     * @return human-readable format of board information
      */
     @Override
     public String toString() {
         return "Boards{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lists=" + lists +
+                ", lists=" + lists.toString() +
                 '}';
     }
 }
