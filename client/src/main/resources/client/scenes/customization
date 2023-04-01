@@ -1,6 +1,6 @@
-listBgColor:#e6e6b3
-boardFtColor:#ffe666
-boardBgColor:#ffcc99
+boardBgColor:#e6e6fa
+boardFtColor:#000000
 cardBgColor:#e6e6fa
 cardFtColor:#000000
-listFtColor:#996699
+listBgColor:#ffffff
+listFtColor:#000000
