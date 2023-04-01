@@ -24,12 +24,13 @@ class CardsTest {
     Subtask subtask3;
     List<Subtask> listSubtasks1;
     List<Subtask> listSubtasks2;
+    Lists list;
 
     @BeforeEach
-    public void setUp(){
+    void setUp(){
         Boards board = new Boards("Board1", new ArrayList<>());
 
-        Lists list = new Lists("list 1", 1, board);
+        list = new Lists("list 1", 1, board);
         list.id = 1;
         Lists list2 = new Lists("list 2", 2, board);
         list2.id = 2;
@@ -62,6 +63,13 @@ class CardsTest {
     }
 
     @Test
+    void testConstructor(){
+        assertNotNull(new Cards("Card", 1,list,
+                "This card", listSubtasks1));
+        assertNotNull(card5);
+    }
+
+    @Test
     void testEqualsTrue(){
         assertEquals(card1, card1);
         assertEquals(card1, card11);
@@ -77,10 +85,8 @@ class CardsTest {
         listSubtasks2.add(subtask2);
         listSubtasks2.add(subtask3);
 
-        long temp = card11.list.id;
         card11.list.id = 12435;
         assertEquals(card1, card11);
-        card11.list.id = temp;
     }
 
     @Test
@@ -103,10 +109,8 @@ class CardsTest {
         assertNotEquals(card1.hashCode(), card5.hashCode());
         assertNotEquals(card1.hashCode(), card6.hashCode());
 
-        long temp = card11.list.id;
         card11.list.id = 12321;
         assertNotEquals(hashcode1, card11.hashCode());
-        card11.list.id = temp;
 
         listSubtasks1.add(subtask3);
         assertNotEquals(hashcode1, card1.hashCode());

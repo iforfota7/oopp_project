@@ -37,16 +37,19 @@ public class SubtaskTest {
     }
 
     @Test
+    void testConstructor(){
+        assertNotNull(new Subtask("Subtask", true, card1, 1));
+        assertNotNull(subtask5);
+    }
+
+    @Test
     void testEqualsTrue() {
         assertEquals(subtask1, subtask1);
         assertEquals(subtask1, subtask11);
 
-        long temp = card2.id;
         card2.id = card1.id;
 
         assertEquals(subtask1, subtask4);
-
-        card2.id = temp;
 
         subtask11.card.id = 3;
         assertEquals(subtask1, subtask11);

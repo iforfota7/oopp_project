@@ -30,6 +30,12 @@ public class BoardsTest {
     }
 
     @Test
+    void testConstructor(){
+        assertNotNull(new Boards("Board", new ArrayList<>()));
+        assertNotNull(board2);
+    }
+
+    @Test
     void testEqualsTrue() {
         assertEquals(board1, board1);
         assertEquals(board1, board11);

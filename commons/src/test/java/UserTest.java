@@ -34,6 +34,12 @@ public class UserTest {
     }
 
     @Test
+    void testConstructor(){
+        assertNotNull(new User("iforfota", new ArrayList<>(), true));
+        assertNotNull(board2);
+    }
+
+    @Test
     void testEqualsTrue(){
         user1.boards.add(board1);
 

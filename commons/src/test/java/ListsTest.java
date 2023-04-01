@@ -41,6 +41,12 @@ class ListsTest {
     }
 
     @Test
+    void testConstructor(){
+        assertNotNull(new Lists("List", 1, board1));
+        assertNotNull(list3);
+    }
+
+    @Test
     void testEqualsTrue() {
         assertEquals(list1, list1);
         assertEquals(list1, list11);
