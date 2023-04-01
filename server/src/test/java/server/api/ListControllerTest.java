@@ -22,9 +22,6 @@ public class ListControllerTest {
     public TestListsRepository repo;
     public ListController sut;
 
-    /**
-     * Before each method for tests
-     */
     @BeforeEach
     public void setup() {
 
@@ -301,12 +298,6 @@ public class ListControllerTest {
         assertEquals(ResponseEntity.badRequest().build(), sut.renameList(null));
     }
 
-    /**
-     * Creates a new list
-     * @param t the name of the list
-     * @param p the position of the list
-     * @return the list
-     */
     public Lists getList(String t, int p) {
 
         Lists list = new Lists(t,p, new Boards("test", null));

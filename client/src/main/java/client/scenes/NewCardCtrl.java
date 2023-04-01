@@ -13,10 +13,6 @@ public class NewCardCtrl {
 
     private final BoardCtrl boardCtrl;
 
-    /**
-     * Constructor method for NewCardCtrl
-     * @param boardCtrl instance of BoardCtrl
-     */
     @Inject
     public NewCardCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;

@@ -1,5 +1,6 @@
 package client.scenes;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -18,10 +19,6 @@ public class ConfirmUsernameCtrl {
 
     private MainCtrl mainCtrl;
 
-    /**
-     * Constructor method for ConfirmUsernameCtrl
-     * @param mainCtrl instance of MainCtrl
-     */
     @Inject
     public ConfirmUsernameCtrl(MainCtrl mainCtrl){
         this.mainCtrl = mainCtrl;
@@ -29,18 +26,20 @@ public class ConfirmUsernameCtrl {
 
     /**
      * Makes call to close confirm username scene
+     * @param event triggers the method
      */
     @FXML
-    void cancel() {
-        mainCtrl.closeSecondaryStage();
+    void cancel(ActionEvent event) {
+        mainCtrl.closeConfirmUsername();
     }
 
     /**
      * Closes confirm username scene and shows the board
+     * @param event triggers the method
      */
     @FXML
-    void confirm() {
-        mainCtrl.closeSecondaryStage();
+    void confirm(ActionEvent event) {
+        mainCtrl.closeConfirmUsername();
         mainCtrl.showBoardOverview();
     }
 

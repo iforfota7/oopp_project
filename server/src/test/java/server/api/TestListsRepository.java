@@ -110,11 +110,6 @@ public class TestListsRepository implements ListsRepository {
         return res;
     }
 
-    /**
-     * Override method for method retrieving all lists in a board in order
-     * @param boardName the name of the board for which lists should be retrieved
-     * @return the list of lists
-     */
     @Override
     public List<Lists> findAllByOrderByPositionInsideBoardAsc(long boardName){
         return null; // needs to be implemented properly

@@ -31,15 +31,6 @@ public class UserDetailsCtrl {
 
     @FXML
     private Button adminLogin;
-
-    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
-
-    /**
-     * Constructor method for UserDetailsCtrl
-     * @param mainCtrl instance of MainCtrl
-     * @param server instance of ServerUtils
-     * @param selectServerCtrl instance of SelectServerCtrl
-     */
     @Inject
     public UserDetailsCtrl(MainCtrl mainCtrl, ServerUtils server,
                            SelectServerCtrl selectServerCtrl){
@@ -47,13 +38,14 @@ public class UserDetailsCtrl {
         this.server = server;
         this.selectServerCtrl = selectServerCtrl;
     }
+    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
 
     /**
      * Method to close the secondary stage which shows the user's details
      */
     @FXML
     void closeUserDetails(){
-        mainCtrl.closeSecondaryStage();
+        mainCtrl.closeUserDetails();
         mainCtrl.showBoardOverview();
     }
 
@@ -63,7 +55,7 @@ public class UserDetailsCtrl {
      */
     public void setUser(User currentUser) {
         this.adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
-        this.username.setText(currentUser.username);
+        this.username.setText(currentUser.getUsername());
         if(adminLock.get()){
             this.isAdmin.setText("Yes!");
             adminLogin.setVisible(false);
@@ -88,7 +80,7 @@ public class UserDetailsCtrl {
             alert.setContentText("Admin has been unlocked!");
             alert.showAndWait();
         } else {
-            mainCtrl.closeSecondaryStage();
+            mainCtrl.closeUserDetails();
             mainCtrl.showConfirmAdmin();
         }
     }
@@ -100,7 +92,7 @@ public class UserDetailsCtrl {
     @FXML
     void adminLogout() {
         selectServerCtrl.removeAdmin();
-        mainCtrl.closeSecondaryStage();
+        mainCtrl.closeUserDetails();
         mainCtrl.showBoardOverview();
     }
 }

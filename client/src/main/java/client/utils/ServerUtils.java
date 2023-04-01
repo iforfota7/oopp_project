@@ -77,88 +77,49 @@ public class ServerUtils {
                 get(new GenericType<Boards>(){});
 
     }
-
-    /**
-     * Add a new list to the database
-     * @param list the list to be added
-     * @return the response object
-     */
     public Lists addList(Lists list){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/lists/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
-    /**
-     * Method that renames an existing list in the database
-     * @param list the list containing the new name
-     * @return the response object
-     */
     public Lists renameList(Lists list){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/lists/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
-    /**
-     * Method that removes a list from the database
-     * @param list the list to be deleted
-     * @return the response object
-     */
     public Lists removeList(Lists list){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/lists/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
-    /**
-     * Method to add a new card to the database
-     * @param card the card to be added
-     * @return the response object
-     */
     public Cards addCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/cards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
-    /**
-     * Method that removes card from the database
-     * @param card the card to be deleted
-     * @return the response object
-     */
     public Cards removeCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
     }
 
-    /**
-     * Method that renames a card in the database
-     * @param card the card to be renamed with new properties
-     * @return the response object
-     */
     public Cards renameCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/cards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
-    /**
-     * Method that moves card to new list or within list
-     * @param card the card to be moved
-     * @return the response object
-     */
     public Cards moveCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
-    /**
-     * Method that retrieves all lists from the server
-     * @return a list of all lists in the database
-     */
+
     public List<Lists> getLists() {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/lists") //
@@ -167,22 +128,11 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
-    /**
-     * Method that adds Board to the database
-     * @param board the board to be added
-     * @return the response object
-     */
     public Boards addBoard(Boards board) {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
-
-    /**
-     * Method that gets all lists in a certain board
-     * @param boardName the id of the board
-     * @return a list of lists in the board
-     */
     public List<Lists> getListsByBoard(long boardName) {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/lists/all/" + boardName) //
@@ -191,10 +141,6 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
-    /**
-     * Method that retrieves all the boards
-     * @return a list of all boards
-     */
     public List<Boards> getBoards() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/all")
@@ -240,11 +186,6 @@ public class ServerUtils {
 
     private final StompSession session =  connect("ws://localhost:8080/websocket");
 
-    /**
-     * Connect method for websockets
-     * @param url the url for the websockets
-     * @return StompSession
-     */
     private StompSession connect(String url){
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
@@ -258,14 +199,6 @@ public class ServerUtils {
         }
         throw new IllegalStateException();
     }
-
-    /**
-     * RegisterForMessages method
-     * @param dest destination
-     * @param type the type
-     * @param consumer a consumer
-     * @param <T> the type
-     */
     public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer){
         session.subscribe(dest, new StompFrameHandler() {
             @Override
@@ -281,39 +214,35 @@ public class ServerUtils {
         });
     }
 
-    /**
-     * Method that refreshes whether user is admin on login
-     * @param user the user
-     * @return the response object
-     */
+
     public User refreshAdmin(User user) {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user/refreshAdmin").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
-
-    /**
-     * Method that removes Board from database
-     * @param board the board to be removed
-     * @return the response object
-     */
     public Boards removeBoard(Boards board){
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/boards/remove/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
 
-    /**
-     * Method that checks whether a user is an admin
-     * @param user the user to be checked
-     * @return true if the user is admin, false otherwise
-     */
     public boolean checkAdmin(User user) {
         return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
                 path("api/user/find/" + user.username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
-                }).isAdmin;
+                }).isAdmin();
+    }
+    public Boards getBoardByID(String boardID) {
+        return  ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/get/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){});
     }
 
+    public Boards setBoardCss(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/setCss/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 }

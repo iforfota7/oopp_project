@@ -5,6 +5,7 @@ import commons.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 
 public class SelectServerCtrl {
 
+    @FXML
+    private AnchorPane container;
 
     @FXML
     private TextField inputServer;
@@ -31,22 +34,13 @@ public class SelectServerCtrl {
 
     private final MainCtrl mainCtrl;
     private BoardOverviewCtrl boardOverviewCtrl;
-
-    /**
-     * Constructor method for SelectServerCtrl
-     * @param server instance of ServerUtils
-     * @param mainCtrl instance of MainCtrl
-     */
     @Inject
-    public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl){
+    public SelectServerCtrl(AnchorPane container, ServerUtils server, MainCtrl mainCtrl){
+        this.container = container;
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
 
-    /**
-     * Method that returns the current User
-     * @return the current User
-     */
     public User getCurrentUser() {
         return currentUser;
     }
@@ -94,7 +88,7 @@ public class SelectServerCtrl {
             // otherwise show confirmation scene
             if(!exists) mainCtrl.showBoardOverview();
             else{
-                if(currentUser.isAdmin){
+                if(currentUser.isAdmin()){
                     boardOverviewCtrl.openAdminFeatures();
                 }
                 mainCtrl.showConfirmUsername();
@@ -106,7 +100,7 @@ public class SelectServerCtrl {
      * Set user's permission level to admin in the database.
      */
     public void setAdmin() {
-        currentUser.isAdmin = true;
+        currentUser.setAdmin(true);
         server.refreshAdmin(currentUser);
     }
 
@@ -114,10 +108,9 @@ public class SelectServerCtrl {
      * Set user's permission level back to user in the database.
      */
     public void removeAdmin() {
-        currentUser.isAdmin = false;
+        currentUser.setAdmin(false);
         server.refreshAdmin(currentUser);
     }
-
     /**
      * Display the updated user information after refresh.
      */

@@ -13,11 +13,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 import javafx.event.ActionEvent;
@@ -27,6 +29,7 @@ import javax.inject.Inject;
 public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
+    private CustomizationCtrl customizationCtrl;
     private final CardDetailsCtrl cardDetailsCtrl;
     @FXML
     private AnchorPane rootContainer;
@@ -42,10 +45,10 @@ public class BoardCtrl {
 
     private VBox currentList;
 
+    private Boards currentBoard;
     private List<Lists> lists;
 
     private final Draggable drag;
-
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -55,13 +58,12 @@ public class BoardCtrl {
     public void initialize(Boards board) {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
+        this.currentBoard = server.getBoardByID(boardName.getText());
         this.board = board;
         refresh();
+        refreshCustomization();
     }
 
-    /**
-     * This method configures websockets for lists
-     */
     private void webSocketLists() {
         server.registerForMessages("/topic/lists", Lists.class, l->{
             Platform.runLater(new Runnable() {
@@ -98,9 +100,6 @@ public class BoardCtrl {
         });
     }
 
-    /**
-     * This method configures websockets for cards
-     */
     private void webSocketCards() {
         server.registerForMessages("/topic/cards/remove", Cards.class, c->{
             Platform.runLater(new Runnable() {
@@ -144,31 +143,25 @@ public class BoardCtrl {
         });
     }
 
-    /**
-     * Method that refreshes the board by getting all lists from the
-     * server and displaying them
-     */
     public void refresh(){
+        this.currentBoard = server.getBoardByID(boardName.getText());
         firstRow.getChildren().clear();
         lists = server.getListsByBoard(board.id);
+        //lists = server.getLists();
         for (Lists list : lists) {
             addNewList(list);
+
         }
+        refreshCustomization();
     }
 
-    /**
-     * Method that gets lists for a specific board
-     */
     public void refreshData(){
         lists = server.getListsByBoard(board.id);
+        //lists = server.getLists();
         refreshLists(lists);
+        refreshCustomization();
     }
 
-    /**
-     * Method that refreshes all the cards in a list
-     * @param listContainer the container of the list
-     * @param c the list of cards
-     */
     public void refreshCards(VBox listContainer, List<Cards> c){
         int j = 0;
         for(Node i : listContainer.getChildren()){
@@ -181,12 +174,9 @@ public class BoardCtrl {
               j++;
             }
         }
+        refreshCustomization();
     }
 
-    /**
-     * Method that refreshes all the lists in a board
-     * @param l a list of lists to be redrawn
-     */
     public void refreshLists(List<Lists> l){
         int j = 0;
         for(Node i : firstRow.getChildren()){
@@ -197,6 +187,7 @@ public class BoardCtrl {
                 j++;
             }
         }
+        refreshCustomization();
     }
 
     /**
@@ -231,19 +222,15 @@ public class BoardCtrl {
         mainCtrl.showRenameList();
     }
 
-    /**
-     * Method that renames a list to a given name and saves it to the database
-     * @param name the new name of the list
-     */
     void rnList(String name) {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         l.title = name;
         server.renameList(l);
-        mainCtrl.closeSecondaryStage();
+        mainCtrl.closeRNList();
     }
 
     /**
-     * Trigger function for deleting List option in the drop-down options button
+     *Trigger function for deleting List option in the drop-down options button
      * @param event List delete process
      */
     @FXML
@@ -254,24 +241,16 @@ public class BoardCtrl {
         mainCtrl.showDeleteList();
 
     }
-
-    /**
-     * Closes delete card scene and deletes card from database
-     */
     void deleteL() {
-        mainCtrl.closeSecondaryStage();
+          mainCtrl.closeDEList();
         server.removeList((Lists) currentList.getProperties().get("list"));
     }
-
-    /**
-     * Method closes the secondary scene, cancelling the delete
-     */
     void undeleteL() {
-        mainCtrl.closeSecondaryStage();
+        mainCtrl.closeDEList();
     }
 
     /**
-     * Trigger function for adding a List with a button //ActionEvent event
+     *Trigger function for adding a List with a button //ActionEvent event
      */
     @FXML
     void addList(){
@@ -307,6 +286,7 @@ public class BoardCtrl {
         HBox footerList = new HBox(30);
 
         headerList.setId("header");
+        footerList.setId("footer");
 
         headerList.setMinSize(150, 235);
         footerList.setMinSize(150, 25);
@@ -403,6 +383,7 @@ public class BoardCtrl {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
+        listName.setId("listName");
         listName.setStyle("-fx-font-size: 13px; -fx-content-display: " +
                 "CENTER; -fx-padding: 5 10 0 10;");
         listName.setAlignment(Pos.CENTER);
@@ -428,53 +409,43 @@ public class BoardCtrl {
     @FXML
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
+       // ((VBox)deleteCard.getParent().getParent()).getChildren().remove(deleteCard.getParent());
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
         server.removeCard(c);
     }
 
     /**
-     * Opens the Card Detail scene and modify all information about the card
-     * Event is triggered by double-clicking on a card
+     * open the Card Detail scene and modify all information about the card,
+     * including its name.....
+     * In order to prevent it from opening while dragging,
+     * the code here sets a time delay between pressing and releasing the left mouse button.
+     * If the time delay is greater than a certain value,
+     * the click option will not be triggered, so the cardDetail won't open during dragging.
      *
-     * @param event Object containing information about the mouse event
+     * @param event a button (Hyperlink)
      */
     @FXML
-    void cardDetail(MouseEvent event) {
-        if(event.getClickCount() == 2) {
-            Hyperlink currentCard = (Hyperlink) event.getSource();
-            Cards openedCard = (Cards) currentCard.getParent().getProperties().get("card");
-            cardDetailsCtrl.setOpenedCard(openedCard);
-            mainCtrl.showCardDetail();
-        }
+    void cardDetail(ActionEvent event) {
+        Hyperlink currentCard = (Hyperlink) event.getTarget();
+        cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
+        mainCtrl.showCardDetail();
     }
 
-    /**
-     * Method opens the secondary scene for adding a new card
-     * @param event button click indicating new card should be added
-     */
     void openAddNewCard(ActionEvent event){
         this.currentList = (VBox)((Node)event.getSource()).getParent().getParent();
         mainCtrl.showAddCard();
     }
 
 
-    /**
-     * Adds a card of name text to a list
-     * @param text the name of the new card
-     */
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
         Cards c = new Cards(text, l.cards.size(), l, "", null);
         c.list = l;
         server.addCard(c);
-        mainCtrl.closeSecondaryStage();
+        mainCtrl.closeNewCard();
+        //Cards
     }
 
-    /**
-     * Adds a list of name text to a board
-     * @param text the name of the list
-     * @param position the position of the list
-     */
     public void addListToBoard(String text, int position){
         // the following two lines causes a stack overflow
         Lists list = new Lists(text, position, board);
@@ -487,11 +458,6 @@ public class BoardCtrl {
         }
     }
 
-    /**
-     * Method that creates a new card and adds it
-     * @param anchor the anchor to which the card should be added
-     * @param c the card to be added
-     */
     public void addNewCard(VBox anchor, Cards c){
 
 
@@ -538,7 +504,6 @@ public class BoardCtrl {
      */
     public Hyperlink newHyperlink(){
         Hyperlink card = new Hyperlink();
-
         // set positioning, sizing, text alignment, and background color of the hyperlink
         card.setLayoutX(41);
         card.setLayoutY(1);
@@ -548,9 +513,9 @@ public class BoardCtrl {
 
         card.setOnDragDetected(drag::dragDetected);
 
+        card.setOnDragDone(drag::dragDone);
         // set the card to execute cardDetail on action
-//        card.setOnAction(this::cardDetail);
-        card.setOnMouseClicked(this::cardDetail);
+        card.setOnAction(this::cardDetail);
         return card;
     }
 
@@ -573,10 +538,6 @@ public class BoardCtrl {
         return button;
     }
 
-    /**
-     * Method that returns the first row of lists
-     * @return the first row of lists
-     */
     public HBox getFirstRow() {
         return firstRow;
     }
@@ -592,10 +553,102 @@ public class BoardCtrl {
         this.board = b;
     }
 
-    /**
-     * Exits the specific board to show board overview
-     */
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+
+    /**
+     * Open a Customization window to modify the color and font of this board.
+     */
+    @FXML
+    void openCustomization() {
+        setCssButton();
+        mainCtrl.showCustomization(boardName.getText());
+    }
+
+    private void setCssButton() {
+        try {
+            Map<String, String> idToColorMap = new HashMap<>();
+            idToColorMap.put("boardBgColor", currentBoard.boardBgColor);
+            idToColorMap.put("boardFtColor", currentBoard.boardFtColor);
+            idToColorMap.put("listBgColor", currentBoard.listBgColor);
+            idToColorMap.put("listFtColor", currentBoard.listFtColor);
+            idToColorMap.put("cardBgColor", currentBoard.cardBgColor);
+            idToColorMap.put("cardFtColor", currentBoard.cardFtColor);
+
+            List<String> lines = idToColorMap.entrySet().stream()
+                    .map(entry -> entry.getKey() + ":" + entry.getValue())
+                    .collect(Collectors.toList());
+
+            Files.write(Paths.get("client/src/main/resources/client/scenes/customization"), lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     *Read the CSS from the file and set them.
+     */
+    public void refreshCustomization() {
+        //boards color CSS setting
+        boardName.getScene().getRoot().lookup("#firstRow").
+                setStyle("-fx-background-color: " + currentBoard.boardBgColor + ";");
+        boardName.getScene().getRoot()
+                .setStyle("-fx-background-color: " + currentBoard.boardBgColor + ";");
+        boardName.setStyle("-fx-text-fill: " + currentBoard.boardFtColor  + ";");
+
+        //list color CSS setting
+        List<VBox> vBoxes = findVBoxes((Pane) boardName.getScene().getRoot());
+        for (VBox vBox : vBoxes) {
+            vBox.setStyle("-fx-background-color: " + currentBoard.listBgColor + ";"
+                    + "-fx-text-fill: " + currentBoard.listFtColor + ";");
+        }
+        //card color CSS setting
+        List<Hyperlink> hyperlinks = findHyperlinks((Pane) boardName.getScene().getRoot());
+        for (Hyperlink link : hyperlinks) {
+            link.setStyle("-fx-background-color: " + currentBoard.cardBgColor + ";"
+                    + "-fx-text-fill: " + currentBoard.cardFtColor + ";");
+        }
+    }
+    private List<VBox> findVBoxes(Pane root) {
+        List<VBox> vBoxes = new ArrayList<>();
+        for (Node node : root.getChildren()) {
+            if (node instanceof VBox) {
+                vBoxes.add((VBox) node);
+            } else if (node instanceof Pane) {
+                vBoxes.addAll(findVBoxes((Pane) node));
+            }
+        }
+        return vBoxes;
+    }
+    private List<Hyperlink> findHyperlinks(Pane root) {
+        List<Hyperlink> hyperlinks = new ArrayList<>();
+        for (Node node : root.getChildren()) {
+            if (node instanceof Hyperlink) {
+                hyperlinks.add((Hyperlink) node);
+            } else if (node instanceof Pane) {
+                hyperlinks.addAll(findHyperlinks((Pane) node));
+            }
+        }
+        return hyperlinks;
+    }
+    public void setBoardToDB() {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(
+                    "client/src/main/resources/client/scenes/customization"));
+            Map<String, String> idToColorMap = lines.stream()
+                    .map(line -> line.split(":"))
+                    .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
+            currentBoard.boardBgColor = idToColorMap.get("boardBgColor");
+            currentBoard.boardFtColor = idToColorMap.get("boardFtColor");
+            currentBoard.listBgColor = idToColorMap.get("listBgColor");
+            currentBoard.listFtColor = idToColorMap.get("listFtColor");
+            currentBoard.cardBgColor = idToColorMap.get("cardBgColor");
+            currentBoard.cardFtColor = idToColorMap.get("cardFtColor");
+            server.setBoardCss(currentBoard);
+            refresh();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package client.scenes;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javax.inject.Inject;
@@ -11,28 +12,17 @@ public class DeListCtrl {
 
     private BoardCtrl boardCtrl;
 
-    /**
-     * Constructor method for DeListCtrl
-     * @param boardCtrl instance of BoardCtrl
-     */
     @Inject
     public DeListCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
     }
-
-    /**
-     * Calls method to delete list
-     */
     @FXML
-    void deleteList() {
+    void deleteList(ActionEvent event) {
         boardCtrl.deleteL();
     }
 
-    /**
-     * Calls method to cancel deletion of list
-     */
     @FXML
-    void undeleteList() {
+    void undeleteList(ActionEvent event) {
         boardCtrl.undeleteL();
     }
 

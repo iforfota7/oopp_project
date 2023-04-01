@@ -12,10 +12,6 @@ import javax.inject.Inject;
 public class RnListCtrl {
     private final BoardCtrl boardCtrl;
 
-    /**
-     * Constructor method for RnListCtrl
-     * @param boardCtrl instance of BoardCtrl
-     */
     @Inject
     public RnListCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
