@@ -330,6 +330,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Customization for "+name);
         secondaryStage.setScene(customization);
+        customizationCtrl.setColorPickers(boardCtrl.getCurrentBoard());
         secondaryStage.show();
     }
 }

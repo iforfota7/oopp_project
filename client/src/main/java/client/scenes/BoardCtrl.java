@@ -28,6 +28,7 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final CardDetailsCtrl cardDetailsCtrl;
+
     @FXML
     private AnchorPane rootContainer;
     @FXML

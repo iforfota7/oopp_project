@@ -12,10 +12,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -56,19 +53,13 @@ public class CustomizationCtrl {
         colorPickers.add(cardFtColor);
         colorPickers.add(listBgColor);
         colorPickers.add(listFtColor);
-        if(boardCtrl.getCurrentBoard()!=null){
-
-            this.setBoard = boardCtrl.getCurrentBoard();
-        }else {
-            revertCustomization();
-        }
     }
 
     /**
      *Set the initial color of each color picker based on the database storage of the current board
      * @param currentBoard current board set previously by clicking the button customization
      */
-    private void setColorPickers(Boards currentBoard) {
+    void setColorPickers(Boards currentBoard) {
         Map<String, String> idToColorMap = new HashMap<>();
         idToColorMap.put("boardBgColor", currentBoard.boardBgColor);
         idToColorMap.put("boardFtColor", currentBoard.boardFtColor);
@@ -135,23 +126,12 @@ public class CustomizationCtrl {
      */
     @FXML
     void revertCustomization() {
-        try {
-            String fileName = "client/src/main/resources/client/scenes/customization(default)";
-            List<String> lines = Files.readAllLines(Paths.get(
-                    fileName));
-            Map<String, String> idToColorMap = lines.stream()
-                    .map(line -> line.split(":"))
-                    .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
-            for (ColorPicker colorPicker : colorPickers) {
-                String id = colorPicker.getId();
-                String color = idToColorMap.get(id);
-                if (color != null) {
-                    colorPicker.setValue(Color.valueOf(color));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        boardBgColor.setValue(Color.rgb(230, 230, 250));
+        boardFtColor.setValue(Color.rgb(0, 0, 0));
+        cardBgColor.setValue(Color.rgb(230, 230, 250));
+        cardFtColor.setValue(Color.rgb(0, 0, 0));
+        listBgColor.setValue(Color.rgb(255, 255, 255));
+        listFtColor.setValue(Color.rgb(0, 0, 0));
     }
 
     /**
