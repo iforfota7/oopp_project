@@ -261,6 +261,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(cardDetails);
         secondaryStage.setTitle("Card Details");
+        cardDetailsCtrl.init();
         secondaryStage.show();
     }
 
