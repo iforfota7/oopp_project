@@ -24,6 +24,7 @@ public class BoardOverviewCtrl{
     private final ServerUtils server;
     private SelectServerCtrl selectServerCtrl;
     private List<Boards> boardsList;
+    private Boards currentBoard;
     private int numberOfBoards = 0;
 
     /**
@@ -150,6 +151,14 @@ public class BoardOverviewCtrl{
         removeBoardButton.setVisible(adminLock.get());
         stackPane.getChildren().add(removeBoardButton);
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
+
+        Button renameBoardButton = new Button("rename");
+        renameBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        renameBoardButton.setOnMouseClicked(this::showRenameBoard);
+        renameBoardButton.setUserData(b.name);
+        stackPane.getChildren().add(renameBoardButton);
+        StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
         return stackPane;
     }
     /**
@@ -162,6 +171,25 @@ public class BoardOverviewCtrl{
         Boards board = (Boards) removeButton.getParent().getProperties().get("board");
         server.removeBoard(board);
         refresh();
+    }
+
+    /**
+     * Method that shows the scene in which a board can be renamed
+     * @param mouseEvent the click on the rename button
+     */
+    private void showRenameBoard(MouseEvent mouseEvent){
+        Button renameButton = (Button) mouseEvent.getSource();
+        currentBoard = (Boards) renameButton.getParent().getProperties().get("board");
+        mainCtrl.showRenameBoard();
+    }
+
+    /**
+     * Getter method for the current board
+     * Used for rename method so that the board that was clicked on is saved
+     * @return the current board
+     */
+    public Boards getCurrentBoard(){
+        return currentBoard;
     }
 
     /**
