@@ -212,6 +212,17 @@ public class ServerUtils {
     }
 
     /**
+     * Method that renames a board
+     * @param board the new board to be saved with a changed name
+     * @return the new board
+     */
+    public Boards renameBoard(Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+                path("api/boards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    /**
      * Setter method for the server attribute
      * @param server the server address to be set
      */
