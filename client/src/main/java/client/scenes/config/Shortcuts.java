@@ -24,7 +24,8 @@ public class Shortcuts {
             if(currentCard!=null)
                 currentCard.setStyle("-fx-background-color:  #E6E6FA;");
 
-            hovered.setStyle("-fx-background-color:  #E6E6FA; -fx-border-color: red;");
+            hovered.setStyle("-fx-background-color:  #E6E6FA; " +
+                    "-fx-border-color: red; -fx-border-style:solid");
             currentCard = hovered;
         }
 
