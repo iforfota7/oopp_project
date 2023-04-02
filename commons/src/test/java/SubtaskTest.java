@@ -34,10 +34,7 @@ public class SubtaskTest {
         subtask3 = new Subtask("Subtask 1", true, card1, 1);
         subtask4 = new Subtask("Subtask 1", false, card2, 1);
         subtask5 = new Subtask("Subtask 1", false, card1, 5);
-<<<<<<< HEAD
-=======
     }
->>>>>>> dev
 
     @Test
     void testConstructor(){
@@ -83,36 +80,9 @@ public class SubtaskTest {
 
     @Test
     void testToString() {
-<<<<<<< HEAD
-        String stringSubtask1 = "Subtask{id=0, title='Subtask 1', checked=false, " +
-                "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
-                "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask2 = "Subtask{id=0, title='Subtask 2', checked=false, " +
-                "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
-                "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask3 = "Subtask{id=0, title='Subtask 1', checked=true, " +
-                "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
-                "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask4 = "Subtask{id=0, title='Subtask 1', checked=false, " +
-                "card=Cards{id=1, title='Card 2', positionInsideList=2, description='', " +
-                "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String stringSubtask11 = "Subtask{id=0, title='Subtask 1', checked=false, " +
-                "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
-                "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}, position=1}";
-        String  stringSubtask5 = "Subtask{id=0, title='Subtask 1', checked=false, " +
-                "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
-                "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
-                "cards=, board=Board1}, subtasks=[]}, position=5}";
-=======
         String stringSubtask1 = "Subtask{id=0, title='Subtask 1', " +
                 "checked=false, card.id=0, position=1}";
 
->>>>>>> dev
         assertEquals(subtask1.toString(), stringSubtask1);
         assertEquals(subtask1.toString(), subtask11.toString());
         assertNotEquals(subtask1.toString(), subtask2.toString());

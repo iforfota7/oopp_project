@@ -53,14 +53,9 @@ class CardsTest {
         card6 = new Cards("Card 1", 1, list,
                 "This is Card 1", listSubtasks2);
 
-<<<<<<< HEAD
-        Subtask subtask1 = new Subtask("Subtask 1", false, card1, 1);
-        Subtask subtask2 = new Subtask("Subtask 2", false, card1, 2);
-=======
         subtask1 = new Subtask("Subtask 1", false, card1, 1);
         subtask2 = new Subtask("Subtask 2", false, card2, 2);
         subtask3 = new Subtask("Subtask 3", false, card2, 1);
->>>>>>> dev
 
         listSubtasks1.add(subtask1);
         listSubtasks2.add(subtask2);
