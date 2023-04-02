@@ -28,7 +28,8 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard, deleteCard;
+    private Scene cardDetails, newCard, confirmUsername,
+            boardOverview, addBoard, renameBoard, deleteCard;
     private Scene selectServer, joinBoardByID, userDetails;
     private Scene confirmAdmin, help;
 
