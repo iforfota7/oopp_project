@@ -231,4 +231,11 @@ public class BoardOverviewCtrl{
         adminLabel.setVisible(false);
         userLabel.setVisible(true);
     }
+
+    /**
+     * Method that shows the help scene
+     */
+    public void showHelpScene(){
+        mainCtrl.showHelpScene();
+    }
 }

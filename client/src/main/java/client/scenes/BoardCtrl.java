@@ -42,6 +42,8 @@ public class BoardCtrl {
 
     private VBox currentList;
 
+    private Cards currentCard;
+
     private List<Lists> lists;
 
     private final Draggable drag;
@@ -348,8 +350,8 @@ public class BoardCtrl {
      */
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
-        refactorButtonList.setText("Refactor List");
-        refactorButtonList.setPrefWidth(75.2);
+        refactorButtonList.setText("Edit List");
+        refactorButtonList.setPrefWidth(60);
         refactorButtonList.setPrefHeight(22);
         refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
 
@@ -429,7 +431,30 @@ public class BoardCtrl {
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
-        server.removeCard(c);
+        currentCard = c;
+        mainCtrl.showDeleteCard();
+    }
+
+    /**
+     * Method tha deletes the card from the database and closes the secondary scene
+     */
+    void deleteCard() {
+        server.removeCard(currentCard);
+        mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * Method that cancels the deletion and closes the secondary scene
+     */
+    void undeleteCard() {
+        mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * Method that shows the help scene
+     */
+    public void showHelpScene(){
+        mainCtrl.showHelpScene();
     }
 
     /**

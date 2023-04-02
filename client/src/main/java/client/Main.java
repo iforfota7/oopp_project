@@ -74,17 +74,20 @@ public class Main extends Application {
                 "AddNewBoard.fxml");
         var joinBoard = FXML.load(JoinBoardByIDCtrl.class,
                 "client","scenes","JoinBoardByID.fxml");
+        var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
+        var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
+
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
-        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
-        mainCtrl.initializeCards(cardDetails, addCard);
+        mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
+        mainCtrl.initializeUtils(helpScene);
         mainCtrl.initializeAdmin(confirmAdmin);
     }
-
 }
