@@ -9,7 +9,7 @@ Testing is an integral part of the coding activities. Unit tests cover all parts
 - Sufficient: The average MR does not only contain business logic, but also unit tests.
 - Insufficient: The application is barely tested or tests are only added as an afterthought.
 
-For this, we would give ourselves a good since we have a current line test coverage of about 100% in commons, 6% in client and 65% in server. The most significant merge requests contributing to these coverages were !70 for client, !61 for commons, as well as !28 and !31 for server.
+For this, we would give ourselves a good since we have a current line test coverage of about 100% in commons, 6% in client and 65% in server. The most significant merge requests contributing to these coverages were !71 for client, !61 for commons, as well as !28 and !31 for server.
 
 
 ### Unit Testing
@@ -21,7 +21,7 @@ Classes are tested in isolation. Configurable *dependent-on-components* are pass
 - Sufficient: The project contains unit tests, but only for classes without dependent-on-components.
 - Insufficient: The project only contains integration tests, which test multiple components at once.
 
-We would give ourselves an excellent for this, since we ensured all of the classes are tested in isolation using mock classes for controllers/repositories. For example, this can be seen in merge request !70 for client, as well as merge requests !28 and !31 for server.
+We would give ourselves an excellent for this, since we ensured all of the classes are tested in isolation using mock classes for controllers/repositories. For example, this can be seen in merge request !71 for client, as well as merge requests !28 and !31 for server.
 
 ### Indirection
 
