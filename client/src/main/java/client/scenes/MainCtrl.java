@@ -61,6 +61,7 @@ public class MainCtrl {
      * @param addBoard addBoardCtrl parent pair for addBoard scene
      * @param joinBoardByID joinBoardByIDCtrl parent pair for joinBoardByID scene
      * @param userDetails userDetailsCtrl parent pair for userDetails scene
+     * @param renameBoard renameBoardCtrl parent pair for renameBoard scene
      */
     public void initializeBoard(Pair<BoardCtrl, Parent> board,
                                 Pair<SelectServerCtrl, Parent> selectServer,
@@ -68,7 +69,8 @@ public class MainCtrl {
                                 Pair<BoardOverviewCtrl, Parent> boardOverview,
                                 Pair<AddBoardCtrl, Parent> addBoard,
                                 Pair<JoinBoardByIDCtrl, Parent> joinBoardByID,
-                                Pair<UserDetailsCtrl, Parent> userDetails) {
+                                Pair<UserDetailsCtrl, Parent> userDetails,
+                                Pair<RenameBoardCtrl, Parent> renameBoard) {
 
         this.board = new Scene(board.getValue());
         this.boardCtrl = board.getKey();
@@ -90,6 +92,9 @@ public class MainCtrl {
 
         this.userDetails = new Scene(userDetails.getValue());
         this.userDetailsCtrl = userDetails.getKey();
+
+        this.renameBoard = new Scene(renameBoard.getValue());
+        this.renameBoardCtrl = renameBoard.getKey();
     }
 
     /**
@@ -174,6 +179,16 @@ public class MainCtrl {
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
         boardCtrl.initialize(b);
+    }
+
+    /**
+     * Show scene in which a board can be renamed
+     */
+    public void showRenameBoard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(renameBoard);
+        secondaryStage.setTitle("Rename board!");
+        secondaryStage.show();
     }
 
     /**
