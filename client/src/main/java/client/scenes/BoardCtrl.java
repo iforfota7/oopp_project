@@ -45,7 +45,7 @@ public class BoardCtrl {
 
     private VBox currentList;
 
-    private Cards currentTotalCard;
+    private Cards currentCard;
 
     private List<Lists> lists;
 
@@ -113,8 +113,7 @@ public class BoardCtrl {
                 public void run() {
                     if(c.list.board.name.equals(boardName.getText())) {
                         VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        AnchorPane card;
-                        card = (AnchorPane) (rootContainer.lookup("#card"+c.id).getParent());
+                        AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
                         ((VBox) l.getChildren().get(0)).getChildren().remove(card);
                         refreshData();
                     }
@@ -435,19 +434,28 @@ public class BoardCtrl {
         Button deleteCard = (Button) event.getTarget();
         Cards c = (Cards) ((AnchorPane)deleteCard.getParent()).getChildren()
                 .get(1).getProperties().get("card");
-        currentTotalCard = c;
+        currentCard = c;
         mainCtrl.showDeleteCard();
     }
 
+    /**
+     * Method tha deletes the card from the database and closes the secondary scene
+     */
     void deleteCard() {
-        server.removeCard(currentTotalCard);
+        server.removeCard(currentCard);
         mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * Method that cancels the deletion and closes the secondary scene
+     */
     void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * Method that shows the help scene
+     */
     public void showHelpScene(){
         mainCtrl.showHelpScene();
     }
@@ -749,4 +757,5 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+
 }

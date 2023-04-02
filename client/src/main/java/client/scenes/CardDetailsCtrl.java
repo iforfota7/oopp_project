@@ -45,6 +45,7 @@ public class CardDetailsCtrl {
 
     private Cards openedCard;
     private Boards board;
+    private boolean sceneOpened = false;
 
     /**
      * Initializes the card details controller object
@@ -70,7 +71,7 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(openedCard != null && c.id == openedCard.id)
+                    if(openedCard != null && c.id == openedCard.id && sceneOpened)
                         setOpenedCard(c);
                 }
             });
@@ -82,8 +83,10 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    mainCtrl.closeSecondaryStage();
-                    mainCtrl.showBoard(board);
+                    if(openedCard != null && c.id == openedCard.id && sceneOpened) {
+                        mainCtrl.closeSecondaryStage();
+                        mainCtrl.showBoard(board);
+                    }
                 }
             });
         });
@@ -108,9 +111,21 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
 
+        // if we have multiple created subtasks
+        // a JSON error will be thrown because it will have to serialize
+        // multiple objects with the same id (0)
+        // this block of code ensures that the ids sent are distinct
+        int index = 0;
+        if(openedCard.subtasks != null) {
+            for(Subtask subtask : openedCard.subtasks)
+                if(subtask.id == 0)
+                    subtask.id = --index;
+        }
+
         subtaskName.setText("");
 
         server.renameCard(openedCard);
+        sceneOpened = false;
         mainCtrl.closeSecondaryStage();
     }
 
@@ -123,8 +138,20 @@ public class CardDetailsCtrl {
 //        if(changes){
 //        }
 //        mainCtrl.closeSecondaryStage();
+        sceneOpened = false;
         mainCtrl.closeSecondaryStage();
         mainCtrl.showBoard(board);
+    }
+
+    /**
+     * Used to refresh the details of the opened card
+     * after something related to subtasks has changed
+     *
+     */
+    public void refreshOpenedCard() {
+        openedCard.title =cardTitleInput.getText();
+        openedCard.description = description.getText();
+        setOpenedCard(openedCard);
     }
 
     /**
@@ -134,6 +161,8 @@ public class CardDetailsCtrl {
      * @param card The new value of the field
      */
     public void setOpenedCard(Cards card) {
+        sceneOpened = true;
+
         this.openedCard = card;
 
         cardTitleInput.setText(card.title);
@@ -255,7 +284,7 @@ public class CardDetailsCtrl {
             }
         }
 
-        setOpenedCard(openedCard);
+        refreshOpenedCard();
     }
 
     /**
@@ -308,7 +337,7 @@ public class CardDetailsCtrl {
             subtaskName.setText("");
 
             openedCard.subtasks.add(newSubtask);
-            setOpenedCard(openedCard);
+            refreshOpenedCard();
         }
 
     }
@@ -324,7 +353,7 @@ public class CardDetailsCtrl {
 
         Subtask subtask = (Subtask) toDelete.getProperties().get("subtask");
         openedCard.subtasks.remove(subtask);
-        setOpenedCard(openedCard);
+        refreshOpenedCard();
     }
 
     /**
@@ -342,7 +371,7 @@ public class CardDetailsCtrl {
         int subtaskIndex = openedCard.subtasks.indexOf(subtask);
         Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
         updatedSubtask.checked = checkBox.isSelected();
-        setOpenedCard(openedCard);
+        refreshOpenedCard();
     }
 
     /**

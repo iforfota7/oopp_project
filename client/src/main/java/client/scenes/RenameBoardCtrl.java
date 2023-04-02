@@ -1,7 +1,9 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Boards;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
@@ -13,6 +15,8 @@ public class RenameBoardCtrl {
 
     @FXML
     private TextField boardName;
+    @FXML
+    private Label warning;
 
     /**
      * Constructor method for RenameBoardCtrl
@@ -33,10 +37,25 @@ public class RenameBoardCtrl {
      */
     @FXML
     void saveNewBoard(){
+        warning.setVisible(false);
+        try{
+            Boards board = boardOverviewCtrl.getCurrentBoard();
+            board.name = boardName.getText();
+            server.renameBoard(board);
+            boardName.setText("");
+            mainCtrl.closeSecondaryStage();
+            boardOverviewCtrl.refresh();
+        }
+        catch(Exception E){
+            warning.setVisible(true);
+        }
+    }
 
-      //  server.renameBoard();
+    @FXML
+    void cancel(){
+        warning.setVisible(false);
         boardName.setText("");
         mainCtrl.closeSecondaryStage();
-
     }
+
 }
