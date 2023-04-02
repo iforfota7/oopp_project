@@ -54,8 +54,15 @@ public class NewTagCtrl {
             return;
         }
         System.out.println(board);
-        server.addTag(new Tags(cardTitleInput.getText(), picker.getValue().toString(), board));
+        server.addTag(new Tags(cardTitleInput.getText(), colorTag(picker.getValue()), board));
         cardTitleInput.clear();
         this.mainCtrl.closeNewTag();
+    }
+
+    private String colorTag(Color tagColor){
+        return String.format("#%02X%02X%02X",
+                (int)(tagColor.getRed() * 255),
+                (int)(tagColor.getGreen() * 255),
+                (int)(tagColor.getBlue() * 255));
     }
 }
