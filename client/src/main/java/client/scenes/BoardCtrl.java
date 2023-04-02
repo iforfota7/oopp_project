@@ -191,7 +191,6 @@ public class BoardCtrl {
         for(Node i : listContainer.getChildren()){
 
             Cards card = (Cards) i.getProperties().get("card");
-            System.out.println(card);
 
             if(card!=null){
               i.getProperties().remove("card");
@@ -209,7 +208,7 @@ public class BoardCtrl {
         int j = 0;
         for(Node i : firstRow.getChildren()){
             Lists list = (Lists) i.getProperties().get("list");
-            System.out.println(list);
+
             if(list!=null){
                 i.getProperties().put("list", l.get(j));
                 refreshCards((VBox) ((VBox) i).getChildren().get(0), l.get(j).cards);
