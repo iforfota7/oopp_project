@@ -180,6 +180,7 @@ public class BoardOverviewCtrl{
             selectServerCtrl.setBoardsOfCurrentUser(boardsList);
         }
 
+        selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
