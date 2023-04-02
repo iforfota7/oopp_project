@@ -599,4 +599,5 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+    
 }

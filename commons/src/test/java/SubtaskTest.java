@@ -16,14 +16,16 @@ public class SubtaskTest {
     Subtask subtask4;
     Subtask subtask11;
     Subtask subtask5;
+    Cards card1;
+    Cards card2;
 
     @BeforeEach
     void setUp(){
         Boards board = new Boards("Board1", new ArrayList<>());
         Lists list = new Lists("list 1", 1, board);
-        Cards card1 = new Cards("Card 1", 1, list,
+        card1 = new Cards("Card 1", 1, list,
                 "", new ArrayList<>());
-        Cards card2 = new Cards("Card 2", 2, list,
+        card2 = new Cards("Card 2", 2, list,
                 "", new ArrayList<>());
         card2.id = 1;
         subtask1 = new Subtask("Subtask 1", false, card1, 1);
@@ -32,41 +34,56 @@ public class SubtaskTest {
         subtask3 = new Subtask("Subtask 1", true, card1, 1);
         subtask4 = new Subtask("Subtask 1", false, card2, 1);
         subtask5 = new Subtask("Subtask 1", false, card1, 5);
+<<<<<<< HEAD
+=======
+    }
+>>>>>>> dev
 
+    @Test
+    void testConstructor(){
+        assertNotNull(new Subtask("Subtask", true, card1, 1));
+        assertNotNull(subtask5);
+        assertNotNull(new Subtask());
     }
 
     @Test
     void testEqualsTrue() {
-        assertTrue(subtask1.equals(subtask1));
-        assertTrue(subtask1.equals(subtask11));
+        assertEquals(subtask1, subtask1);
+        assertEquals(subtask1, subtask11);
+
+        card2.id = card1.id;
+
+        assertEquals(subtask1, subtask4);
+
+        subtask11.card.id = 3;
+        assertEquals(subtask1, subtask11);
     }
 
     @Test
     void testEqualsFalse() {
-        assertFalse(subtask1.equals(subtask2));
-        assertFalse(subtask1.equals(subtask3));
-        assertFalse(subtask1.equals(subtask4));
-        assertFalse(subtask1.equals(subtask5));
+        assertNotEquals(subtask1, subtask2);
+        assertNotEquals(subtask1, subtask3);
+        assertNotEquals(subtask1, subtask4);
+        assertNotEquals(subtask1, subtask5);
     }
 
     @Test
     void testHashCode() {
         int hashcode1 = subtask1.hashCode();
-        int hashcode11 = subtask11.hashCode();
-        int hashcode2 = subtask2.hashCode();
-        int hashcode3 = subtask3.hashCode();
-        int hashcode4 = subtask4.hashCode();
-        int hashcode5 = subtask5.hashCode();
 
-        assertFalse(hashcode1 == hashcode2);
-        assertFalse(hashcode1 == hashcode3);
-        assertFalse(hashcode1 == hashcode4);
-        assertFalse(hashcode1 == hashcode5);
-        assertTrue(hashcode1 == hashcode11);
+        assertNotEquals(hashcode1, subtask2.hashCode());
+        assertNotEquals(hashcode1, subtask3.hashCode());
+        assertNotEquals(hashcode1, subtask4.hashCode());
+        assertNotEquals(hashcode1, subtask5.hashCode());
+        assertEquals(hashcode1, subtask11.hashCode());
+
+        subtask11.card = card2;
+        assertNotEquals(subtask1.hashCode(), subtask11.hashCode());
     }
 
     @Test
     void testToString() {
+<<<<<<< HEAD
         String stringSubtask1 = "Subtask{id=0, title='Subtask 1', checked=false, " +
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
@@ -91,12 +108,23 @@ public class SubtaskTest {
                 "card=Cards{id=0, title='Card 1', positionInsideList=1, description='', " +
                 "list=Lists{id=0, title='list 1', positionInsideBoard=1, " +
                 "cards=, board=Board1}, subtasks=[]}, position=5}";
+=======
+        String stringSubtask1 = "Subtask{id=0, title='Subtask 1', " +
+                "checked=false, card.id=0, position=1}";
+
+>>>>>>> dev
         assertEquals(subtask1.toString(), stringSubtask1);
-        assertEquals(subtask1.toString(), stringSubtask11);
-        assertNotEquals(subtask1.toString(), stringSubtask2);
-        assertNotEquals(subtask1.toString(), stringSubtask3);
-        assertNotEquals(subtask1.toString(), stringSubtask4);
-        assertNotEquals(subtask1.toString(), stringSubtask5);
+        assertEquals(subtask1.toString(), subtask11.toString());
+        assertNotEquals(subtask1.toString(), subtask2.toString());
+        assertNotEquals(subtask1.toString(), subtask3.toString());
+        assertNotEquals(subtask1.toString(), subtask4.toString());
+        assertNotEquals(subtask1.toString(), subtask5.toString());
+
+        subtask1.position = 3;
+        String stringSubtask6 = subtask1.toString();
+
+        assertEquals(subtask1.toString(), stringSubtask6);
+        assertNotEquals(subtask1.toString(), stringSubtask1);
     }
 
 }

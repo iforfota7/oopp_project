@@ -67,7 +67,7 @@ public class Subtask {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, checked, card, position);
+        return Objects.hash(id, title, checked, card.id, position);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Subtask {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", checked=" + checked +
-                ", card=" + card +
+                ", card.id=" + card.id +
                 ", position=" + position +
                 '}';
     }
