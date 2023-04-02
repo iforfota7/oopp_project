@@ -44,7 +44,7 @@ public class Lists {
      * Default constructor method for object mapper
      */
     @SuppressWarnings("unused")
-    private Lists(){}
+    public Lists(){}
 
     /**
      * Equals method for a list
@@ -67,7 +67,7 @@ public class Lists {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideBoard, cards, board);
+        return Objects.hash(id, title, positionInsideBoard, cards, board.name);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Lists {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", positionInsideBoard=" + positionInsideBoard +
-                ", cards="  +
+                ", cards="  + cards.toString() +
                 ", board=" + board.name +
                 '}';
     }

@@ -23,6 +23,7 @@ public class Cards {
     public Lists list;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @OrderBy("position ASC")
     public List<Subtask> subtasks;
 
 
@@ -72,7 +73,7 @@ public class Cards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, positionInsideList, list, subtasks);
+        return Objects.hash(id, title, list.id, positionInsideList, description, subtasks);
     }
 
     /**
@@ -87,7 +88,7 @@ public class Cards {
                 ", title='" + title + '\'' +
                 ", positionInsideList=" + positionInsideList +
                 ", description='" + description + '\'' +
-                ", list=" + list +
+                ", list.id=" + list.id +
                 ", subtasks=" + subtasks.toString() +
                 '}';
     }
