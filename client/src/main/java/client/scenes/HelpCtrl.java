@@ -7,8 +7,8 @@ public class HelpCtrl {
     private final MainCtrl mainCtrl;
 
     /**
-     * Constructor method for HelpCtrl
-     * @param mainCtrl instance of MainCtrl
+     * Constructor method for HelpCtrl class
+     * @param mainCtrl
      */
     @Inject
     public HelpCtrl(MainCtrl mainCtrl){
@@ -16,7 +16,7 @@ public class HelpCtrl {
     }
 
     /**
-     * Method that closes the scene
+     * Method to close the Help window
      */
     @FXML
     void close(){
