@@ -370,4 +370,8 @@ public class MainCtrl {
     public void closeUserDetails(){
         secondaryStage.close();
     }
+
+    public void closeTags(){
+        secondaryStage.close();
+    }
 }

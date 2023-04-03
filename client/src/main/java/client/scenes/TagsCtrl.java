@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -30,7 +29,11 @@ public class TagsCtrl {
     @FXML
     private AnchorPane rootTagContainer;
 
-
+    /**
+     * The method adds the tags into an arrayList, and renders them
+     * afterwards into the list of tags
+     * @param board the board to which the tags belong to
+     */
     public void initialize(Boards board){
         this.board = board;
         tagList.getChildren().clear();
@@ -38,6 +41,10 @@ public class TagsCtrl {
         for(int i = 0; i < tags.size(); i++)
             addNewTag(tags.get(i));
     }
+
+    /**
+     * Initialises the websockets for the tags
+     */
     private void webSocketTags() {
         server.registerForMessages("/topic/tags/add", Tags.class, t -> {
             Platform.runLater(new Runnable() {
@@ -80,6 +87,11 @@ public class TagsCtrl {
 
     }
 
+    /**
+     * Constructor of the TagsCtrl class
+     * @param mainCtrl
+     * @param server
+     */
     @Inject
     public TagsCtrl(MainCtrl mainCtrl, ServerUtils server){
         this.server = server;
@@ -88,6 +100,10 @@ public class TagsCtrl {
 
     }
 
+    /**
+     * Adds a new tag to the list of tags
+     * @param t the tag to be added to the list
+     */
     public void addNewTag(Tags t){
 
         AnchorPane newTag = createNewTag(t);
@@ -99,6 +115,11 @@ public class TagsCtrl {
         tagList.getChildren().add(newTag);
     }
 
+    /**
+     * Creates the representation of a new tag in frontend
+     * @param tag the tag to be created a representation to
+     * @return an anchorPane, the body of the tag
+     */
     public AnchorPane createNewTag(Tags tag){
         AnchorPane tagBody = new AnchorPane();
         tagBody.setPrefWidth(125.6);
@@ -127,12 +148,20 @@ public class TagsCtrl {
         return tagBody;
     }
 
+    /**
+     * Opens the tag's detail scene
+     * @param mouseEvent
+     */
     @FXML
     public void tagDetail(MouseEvent mouseEvent) {
         Tags t = (Tags) ((Node) mouseEvent.getSource()).getProperties().get("tag");
         mainCtrl.showTagDetail(t);
     }
 
+    /**
+     * Deletes a tag from the tag list
+     * @param event the event that triggered the deletion of the tag
+     */
     @FXML
     public void deleteTag(ActionEvent event) {
         Button deleteCard = (Button) event.getSource();
@@ -141,9 +170,20 @@ public class TagsCtrl {
         server.removeTag(t);
     }
 
+    /**
+     * Opens the scene for adding a new tag
+     * @param event the event that triggers the creation of a tag
+     */
     @FXML
     void openAddNewTag(ActionEvent event){
         mainCtrl.showAddTag(board);
     }
 
+    /**
+     * Closes the tag list scene
+     */
+    @FXML
+    void close()  {
+        mainCtrl.closeTags();
+    }
 }

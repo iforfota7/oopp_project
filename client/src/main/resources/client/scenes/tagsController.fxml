@@ -31,7 +31,7 @@
             <Insets bottom="-3.0" top="-3.0" />
          </padding>
       </Button>
-      <Button layoutX="108.0" layoutY="363.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #d4d4f7; -fx-background-radius: 4;" text="Close">
+      <Button layoutX="108.0" layoutY="363.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #d4d4f7; -fx-background-radius: 4;" text="Close">
          <effect>
             <InnerShadow height="8.0" radius="3.25" width="7.0">
                <color>

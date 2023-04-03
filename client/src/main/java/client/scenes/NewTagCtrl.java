@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.Main;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Boards;
@@ -27,7 +26,11 @@ public class NewTagCtrl {
 
     private Boards board;
 
-
+    /**
+     * Constructor of the NewTagCtrl class
+     * @param server instance of the serverUtils class
+     * @param mainCtrl instance of the mainCtrl class
+     */
     @Inject
     public NewTagCtrl(ServerUtils server, MainCtrl mainCtrl){
 
@@ -35,14 +38,15 @@ public class NewTagCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    /**
+     * Initialises the NewCardCtrl to the board which the tag is to be created into
+     * @param b the board which the tag is to be created into
+     */
     public void initialize(Boards b){this.board = b;}
 
     /**
-     * The redefinition of the card name on the board
-     * is achieved through setting the display properties.
-     * This method sends the information entered in cardDetail
-     * to the board to display the card name.
-     * A warning is displayed if the input field is empty.
+     * Saves the new created tag into the application
+     * A warning is displayed if the input field for the title is empty.
      */
     @FXML
     void save() {
@@ -59,6 +63,11 @@ public class NewTagCtrl {
         this.mainCtrl.closeNewTag();
     }
 
+    /**
+     * Changes the colorPicker value of a color into a CSS string value of that color
+     * @param tagColor the colorPicker value of a color
+     * @return the CSS string value of that color
+     */
     private String colorTag(Color tagColor){
         return String.format("#%02X%02X%02X",
                 (int)(tagColor.getRed() * 255),
