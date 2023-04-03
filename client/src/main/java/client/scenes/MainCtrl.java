@@ -175,6 +175,7 @@ public class MainCtrl {
      */
     public void showBoard(Boards b) {
         boardCtrl.setBoardName(b);
+        boardCtrl.addBoardToUser(b);
         primaryStage.setTitle("Board");
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
@@ -260,6 +261,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(cardDetails);
         secondaryStage.setTitle("Card Details");
+        cardDetailsCtrl.init();
         secondaryStage.show();
     }
 
