@@ -98,8 +98,8 @@ public class Main extends Application {
 
 
         mainCtrl.initializeAdmin(confirmAdmin);
-        mainCtrl.initializeTags(tagsControl);
-        mainCtrl.initializeTags(tagDetails, addTag);
+//        mainCtrl.initializeTags(tagsControl);
+        mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
 
     }
 }

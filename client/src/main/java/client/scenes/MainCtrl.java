@@ -167,12 +167,16 @@ public class MainCtrl {
      * @param tagDetails tagDetailsCtrl parent pair for tagDetails scene
      * @param addTagCtrl newTagCtrl parent pair for newTag
      */
-    public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails, Pair<AddTagCtrl, Parent> addTagCtrl){
+    public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails, Pair<AddTagCtrl, Parent> addTagCtrl, Pair<TagsCtrl, Parent> tagControl){
         this.tagDetails = new Scene(tagDetails.getValue());
         this.tagDetailsCtrl = tagDetails.getKey();
 
         this.addTag = new Scene(addTagCtrl.getValue());
         this.addTagCtrl = addTagCtrl.getKey();
+
+        this.tagControl = new Scene(tagControl.getValue());
+        this.tagsCtrl = tagControl.getKey();
+
     }
 
     /**
@@ -192,11 +196,12 @@ public class MainCtrl {
         primaryStage.setScene(selectServer);
     }
 
-    public void initializeTags(Pair<TagsCtrl, Parent> tagControl){
-        this.tagControl = new Scene(tagControl.getValue());
-        this.tagsCtrl = tagControl.getKey();
 
-    }
+//    public void initializeTags(Pair<TagsCtrl, Parent> tagControl){
+//        this.tagControl = new Scene(tagControl.getValue());
+//        this.tagsCtrl = tagControl.getKey();
+//
+//    }
 
     /**
      * Show board scene
@@ -300,12 +305,19 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
-    public void showTagDetail(Tags t){
+    /**
+     * Shows the tag details scene
+     *
+     * @param t The Tags object for which we show the scene
+     * @param board The board object which contains the tag
+     */
+
+    public void showTagDetail(Tags t, Boards board){
        thirdStage = new Stage();
         thirdStage.setScene(tagDetails);
         thirdStage.setTitle("Tag Details");
         thirdStage.show();
-        tagDetailsCtrl.initialize(t);
+        tagDetailsCtrl.initialize(t, board);
     }
 
     /**
@@ -319,6 +331,11 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Opens the scene for adding a new tag
+     *
+     * @param board The board object inside which we add a tag
+     */
     public void showAddTag(Boards board){
         thirdStage = new Stage();
         thirdStage.setScene(addTag);
@@ -327,6 +344,11 @@ public class MainCtrl {
         addTagCtrl.initialize(board);
     }
 
+    /**
+     * Opens the primary scene for viewing tags
+     *
+     * @param b The board object for which we open this scene
+     */
     public void showTagControl(Boards b){
         secondaryStage = new Stage();
         secondaryStage.setScene(tagControl);
@@ -336,6 +358,10 @@ public class MainCtrl {
     }
 
 
+    /**
+     * Closes the create tag scene
+     *
+     */
     public void closeNewTag(){thirdStage.close();}
 
 
@@ -441,6 +467,11 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
+
+    /**
+     * Closes the tags scene
+     *
+     */
     public void closeTags(){
         secondaryStage.close();
     }

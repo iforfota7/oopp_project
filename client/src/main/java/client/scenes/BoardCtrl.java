@@ -111,6 +111,15 @@ public class BoardCtrl {
                 }
             });
         });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(b);
+                }
+            });
+        });
     }
 
     /**

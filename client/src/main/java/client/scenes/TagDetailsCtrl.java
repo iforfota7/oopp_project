@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Boards;
 import commons.Tags;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
@@ -19,16 +20,19 @@ public class TagDetailsCtrl {
     private Tags tag;
     private ServerUtils server;
     private MainCtrl mainCtrl;
+    private Boards board;
 
 
     /**
      * Initialises the tag's details scene with the tag's specific details
      * @param t the tag for which the details' scene to be shown
+     * @param board reference to the board object that contains this tag
      */
-    public void initialize(Tags t){
+    public void initialize(Tags t, Boards board){
         this.tag = t;
         picker.setValue(Color.valueOf(this.tag.color));
         cardTitleInput.setText(this.tag.title);
+        this.board = board;
     }
 
     /**
@@ -55,11 +59,14 @@ public class TagDetailsCtrl {
             return;
         }
 
-        this.tag.title = cardTitleInput.getText();
-        String color = "#" + picker.getValue().toString().substring(2, 8);
-        this.tag.color = color;
+        int tagPositionInBoard = board.tags.indexOf(tag);
 
-        server.renameTag(tag);
+        tag.title = cardTitleInput.getText();
+        String color = "#" + picker.getValue().toString().substring(2, 8);
+        tag.color = color;
+        board.tags.set(tagPositionInBoard, tag);
+
+        server.updateBoard(board);
 
         mainCtrl.closeNewTag();
 

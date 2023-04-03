@@ -245,6 +245,20 @@ public class ServerUtils {
     }
 
     /**
+     * Updates the information of a board
+     * The constraint is that the name remains the same
+     *
+     * @param board The board to be updated
+     * @return the updated board
+     */
+    public Boards updateBoard(Boards board) {
+        System.out.println(board.tags);
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    /**
      * Setter method for the server attribute
      * @param server the server address to be set
      */

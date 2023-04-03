@@ -322,7 +322,6 @@ public class CardDetailsCtrl {
      */
     @FXML
     public void addSubtask(){
-//        changes = true;
         inputsOpen++;
 
         if(inputsOpen == 1){
@@ -404,16 +403,20 @@ public class CardDetailsCtrl {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         HBox currentSubtask = (HBox) popup.getOwnerNode().getParent();
+        inputsOpen++;
 
-        // will inform the createSubtask method that the new subtask is actually a renamed one
-        rename = true;
-        toRename = (Subtask) currentSubtask.getProperties().get("subtask");
-        subtaskName.setText(toRename.title);
+        if(inputsOpen == 1){
+            // will inform the createSubtask method that the new subtask is actually a renamed one
+            rename = true;
+            toRename = (Subtask) currentSubtask.getProperties().get("subtask");
+            subtaskName.setText(toRename.title);
 
-        int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
-        taskList.getChildren().set(indexInVbox, inputSubtask);
+            int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
+            taskList.getChildren().set(indexInVbox, inputSubtask);
 
-        openedCard.subtasks.remove(toRename);
+            openedCard.subtasks.remove(toRename);
+        }
+
     }
 
     /**

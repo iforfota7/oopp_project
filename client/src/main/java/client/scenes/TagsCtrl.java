@@ -43,54 +43,21 @@ public class TagsCtrl {
         }
 
         this.board = board;
+        System.out.println(board.tags.size());
         tagList.getChildren().clear();
-        List<Tags> tags = server.getTagsByBoard(board.id);
-        for(int i = 0; i < tags.size(); i++)
-            addNewTag(tags.get(i));
+        for(Tags tags : board.tags)
+            addNewTag(tags);
     }
 
     /**
      * Initialises the websockets for the tags
      */
     private void webSocketTags() {
-        server.registerForMessages("/topic/tags/add", Tags.class, t -> {
+        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-//                    if (t.board.name.equals(board.name)) {
-//                        addNewTag(t);
-//                    }
-                    initialize(board);
-                }
-            });
-        });
-
-        server.registerForMessages("/topic/tags/remove", Tags.class, t->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-//                    if(t.board.name.equals(board.name)) {
-//                        AnchorPane tag = (AnchorPane) rootTagContainer.lookup("#tag"+t.id);
-//                        tagList.getChildren().remove(tag);
-//
-//                    }
-                    initialize(board);
-                }
-            });
-        });
-
-        server.registerForMessages("/topic/tags/rename", Tags.class, t->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-//                    if(t.board.name.equals(board.name)) {
-//                        Label tag = ((Label)((AnchorPane) rootTagContainer.lookup("#tag"+t.id)).
-//                                getChildren().get(0));
-//                        tag.setText(t.title);
-//                        ((AnchorPane)tag.getParent())
-//                                .setStyle("-fx-background-radius: 4; -fx-background-color: " + t.color);
-//                    }
-                    initialize(board);
+                    initialize(b);
                 }
             });
         });
@@ -99,16 +66,14 @@ public class TagsCtrl {
 
     /**
      * Constructor of the TagsCtrl class
-     * @param mainCtrl
-     * @param server
+     * @param mainCtrl Used for navigating between scenes
+     * @param server Used for sending requests to the backend
      */
     @Inject
     public TagsCtrl(MainCtrl mainCtrl, ServerUtils server){
         this.server = server;
         this.mainCtrl = mainCtrl;
         stringURLS = new ArrayList<>();
-//        webSocketTags();
-
     }
 
     /**
@@ -161,12 +126,12 @@ public class TagsCtrl {
 
     /**
      * Opens the tag's detail scene
-     * @param mouseEvent
+     * @param mouseEvent Object storing information about the mouse event
      */
     @FXML
     public void tagDetail(MouseEvent mouseEvent) {
         Tags t = (Tags) ((Node) mouseEvent.getSource()).getProperties().get("tag");
-        mainCtrl.showTagDetail(t);
+        mainCtrl.showTagDetail(t, board);
     }
 
     /**
@@ -178,7 +143,8 @@ public class TagsCtrl {
         Button deleteCard = (Button) event.getSource();
         Tags t = (Tags) ((Label)((AnchorPane)deleteCard.getParent())
                 .getChildren().get(0)).getProperties().get("tag");
-        server.removeTag(t);
+        board.tags.remove(t);
+        server.updateBoard(board);
     }
 
     /**
@@ -196,5 +162,14 @@ public class TagsCtrl {
     @FXML
     void close()  {
         mainCtrl.closeTags();
+    }
+
+    /**
+     * Setter for the board attribute of the controller
+     *
+     * @param board The new board object
+     */
+    public void setBoard(Boards board) {
+        this.board = board;
     }
 }

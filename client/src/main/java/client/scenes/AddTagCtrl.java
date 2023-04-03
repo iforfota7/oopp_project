@@ -22,7 +22,7 @@ public class AddTagCtrl {
 
     private final ServerUtils server;
 
-    private MainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     private Boards board;
 
@@ -57,8 +57,10 @@ public class AddTagCtrl {
             warning.setVisible(true);
             return;
         }
-        System.out.println(board);
-        server.addTag(new Tags(cardTitleInput.getText(), colorTag(picker.getValue()), board));
+
+        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(picker.getValue()), board));
+        server.updateBoard(board);
+
         cardTitleInput.clear();
         this.mainCtrl.closeNewTag();
     }
