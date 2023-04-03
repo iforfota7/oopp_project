@@ -49,8 +49,6 @@ public class BoardCtrl {
 
     private Cards currentCard;
 
-    private List<Lists> lists;
-
     private final Draggable drag;
     private final Shortcuts shortcuts;
 
@@ -145,8 +143,8 @@ public class BoardCtrl {
      */
     public void refresh(){
         firstRow.getChildren().clear();
-        lists = server.getListsByBoard(board.id);
-        for (Lists list : lists) {
+        board.lists = server.getListsByBoard(board.id);
+        for (Lists list : board.lists) {
             addNewList(list);
         }
     }
@@ -450,8 +448,9 @@ public class BoardCtrl {
      * @param position the position of the list
      */
     public void addListToBoard(String text, int position){
-        // the following two lines causes a stack overflow
-        Lists list = new Lists(text, position, board);
+        Boards boards = new Boards(board.name, null);
+        boards.id = board.id;
+        Lists list = new Lists(text, position, boards);
 
         try {
             server.addList(list);

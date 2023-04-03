@@ -122,6 +122,7 @@ public class ListController {
     @Transactional
     @PostMapping(path={"/remove", "/remove/"})
     public ResponseEntity<Lists> removeList(@RequestBody Lists list) {
+        System.out.println(list);
         if(list == null)
             return ResponseEntity.badRequest().build();
 
