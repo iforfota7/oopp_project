@@ -1,11 +1,11 @@
 package client.scenes.config;
 
-import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class Shortcuts {
 
-    private Hyperlink currentCard;
+    private AnchorPane currentCard;
 
     /**
      * Whenever the user hovers above a card using their mouse,
@@ -16,19 +16,35 @@ public class Shortcuts {
      */
     public void onMouseHover(MouseEvent mouseEvent) {
 
-        Hyperlink hovered = (Hyperlink) mouseEvent.getSource();
+        AnchorPane hovered = (AnchorPane) mouseEvent.getSource();
         if(currentCard==null ||
-                ((Hyperlink) mouseEvent.getSource()).getParent()
+                ((AnchorPane) mouseEvent.getSource()).getParent()
                         .getParent()!=currentCard.getParent().getParent()) {
 
             if(currentCard!=null)
-                currentCard.setStyle("-fx-background-color:  #E6E6FA;");
+                currentCard.setStyle("");
 
-            hovered.setStyle("-fx-background-color:  #E6E6FA; " +
+            hovered.setStyle(
                     "-fx-border-color: red; -fx-border-style:solid");
             currentCard = hovered;
         }
 
         mouseEvent.consume();
+    }
+
+    /**
+     * Getter for the currently highlighted card
+     * @return the currently highlighted card
+     */
+    public AnchorPane getCurrentCard() {
+        return currentCard;
+    }
+
+    /**
+     * Setter for the currently highlighted card
+     * @param currentCard the currently highlighted card
+     */
+    public void setCurrentCard(AnchorPane currentCard) {
+        this.currentCard = currentCard;
     }
 }

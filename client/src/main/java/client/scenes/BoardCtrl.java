@@ -484,6 +484,9 @@ public class BoardCtrl {
         over.setOnDragDropped(drag::dragDropped);
         over.setOnMouseClicked(this::cardDetail);
 
+        over.setId("card"+Long.toString(c.id));
+        over.setOnMouseEntered(shortcuts::onMouseHover);
+
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
 
@@ -491,6 +494,12 @@ public class BoardCtrl {
         newCard.getChildren().addAll(deleteCard, card, over);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
+
+        if(shortcuts.getCurrentCard()!=null &&
+                newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
+            over.setStyle("-fx-border-color: red; -fx-border-style:solid");
+            shortcuts.setCurrentCard(over);
+        }
 
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
     }
