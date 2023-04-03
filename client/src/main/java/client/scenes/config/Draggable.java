@@ -16,6 +16,10 @@ public class Draggable {
 
     private ServerUtils server;
 
+    /**
+     * Constructor method for Draggable
+     * @param server instance of ServerUtils
+     */
     @Inject
     public Draggable(ServerUtils server){
         this.server = server;
@@ -26,7 +30,6 @@ public class Draggable {
      *
      * @param mouseEvent Object containing information about the mouse event
      */
-
     public void dragDetected(MouseEvent mouseEvent) {
         Hyperlink dragged = (Hyperlink) mouseEvent.getSource();
         Dragboard db = dragged.startDragAndDrop(TransferMode.ANY);
@@ -42,7 +45,6 @@ public class Draggable {
      *
      * @param event Object containing information about the drag event
      */
-
     public void dragEntered(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
                 ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
@@ -80,7 +82,6 @@ public class Draggable {
      * @param dropTarget The element on which the card is dropped
      * @return The list container
      */
-
     private VBox getListContainerFromDropTarget(Node dropTarget) {
         //this while statement takes care of the case where the card is dropped on a card
         while(!(dropTarget instanceof VBox))
@@ -99,7 +100,6 @@ public class Draggable {
      * @param dropTarget The element on which the card could be dropped
      * @return The list object associated with this element
      */
-
     private Lists computeTargetList(Node dropTarget) {
         dropTarget = getListContainerFromDropTarget(dropTarget);
         return (Lists)dropTarget.getParent().getProperties().get("list");
@@ -110,7 +110,6 @@ public class Draggable {
      *
      * @param dropTarget The node on which the card would be dropped
      */
-
     private void removeVisualCue(Node dropTarget) {
         dropTarget = getListContainerFromDropTarget(dropTarget);
         for(Node child : ((VBox) dropTarget).getChildren()) {
@@ -131,7 +130,6 @@ public class Draggable {
      * @param node The element on which the card could be dropped
      * @return The new position of the dragged card
      */
-
     private int positionOfDroppedCard(DragEvent event, Cards sourceCard, Node node) {
         Lists targetList = computeTargetList(node);
         node = getListContainerFromDropTarget(node);
@@ -182,7 +180,6 @@ public class Draggable {
      * @param positionInsideList The position at which the card will be dropped
      *                          at this moment in time
      */
-
     public void createVisualCue(Node dropTarget, Lists targetList,
                                 Cards sourceCard, int positionInsideList) {
 
@@ -268,9 +265,4 @@ public class Draggable {
         event.setDropCompleted(true);
         event.consume();
     }
-
-    public void dragDone(DragEvent event){
-        event.consume();
-    }
-
 }

@@ -24,6 +24,7 @@ import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import commons.User;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -38,7 +39,7 @@ import static jakarta.ws.rs.core.MediaType.*;
 
 public class ServerUtils {
 
-    private static String SERVER;
+    private String serverAddress;
     private static String USERNAME;
 
     /**
@@ -47,7 +48,7 @@ public class ServerUtils {
      * @return the response object
      */
     public User addUser(User user){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
@@ -58,7 +59,7 @@ public class ServerUtils {
      * @return true if user already in database, otherwise false
      */
     public boolean existsUser(User user){
-        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        if(ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/find/" + user.username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>(){}) == null) return false;
@@ -67,94 +68,176 @@ public class ServerUtils {
 
     /**
      * Find whether a board exists or not using its ID
-     * @param boardID the id of the board that is being searched for
+     * @param boardName the id of the board that is being searched for
      * @return true if the board is in the database, otherwise false
      */
-    public boolean existsBoardByID(String boardID) {
-        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/boards/find/"+boardID).
+    public Boards existsBoardByName(String boardName) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/find/"+boardName).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON).
-                get(new GenericType<Boards>(){}) == null) return false;
-        return true;
+                get(new GenericType<Boards>(){});
+
     }
-    public Lists addList(Lists list, Boards board){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/lists/" + board.name).request(APPLICATION_JSON).accept(APPLICATION_JSON).
+
+    /**
+     * Add a new list to the database
+     * @param list the list to be added
+     * @return the response object
+     */
+    public Lists addList(Lists list){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/lists/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
+    /**
+     * Method that renames an existing list in the database
+     * @param list the list containing the new name
+     * @return the response object
+     */
     public Lists renameList(Lists list){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/lists/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
+    /**
+     * Method that removes a list from the database
+     * @param list the list to be deleted
+     * @return the response object
+     */
     public Lists removeList(Lists list){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/lists/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
 
+    /**
+     * Method to add a new card to the database
+     * @param card the card to be added
+     * @return the response object
+     */
     public Cards addCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
+    /**
+     * Method that removes card from the database
+     * @param card the card to be deleted
+     * @return the response object
+     */
     public Cards removeCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
     }
 
+    /**
+     * Method that renames a card in the database
+     * @param card the card to be renamed with new properties
+     * @return the response object
+     */
     public Cards renameCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
+    /**
+     * Method that moves card to new list or within list
+     * @param card the card to be moved
+     * @return the response object
+     */
     public Cards moveCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
-
+    /**
+     * Method that retrieves all lists from the serverAddress
+     * @return a list of all lists in the database
+     */
     public List<Lists> getLists() {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/lists") //
+                .target(serverAddress).path("api/lists") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    /**
+     * Method that adds Board to the database
+     * @param board the board to be added
+     * @return the response object
+     */
     public Boards addBoard(Boards board) {
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
-    public List<Lists> getListsByBoard(String boardName) {
+
+    /**
+     * Method that gets all lists in a certain board
+     * @param boardName the id of the board
+     * @return a list of lists in the board
+     */
+    public List<Lists> getListsByBoard(long boardName) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/lists/all/" + boardName) //
+                .target(serverAddress).path("api/lists/all/" + boardName) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    /**
+     * Method that retrieves all the boards
+     * @return a list of all boards
+     */
     public List<Boards> getBoards() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/boards/all")
+                .target(serverAddress).path("api/boards/all")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
     }
 
     /**
+     * Method that renames a board
+     * @param board the new board to be saved with a changed name
+     * @return the new board
+     */
+    public Boards renameBoard(Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    /**
      * Setter method for the server attribute
      * @param server the server address to be set
      */
-    public static void setServer(String server){
-        SERVER = server;
+    public void setServer(String server){
+        serverAddress = server;
+    }
+
+    /**
+     * Getter for the serverAddress property
+     *
+     * @return the serverAddress property
+     */
+    public String getServer() {
+        return serverAddress;
+    }
+
+    /**
+     * Method for connecting websockets to a particular Talio server
+     *
+     */
+    public void setWebsockets() {
+        session = connect(serverAddress.replaceFirst("http", "ws") + "/websocket");
     }
 
     /**
@@ -169,14 +252,14 @@ public class ServerUtils {
      *
      * @return True iff the client-server connection can be established
      */
-    public static boolean checkServer(){
+    public boolean checkServer(){
         try {
-            ClientBuilder.newClient(new ClientConfig())
-                    .target(SERVER).path("api/test-connection")
+            Response response = ClientBuilder.newClient(new ClientConfig())
+                    .target(serverAddress).path("api/test-connection")
                     .request(TEXT_PLAIN)
                     .accept(TEXT_PLAIN)
                     .get();
-            return true;
+            return response.getStatus() == 200;
         }catch(Exception e) {
             return false;
         }
@@ -184,8 +267,13 @@ public class ServerUtils {
 
     }
 
-    private final StompSession session =  connect("ws://localhost:8080/websocket");
+    private StompSession session =  null;
 
+    /**
+     * Connect method for websockets
+     * @param url the url for the websockets
+     * @return StompSession
+     */
     private StompSession connect(String url){
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
@@ -199,6 +287,14 @@ public class ServerUtils {
         }
         throw new IllegalStateException();
     }
+
+    /**
+     * RegisterForMessages method
+     * @param dest destination
+     * @param type the type
+     * @param consumer a consumer
+     * @param <T> the type
+     */
     public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer){
         session.subscribe(dest, new StompFrameHandler() {
             @Override
@@ -214,7 +310,39 @@ public class ServerUtils {
         });
     }
 
+    /**
+     * Method that refreshes whether user is admin on login
+     * @param user the user
+     * @return the response object
+     */
+    public User refreshAdmin(User user) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/refreshAdmin").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
 
+    /**
+     * Method that removes Board from database
+     * @param board the board to be removed
+     * @return the response object
+     */
+    public Boards removeBoard(Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/remove/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 
+    /**
+     * Method that checks whether a user is an admin
+     * @param user the user to be checked
+     * @return true if the user is admin, false otherwise
+     */
+    public boolean checkAdmin(User user) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/find/" + user.username).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>() {
+                }).isAdmin;
+    }
 
 }
