@@ -17,41 +17,242 @@ package client.scenes;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
+    private Stage primaryStage, secondaryStage;
 
-    private Stage primaryStage;
+    private Scene board, renameList, deleteList, addList;
+    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard;
+    private Scene selectServer, joinBoardByID;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+    private RnListCtrl rnListCtrl;
+    private DeListCtrl deListCtrl;
+    private AdListCtrl addListCtrl;
+    private CardDetailsCtrl cardDetailsCtrl;
+    private NewCardCtrl newCardCtrl;
+    private ConfirmUsernameCtrl confirmUsernameCtrl;
+    private BoardOverviewCtrl boardOverviewCtrl;
+    private SelectServerCtrl selectServerCtrl;
+    private JoinBoardByIDCtrl joinBoardByIDCtrl;
+    private BoardCtrl boardCtrl;
+    private AddBoardCtrl addBoardCtrl;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+    private int numberOfLists = 2;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+
+    public void initializeBoard(Stage primaryStage,
+                                Pair<SelectServerCtrl, Parent> selectServer,
+                                Pair<ConfirmUsernameCtrl, Parent> confirmUsername,
+                                Pair<BoardOverviewCtrl, Parent> boardOverview,
+                                Pair<AddBoardCtrl, Parent> addBoard,
+                                Pair<JoinBoardByIDCtrl, Parent> joinBoardByID) {
+
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+        this.selectServer = new Scene(selectServer.getValue());
+        this.selectServerCtrl = selectServer.getKey();
 
-        showOverview();
+        this.confirmUsername = new Scene(confirmUsername.getValue());
+        this.confirmUsernameCtrl = confirmUsername.getKey();
+
+        this.boardOverview = new Scene(boardOverview.getValue());
+        this.boardOverviewCtrl = boardOverview.getKey();
+
+        this.addBoard = new Scene(addBoard.getValue());
+        this.addBoardCtrl = addBoard.getKey();
+
+        this.joinBoardByID = new Scene(joinBoardByID.getValue());
+        this.joinBoardByIDCtrl = joinBoardByID.getKey();
+
+        showStart();
         primaryStage.show();
     }
 
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    public void initializeLists( Pair<RnListCtrl,Parent> renameList,
+                Pair<DeListCtrl, Parent> deleteList,
+                Pair<AdListCtrl, Parent> addList) {
+
+        this.renameList = new Scene(renameList.getValue());
+        this.rnListCtrl = renameList.getKey();
+
+        this.deleteList = new Scene(deleteList.getValue());
+        this.deListCtrl = deleteList.getKey();
+
+        this.addList = new Scene(addList.getValue());
+        this.addListCtrl = addList.getKey();
+    }
+    public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
+            Pair<NewCardCtrl, Parent> newCardCtrl) {
+
+        this.cardDetails = new Scene(cardDetails.getValue());
+        this.cardDetailsCtrl = cardDetails.getKey();
+
+        this.newCard = new Scene(newCardCtrl.getValue());
+        this.newCardCtrl = newCardCtrl.getKey();
     }
 
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+    public void showStart() {
+        primaryStage.setTitle("Start");
+        primaryStage.setScene(selectServer);
     }
+
+    public void showBoard(String boardName) {
+        boardCtrl.setBoardName(boardName);
+        primaryStage.setTitle("Start");
+        primaryStage.setScene(board);
+        if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
+        boardCtrl.initialize();
+    }
+
+    /**
+     * Sets scene of stage to passed board
+     * @param board the scene to be displayed
+     * @param boardName used to display the title of the board
+     */
+    public void setBoard(Pair<BoardCtrl, Parent> board, String boardName){
+        this.board = new Scene(board.getValue());
+        this.boardCtrl = board.getKey();
+        showBoard(boardName);
+    }
+
+    /**
+     * Show scene of Rename List
+     */
+    public void showRenameList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(renameList);
+        secondaryStage.setTitle("Rename list!");
+        secondaryStage.show();
+    }
+
+    /**
+     * Show scene of Delete List
+     */
+    public void showDeleteList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(this.deleteList);
+        secondaryStage.setTitle("Delete List!");
+        secondaryStage.show();
+    }
+
+    /**
+     * Show scene of addList
+     */
+    public void showAddList() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(addList);
+        secondaryStage.setTitle("New List!");
+        secondaryStage.show();
+    }
+
+    /**
+     * Show confirmUsername scene
+     */
+    public void showConfirmUsername(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(confirmUsername);
+        secondaryStage.setTitle("Confirm Username!");
+        secondaryStage.show();
+    }
+
+    public void closeRNList() {
+        secondaryStage.close();
+    }
+    public void closeDEList() {
+        secondaryStage.close();
+    }
+
+    public void closeADList() {
+        secondaryStage.close();
+    }
+
+    /**
+     * Closes the confirmUsername scene
+     */
+    public void closeConfirmUsername() {secondaryStage.close();}
+
+    /**
+     * Adds a new list to the board
+     * @param list the list to be added to the board
+     * @param row the hbox to which the list should be added (the row)
+     */
+    public void addNewList(VBox list, HBox row){
+        row.getChildren().add(list);
+
+    }
+
+
+    /**
+     * Show scene of cardDetails
+     */
+    public void showCardDetail() {
+        secondaryStage = new Stage();
+        secondaryStage.setScene(cardDetails);
+        secondaryStage.setTitle("Card Details");
+        secondaryStage.show();
+    }
+
+    public void showAddCard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(newCard);
+        secondaryStage.setTitle("Add new Card");
+        secondaryStage.show();
+    }
+
+    /**
+     * close scene of cardDetails
+     */
+    public void closeCardDetails() {
+        secondaryStage.close();
+    }
+    public void closeNewCard(){secondaryStage.close();}
+
+    /**
+     * Method that sets the scene to the Board Overview scene
+     *
+     */
+    public void showBoardOverview() {
+        boardOverviewCtrl.init();
+        primaryStage.setTitle("Board Overview");
+        primaryStage.setScene(boardOverview);
+    }
+
+    /**
+     * Method that sets the scene to the Select Server scene
+     *
+     */
+    public void showSelectServer() {
+        primaryStage.setTitle("Start");
+        primaryStage.setScene(selectServer);
+    }
+
+    public void showAddBoard(){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(addBoard);
+        secondaryStage.setTitle("Add a new Board!");
+        secondaryStage.show();
+    }
+
+    public void closeAddBoard(){
+        secondaryStage.close();
+    }
+
+    /**
+     * Open a new window that displays the joinBoardByID scene
+     */
+    public void showJoinBoardByID() {
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Join board by ID");
+        secondaryStage.setScene(joinBoardByID);
+        secondaryStage.show();
+    }
+
+    /**
+     * Closes the window that displays the joinBoardByID scene
+     */
+    public void closeJoinBoardByID() { secondaryStage.close(); }
 }
