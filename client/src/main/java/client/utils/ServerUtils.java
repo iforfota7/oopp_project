@@ -25,6 +25,7 @@ import commons.Cards;
 import commons.Lists;
 import commons.User;
 import jakarta.ws.rs.core.Response;
+import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -192,6 +193,11 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public List<Tags> getTagsByBoard(long boardID){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/all/" + boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).get(new GenericType<List<Tags>>(){});
+    }
+
     /**
      * Method that retrieves all the boards
      * @return a list of all boards
@@ -332,11 +338,20 @@ public class ServerUtils {
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
 
-    /**
-     * Method that checks whether a user is an admin
-     * @param user the user to be checked
-     * @return true if the user is admin, false otherwise
-     */
+    public Tags addTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/").request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON).post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
+    }
+
+    public Tags renameTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
+    }
+
+    public Tags removeTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/remove").
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
+    }
     public boolean checkAdmin(User user) {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/find/" + user.username).

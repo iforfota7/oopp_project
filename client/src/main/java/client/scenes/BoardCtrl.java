@@ -28,6 +28,9 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final CardDetailsCtrl cardDetailsCtrl;
+
+    @FXML
+    private Button tags;
     @FXML
     private AnchorPane rootContainer;
     @FXML
@@ -576,7 +579,6 @@ public class BoardCtrl {
         card.setPrefSize(95, 23);
         card.setAlignment(Pos.CENTER);
         card.setStyle("-fx-background-color:  #E6E6FA");
-
         card.setOnDragDetected(drag::dragDetected);
 
         // set the card to execute cardDetail on action
@@ -629,5 +631,7 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
-    
+    public void openTag(){
+        mainCtrl.showTagControl(board);
+    }
 }

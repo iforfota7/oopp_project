@@ -79,6 +79,7 @@ public class Main extends Application {
 
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
+
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
 
@@ -88,6 +89,16 @@ public class Main extends Application {
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene);
+
+        var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
+
+        var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
+
+        var addTag = FXML.load(NewTagCtrl.class, "client", "scenes", "addTag.fxml");
+
         mainCtrl.initializeAdmin(confirmAdmin);
+        mainCtrl.initializeTags(tagsControl);
+        mainCtrl.initializeTags(tagDetails, addTag);
+
     }
 }

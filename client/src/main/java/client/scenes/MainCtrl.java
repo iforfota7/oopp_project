@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Tags;
 import commons.User;
 import commons.Boards;
 import javafx.scene.Parent;
@@ -25,17 +26,22 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
-    private Stage primaryStage, secondaryStage;
+    private Stage primaryStage, secondaryStage, thirdStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername, boardOverview, addBoard, renameBoard;
+    private Scene cardDetails, newCard, tagControl, newTag, tagDetails,  confirmUsername, boardOverview, addBoard, renameBoard;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
     private Scene confirmAdmin, help;
 
     private RnListCtrl rnListCtrl;
+
+    private TagsCtrl tagsCtrl;
     private DeListCtrl deListCtrl;
     private AdListCtrl addListCtrl;
     private CardDetailsCtrl cardDetailsCtrl;
+
+    private TagDetailsCtrl tagDetailsCtrl;
+
     private NewCardCtrl newCardCtrl;
     private ConfirmUsernameCtrl confirmUsernameCtrl;
     private ConfirmAdminCtrl confirmAdminCtrl;
@@ -45,6 +51,8 @@ public class MainCtrl {
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
     private UserDetailsCtrl userDetailsCtrl;
+
+    private NewTagCtrl newTagCtrl;
 
     private RenameBoardCtrl renameBoardCtrl;
     private HelpCtrl helpCtrl;
@@ -152,6 +160,14 @@ public class MainCtrl {
         this.helpCtrl = helpCtrl.getKey();
     }
 
+
+    public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails, Pair<NewTagCtrl, Parent> newTagCtrl){
+        this.tagDetails = new Scene(tagDetails.getValue());
+        this.tagDetailsCtrl = tagDetails.getKey();
+        this.newTag = new Scene(newTagCtrl.getValue());
+        this.newTagCtrl = newTagCtrl.getKey();
+    }
+
     /**
      * Initialize method for admin related scenes
      * @param confirmAdmin confirmAdminCtrl parent pair for confirmAdmin scene
@@ -167,6 +183,12 @@ public class MainCtrl {
     public void showStart() {
         primaryStage.setTitle("Select Server");
         primaryStage.setScene(selectServer);
+    }
+
+    public void initializeTags(Pair<TagsCtrl, Parent> tagControl){
+        this.tagControl = new Scene(tagControl.getValue());
+        this.tagsCtrl = tagControl.getKey();
+
     }
 
     /**
@@ -264,6 +286,14 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    public void showTagDetail(Tags t){
+       thirdStage = new Stage();
+        thirdStage.setScene(tagDetails);
+        thirdStage.setTitle("Tag Details");
+        thirdStage.show();
+        tagDetailsCtrl.initialize(t);
+    }
+
     /**
      * Show addCard scene
      */
@@ -274,6 +304,26 @@ public class MainCtrl {
         secondaryStage.setTitle("Add new Card");
         secondaryStage.show();
     }
+
+    public void showAddTag(Boards board){
+        thirdStage = new Stage();
+        thirdStage.setScene(newTag);
+        thirdStage.setTitle("Add new Tag");
+        thirdStage.show();
+        newTagCtrl.initialize(board);
+    }
+
+    public void showTagControl(Boards b){
+        secondaryStage = new Stage();
+        secondaryStage.setScene(tagControl);
+        secondaryStage.setTitle("Tags Control");
+        secondaryStage.show();
+        tagsCtrl.initialize(b);
+    }
+
+
+    public void closeNewTag(){thirdStage.close();}
+
 
     /**
      * Method that shows the confirmation scene for deleting a card
@@ -374,6 +424,10 @@ public class MainCtrl {
      * This method closes any general secondary stage
      */
     public void closeSecondaryStage(){
+        secondaryStage.close();
+    }
+
+    public void closeTags(){
         secondaryStage.close();
     }
 }

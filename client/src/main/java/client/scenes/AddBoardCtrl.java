@@ -37,7 +37,7 @@ public class AddBoardCtrl {
      */
     @FXML
     void saveNewBoard(){
-        server.addBoard(new Boards(boardName.getText(), null));
+        server.addBoard(new Boards(boardName.getText(), null, null));
         boardName.setText("");
 
         mainCtrl.closeSecondaryStage();
