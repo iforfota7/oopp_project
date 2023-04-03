@@ -378,7 +378,8 @@ public class BoardCtrl {
     }
 
     /**
-     * Method tha deletes the card from the database and closes the secondary scene
+     * Deletes a card from the database, after the user confirmed
+     * the deletion
      */
     void deleteCard() {
         server.removeCard(currentCard);
@@ -386,14 +387,15 @@ public class BoardCtrl {
     }
 
     /**
-     * Method that cancels the deletion and closes the secondary scene
+     * Closes the scene which asks for confirmation of deleting a card
      */
     void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
     /**
-     * Method that shows the help scene
+     * Opens the Help Scene of a board when the button 'H' from
+     * bottom right is pushed
      */
     public void showHelpScene(){
         mainCtrl.showHelpScene();

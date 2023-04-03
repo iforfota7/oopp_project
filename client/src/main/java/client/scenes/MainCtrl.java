@@ -127,7 +127,7 @@ public class MainCtrl {
      * Initialize method for card related scenes
      * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
-     * @param deCardCtrl deCardCtrl parent pair for deleteCard scene
+     * @param deCardCtrl deCardCtrl parent pair for deCard scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
             Pair<NewCardCtrl, Parent> newCardCtrl,
@@ -144,8 +144,8 @@ public class MainCtrl {
     }
 
     /**
-     * Initialize method for utils related scenes
-     * @param helpCtrl helpCtrl parent pair for help scene
+     * Initialise method for 'useful' scenes
+     * @param helpCtrl helpCtrl parent pair for Help scene
      */
     public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl){
         this.help = new Scene(helpCtrl.getValue());
@@ -277,7 +277,8 @@ public class MainCtrl {
     }
 
     /**
-     * Method that shows the confirmation scene for deleting a card
+     * Opens a secondary window which asks for confirmation for
+     * deleting a card
      */
     public void showDeleteCard(){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
@@ -348,7 +349,8 @@ public class MainCtrl {
 
 
     /**
-     * Method that shows the help scene
+     * Shows in a second window the guide to use the application
+     * after pressing the 'H' button -> help
      */
     public void showHelpScene(){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
@@ -359,8 +361,9 @@ public class MainCtrl {
     }
 
     /**
-     * Method that shows the current users details
-     * @param currentUser the current user
+     * Shows in a second window the user's details: username, server
+     * address and whether it is an admin or not
+     * @param currentUser the user whose details are shown
      */
     public void showUserDetails(User currentUser){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
