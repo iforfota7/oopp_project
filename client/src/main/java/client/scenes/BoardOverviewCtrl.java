@@ -109,9 +109,7 @@ public class BoardOverviewCtrl{
         int row = (numberOfBoards - 1) / 3;
 
         StackPane newBoard = createNewBoard(b);
-
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
-
         gridPane.add(newBoard, positionInColumn, row);
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
                 new Insets(10, 10 , 10 ,10));
@@ -128,8 +126,10 @@ public class BoardOverviewCtrl{
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
-        newBoard.setPrefWidth(165);
-        newBoard.setPrefHeight(75);
+        newBoard.setPrefWidth(160.8);
+        newBoard.setPrefHeight(73.6);
+        newBoard.setMinWidth(160.8);
+        newBoard.setMinHeight(73.6);
         newBoard.setAlignment(Pos.CENTER);
         newBoard.setText(b.name);
         newBoard.getProperties().put("board", b);
