@@ -22,6 +22,7 @@ public class BoardOverviewCtrl{
     private final ServerUtils server;
     private SelectServerCtrl selectServerCtrl;
     private List<Boards> boardsList;
+    private Boards currentBoard;
     private int numberOfBoards = 0;
 
     /**
@@ -47,7 +48,7 @@ public class BoardOverviewCtrl{
     private Label userLabel;
 
 
-    private boolean adminLock = false;
+    private boolean adminLock;
 
     /**
      * Sets lock for admin
@@ -68,7 +69,6 @@ public class BoardOverviewCtrl{
     }
 
 
-
     /**
      * Go to a specific board when a board label has been clicked
      * @param event Object that contains information about the mouse event
@@ -87,6 +87,7 @@ public class BoardOverviewCtrl{
      * to the Board Overview scene
      */
     public void disconnect() {
+        server.updateUser(selectServerCtrl.getCurrentUser());
         mainCtrl.showSelectServer();
     }
 
@@ -158,6 +159,14 @@ public class BoardOverviewCtrl{
         stackPane.getChildren().add(hideBoardButton);
         StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
 
+        Button renameBoardButton = new Button("rename");
+        renameBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        renameBoardButton.setOnMouseClicked(this::showRenameBoard);
+        renameBoardButton.setUserData(b.name);
+        stackPane.getChildren().add(renameBoardButton);
+        StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
+
         return stackPane;
     }
     /**
@@ -177,11 +186,30 @@ public class BoardOverviewCtrl{
      * Causes board to be hidden from a user in their board overview
      * @param mouseEvent mouse click on button
      */
-    private void hideBoard(MouseEvent mouseEvent){
+    private void hideBoard(MouseEvent mouseEvent) {
         Button removeButton = (Button) mouseEvent.getSource();
         Boards board = (Boards) removeButton.getParent().getProperties().get("board");
         server.hideBoardFromUser(board);
         refresh();
+    }
+
+    /**
+     * Method that shows the scene in which a board can be renamed
+     * @param mouseEvent the click on the rename button
+     */
+    private void showRenameBoard(MouseEvent mouseEvent){
+        Button renameButton = (Button) mouseEvent.getSource();
+        currentBoard = (Boards) renameButton.getParent().getProperties().get("board");
+        mainCtrl.showRenameBoard();
+    }
+
+    /**
+     * Getter method for the current board
+     * Used for rename method so that the board that was clicked on is saved
+     * @return the current board
+     */
+    public Boards getCurrentBoard(){
+        return currentBoard;
     }
 
     /**
@@ -190,15 +218,17 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boolean isAdmin = server.checkAdmin();
+        adminLock = server.checkAdmin();
 
-        if(isAdmin){
+        if(adminLock){
             boardsList = server.getBoards();
         }
         else{
             boardsList = server.viewedBoards();
+            selectServerCtrl.setBoardsOfCurrentUser(boardsList);
         }
 
+        selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
@@ -230,5 +260,12 @@ public class BoardOverviewCtrl{
     public void closeAdminFeatures(){
         adminLabel.setVisible(false);
         userLabel.setVisible(true);
+    }
+
+    /**
+     * Method that shows the help scene
+     */
+    public void showHelpScene(){
+        mainCtrl.showHelpScene();
     }
 }

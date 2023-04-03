@@ -42,9 +42,12 @@ public class BoardCtrl {
 
     private VBox currentList;
 
+    private Cards currentCard;
+
     private List<Lists> lists;
 
     private final Draggable drag;
+    private List<String> serverURLS;
 
 
     /**
@@ -56,6 +59,12 @@ public class BoardCtrl {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            webSocketLists();
+            webSocketCards();
+        }
         refresh();
     }
 
@@ -67,10 +76,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        addNewList(l);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -79,7 +85,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                        initialize(board);
+                    initialize(board);
                 }
             });
         });
@@ -88,11 +94,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        VBox list = (VBox)rootContainer.lookup("#list"+l.id);
-                        firstRow.getChildren().removeAll(list);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -106,13 +108,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
-                        ((VBox) l.getChildren().get(0)).getChildren().remove(card);
-                        refreshData();
-                    }
-
+                    initialize(board);
                 }
             });
         });
@@ -121,11 +117,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
-                                getChildren().get(0)).setText(c.title);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -134,11 +126,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        addNewCard((VBox) l.getChildren().get(0), c);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -191,6 +179,7 @@ public class BoardCtrl {
         int j = 0;
         for(Node i : firstRow.getChildren()){
             Lists list = (Lists) i.getProperties().get("list");
+
             if(list!=null){
                 i.getProperties().put("list", l.get(j));
                 refreshCards((VBox) ((VBox) i).getChildren().get(0), l.get(j).cards);
@@ -215,8 +204,7 @@ public class BoardCtrl {
         this.drag = new Draggable(this.server);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
-        webSocketLists();
-        webSocketCards();
+        serverURLS = new ArrayList<>();
     }
 
     /**
@@ -348,8 +336,8 @@ public class BoardCtrl {
      */
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
-        refactorButtonList.setText("Refactor List");
-        refactorButtonList.setPrefWidth(75.2);
+        refactorButtonList.setText("Edit List");
+        refactorButtonList.setPrefWidth(60);
         refactorButtonList.setPrefHeight(22);
         refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
 
@@ -429,7 +417,30 @@ public class BoardCtrl {
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
-        server.removeCard(c);
+        currentCard = c;
+        mainCtrl.showDeleteCard();
+    }
+
+    /**
+     * Method tha deletes the card from the database and closes the secondary scene
+     */
+    void deleteCard() {
+        server.removeCard(currentCard);
+        mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * Method that cancels the deletion and closes the secondary scene
+     */
+    void undeleteCard() {
+        mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * Method that shows the help scene
+     */
+    public void showHelpScene(){
+        mainCtrl.showHelpScene();
     }
 
     /**
@@ -606,4 +617,5 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+    
 }

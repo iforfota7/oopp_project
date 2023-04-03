@@ -25,6 +25,7 @@ import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import commons.User;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -39,7 +40,7 @@ import static jakarta.ws.rs.core.MediaType.*;
 
 public class ServerUtils {
 
-    private static String SERVER;
+    private String serverAddress;
     private static String USERNAME;
 
     /**
@@ -48,22 +49,29 @@ public class ServerUtils {
      * @return the response object
      */
     public User addUser(User user){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
     /**
      * Find whether a user exists or not
-     * @param user a user which should be checked
      * @return true if user already in database, otherwise false
      */
-    public boolean existsUser(User user){
-        if(ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/user/find/" + user.username).
-                request(APPLICATION_JSON).accept(APPLICATION_JSON)
-                .get(new GenericType<User>(){}) == null) return false;
+    public boolean existsUser(){
+        if(findUser()== null) return false;
         return true;
+    }
+
+    /**
+     * Find whether current user is in the database
+     * @return the user if they exist
+     */
+    public User findUser(){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){});
     }
 
     /**
@@ -72,7 +80,7 @@ public class ServerUtils {
      * @return true if the board is in the database, otherwise false
      */
     public Boards existsBoardByName(String boardName) {
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/boards/find/"+boardName).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 get(new GenericType<Boards>(){});
@@ -85,7 +93,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Lists addList(Lists list){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/lists/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
@@ -96,7 +104,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Lists renameList(Lists list){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/lists/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
@@ -107,7 +115,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Lists removeList(Lists list){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/lists/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(list, APPLICATION_JSON), Lists.class);
     }
@@ -118,7 +126,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Cards addCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
@@ -129,7 +137,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Cards removeCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
     }
@@ -140,7 +148,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Cards renameCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
@@ -151,18 +159,18 @@ public class ServerUtils {
      * @return the response object
      */
     public Cards moveCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
 
     /**
-     * Method that retrieves all lists from the server
+     * Method that retrieves all lists from the serverAddress
      * @return a list of all lists in the database
      */
     public List<Lists> getLists() {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/lists") //
+                .target(serverAddress).path("api/lists") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
@@ -174,7 +182,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Boards addBoard(Boards board) {
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/boards").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
@@ -186,7 +194,7 @@ public class ServerUtils {
      */
     public List<Lists> getListsByBoard(long boardName) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/lists/all/" + boardName) //
+                .target(serverAddress).path("api/lists/all/" + boardName) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Lists>>() {});
@@ -198,18 +206,46 @@ public class ServerUtils {
      */
     public List<Boards> getBoards() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/boards/all")
+                .target(serverAddress).path("api/boards/all")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
     }
 
     /**
+     * Method that renames a board
+     * @param board the new board to be saved with a changed name
+     * @return the new board
+     */
+    public Boards renameBoard(Boards board){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    /**
      * Setter method for the server attribute
      * @param server the server address to be set
      */
-    public static void setServer(String server){
-        SERVER = server;
+    public void setServer(String server){
+        serverAddress = server;
+    }
+
+    /**
+     * Getter for the serverAddress property
+     *
+     * @return the serverAddress property
+     */
+    public String getServer() {
+        return serverAddress;
+    }
+
+    /**
+     * Method for connecting websockets to a particular Talio server
+     *
+     */
+    public void setWebsockets() {
+        session = connect(serverAddress.replaceFirst("http", "ws") + "/websocket");
     }
 
     /**
@@ -224,20 +260,20 @@ public class ServerUtils {
      *
      * @return True iff the client-server connection can be established
      */
-    public static boolean checkServer(){
+    public boolean checkServer(){
         try {
-            ClientBuilder.newClient(new ClientConfig())
-                    .target(SERVER).path("api/test-connection")
+            Response response = ClientBuilder.newClient(new ClientConfig())
+                    .target(serverAddress).path("api/test-connection")
                     .request(TEXT_PLAIN)
                     .accept(TEXT_PLAIN)
                     .get();
-            return true;
+            return response.getStatus() == 200;
         }catch(Exception e) {
             return false;
         }
     }
 
-    private final StompSession session =  connect("ws://localhost:8080/websocket");
+    private StompSession session =  null;
 
     /**
      * Connect method for websockets
@@ -286,7 +322,7 @@ public class ServerUtils {
      * @return the response object
      */
     public User refreshAdmin(User user) {
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/refreshAdmin").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
@@ -297,7 +333,7 @@ public class ServerUtils {
      * @return the response object
      */
     public Boards removeBoard(Boards board){
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/boards/remove/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
@@ -309,7 +345,7 @@ public class ServerUtils {
      */
     public User hideBoardFromUser(Boards board){
         // get the current user using the saved USERNAME
-        User user = ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
@@ -320,7 +356,7 @@ public class ServerUtils {
         }
 
         // send the updated user to the server so that the database is changed too
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
@@ -330,7 +366,7 @@ public class ServerUtils {
      * @return true if the user is admin, false otherwise
      */
     public boolean checkAdmin() {
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
@@ -343,7 +379,7 @@ public class ServerUtils {
      */
     public void addBoardToUser(Boards board){
         // get the current user using the saved USERNAME
-        User user = ClientBuilder.newClient(new ClientConfig()).target(SERVER).
+        User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
@@ -353,10 +389,7 @@ public class ServerUtils {
         // add the current board to the users list of boards if it isn't already in the list
         if(!user.boards.contains(board)) user.boards.add(board);
 
-        // send the updated user to the server so that the database is changed too
-        ClientBuilder.newClient(new ClientConfig()).target(SERVER).
-                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-                post(Entity.entity(user, APPLICATION_JSON), User.class);
+        updateUser(user);
     }
 
     /**
@@ -365,10 +398,22 @@ public class ServerUtils {
      */
     public List<Boards> viewedBoards(){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/user/boards/" + USERNAME)
+                .target(serverAddress).path("api/user/boards/" + USERNAME)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
+    }
+
+    /**
+     * Update the users attributes to new ones posted
+     * @param user the user to be updated
+     * @return the user that was updated
+     */
+    public User updateUser(User user){
+        // send the updated user to the server so that the database is changed too
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
 }

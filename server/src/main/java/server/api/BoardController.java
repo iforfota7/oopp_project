@@ -50,6 +50,25 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     * Rename method that saves a board with a new name in the database
+     * @param board the board with the new name
+     * @return the response entity
+     */
+    @Transactional
+    @PostMapping(path={"/rename", "/rename/"})
+    public ResponseEntity<Boards> renameBoard(@RequestBody Boards board){
+        if(board == null || isNullOrEmpty(board.name))
+            return ResponseEntity.badRequest().build();
+
+        if(!repo.findByName(board.name).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        Boards saved = repo.save(board);
+
+        return ResponseEntity.ok(saved);
+    }
+
 
 
     /**
