@@ -57,15 +57,22 @@ public class ServerUtils {
 
     /**
      * Find whether a user exists or not
-     * @param user a user which should be checked
      * @return true if user already in database, otherwise false
      */
-    public boolean existsUser(User user){
-        if(ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + user.username).
-                request(APPLICATION_JSON).accept(APPLICATION_JSON)
-                .get(new GenericType<User>(){}) == null) return false;
+    public boolean existsUser(){
+        if(findUser()== null) return false;
         return true;
+    }
+
+    /**
+     * Find whether current user is in the database
+     * @return the user if they exist
+     */
+    public User findUser(){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){});
     }
 
     /**
@@ -393,12 +400,11 @@ public class ServerUtils {
 
     /**
      * Method that checks whether a user is an admin
-     * @param user the user to be checked
      * @return true if the user is admin, false otherwise
      */
-    public boolean checkAdmin(User user) {
+    public boolean checkAdmin() {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + user.username).
+                path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
                 }).isAdmin;
@@ -415,15 +421,14 @@ public class ServerUtils {
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
 
+        System.out.println(user.boards);
         // if the user has no boards, make a new list
         if(user.boards == null || user.boards.size() == 0) user.boards = new ArrayList<>(){};
         // add the current board to the users list of boards if it isn't already in the list
         if(!user.boards.contains(board)) user.boards.add(board);
+        System.out.println(user.boards);
 
-        // send the updated user to the server so that the database is changed too
-        ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-                post(Entity.entity(user, APPLICATION_JSON), User.class);
+        updateUser(user);
     }
 
     /**
@@ -436,6 +441,18 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
+    }
+
+    /**
+     * Update the users attributes to new ones posted
+     * @param user the user to be updated
+     * @return the user that was updated
+     */
+    public User updateUser(User user){
+        // send the updated user to the server so that the database is changed too
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
 }

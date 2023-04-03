@@ -51,8 +51,6 @@ public class BoardCtrl {
 
     private Cards currentCard;
 
-    private List<Lists> lists;
-
     private final Draggable drag;
     private List<String> serverURLS;
 
@@ -154,52 +152,9 @@ public class BoardCtrl {
      */
     public void refresh(){
         firstRow.getChildren().clear();
-        lists = server.getListsByBoard(board.id);
-        for (Lists list : lists) {
+        board.lists = server.getListsByBoard(board.id);
+        for (Lists list : board.lists) {
             addNewList(list);
-        }
-    }
-
-    /**
-     * Method that gets lists for a specific board
-     */
-    public void refreshData(){
-        lists = server.getListsByBoard(board.id);
-        refreshLists(lists);
-    }
-
-    /**
-     * Method that refreshes all the cards in a list
-     * @param listContainer the container of the list
-     * @param c the list of cards
-     */
-    public void refreshCards(VBox listContainer, List<Cards> c){
-        int j = 0;
-        for(Node i : listContainer.getChildren()){
-
-            Cards card = (Cards) i.getProperties().get("card");
-
-            if(card!=null){
-              i.getProperties().remove("card");
-              i.getProperties().put("card", c.get(j));
-              j++;
-            }
-        }
-    }
-
-    /**
-     * Method that refreshes all the lists in a board
-     * @param l a list of lists to be redrawn
-     */
-    public void refreshLists(List<Lists> l){
-        int j = 0;
-        for(Node i : firstRow.getChildren()){
-            Lists list = (Lists) i.getProperties().get("list");
-            if(list!=null){
-                i.getProperties().put("list", l.get(j));
-                refreshCards((VBox) ((VBox) i).getChildren().get(0), l.get(j).cards);
-                j++;
-            }
         }
     }
 
@@ -471,7 +426,7 @@ public class BoardCtrl {
             /*VBox currentCard = (VBox) ((AnchorPane)(
                     (AnchorPane)event.getSource()).getParent()).getChildren().get(1);
             Cards openedCard = (Cards) currentCard.getProperties().get("card");*/
-            //cardDetailsCtrl.setBoard(board);
+            cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
             mainCtrl.showCardDetail();
         }
@@ -504,8 +459,9 @@ public class BoardCtrl {
      * @param position the position of the list
      */
     public void addListToBoard(String text, int position){
-        // the following two lines causes a stack overflow
-        Lists list = new Lists(text, position, board);
+        Boards boards = new Boards(board.name, null, null);
+        boards.id = board.id;
+        Lists list = new Lists(text, position, boards);
 
         try {
             server.addList(list);

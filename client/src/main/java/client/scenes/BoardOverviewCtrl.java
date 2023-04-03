@@ -50,15 +50,14 @@ public class BoardOverviewCtrl{
     @FXML
     private Label userLabel;
 
-
-    private boolean adminLock = false;
+    private boolean adminLock;
 
     /**
      * Sets lock for admin
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock = server.checkAdmin(selectServerCtrl.getCurrentUser());
+        adminLock = server.checkAdmin();
         return adminLock;
     }
 
@@ -89,6 +88,7 @@ public class BoardOverviewCtrl{
      * to the Board Overview scene
      */
     public void disconnect() {
+        server.updateUser(selectServerCtrl.getCurrentUser());
         mainCtrl.showSelectServer();
     }
 
@@ -219,15 +219,17 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boolean isAdmin = server.checkAdmin(selectServerCtrl.getCurrentUser());
+        adminLock = server.checkAdmin();
 
-        if(isAdmin){
+        if(adminLock){
             boardsList = server.getBoards();
         }
         else{
             boardsList = server.viewedBoards();
+            selectServerCtrl.setBoardsOfCurrentUser(boardsList);
         }
 
+        selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);

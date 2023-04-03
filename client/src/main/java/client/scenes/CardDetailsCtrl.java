@@ -101,7 +101,7 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id && sceneOpened) {
                         mainCtrl.closeSecondaryStage();
-                        mainCtrl.showBoard(board);
+//                        mainCtrl.showBoard(board);
                     }
                 }
             });
@@ -156,7 +156,7 @@ public class CardDetailsCtrl {
 //        mainCtrl.closeSecondaryStage();
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
-        //mainCtrl.showBoard(board);
+        mainCtrl.showBoard(board);
     }
 
     /**
