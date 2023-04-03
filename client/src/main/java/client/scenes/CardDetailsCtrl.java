@@ -38,11 +38,12 @@ public class CardDetailsCtrl {
     @FXML
     private Text warningSubtask;
     private int inputsOpen = 0;
-    private boolean changes = false;
+    private boolean rename = false;
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
+    private Subtask toRename;
     private Cards openedCard;
     private Boards board;
     private boolean sceneOpened = false;
@@ -101,7 +102,7 @@ public class CardDetailsCtrl {
     @FXML
     void save() {
         warning.setVisible(false);
-        changes = false;
+        //changes = false;
 
         if(cardTitleInput.getText().isBlank()) {
             warning.setVisible(true);
@@ -149,7 +150,7 @@ public class CardDetailsCtrl {
      *
      */
     public void refreshOpenedCard() {
-        openedCard.title =cardTitleInput.getText();
+        openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
     }
@@ -256,6 +257,7 @@ public class CardDetailsCtrl {
         MenuItem delete = new MenuItem();
         delete.setText("Delete");
         delete.setOnAction(this::deleteSubtask);
+        rename.setOnAction(this::renameSubtask);
         menuButton.getItems().addAll(rename, delete);
         subtaskContainer.getChildren().add(menuButton);
         HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
@@ -321,6 +323,7 @@ public class CardDetailsCtrl {
     public void createSubtask(){
         subtaskName.setStyle("");
         warningSubtask.setVisible(false);
+
         if(subtaskName.getText().equals("")){
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
                     "-fx-border-color: #b30000; -fx-background-radius: 4; " +
@@ -328,7 +331,13 @@ public class CardDetailsCtrl {
             warningSubtask.setVisible(true);
         }
         else {
-            int position = taskList.getChildren().size() - 1;
+            int position;
+            if(rename){
+                position = toRename.position;
+            }
+            else {
+                position = taskList.getChildren().size() - 1;
+            }
             Subtask newSubtask = new Subtask(subtaskName.getText(),
                     false, openedCard, position);
             subtaskName.setStyle("");
@@ -354,6 +363,22 @@ public class CardDetailsCtrl {
         Subtask subtask = (Subtask) toDelete.getProperties().get("subtask");
         openedCard.subtasks.remove(subtask);
         refreshOpenedCard();
+    }
+
+    private void renameSubtask(ActionEvent event) {
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        HBox currentSubtask = (HBox) popup.getOwnerNode().getParent();
+
+        int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
+        rename = true;
+        toRename = (Subtask) currentSubtask.getProperties().get("subtask");
+        subtaskName.setText(toRename.title);
+        taskList.getChildren().set(indexInVbox, inputSubtask);
+
+       /* Subtask subtask = (Subtask) toRename.getProperties().get("subtask");
+        int index = openedCard.subtasks.indexOf(subtask);
+        openedCard.subtasks.get(index).title =*/
     }
 
     /**
