@@ -47,7 +47,7 @@ public class AddBoardCtrl {
     void saveNewBoard(){
         warning.setVisible(false);
         try {
-            Boards b = server.addBoard(new Boards(boardName.getText(), null));
+            Boards b = server.addBoard(new Boards(boardName.getText(), null, null));
             boardName.setText("");
             server.addBoardToUser(b);
             mainCtrl.closeSecondaryStage();

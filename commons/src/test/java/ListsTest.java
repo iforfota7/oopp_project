@@ -18,8 +18,8 @@ class ListsTest {
     @BeforeEach
     void setUp() {
 
-        board1 = new Boards("Board1", new ArrayList<>());
-        board2 = new Boards("Board2", new ArrayList<>());
+        board1 = new Boards("Board1", new ArrayList<>(), new ArrayList<>());
+        board2 = new Boards("Board2", new ArrayList<>(), new ArrayList<>());
 
         list1 = new Lists("List 1", 1, board1);
         list11 = new Lists("List 1", 1, board1);

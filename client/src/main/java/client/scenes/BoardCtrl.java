@@ -32,6 +32,9 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final CardDetailsCtrl cardDetailsCtrl;
+
+    @FXML
+    private Button tags;
     @FXML
     private AnchorPane rootContainer;
     @FXML
@@ -97,6 +100,15 @@ public class BoardCtrl {
                 @Override
                 public void run() {
                     initialize(board);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(b);
                 }
             });
         });
@@ -444,7 +456,7 @@ public class BoardCtrl {
      * @param position the position of the list
      */
     public void addListToBoard(String text, int position){
-        Boards boards = new Boards(board.name, null);
+        Boards boards = new Boards(board.name, null, null);
         boards.id = board.id;
         Lists list = new Lists(text, position, boards);
 
@@ -622,6 +634,27 @@ public class BoardCtrl {
     }
 
     /**
+     * Creates a new hyperlink for a card
+     * @return the created hyperlink
+     */
+    public Hyperlink newHyperlink(){
+        Hyperlink card = new Hyperlink();
+
+        // set positioning, sizing, text alignment, and background color of the hyperlink
+        card.setLayoutX(41);
+        card.setLayoutY(1);
+        card.setPrefSize(95, 23);
+        card.setAlignment(Pos.CENTER);
+        card.setStyle("-fx-background-color:  #E6E6FA");
+        card.setOnDragDetected(drag::dragDetected);
+
+        // set the card to execute cardDetail on action
+//        card.setOnAction(this::cardDetail);
+        card.setOnMouseClicked(this::cardDetail);
+        return card;
+    }
+
+    /**
      * Create a new delete card button for a card
      * @return a new button
      */
@@ -675,4 +708,11 @@ public class BoardCtrl {
         mainCtrl.showBoardOverview();
     }
 
+    /**
+     * Opens the primary tag scene
+     *
+     */
+    public void openTag(){
+        mainCtrl.showTagControl(board);
+    }
 }
