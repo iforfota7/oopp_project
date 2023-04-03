@@ -102,7 +102,7 @@ public class BoardController {
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Void> removeBoard(@RequestBody Boards boards) {
         String boardName = boards.name;
-        System.out.println(boardName);
+
         if (boardName == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -113,6 +113,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
+        repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
         return ResponseEntity.ok().build();
