@@ -108,7 +108,6 @@ public class BoardOverviewCtrl{
         int positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
-
         StackPane newBoard = createNewBoard(b);
 
         newBoard.setAccessibleRole(AccessibleRole.TEXT);

@@ -61,6 +61,7 @@ public class CardDetailsCtrl {
             serverURLS.add(server.getServer());
             websocketConfig();
         }
+        warning.setVisible(false);
     }
 
     /**
