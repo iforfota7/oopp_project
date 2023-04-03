@@ -156,7 +156,7 @@ public class CardDetailsCtrl {
 //        mainCtrl.closeSecondaryStage();
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
-        mainCtrl.showBoard(board);
+        //mainCtrl.showBoard(board);
     }
 
     /**
@@ -327,6 +327,13 @@ public class CardDetailsCtrl {
         if(inputsOpen == 1){
             taskList.getChildren().add(inputSubtask);
         }
+        else {
+            subtaskName.setStyle("-fx-background-color: #ffcccc; " +
+                    "-fx-border-color: #b30000; -fx-background-radius: 4; " +
+                    "-fx-border-radius: 4;");
+            warningSubtask.setText("Please complete this action before \n attempting a new one!");
+            warningSubtask.setVisible(true);
+        }
     }
 
     /**
@@ -342,6 +349,7 @@ public class CardDetailsCtrl {
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
                     "-fx-border-color: #b30000; -fx-background-radius: 4; " +
                     "-fx-border-radius: 4;");
+            warningSubtask.setText("Name cannot be blank!");
             warningSubtask.setVisible(true);
         }
         else {
@@ -415,6 +423,13 @@ public class CardDetailsCtrl {
             taskList.getChildren().set(indexInVbox, inputSubtask);
 
             openedCard.subtasks.remove(toRename);
+        }
+        else {
+            subtaskName.setStyle("-fx-background-color: #ffcccc; " +
+                    "-fx-border-color: #b30000; -fx-background-radius: 4; " +
+                    "-fx-border-radius: 4;");
+            warningSubtask.setText("Please complete this action before \n attempting a new one!");
+            warningSubtask.setVisible(true);
         }
 
     }

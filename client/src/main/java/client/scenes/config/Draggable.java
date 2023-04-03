@@ -12,6 +12,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+
 public class Draggable {
 
     private ServerUtils server;
@@ -73,7 +74,9 @@ public class Draggable {
                     new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
-        removeVisualCue((Node)event.getSource());
+        if(event.getSource() instanceof  VBox) {
+            removeVisualCue((Node)event.getSource());
+        }
 
         event.consume();
     }
@@ -266,5 +269,7 @@ public class Draggable {
 
         event.setDropCompleted(true);
         event.consume();
+
     }
+
 }

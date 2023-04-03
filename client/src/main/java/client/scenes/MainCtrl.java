@@ -163,11 +163,13 @@ public class MainCtrl {
     }
 
     /**
-     *
      * @param tagDetails tagDetailsCtrl parent pair for tagDetails scene
-     * @param addTagCtrl newTagCtrl parent pair for newTag
+     * @param addTagCtrl newTagCtrl parent pair for addTag
+     * @param tagControl tagControl parent pair for TagsController
      */
-    public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails, Pair<AddTagCtrl, Parent> addTagCtrl, Pair<TagsCtrl, Parent> tagControl){
+    public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails,
+                               Pair<AddTagCtrl, Parent> addTagCtrl,
+                               Pair<TagsCtrl, Parent> tagControl){
         this.tagDetails = new Scene(tagDetails.getValue());
         this.tagDetailsCtrl = tagDetails.getKey();
 

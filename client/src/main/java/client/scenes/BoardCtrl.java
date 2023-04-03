@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.Boards;
 import commons.Lists;
 import commons.Cards;
+import commons.Subtask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -82,10 +83,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        addNewList(l);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -94,7 +92,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                        initialize(board);
+                    initialize(board);
                 }
             });
         });
@@ -103,11 +101,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        VBox list = (VBox)rootContainer.lookup("#list"+l.id);
-                        firstRow.getChildren().removeAll(list);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -130,13 +124,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
-                        ((VBox) l.getChildren().get(0)).getChildren().remove(card);
-                        refreshData();
-                    }
-
+                    initialize(board);
                 }
             });
         });
@@ -145,12 +133,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        ((Label)((HBox)((VBox)rootContainer.lookup("#card"+c.id))
-                                .getChildren().get(0))
-                                .getChildren().get(0)).setText(c.title);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -159,11 +142,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        addNewCard((VBox) l.getChildren().get(0), c);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -308,11 +287,11 @@ public class BoardCtrl {
      * @param l list to be added
      */
     public void addNewList(Lists l) {
-       VBox newList = createNewList(l);
-       mainCtrl.addNewList(newList, firstRow);
-       for(int i = 0; i<l.cards.size(); i++){
-           Cards c = l.cards.get(i);
-           addNewCard((VBox)newList.getChildren().get(0), c);
+        VBox newList = createNewList(l);
+        mainCtrl.addNewList(newList, firstRow);
+        for(int i = 0; i<l.cards.size(); i++){
+            Cards c = l.cards.get(i);
+            addNewCard((VBox)newList.getChildren().get(0), c);
         }
     }
 
@@ -412,7 +391,7 @@ public class BoardCtrl {
                 "-fx-font-size: 10px;");
         addButton.setPrefWidth(24);
         addButton.setPrefHeight(23);
-       addButton.setOnAction(this::openAddNewCard);
+        addButton.setOnAction(this::openAddNewCard);
         return addButton;
     }
 
@@ -486,10 +465,13 @@ public class BoardCtrl {
     @FXML
     void cardDetail(MouseEvent event) {
         if(event.getClickCount() == 2) {
-            VBox currentCard = (VBox) ((AnchorPane)(
+            AnchorPane currentCard = (AnchorPane) event.getSource();
+            Cards openedCard = (Cards) ((AnchorPane)currentCard.getParent())
+                    .getChildren().get(1).getProperties().get("card");
+            /*VBox currentCard = (VBox) ((AnchorPane)(
                     (AnchorPane)event.getSource()).getParent()).getChildren().get(1);
-            Cards openedCard = (Cards) currentCard.getProperties().get("card");
-            cardDetailsCtrl.setBoard(board);
+            Cards openedCard = (Cards) currentCard.getProperties().get("card");*/
+            //cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
             mainCtrl.showCardDetail();
         }
@@ -539,43 +521,33 @@ public class BoardCtrl {
      * @param c the card to be added
      */
     public void addNewCard(VBox anchor, Cards c){
+
         // create a new anchor pane for the card
         AnchorPane newCard = newAnchorPane();
 
         // create the button to delete a card and the card's body
         Button deleteCard = newDeleteCardButton();
+
         VBox card = newCardBody(c);
         AnchorPane over = newAnchorPane();
         over.setPrefWidth(114.4);
         over.setPrefHeight(34.4);
         over.setLayoutX(30);
         over.setOnDragDetected(drag::dragDetected);
+        over.setOnDragExited(drag::dragExited);
+        over.setOnDragEntered(drag::dragEntered);
+        over.setOnDragDropped(drag::dragDropped);
         over.setOnMouseClicked(this::cardDetail);
 
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
-        card.setOnDragExited(drag::dragExited);
-        card.setOnDragEntered(drag::dragEntered);
-        card.setOnDragDropped(drag::dragDropped);
-        card.setOnDragOver(drag::dragOver);
-        card.setOnMouseClicked(this::cardDetail);
 
+        // add text and the delete button for the card
         newCard.getChildren().addAll(deleteCard, card, over);
-        //newCard.setOnDragDetected(drag::dragDetected);
-        /*/ append the card to the list
-        Hyperlink currentCard = (Hyperlink) newCard.getChildren().get(0);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
-        currentCard.setOnDragExited(drag::dragExited);
-        currentCard.setOnDragEntered(drag::dragEntered);
-        currentCard.setOnDragDropped(drag::dragDropped);
-        currentCard.setOnDragOver(drag::dragOver);
-        currentCard.setText(c.title);*/
 
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
-
-        // show card detail scene to be able to set details of card
-
     }
 
     /**
@@ -601,8 +573,6 @@ public class BoardCtrl {
         cardBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
         cardBody.setEffect(innerShadow);
 
-        cardBody.setOnDragDetected(drag::dragDetected);
-
         HBox cardOverviewInfo = newCardOverviewBody(c);
         HBox cardTags = newCardTagsBody();
 
@@ -625,15 +595,12 @@ public class BoardCtrl {
         cardOverviewBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
 
         Label cardTitle = new Label(c.title);
-        VBox cardDetailsOverview = newCardDetailsOverview();
+        VBox cardDetailsOverview = newCardDetailsOverview(c);
 
         cardTitle.setPrefWidth(54.4);
         cardTitle.setPrefHeight(25.6);
         cardTitle.setPadding(new Insets(0, 0, -2, 10));
         cardTitle.setStyle("-fx-font-size: 11;");
-
-        //cardTitle.setOnDragDetected(drag::dragDetected);
-        cardDetailsOverview.setOnDragDetected(drag::dragDetected);
 
         cardOverviewBody.getChildren().addAll(cardTitle, cardDetailsOverview);
         return cardOverviewBody;
@@ -643,15 +610,30 @@ public class BoardCtrl {
      * Creates the part of the body of a card where are displayed the process
      * regarding the number of subtasks and whether the card also has a
      * description or not
+     *
+     * @param card Object containing information about the card
      * @return the 'details' part of the body of the given card
      */
-    public VBox newCardDetailsOverview(){
+    public VBox newCardDetailsOverview(Cards card){
         VBox cardDetailsOverview = new VBox();
         cardDetailsOverview.setPrefWidth(61);
         cardDetailsOverview.setPrefHeight(25.6);
 
-        Label subtasksCount = new Label("0/0 subtasks");
-        Label descriptionExistence = new Label("Description: no");
+        String subtasksLabelText = "no subtasks";
+        if(card.subtasks != null && card.subtasks.size() > 0) {
+            int total = card.subtasks.size();
+            int done = 0;
+            for(Subtask subtask : card.subtasks)
+                if(subtask.checked)
+                    done++;
+            subtasksLabelText = done + "/" + total + " subtasks";
+        }
+        Label subtasksCount = new Label(subtasksLabelText);
+
+        String descriptionLabelText = "Description: no";
+        if(!card.description.equals(""))
+            descriptionLabelText = "Description: yes";
+        Label descriptionExistence = new Label(descriptionLabelText);
 
         subtasksCount.setStyle("-fx-font-size: 7;");
         subtasksCount.setAlignment(Pos.CENTER_RIGHT);
@@ -664,9 +646,6 @@ public class BoardCtrl {
         descriptionExistence.setPrefWidth(61);
         descriptionExistence.setPrefHeight(13);
         descriptionExistence.setPadding(new Insets(-1, 10, 1, 0));
-
-        subtasksCount.setOnDragDetected(drag::dragDetected);
-        descriptionExistence.setOnDragDetected(drag::dragDetected);
 
         cardDetailsOverview.getChildren().addAll(subtasksCount, descriptionExistence);
         return cardDetailsOverview;
@@ -699,27 +678,6 @@ public class BoardCtrl {
         anchor.setOnDragDetected(drag::dragDetected);
 
         return anchor;
-    }
-
-    /**
-     * Creates a new hyperlink for a card
-     * @return the created hyperlink
-     */
-    public Hyperlink newHyperlink(){
-        Hyperlink card = new Hyperlink();
-
-        // set positioning, sizing, text alignment, and background color of the hyperlink
-        card.setLayoutX(41);
-        card.setLayoutY(1);
-        card.setPrefSize(95, 23);
-        card.setAlignment(Pos.CENTER);
-        card.setStyle("-fx-background-color:  #E6E6FA");
-        card.setOnDragDetected(drag::dragDetected);
-
-        // set the card to execute cardDetail on action
-//        card.setOnAction(this::cardDetail);
-        card.setOnMouseClicked(this::cardDetail);
-        return card;
     }
 
     /**
