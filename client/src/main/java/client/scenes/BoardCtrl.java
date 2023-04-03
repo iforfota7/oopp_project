@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
@@ -41,11 +42,12 @@ public class BoardCtrl {
 
     private VBox currentList;
 
-    private Cards currentTotalCard;
+    private Cards currentCard;
 
     private List<Lists> lists;
 
     private final Draggable drag;
+    private List<String> serverURLS;
 
 
     /**
@@ -57,6 +59,12 @@ public class BoardCtrl {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            webSocketLists();
+            webSocketCards();
+        }
         refresh();
     }
 
@@ -68,10 +76,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        addNewList(l);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -80,7 +85,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                        initialize(board);
+                    initialize(board);
                 }
             });
         });
@@ -89,11 +94,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(l.board.name.equals(boardName.getText())) {
-                        VBox list = (VBox)rootContainer.lookup("#list"+l.id);
-                        firstRow.getChildren().removeAll(list);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -107,13 +108,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
-                        ((VBox) l.getChildren().get(0)).getChildren().remove(card);
-                        refreshData();
-                    }
-
+                    initialize(board);
                 }
             });
         });
@@ -122,11 +117,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
-                                getChildren().get(0)).setText(c.title);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -135,11 +126,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        addNewCard((VBox) l.getChildren().get(0), c);
-                        refreshData();
-                    }
+                    initialize(board);
                 }
             });
         });
@@ -192,6 +179,7 @@ public class BoardCtrl {
         int j = 0;
         for(Node i : firstRow.getChildren()){
             Lists list = (Lists) i.getProperties().get("list");
+
             if(list!=null){
                 i.getProperties().put("list", l.get(j));
                 refreshCards((VBox) ((VBox) i).getChildren().get(0), l.get(j).cards);
@@ -216,8 +204,7 @@ public class BoardCtrl {
         this.drag = new Draggable(this.server);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
-        webSocketLists();
-        webSocketCards();
+        serverURLS = new ArrayList<>();
     }
 
     /**
@@ -430,36 +417,46 @@ public class BoardCtrl {
     public void deleteCard(ActionEvent event) {
         Button deleteCard = (Button) event.getTarget();
         Cards c = (Cards) deleteCard.getParent().getProperties().get("card");
-        currentTotalCard = c;
+        currentCard = c;
         mainCtrl.showDeleteCard();
     }
 
+    /**
+     * Method tha deletes the card from the database and closes the secondary scene
+     */
     void deleteCard() {
-        server.removeCard(currentTotalCard);
+        server.removeCard(currentCard);
         mainCtrl.closeSecondaryStage();
     }
+
+    /**
+     * Method that cancels the deletion and closes the secondary scene
+     */
     void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
+    /**
+     * Method that shows the help scene
+     */
     public void showHelpScene(){
         mainCtrl.showHelpScene();
     }
 
     /**
-     * open the Card Detail scene and modify all information about the card, including its name.....
-     * In order to prevent it from opening while dragging,
-     * the code here sets a time delay between pressing and releasing the left mouse button.
-     * If the time delay is greater than a certain value,
-     * the click option will not be triggered, so the cardDetail won't open during dragging.
+     * Opens the Card Detail scene and modify all information about the card
+     * Event is triggered by double-clicking on a card
      *
-     * @param event a button (Hyperlink)
+     * @param event Object containing information about the mouse event
      */
     @FXML
-    void cardDetail(ActionEvent event) {
-        Hyperlink currentCard = (Hyperlink) event.getTarget();
-        cardDetailsCtrl.setOpenedCard((Cards) currentCard.getParent().getProperties().get("card"));
-        mainCtrl.showCardDetail();
+    void cardDetail(MouseEvent event) {
+        if(event.getClickCount() == 2) {
+            Hyperlink currentCard = (Hyperlink) event.getSource();
+            Cards openedCard = (Cards) currentCard.getParent().getProperties().get("card");
+            cardDetailsCtrl.setOpenedCard(openedCard);
+            mainCtrl.showCardDetail();
+        }
     }
 
     /**
@@ -563,7 +560,8 @@ public class BoardCtrl {
         card.setOnDragDetected(drag::dragDetected);
 
         // set the card to execute cardDetail on action
-        card.setOnAction(this::cardDetail);
+//        card.setOnAction(this::cardDetail);
+        card.setOnMouseClicked(this::cardDetail);
         return card;
     }
 
@@ -606,9 +604,18 @@ public class BoardCtrl {
     }
 
     /**
+     * Method that adds board to users visited boards
+     * @param board the board to be added
+     */
+    public void addBoardToUser(Boards board){
+        server.addBoardToUser(board);
+    }
+
+    /**
      * Exits the specific board to show board overview
      */
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+    
 }

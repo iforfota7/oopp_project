@@ -50,6 +50,25 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     * Rename method that saves a board with a new name in the database
+     * @param board the board with the new name
+     * @return the response entity
+     */
+    @Transactional
+    @PostMapping(path={"/rename", "/rename/"})
+    public ResponseEntity<Boards> renameBoard(@RequestBody Boards board){
+        if(board == null || isNullOrEmpty(board.name))
+            return ResponseEntity.badRequest().build();
+
+        if(!repo.findByName(board.name).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        Boards saved = repo.save(board);
+
+        return ResponseEntity.ok(saved);
+    }
+
 
 
     /**
@@ -83,7 +102,7 @@ public class BoardController {
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Void> removeBoard(@RequestBody Boards boards) {
         String boardName = boards.name;
-        System.out.println(boardName);
+
         if (boardName == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -94,6 +113,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
+        repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
         return ResponseEntity.ok().build();
