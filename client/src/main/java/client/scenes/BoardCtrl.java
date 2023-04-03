@@ -31,6 +31,9 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final CardDetailsCtrl cardDetailsCtrl;
+
+    @FXML
+    private Button tags;
     @FXML
     private AnchorPane rootContainer;
     @FXML
@@ -134,9 +137,8 @@ public class BoardCtrl {
                 @Override
                 public void run() {
                     if(c.list.board.name.equals(boardName.getText())) {
-                        ((Label)((HBox)((VBox)((AnchorPane)
-                                rootContainer.lookup("#card"+c.id)).
-                                getChildren().get(1)).getChildren().get(0))
+                        ((Label)((HBox)((VBox)rootContainer.lookup("#card"+c.id))
+                                .getChildren().get(0))
                                 .getChildren().get(0)).setText(c.title);
                         refreshData();
                     }
@@ -475,7 +477,8 @@ public class BoardCtrl {
     @FXML
     void cardDetail(MouseEvent event) {
         if(event.getClickCount() == 2) {
-            VBox currentCard = (VBox) event.getSource();
+            VBox currentCard = (VBox) ((AnchorPane)(
+                    (AnchorPane)event.getSource()).getParent()).getChildren().get(1);
             Cards openedCard = (Cards) currentCard.getProperties().get("card");
             cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
@@ -702,7 +705,6 @@ public class BoardCtrl {
         card.setPrefSize(95, 23);
         card.setAlignment(Pos.CENTER);
         card.setStyle("-fx-background-color:  #E6E6FA");
-
         card.setOnDragDetected(drag::dragDetected);
 
         // set the card to execute cardDetail on action
@@ -765,4 +767,10 @@ public class BoardCtrl {
         mainCtrl.showBoardOverview();
     }
 
+    /**
+     * Opens the scene which shows the tags the current board has
+     */
+    public void openTag(){
+        mainCtrl.showTagControl(board);
+    }
 }

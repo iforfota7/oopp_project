@@ -216,6 +216,11 @@ public class ServerUtils {
                 .get(new GenericType<List<Lists>>() {});
     }
 
+    public List<Tags> getTagsByBoard(long boardID){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/all/" + boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).get(new GenericType<List<Tags>>(){});
+    }
+
     /**
      * Method that retrieves all the boards
      * @return a list of all boards
@@ -375,6 +380,21 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    public Tags addTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/").request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON).post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
+    }
+
+    public Tags renameTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
+    }
+
+    public Tags removeTag(Tags tag){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).path("api/tags/remove").
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).post(Entity.entity(tag, APPLICATION_JSON), Tags.class);
     }
 
     /**

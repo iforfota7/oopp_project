@@ -117,6 +117,7 @@ public class CardDetailsCtrl {
     @FXML
     void save() {
         warning.setVisible(false);
+        rename = false;
 
         if(cardTitleInput.getText().isBlank()) {
             warning.setVisible(true);
@@ -346,20 +347,33 @@ public class CardDetailsCtrl {
         }
         else {
             int position;
+            boolean checked = false;
+
+            // when renaming a subtask, the actual subtask it deleted and a new one,
+            // with the same details as it, but with the new name is created
+            // therefore, the position and checked value of the subtask can be different from
+            // the initial ones when a subtask is just created
             if(rename){
                 position = toRename.position;
+                checked = toRename.checked;
             }
             else {
                 position = taskList.getChildren().size() - 1;
             }
             Subtask newSubtask = new Subtask(subtaskName.getText(),
-                    false, openedCard, position);
+                    checked, openedCard, position);
             subtaskName.setStyle("");
             warningSubtask.setVisible(false);
             inputsOpen--;
             subtaskName.setText("");
 
-            openedCard.subtasks.add(newSubtask);
+            if(rename){
+                openedCard.subtasks.add(position, newSubtask);
+                rename = false;
+            }
+            else {
+                openedCard.subtasks.add(newSubtask);
+            }
             refreshOpenedCard();
         }
 
@@ -379,20 +393,27 @@ public class CardDetailsCtrl {
         refreshOpenedCard();
     }
 
+    /**
+     * Renames a subtask from the list,
+     * A text field for inputting the new name is shown instead of the subtask
+     * Renaming is done by deleting the actual subtask and creating
+     * another one, with the same details, but with the different titles
+     * @param event Object containing information about the action event
+     */
     private void renameSubtask(ActionEvent event) {
         MenuItem menuItem = (MenuItem) event.getSource();
         ContextMenu popup = menuItem.getParentPopup();
         HBox currentSubtask = (HBox) popup.getOwnerNode().getParent();
 
-        int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
+        // will inform the createSubtask method that the new subtask is actually a renamed one
         rename = true;
         toRename = (Subtask) currentSubtask.getProperties().get("subtask");
         subtaskName.setText(toRename.title);
+
+        int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
         taskList.getChildren().set(indexInVbox, inputSubtask);
 
-       /* Subtask subtask = (Subtask) toRename.getProperties().get("subtask");
-        int index = openedCard.subtasks.indexOf(subtask);
-        openedCard.subtasks.get(index).title =*/
+        openedCard.subtasks.remove(toRename);
     }
 
     /**
