@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
-import commons.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -88,8 +87,7 @@ public class BoardOverviewCtrl{
      * to the Board Overview scene
      */
     public void disconnect() {
-        User s = server.updateUser(selectServerCtrl.getCurrentUser());
-        System.out.println(s);
+        server.updateUser(selectServerCtrl.getCurrentUser());
         mainCtrl.showSelectServer();
     }
 

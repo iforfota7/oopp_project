@@ -76,12 +76,6 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    /*
-                    if(l.board.name.equals(boardName.getText())) {
-                        addNewList(l);
-                        refreshData();
-                    }
-                    */
                     initialize(board);
                 }
             });
@@ -91,7 +85,6 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                        //initialize(board);
                     initialize(board);
                 }
             });
@@ -101,13 +94,6 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    /*
-                    if(l.board.name.equals(boardName.getText())) {
-                        VBox list = (VBox)rootContainer.lookup("#list"+l.id);
-                        firstRow.getChildren().removeAll(list);
-                        refreshData();
-                    }
-                    */
                     initialize(board);
                 }
             });
@@ -122,14 +108,6 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    /*
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        AnchorPane card = (AnchorPane) rootContainer.lookup("#card"+c.id);
-                        ((VBox) l.getChildren().get(0)).getChildren().remove(card);
-                        refreshData();
-                    }
-                     */
                     initialize(board);
                 }
             });
@@ -139,13 +117,6 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    /*
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        ((Hyperlink)((AnchorPane) rootContainer.lookup("#card"+c.id)).
-                                getChildren().get(0)).setText(c.title);
-                        refreshData();
-                    }
-                     */
                     initialize(board);
                 }
             });
@@ -155,13 +126,6 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    /*
-                    if(c.list.board.name.equals(boardName.getText())) {
-                        VBox l = (VBox) rootContainer.lookup("#list"+c.list.id);
-                        addNewCard((VBox) l.getChildren().get(0), c);
-                        refreshData();
-                    }
-                     */
                     initialize(board);
                 }
             });
