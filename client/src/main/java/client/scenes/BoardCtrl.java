@@ -664,7 +664,7 @@ public class BoardCtrl {
      * Method that adds board to users visited boards
      * @param board the board to be added
      */
-    public void addBoardToList(Boards board){
+    public void addBoardToUser(Boards board){
         server.addBoardToUser(board);
     }
 

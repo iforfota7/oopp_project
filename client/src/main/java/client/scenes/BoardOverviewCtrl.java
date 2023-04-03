@@ -125,7 +125,6 @@ public class BoardOverviewCtrl{
     public StackPane createNewBoard(Boards b) {
         Label newBoard = new Label(b.name);
 
-
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
@@ -140,7 +139,8 @@ public class BoardOverviewCtrl{
         StackPane stackPane = new StackPane();
         stackPane.getChildren().add(newBoard);
         stackPane.getProperties().put("board", b);
-        Button removeBoardButton = new Button("X");
+
+        Button removeBoardButton = new Button("delete");
         removeBoardButton.setStyle("-fx-background-color: #f08080;" +
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
@@ -149,6 +149,15 @@ public class BoardOverviewCtrl{
         stackPane.getChildren().add(removeBoardButton);
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
 
+        Button hideBoardButton = new Button("hide");
+        hideBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        hideBoardButton.setOnMouseClicked(this::hideBoard);
+        hideBoardButton.setUserData(b.name);
+        hideBoardButton.setVisible(!adminLock);
+        stackPane.getChildren().add(hideBoardButton);
+        StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
+
         Button renameBoardButton = new Button("rename");
         renameBoardButton.setStyle("-fx-background-color: #f08080;" +
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
@@ -156,17 +165,30 @@ public class BoardOverviewCtrl{
         renameBoardButton.setUserData(b.name);
         stackPane.getChildren().add(renameBoardButton);
         StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
+
         return stackPane;
     }
     /**
-     *The functionality of the delete current board button will be displayed
+     * The functionality of the delete current board button will be displayed
      * after obtaining admin privileges.
-     *  It returns to the board overview interface and deletes the current board.
+     * It returns to the board overview interface and deletes the current board.
+     * @param mouseEvent mouse click on button
      */
     private void removeBoard(MouseEvent mouseEvent) {
         Button removeButton = (Button) mouseEvent.getSource();
         Boards board = (Boards) removeButton.getParent().getProperties().get("board");
         server.removeBoard(board);
+        refresh();
+    }
+
+    /**
+     * Causes board to be hidden from a user in their board overview
+     * @param mouseEvent mouse click on button
+     */
+    private void hideBoard(MouseEvent mouseEvent) {
+        Button removeButton = (Button) mouseEvent.getSource();
+        Boards board = (Boards) removeButton.getParent().getProperties().get("board");
+        server.hideBoardFromUser(board);
         refresh();
     }
 
