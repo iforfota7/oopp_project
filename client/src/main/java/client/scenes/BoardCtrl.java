@@ -108,6 +108,15 @@ public class BoardCtrl {
                 }
             });
         });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(b);
+                }
+            });
+        });
     }
 
     /**
@@ -510,7 +519,6 @@ public class BoardCtrl {
      * @param position the position of the list
      */
     public void addListToBoard(String text, int position){
-        // the following two lines causes a stack overflow
         Lists list = new Lists(text, position, board);
 
         try {
@@ -631,6 +639,11 @@ public class BoardCtrl {
     public void exitBoard() {
         mainCtrl.showBoardOverview();
     }
+
+    /**
+     * Opens the primary tag scene
+     *
+     */
     public void openTag(){
         mainCtrl.showTagControl(board);
     }

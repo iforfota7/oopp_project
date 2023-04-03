@@ -97,8 +97,8 @@ public class Main extends Application {
         var addTag = FXML.load(NewTagCtrl.class, "client", "scenes", "addTag.fxml");
 
         mainCtrl.initializeAdmin(confirmAdmin);
-        mainCtrl.initializeTags(tagsControl);
-        mainCtrl.initializeTags(tagDetails, addTag);
+//        mainCtrl.initializeTags(tagsControl);
+        mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
 
     }
 }

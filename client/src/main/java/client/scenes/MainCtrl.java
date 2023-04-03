@@ -29,7 +29,8 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage, thirdStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, tagControl, newTag, tagDetails,  confirmUsername, boardOverview, addBoard, renameBoard;
+    private Scene cardDetails, newCard, tagControl, newTag;
+    private Scene tagDetails,  confirmUsername, boardOverview, addBoard, renameBoard;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
     private Scene confirmAdmin, help;
 
@@ -161,11 +162,22 @@ public class MainCtrl {
     }
 
 
-    public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails, Pair<NewTagCtrl, Parent> newTagCtrl){
+    /**
+     * Method for initializing the scenes and controllers for tags
+     *
+     * @param tagDetails Pair of controller and parent for tag details
+     * @param newTagCtrl Pair of controller and parent for new tag scene
+     * @param tagControl Pair of controller and parent for the primary tag scene
+     */
+    public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails,
+                               Pair<NewTagCtrl, Parent> newTagCtrl,
+                               Pair<TagsCtrl, Parent> tagControl){
         this.tagDetails = new Scene(tagDetails.getValue());
         this.tagDetailsCtrl = tagDetails.getKey();
         this.newTag = new Scene(newTagCtrl.getValue());
         this.newTagCtrl = newTagCtrl.getKey();
+        this.tagControl = new Scene(tagControl.getValue());
+        this.tagsCtrl = tagControl.getKey();
     }
 
     /**
@@ -185,11 +197,12 @@ public class MainCtrl {
         primaryStage.setScene(selectServer);
     }
 
-    public void initializeTags(Pair<TagsCtrl, Parent> tagControl){
-        this.tagControl = new Scene(tagControl.getValue());
-        this.tagsCtrl = tagControl.getKey();
 
-    }
+//    public void initializeTags(Pair<TagsCtrl, Parent> tagControl){
+//        this.tagControl = new Scene(tagControl.getValue());
+//        this.tagsCtrl = tagControl.getKey();
+//
+//    }
 
     /**
      * Show board scene
@@ -286,12 +299,19 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
-    public void showTagDetail(Tags t){
+    /**
+     * Shows the tag details scene
+     *
+     * @param t The Tags object for which we show the scene
+     * @param board The board object which contains the tag
+     */
+
+    public void showTagDetail(Tags t, Boards board){
        thirdStage = new Stage();
         thirdStage.setScene(tagDetails);
         thirdStage.setTitle("Tag Details");
         thirdStage.show();
-        tagDetailsCtrl.initialize(t);
+        tagDetailsCtrl.initialize(t, board);
     }
 
     /**
@@ -305,6 +325,11 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Opens the scene for adding a new tag
+     *
+     * @param board The board object inside which we add a tag
+     */
     public void showAddTag(Boards board){
         thirdStage = new Stage();
         thirdStage.setScene(newTag);
@@ -313,6 +338,11 @@ public class MainCtrl {
         newTagCtrl.initialize(board);
     }
 
+    /**
+     * Opens the primary scene for viewing tags
+     *
+     * @param b The board object for which we open this scene
+     */
     public void showTagControl(Boards b){
         secondaryStage = new Stage();
         secondaryStage.setScene(tagControl);
@@ -322,6 +352,10 @@ public class MainCtrl {
     }
 
 
+    /**
+     * Closes the create tag scene
+     *
+     */
     public void closeNewTag(){thirdStage.close();}
 
 
@@ -427,6 +461,11 @@ public class MainCtrl {
         secondaryStage.close();
     }
 
+
+    /**
+     * Closes the tags scene
+     *
+     */
     public void closeTags(){
         secondaryStage.close();
     }

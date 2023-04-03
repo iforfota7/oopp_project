@@ -22,7 +22,7 @@ public class NewTagCtrl {
 
     private final ServerUtils server;
 
-    private MainCtrl mainCtrl;
+    private final MainCtrl mainCtrl;
 
     private Boards board;
 
@@ -33,7 +33,6 @@ public class NewTagCtrl {
      */
     @Inject
     public NewTagCtrl(ServerUtils server, MainCtrl mainCtrl){
-
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
@@ -57,8 +56,10 @@ public class NewTagCtrl {
             warning.setVisible(true);
             return;
         }
-        System.out.println(board);
-        server.addTag(new Tags(cardTitleInput.getText(), colorTag(picker.getValue()), board));
+
+        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(picker.getValue()), board));
+        server.updateBoard(board);
+
         cardTitleInput.clear();
         this.mainCtrl.closeNewTag();
     }

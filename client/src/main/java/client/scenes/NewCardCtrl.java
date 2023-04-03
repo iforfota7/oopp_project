@@ -1,7 +1,6 @@
 package client.scenes;
 
 import com.google.inject.Inject;
-import commons.Boards;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;

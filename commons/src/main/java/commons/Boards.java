@@ -24,7 +24,7 @@ public class Boards {
     @OrderBy("positionInsideBoard ASC")
     public List<Lists> lists;
 
-    @OneToMany(mappedBy="board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Tags> tags;
 
     /**

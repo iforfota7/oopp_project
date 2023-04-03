@@ -21,7 +21,7 @@ public class SubtaskTest {
 
     @BeforeEach
     void setUp(){
-        Boards board = new Boards("Board1", new ArrayList<>());
+        Boards board = new Boards("Board1", new ArrayList<>(), new ArrayList<>());
         Lists list = new Lists("list 1", 1, board);
         card1 = new Cards("Card 1", 1, list,
                 "", new ArrayList<>());
