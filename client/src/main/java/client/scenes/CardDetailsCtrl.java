@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,6 +48,7 @@ public class CardDetailsCtrl {
     private Cards openedCard;
     private Boards board;
     private boolean sceneOpened = false;
+    private List<String> serverURLS;
 
     /**
      * Initializes the card details controller object
@@ -57,7 +59,20 @@ public class CardDetailsCtrl {
     public CardDetailsCtrl(ServerUtils server, MainCtrl mainCtrl){
         this.server = server;
         this.mainCtrl = mainCtrl;
-        websocketConfig();
+        serverURLS = new ArrayList<>();
+    }
+
+    /**
+     * Method used to initialize the websockets
+     * If websockets have already been initialized for this server address
+     * the method does nothing
+     *
+     */
+    public void init() {
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketConfig();
+        }
     }
 
     /**
@@ -102,7 +117,6 @@ public class CardDetailsCtrl {
     @FXML
     void save() {
         warning.setVisible(false);
-        //changes = false;
 
         if(cardTitleInput.getText().isBlank()) {
             warning.setVisible(true);

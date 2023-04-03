@@ -62,7 +62,7 @@ public class UserDetailsCtrl {
      * @param currentUser Current user element
      */
     public void setUser(User currentUser) {
-        this.adminLock.set(server.checkAdmin());
+        this.adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
         this.username.setText(currentUser.username);
         if(adminLock.get()){
             this.isAdmin.setText("Yes!");

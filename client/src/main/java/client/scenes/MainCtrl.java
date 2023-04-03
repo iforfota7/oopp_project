@@ -268,6 +268,7 @@ public class MainCtrl {
             cardDetailsCtrl.close();
         });
         secondaryStage.setTitle("Card Details");
+        cardDetailsCtrl.init();
         secondaryStage.show();
     }
 

@@ -66,12 +66,14 @@ public class SelectServerCtrl {
         }
         // transforms to complete url
         // if begins with colon assumed to be localhost address with specified port
-        if(address.startsWith("http://")) ServerUtils.setServer(address);
-        else if(address.startsWith(":")) ServerUtils.setServer("http://localhost" + address);
-        else ServerUtils.setServer("http://" + address);
+        if(address.startsWith("http://")) server.setServer(address);
+        else if(address.startsWith(":")) server.setServer("http://localhost" + address);
+        else server.setServer("http://" + address);
         // if you can connect to the specified server address
-        if(ServerUtils.checkServer()){
+        if(server.checkServer()){
             serverWarning.setVisible(false);
+            server.setWebsockets();
+
             // set the username in the frontend
             ServerUtils.setUsername(username);
             // create user from information

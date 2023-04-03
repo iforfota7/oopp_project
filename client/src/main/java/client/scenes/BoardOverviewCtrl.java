@@ -24,6 +24,8 @@ public class BoardOverviewCtrl{
     private List<Boards> boardsList;
     private Boards currentBoard;
     private int numberOfBoards = 0;
+    private List<String> serverURLS;
+
 
     /**
      * Constructor for the BoardOverviewCtrl
@@ -37,6 +39,7 @@ public class BoardOverviewCtrl{
                              SelectServerCtrl selectServerCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        serverURLS = new ArrayList<>();
         this.selectServerCtrl = selectServerCtrl;
     }
     @FXML
@@ -55,7 +58,7 @@ public class BoardOverviewCtrl{
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock = server.checkAdmin();
+        adminLock = server.checkAdmin(selectServerCtrl.getCurrentUser());
         return adminLock;
     }
 
@@ -216,7 +219,7 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boolean isAdmin = server.checkAdmin();
+        boolean isAdmin = server.checkAdmin(selectServerCtrl.getCurrentUser());
 
         if(isAdmin){
             boardsList = server.getBoards();

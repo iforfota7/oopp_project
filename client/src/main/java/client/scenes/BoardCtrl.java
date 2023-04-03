@@ -50,6 +50,7 @@ public class BoardCtrl {
     private List<Lists> lists;
 
     private final Draggable drag;
+    private List<String> serverURLS;
 
 
     /**
@@ -61,6 +62,12 @@ public class BoardCtrl {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            webSocketLists();
+            webSocketCards();
+        }
         refresh();
     }
 
@@ -222,8 +229,7 @@ public class BoardCtrl {
         this.drag = new Draggable(this.server);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
-        webSocketLists();
-        webSocketCards();
+        serverURLS = new ArrayList<>();
     }
 
     /**
@@ -532,6 +538,7 @@ public class BoardCtrl {
         over.setPrefHeight(34.4);
         over.setLayoutX(30);
         over.setOnDragDetected(drag::dragDetected);
+        over.setOnMouseClicked(this::cardDetail);
 
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
