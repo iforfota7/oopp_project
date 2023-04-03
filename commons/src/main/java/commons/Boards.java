@@ -29,12 +29,17 @@ public class Boards {
     public String listFtColor;
     public String cardBgColor;
     public String cardFtColor;
+
+    @OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Tags> tags;
+
     /**
      * Constructor method for a board
      * @param name the name of the board (acts as unique id)
      * @param lists a list of lists contained in the board
+     * @param tags a list of tags contained in the board
      */
-    public Boards(String name, List<Lists> lists){
+    public Boards(String name, List<Lists> lists, List<Tags> tags){
         this.name = name;
         this.lists = lists;
         this.boardBgColor = "#E6E6FA";
@@ -43,6 +48,7 @@ public class Boards {
         this.listFtColor = "#000000";
         this.cardBgColor = "#FFFFFF";
         this.cardFtColor = "#000000";
+        this.tags = tags;
     }
 
     /**
@@ -50,11 +56,6 @@ public class Boards {
      */
     @SuppressWarnings("unused")
     public Boards(){}
-
-
-
-
-
 
     /**
      * Equals method for boards class
@@ -81,14 +82,14 @@ public class Boards {
 
     /**
      * To string method for the board
-     * @return human readable format of board information
+     * @return human-readable format of board information
      */
     @Override
     public String toString() {
         return "Boards{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lists=" + lists +
+                ", lists=" + lists.toString() +
                 '}';
     }
 }

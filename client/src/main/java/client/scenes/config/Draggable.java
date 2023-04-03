@@ -6,7 +6,7 @@ import commons.Cards;
 import commons.Lists;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -32,10 +32,12 @@ public class Draggable {
      * @param mouseEvent Object containing information about the mouse event
      */
     public void dragDetected(MouseEvent mouseEvent) {
-        Hyperlink dragged = (Hyperlink) mouseEvent.getSource();
+        AnchorPane dragged = (AnchorPane) mouseEvent.getSource();
         Dragboard db = dragged.startDragAndDrop(TransferMode.ANY);
         ClipboardContent content = new ClipboardContent();
-        content.putString(dragged.getText());
+        Label cardTitle = (Label)((HBox)((VBox)((AnchorPane)dragged.getParent())
+                .getChildren().get(1)).getChildren().get(0)).getChildren().get(0);
+        content.putString(cardTitle.getText());
         db.setContent(content);
         mouseEvent.consume();
     }
@@ -47,10 +49,8 @@ public class Draggable {
      * @param event Object containing information about the drag event
      */
     public void dragEntered(DragEvent event){
-
-
-        if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
+        if(event.getGestureSource() != event.getSource() &&
+                ((AnchorPane) event.getGestureSource()).getParent() != event.getSource() &&
                 event.getSource() instanceof VBox){
 
             this.background = ((Region) event.getSource()).getBackground();
@@ -69,12 +69,14 @@ public class Draggable {
      */
     public void dragExited(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
+                ((AnchorPane)event.getGestureSource()).getParent()!=event.getSource() &&
                 event.getSource() instanceof VBox){
             ((Region) event.getSource()).setBackground(background);
         }
 
-        removeVisualCue((Node)event.getSource());
+        if(event.getSource() instanceof  VBox) {
+            removeVisualCue((Node)event.getSource());
+        }
 
         event.consume();
     }
@@ -225,14 +227,14 @@ public class Draggable {
      */
     public void dragOver(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource())
+                ((AnchorPane)event.getGestureSource())
                         .getParent()!=event.getSource()){
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
 
         // information about the dragged card
-        Cards sourceCard = (Cards) ((Node) event.getGestureSource())
-                .getParent().getProperties().get("card");
+        Cards sourceCard = (Cards) ((AnchorPane)((Node) event.getGestureSource())
+                .getParent()).getChildren().get(1).getProperties().get("card");
 
         // information about the node where the card has been dropped
         Node node = (Node)event.getSource();
@@ -253,8 +255,8 @@ public class Draggable {
      */
     public void dragDropped(DragEvent event){
         // information about the dragged card
-        Cards sourceCard = (Cards) ((Node) event.getGestureSource())
-                .getParent().getProperties().get("card");
+        Cards sourceCard = (Cards) ((AnchorPane)((Node) event.getGestureSource())
+                .getParent()).getChildren().get(1).getProperties().get("card");
 
         // information about the node where the card has been dropped
         Node node = (Node)event.getSource();
@@ -267,5 +269,7 @@ public class Draggable {
 
         event.setDropCompleted(true);
         event.consume();
+
     }
+
 }

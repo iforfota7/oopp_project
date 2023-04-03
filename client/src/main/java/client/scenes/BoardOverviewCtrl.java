@@ -2,8 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -24,7 +22,10 @@ public class BoardOverviewCtrl{
     private final ServerUtils server;
     private SelectServerCtrl selectServerCtrl;
     private List<Boards> boardsList;
+    private Boards currentBoard;
     private int numberOfBoards = 0;
+    private List<String> serverURLS;
+
 
     /**
      * Constructor for the BoardOverviewCtrl
@@ -38,6 +39,7 @@ public class BoardOverviewCtrl{
                              SelectServerCtrl selectServerCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        serverURLS = new ArrayList<>();
         this.selectServerCtrl = selectServerCtrl;
     }
     @FXML
@@ -49,15 +51,15 @@ public class BoardOverviewCtrl{
     private Label userLabel;
 
 
-    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
+    private boolean adminLock = false;
 
     /**
      * Sets lock for admin
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
-        return adminLock.get();
+        adminLock = server.checkAdmin(selectServerCtrl.getCurrentUser());
+        return adminLock;
     }
 
     /**
@@ -68,8 +70,6 @@ public class BoardOverviewCtrl{
         boardsList = new ArrayList<>();
         refresh();
     }
-
-
 
     /**
      * Go to a specific board when a board label has been clicked
@@ -127,7 +127,6 @@ public class BoardOverviewCtrl{
     public StackPane createNewBoard(Boards b) {
         Label newBoard = new Label(b.name);
 
-
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
@@ -142,20 +141,40 @@ public class BoardOverviewCtrl{
         StackPane stackPane = new StackPane();
         stackPane.getChildren().add(newBoard);
         stackPane.getProperties().put("board", b);
-        Button removeBoardButton = new Button("X");
+
+        Button removeBoardButton = new Button("delete");
         removeBoardButton.setStyle("-fx-background-color: #f08080;" +
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
         removeBoardButton.setUserData(b.name);
-        removeBoardButton.setVisible(adminLock.get());
+        removeBoardButton.setVisible(adminLock);
         stackPane.getChildren().add(removeBoardButton);
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
+
+        Button hideBoardButton = new Button("hide");
+        hideBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        hideBoardButton.setOnMouseClicked(this::hideBoard);
+        hideBoardButton.setUserData(b.name);
+        hideBoardButton.setVisible(!adminLock);
+        stackPane.getChildren().add(hideBoardButton);
+        StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
+
+
+        Button renameBoardButton = new Button("rename");
+        renameBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        renameBoardButton.setOnMouseClicked(this::showRenameBoard);
+        renameBoardButton.setUserData(b.name);
+        stackPane.getChildren().add(renameBoardButton);
+        StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
         return stackPane;
     }
     /**
-     *The functionality of the delete current board button will be displayed
+     * The functionality of the delete current board button will be displayed
      * after obtaining admin privileges.
-     *  It returns to the board overview interface and deletes the current board.
+     * It returns to the board overview interface and deletes the current board.
+     * @param mouseEvent mouse click on button
      */
     private void removeBoard(MouseEvent mouseEvent) {
         Button removeButton = (Button) mouseEvent.getSource();
@@ -165,12 +184,50 @@ public class BoardOverviewCtrl{
     }
 
     /**
+     * Causes board to be hidden from a user in their board overview
+     * @param mouseEvent mouse click on button
+     */
+    private void hideBoard(MouseEvent mouseEvent){
+        Button removeButton = (Button) mouseEvent.getSource();
+        Boards board = (Boards) removeButton.getParent().getProperties().get("board");
+        server.hideBoardFromUser(board);
+        refresh();
+    }
+
+    /**
+     * Method that shows the scene in which a board can be renamed
+     * @param mouseEvent the click on the rename button
+     */
+    private void showRenameBoard(MouseEvent mouseEvent){
+        Button renameButton = (Button) mouseEvent.getSource();
+        currentBoard = (Boards) renameButton.getParent().getProperties().get("board");
+        mainCtrl.showRenameBoard();
+    }
+
+    /**
+     * Getter method for the current board
+     * Used for rename method so that the board that was clicked on is saved
+     * @return the current board
+     */
+    public Boards getCurrentBoard(){
+        return currentBoard;
+    }
+
+    /**
      * Refreshes the Board Overview, by fetching the Boards
      * from the database
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boardsList = server.getBoards();
+        boolean isAdmin = server.checkAdmin(selectServerCtrl.getCurrentUser());
+
+        if(isAdmin){
+            boardsList = server.getBoards();
+        }
+        else{
+            boardsList = server.viewedBoards();
+        }
+
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
@@ -189,7 +246,7 @@ public class BoardOverviewCtrl{
      * Unveiled hidden delete buttons.
      */
     public void openAdminFeatures() {
-        adminLock.set(true);
+        adminLock = true;
         mainCtrl.closeSecondaryStage();
         adminLabel.setVisible(true);
         userLabel.setVisible(false);
@@ -202,5 +259,12 @@ public class BoardOverviewCtrl{
     public void closeAdminFeatures(){
         adminLabel.setVisible(false);
         userLabel.setVisible(true);
+    }
+
+    /**
+     * Method that shows the help scene
+     */
+    public void showHelpScene(){
+        mainCtrl.showHelpScene();
     }
 }
