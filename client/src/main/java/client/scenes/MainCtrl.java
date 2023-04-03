@@ -197,13 +197,6 @@ public class MainCtrl {
         primaryStage.setScene(selectServer);
     }
 
-
-//    public void initializeTags(Pair<TagsCtrl, Parent> tagControl){
-//        this.tagControl = new Scene(tagControl.getValue());
-//        this.tagsCtrl = tagControl.getKey();
-//
-//    }
-
     /**
      * Show board scene
      * @param b the board to be shown
@@ -308,7 +301,8 @@ public class MainCtrl {
      */
 
     public void showTagDetail(Tags t, Boards board){
-       thirdStage = new Stage();
+        if(thirdStage != null && thirdStage.isShowing()) return;
+        thirdStage = new Stage();
         thirdStage.setScene(tagDetails);
         thirdStage.setTitle("Tag Details");
         thirdStage.show();
@@ -332,6 +326,7 @@ public class MainCtrl {
      * @param board The board object inside which we add a tag
      */
     public void showAddTag(Boards board){
+        if(thirdStage != null && thirdStage.isShowing()) return;
         thirdStage = new Stage();
         thirdStage.setScene(newTag);
         thirdStage.setTitle("Add new Tag");
@@ -345,6 +340,7 @@ public class MainCtrl {
      * @param b The board object for which we open this scene
      */
     public void showTagControl(Boards b){
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
         secondaryStage = new Stage();
         secondaryStage.setScene(tagControl);
         secondaryStage.setTitle("Tags Control");
@@ -354,10 +350,10 @@ public class MainCtrl {
 
 
     /**
-     * Closes the create tag scene
+     * Closes an instance of a third stage
      *
      */
-    public void closeNewTag(){thirdStage.close();}
+    public void closeThirdStage(){thirdStage.close();}
 
 
     /**
@@ -462,15 +458,6 @@ public class MainCtrl {
      * This method closes any general secondary stage
      */
     public void closeSecondaryStage(){
-        secondaryStage.close();
-    }
-
-
-    /**
-     * Closes the tags scene
-     *
-     */
-    public void closeTags(){
         secondaryStage.close();
     }
 }

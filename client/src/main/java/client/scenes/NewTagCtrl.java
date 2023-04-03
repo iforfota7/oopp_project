@@ -61,7 +61,7 @@ public class NewTagCtrl {
         server.updateBoard(board);
 
         cardTitleInput.clear();
-        this.mainCtrl.closeNewTag();
+        this.mainCtrl.closeThirdStage();
     }
 
     /**

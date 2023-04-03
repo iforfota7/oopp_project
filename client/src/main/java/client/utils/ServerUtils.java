@@ -232,7 +232,6 @@ public class ServerUtils {
      * @return the updated board
      */
     public Boards updateBoard(Boards board) {
-        System.out.println(board.tags);
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/boards/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
