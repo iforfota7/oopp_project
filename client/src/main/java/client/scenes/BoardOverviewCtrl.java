@@ -2,8 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -50,15 +48,15 @@ public class BoardOverviewCtrl{
     private Label userLabel;
 
 
-    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
+    private boolean adminLock;
 
     /**
      * Sets lock for admin
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
-        return adminLock.get();
+        adminLock = server.checkAdmin();
+        return adminLock;
     }
 
     /**
@@ -69,7 +67,6 @@ public class BoardOverviewCtrl{
         boardsList = new ArrayList<>();
         refresh();
     }
-
 
 
     /**
@@ -90,6 +87,7 @@ public class BoardOverviewCtrl{
      * to the Board Overview scene
      */
     public void disconnect() {
+        server.updateUser(selectServerCtrl.getCurrentUser());
         mainCtrl.showSelectServer();
     }
 
@@ -148,7 +146,7 @@ public class BoardOverviewCtrl{
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
         removeBoardButton.setUserData(b.name);
-        removeBoardButton.setVisible(adminLock.get());
+        removeBoardButton.setVisible(adminLock);
         stackPane.getChildren().add(removeBoardButton);
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
 
@@ -198,7 +196,17 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boardsList = server.getBoards();
+        adminLock = server.checkAdmin();
+
+        if(adminLock){
+            boardsList = server.getBoards();
+        }
+        else{
+            boardsList = server.viewedBoards();
+            selectServerCtrl.setBoardsOfCurrentUser(boardsList);
+        }
+
+        selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
@@ -217,7 +225,7 @@ public class BoardOverviewCtrl{
      * Unveiled hidden delete buttons.
      */
     public void openAdminFeatures() {
-        adminLock.set(true);
+        adminLock = true;
         mainCtrl.closeSecondaryStage();
         adminLabel.setVisible(true);
         userLabel.setVisible(false);
