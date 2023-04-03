@@ -33,6 +33,6 @@ Agenda items:
 | 5 minutes | **Product Pitch**                                                                                                                                                |
 | | Does anyone have questions regarding it?                                                                                                                         |
 | | Is there something more to add to the script?                                                                                                                    |
-| | Discuss general planning for meeting and created the video                                                                                                       |
+| | Discuss general planning for meeting and the product pitch                                                                                                       |
 | 5 minutes | **Feedback and Question round** - Does anyone have anything to add before the meeting closes?<br/> - What went well and what do you think can still be improved? |
 | | Closure                                                                                                                                                          |
