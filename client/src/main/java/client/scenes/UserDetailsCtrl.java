@@ -58,10 +58,12 @@ public class UserDetailsCtrl {
 
     /**
      * Display different button prompts and button colors based on the logged-in user.
+     * Also displays the current server address
      * @param currentUser Current user element
      */
     public void setUser(User currentUser) {
         this.username.setText(currentUser.username);
+        this.serverAddress.setText(server.getServer());
         if(boardOverviewCtrl.getAdminLock()){
             this.isAdmin.setText("Yes!");
             adminLogin.setVisible(false);
