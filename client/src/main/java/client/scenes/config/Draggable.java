@@ -265,7 +265,6 @@ public class Draggable {
         sourceCard.list = computeTargetList(node);
         removeVisualCue((Node)event.getSource());
 
-        System.out.println(sourceCard);
         server.moveCard(sourceCard);
 
         event.setDropCompleted(true);

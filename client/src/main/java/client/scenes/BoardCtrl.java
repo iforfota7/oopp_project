@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.Boards;
 import commons.Lists;
 import commons.Cards;
+import commons.Subtask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -536,7 +537,7 @@ public class BoardCtrl {
         cardOverviewBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
 
         Label cardTitle = new Label(c.title);
-        VBox cardDetailsOverview = newCardDetailsOverview();
+        VBox cardDetailsOverview = newCardDetailsOverview(c);
 
         cardTitle.setPrefWidth(54.4);
         cardTitle.setPrefHeight(25.6);
@@ -551,15 +552,30 @@ public class BoardCtrl {
      * Creates the part of the body of a card where are displayed the process
      * regarding the number of subtasks and whether the card also has a
      * description or not
+     *
+     * @param card Object containing information about the card
      * @return the 'details' part of the body of the given card
      */
-    public VBox newCardDetailsOverview(){
+    public VBox newCardDetailsOverview(Cards card){
         VBox cardDetailsOverview = new VBox();
         cardDetailsOverview.setPrefWidth(61);
         cardDetailsOverview.setPrefHeight(25.6);
 
-        Label subtasksCount = new Label("0/0 subtasks");
-        Label descriptionExistence = new Label("Description: no");
+        String subtasksLabelText = "no subtasks";
+        if(card.subtasks != null && card.subtasks.size() > 0) {
+            int total = card.subtasks.size();
+            int done = 0;
+            for(Subtask subtask : card.subtasks)
+                if(subtask.checked)
+                    done++;
+            subtasksLabelText = done + "/" + total + " subtasks";
+        }
+        Label subtasksCount = new Label(subtasksLabelText);
+
+        String descriptionLabelText = "Description: no";
+        if(!card.description.equals(""))
+            descriptionLabelText = "Description: yes";
+        Label descriptionExistence = new Label(descriptionLabelText);
 
         subtasksCount.setStyle("-fx-font-size: 7;");
         subtasksCount.setAlignment(Pos.CENTER_RIGHT);
