@@ -24,6 +24,8 @@ public class BoardOverviewCtrl{
     private List<Boards> boardsList;
     private Boards currentBoard;
     private int numberOfBoards = 0;
+    private List<String> serverURLS;
+
 
     /**
      * Constructor for the BoardOverviewCtrl
@@ -37,6 +39,7 @@ public class BoardOverviewCtrl{
                              SelectServerCtrl selectServerCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        serverURLS = new ArrayList<>();
         this.selectServerCtrl = selectServerCtrl;
     }
     @FXML
@@ -46,7 +49,6 @@ public class BoardOverviewCtrl{
     private Label adminLabel;
     @FXML
     private Label userLabel;
-
 
     private boolean adminLock;
 
@@ -67,7 +69,6 @@ public class BoardOverviewCtrl{
         boardsList = new ArrayList<>();
         refresh();
     }
-
 
     /**
      * Go to a specific board when a board label has been clicked

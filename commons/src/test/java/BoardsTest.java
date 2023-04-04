@@ -23,15 +23,15 @@ public class BoardsTest {
         List<Lists> lists1 = new ArrayList<>();
         List<Lists> lists2 = new ArrayList<>();
 
-        board1 = new Boards("Board 1", lists1);
-        board11 = new Boards("Board 1", lists1);
-        board2 = new Boards("Board 2", lists2);
-        board3 = new Boards("Board 1", new ArrayList<>());
+        board1 = new Boards("Board 1", lists1, new ArrayList<>());
+        board11 = new Boards("Board 1", lists1, new ArrayList<>());
+        board2 = new Boards("Board 2", lists2, new ArrayList<>());
+        board3 = new Boards("Board 1", new ArrayList<>(), new ArrayList<>());
     }
 
     @Test
     void testConstructor(){
-        assertNotNull(new Boards("Board", new ArrayList<>()));
+        assertNotNull(new Boards("Board", new ArrayList<>(),new ArrayList<>()));
         assertNotNull(new Boards());
         assertNotNull(board2);
     }

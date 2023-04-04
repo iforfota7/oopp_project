@@ -38,6 +38,7 @@ public class Subtask {
         this.card = card;
         this.position = position;
     }
+
     /**
      * Default constructor method for the object mapper
      */

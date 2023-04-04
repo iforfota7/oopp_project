@@ -32,6 +32,9 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final CardDetailsCtrl cardDetailsCtrl;
+
+    @FXML
+    private Button tags;
     @FXML
     private AnchorPane rootContainer;
     @FXML
@@ -97,6 +100,15 @@ public class BoardCtrl {
                 @Override
                 public void run() {
                     initialize(board);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(b);
                 }
             });
         });
@@ -413,6 +425,11 @@ public class BoardCtrl {
             AnchorPane currentCard = (AnchorPane) event.getSource();
             Cards openedCard = (Cards) ((AnchorPane)currentCard.getParent())
                     .getChildren().get(1).getProperties().get("card");
+            /*VBox currentCard = (VBox) ((AnchorPane)(
+                    (AnchorPane)event.getSource()).getParent()).getChildren().get(1);
+            Cards openedCard = (Cards) currentCard.getProperties().get("card");*/
+
+            cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
             mainCtrl.showCardDetail();
         }
@@ -427,14 +444,13 @@ public class BoardCtrl {
         mainCtrl.showAddCard();
     }
 
-
     /**
      * Adds a card of name text to a list
      * @param text the name of the new card
      */
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
-        Cards c = new Cards(text, l.cards.size(), l, "", null);
+        Cards c = new Cards(text, l.cards.size(), l, "", new ArrayList<>());
         c.list = l;
         server.addCard(c);
         mainCtrl.closeSecondaryStage();
@@ -446,9 +462,7 @@ public class BoardCtrl {
      * @param position the position of the list
      */
     public void addListToBoard(String text, int position){
-        Boards boards = new Boards(board.name, null);
-        boards.id = board.id;
-        Lists list = new Lists(text, position, boards);
+        Lists list = new Lists(text, position, board);
 
         try {
             server.addList(list);
@@ -610,15 +624,15 @@ public class BoardCtrl {
         return cardTagsBody;
     }
 
-
     /**
      * Creates an empty anchor pane for a card
      * @return the created anchor pane
      */
     public AnchorPane newAnchorPane(){
         AnchorPane anchor = new AnchorPane();
-        anchor.setLayoutX(0);
-        anchor.setLayoutY(0);
+        anchor.setPrefWidth(150.4);
+        anchor.setPrefHeight(36);
+        anchor.setOnDragDetected(drag::dragDetected);
 
         return anchor;
     }
@@ -677,4 +691,10 @@ public class BoardCtrl {
         mainCtrl.showBoardOverview();
     }
 
+    /**
+     * Opens the scene which shows the tags the current board has
+     */
+    public void openTag(){
+        mainCtrl.showTagControl(board);
+    }
 }
