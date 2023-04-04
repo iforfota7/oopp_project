@@ -24,14 +24,14 @@
       <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0" />
       <Button fx:id="lockBtu" layoutX="108.0" layoutY="16.0" mnemonicParsing="false" text="🔒" AnchorPane.leftAnchor="108.0" AnchorPane.topAnchor="16.0" />
       <HBox fx:id="firstRow" layoutX="41.0" layoutY="68.0" prefHeight="272.0" prefWidth="507.0" spacing="27.0" style="-fx-background-color: #E6E6FA;" />
-      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="506.0" layoutY="360.0" mnemonicParsing="false" onAction="#addList" prefHeight="23.0" prefWidth="22.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="50.0">
+      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="511.79999999999995" layoutY="359.0" mnemonicParsing="false" onAction="#addList" prefHeight="23.0" prefWidth="22.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="17.80000000000001" AnchorPane.rightAnchor="65.0">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="538.0" layoutY="360.0" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="23.0" prefWidth="22.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="15.8">
+      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="538.0" layoutY="360.0" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="23.0" prefWidth="39.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Help" textAlignment="CENTER" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="16.0">
          <font>
-            <Font size="10.0" />
+            <Font size="11.0" />
          </font>
       </Button>
       <Button fx:id="tags" layoutX="431.0" layoutY="17.0" mnemonicParsing="false" onAction="#openTag" prefHeight="27.0" prefWidth="71.2" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="97.80000000000001" AnchorPane.topAnchor="17.0" />
