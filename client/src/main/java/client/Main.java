@@ -79,8 +79,15 @@ public class Main extends Application {
 
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
+
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
+
+        var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
+
+        var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
+
+        var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
@@ -88,6 +95,10 @@ public class Main extends Application {
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene);
+
+
         mainCtrl.initializeAdmin(confirmAdmin);
+        mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
+
     }
 }

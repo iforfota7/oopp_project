@@ -24,6 +24,8 @@ public class BoardOverviewCtrl{
     private List<Boards> boardsList;
     private Boards currentBoard;
     private int numberOfBoards = 0;
+    private List<String> serverURLS;
+
 
     /**
      * Constructor for the BoardOverviewCtrl
@@ -37,6 +39,7 @@ public class BoardOverviewCtrl{
                              SelectServerCtrl selectServerCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        serverURLS = new ArrayList<>();
         this.selectServerCtrl = selectServerCtrl;
     }
     @FXML
@@ -46,7 +49,6 @@ public class BoardOverviewCtrl{
     private Label adminLabel;
     @FXML
     private Label userLabel;
-
 
     private boolean adminLock;
 
@@ -67,7 +69,6 @@ public class BoardOverviewCtrl{
         boardsList = new ArrayList<>();
         refresh();
     }
-
 
     /**
      * Go to a specific board when a board label has been clicked
@@ -109,9 +110,7 @@ public class BoardOverviewCtrl{
         int row = (numberOfBoards - 1) / 3;
 
         StackPane newBoard = createNewBoard(b);
-
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
-
         gridPane.add(newBoard, positionInColumn, row);
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
                 new Insets(10, 10 , 10 ,10));
@@ -128,8 +127,10 @@ public class BoardOverviewCtrl{
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
-        newBoard.setPrefWidth(165);
-        newBoard.setPrefHeight(75);
+        newBoard.setPrefWidth(160.8);
+        newBoard.setPrefHeight(73.6);
+        newBoard.setMinWidth(160.8);
+        newBoard.setMinHeight(73.6);
         newBoard.setAlignment(Pos.CENTER);
         newBoard.setText(b.name);
         newBoard.getProperties().put("board", b);

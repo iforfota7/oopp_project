@@ -33,6 +33,9 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final CardDetailsCtrl cardDetailsCtrl;
+
+    @FXML
+    private Button tags;
     @FXML
     private AnchorPane rootContainer;
     @FXML
@@ -100,6 +103,15 @@ public class BoardCtrl {
                 @Override
                 public void run() {
                     initialize(board);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(b);
                 }
             });
         });
@@ -382,7 +394,8 @@ public class BoardCtrl {
     }
 
     /**
-     * Method tha deletes the card from the database and closes the secondary scene
+     * Deletes a card from the database, after the user confirmed
+     * the deletion
      */
     void deleteCard() {
         server.removeCard(currentCard);
@@ -390,14 +403,15 @@ public class BoardCtrl {
     }
 
     /**
-     * Method that cancels the deletion and closes the secondary scene
+     * Closes the scene which asks for confirmation of deleting a card
      */
     void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
     /**
-     * Method that shows the help scene
+     * Opens the Help Scene of a board when the button 'H' from
+     * bottom right is pushed
      */
     public void showHelpScene(){
         mainCtrl.showHelpScene();
@@ -415,6 +429,11 @@ public class BoardCtrl {
             AnchorPane currentCard = (AnchorPane) event.getSource();
             Cards openedCard = (Cards) ((AnchorPane)currentCard.getParent())
                     .getChildren().get(1).getProperties().get("card");
+            /*VBox currentCard = (VBox) ((AnchorPane)(
+                    (AnchorPane)event.getSource()).getParent()).getChildren().get(1);
+            Cards openedCard = (Cards) currentCard.getProperties().get("card");*/
+
+            cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
             mainCtrl.showCardDetail();
         }
@@ -429,14 +448,13 @@ public class BoardCtrl {
         mainCtrl.showAddCard();
     }
 
-
     /**
      * Adds a card of name text to a list
      * @param text the name of the new card
      */
     public void addCardToList(String text){
         Lists l = (Lists) this.currentList.getProperties().get("list");
-        Cards c = new Cards(text, l.cards.size(), l, "", null);
+        Cards c = new Cards(text, l.cards.size(), l, "", new ArrayList<>());
         c.list = l;
         server.addCard(c);
         mainCtrl.closeSecondaryStage();
@@ -448,9 +466,7 @@ public class BoardCtrl {
      * @param position the position of the list
      */
     public void addListToBoard(String text, int position){
-        Boards boards = new Boards(board.name, null);
-        boards.id = board.id;
-        Lists list = new Lists(text, position, boards);
+        Lists list = new Lists(text, position, board);
 
         try {
             server.addList(list);
@@ -621,20 +637,44 @@ public class BoardCtrl {
         return cardTagsBody;
     }
 
-
     /**
      * Creates an empty anchor pane for a card
      * @return the created anchor pane
      */
     public AnchorPane newAnchorPane(){
         AnchorPane anchor = new AnchorPane();
-        anchor.setLayoutX(0);
-        anchor.setLayoutY(0);
+        anchor.setPrefWidth(150.4);
+        anchor.setPrefHeight(36);
+        anchor.setOnDragDetected(drag::dragDetected);
 
         return anchor;
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Creates a new hyperlink for a card
+     * @return the created hyperlink
+     */
+    public Hyperlink newHyperlink(){
+        Hyperlink card = new Hyperlink();
+
+        // set positioning, sizing, text alignment, and background color of the hyperlink
+        card.setLayoutX(41);
+        card.setLayoutY(1);
+        card.setPrefSize(95, 23);
+        card.setAlignment(Pos.CENTER);
+        card.setStyle("-fx-background-color:  #E6E6FA");
+        card.setOnDragDetected(drag::dragDetected);
+
+        // set the card to execute cardDetail on action
+//        card.setOnAction(this::cardDetail);
+        card.setOnMouseClicked(this::cardDetail);
+        return card;
+    }
+
+    /**
+>>>>>>> dev
      * Create a new delete card button for a card
      * @return a new button
      */
@@ -688,4 +728,10 @@ public class BoardCtrl {
         mainCtrl.showBoardOverview();
     }
 
+    /**
+     * Opens the scene which shows the tags the current board has
+     */
+    public void openTag(){
+        mainCtrl.showTagControl(board);
+    }
 }

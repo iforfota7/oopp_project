@@ -21,7 +21,7 @@ public class DeCardCtrl {
     }
 
     /**
-     * Method to confirm the deletion of a card
+     * Calls the method to definitively deleting a card
      */
     @FXML
     void deleteCard() {
@@ -29,7 +29,7 @@ public class DeCardCtrl {
     }
 
     /**
-     * Method that cancels the deletion of a card
+     * Calls the method to cancel the deletion of a card
      */
     @FXML
     void undeleteCard() {

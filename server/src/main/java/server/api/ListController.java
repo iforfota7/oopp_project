@@ -122,13 +122,12 @@ public class ListController {
     @Transactional
     @PostMapping(path={"/remove", "/remove/"})
     public ResponseEntity<Lists> removeList(@RequestBody Lists list) {
-        System.out.println(list);
         if(list == null)
             return ResponseEntity.badRequest().build();
 
         if(repo.existsById(list.id)) {
             //remove all cards inside this list
-            repo.removeCardsInsideList(list.id);
+//            repo.removeCardsInsideList(list.id);
 
             // only remove and decrement list positions if
             // the entry with the provided id actually exists

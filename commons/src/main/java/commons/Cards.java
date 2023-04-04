@@ -22,7 +22,7 @@ public class Cards {
     @ManyToOne
     public Lists list;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("position ASC")
     public List<Subtask> subtasks;
 

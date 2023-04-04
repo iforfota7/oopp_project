@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #e6ecff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
+   <children>
+      <Label alignment="CENTER" layoutX="58.0" layoutY="44.0" prefHeight="48.0" prefWidth="286.0" text="Are you sure you want to close the card's details without saving the changes?" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font name="Baskerville Old Face" size="17.0" />
+         </font>
+      </Label>
+      <Button layoutX="216.0" layoutY="130.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="92.0" style="-fx-background-color: #ccffcc; -fx-background-radius: 4;" text="Yes">
+         <effect>
+            <InnerShadow>
+               <color>
+                  <Color red="0.019999999552965164" green="0.6000000238418579" blue="0.1263333261013031" />
+               </color>
+            </InnerShadow>
+         </effect>
+      </Button>
+      <Button layoutX="93.0" layoutY="130.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="92.0" style="-fx-background-color: #ffcccc; -fx-background-radius: 4;" text="No">
+         <effect>
+            <InnerShadow>
+               <color>
+                  <Color red="0.6700000166893005" green="0.08709999918937683" blue="0.08709999918937683" opacity="0.8487842082977295" />
+               </color>
+            </InnerShadow>
+         </effect>
+      </Button>
+   </children>
+</AnchorPane>

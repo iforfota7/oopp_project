@@ -28,7 +28,7 @@ class CardsTest {
 
     @BeforeEach
     void setUp(){
-        Boards board = new Boards("Board1", new ArrayList<>());
+        Boards board = new Boards("Board1", new ArrayList<>(), new ArrayList<>());
 
         list = new Lists("list 1", 1, board);
         list.id = 1;
