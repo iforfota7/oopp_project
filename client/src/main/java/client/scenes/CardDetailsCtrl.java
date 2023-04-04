@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Boards;
 import commons.Cards;
 import commons.Subtask;
 import javafx.application.Platform;
@@ -31,11 +32,22 @@ public class CardDetailsCtrl {
     private VBox taskList;
     @FXML
     private GridPane tagList;
+    @FXML
+    private HBox inputSubtask;
+    @FXML
+    private TextField subtaskName;
+    @FXML
+    private Text warningSubtask;
+    private int inputsOpen = 0;
+    private boolean rename = false;
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
+    private Subtask toRename;
     private Cards openedCard;
+    private Boards board;
+    private boolean sceneOpened = false;
     private List<String> serverURLS;
 
     /**
@@ -61,6 +73,7 @@ public class CardDetailsCtrl {
             serverURLS.add(server.getServer());
             websocketConfig();
         }
+        warning.setVisible(false);
     }
 
     /**
@@ -75,8 +88,21 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(openedCard != null && c.id == openedCard.id)
+                    if(openedCard != null && c.id == openedCard.id && sceneOpened)
                         setOpenedCard(c);
+                }
+            });
+        });
+
+        // When another client removes this card, this client will be
+        // sent to the board scene
+        server.registerForMessages("/topic/cards/remove", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && c.id == openedCard.id && sceneOpened) {
+                        mainCtrl.closeSecondaryStage();
+                    }
                 }
             });
         });
@@ -91,6 +117,7 @@ public class CardDetailsCtrl {
     @FXML
     void save() {
         warning.setVisible(false);
+        rename = false;
 
         if(cardTitleInput.getText().isBlank()) {
             warning.setVisible(true);
@@ -99,8 +126,45 @@ public class CardDetailsCtrl {
 
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
+
+        // if we have multiple created subtasks
+        // a JSON error will be thrown because it will have to serialize
+        // multiple objects with the same id (0)
+        // this block of code ensures that the ids sent are distinct
+        int index = 0;
+        if(openedCard.subtasks != null) {
+            for(Subtask subtask : openedCard.subtasks)
+                if(subtask.id == 0)
+                    subtask.id = --index;
+        }
+
+        subtaskName.setText("");
+
         server.renameCard(openedCard);
+        sceneOpened = false;
         mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * The user can close the card details without the modifications made
+     * to be saved by pressing the 'close' button
+     */
+    @FXML
+    void close(){
+        sceneOpened = false;
+        mainCtrl.closeSecondaryStage();
+        mainCtrl.showBoard(board);
+    }
+
+    /**
+     * Used to refresh the details of the opened card
+     * after something related to subtasks has changed
+     *
+     */
+    public void refreshOpenedCard() {
+        openedCard.title = cardTitleInput.getText();
+        openedCard.description = description.getText();
+        setOpenedCard(openedCard);
     }
 
     /**
@@ -110,6 +174,8 @@ public class CardDetailsCtrl {
      * @param card The new value of the field
      */
     public void setOpenedCard(Cards card) {
+        sceneOpened = true;
+
         this.openedCard = card;
 
         cardTitleInput.setText(card.title);
@@ -124,6 +190,8 @@ public class CardDetailsCtrl {
                 openedCard.subtasks.get(i).position = i;
                 renderSubtask(openedCard.subtasks.get(i), i);
             }
+
+        inputsOpen = 0;
     }
 
     /**
@@ -132,12 +200,14 @@ public class CardDetailsCtrl {
      * @param subtask Object containing information about
      * @param position The position of the Subtask in the list of subtasks
      */
+
     public void renderSubtask(Subtask subtask, int position) {
         // styling for the subtask container
         HBox subtaskContainer = new HBox();
         subtaskContainer.setPrefWidth(214);
         subtaskContainer.setPrefHeight(32);
         subtaskContainer.setAlignment(Pos.CENTER);
+        subtaskContainer.getProperties().put("subtask", subtask);
 
         // styling for the menu button
         menuButtonStyling(subtaskContainer);
@@ -148,6 +218,7 @@ public class CardDetailsCtrl {
         checkBox.setText(subtask.title);
         checkBox.setPrefWidth(174);
         checkBox.setPrefHeight(32);
+        checkBox.setOnAction(this::checkboxClicked);
         subtaskContainer.getChildren().add(checkBox);
         checkBox.setSelected(subtask.checked);
 
@@ -197,6 +268,8 @@ public class CardDetailsCtrl {
         rename.setText("Rename");
         MenuItem delete = new MenuItem();
         delete.setText("Delete");
+        delete.setOnAction(this::deleteSubtask);
+        rename.setOnAction(this::renameSubtask);
         menuButton.getItems().addAll(rename, delete);
         subtaskContainer.getChildren().add(menuButton);
         HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
@@ -208,6 +281,7 @@ public class CardDetailsCtrl {
      * @param actionEvent Object containing information about the action event
      */
     public void swapSubtasks(ActionEvent actionEvent) {
+//        changes = true;
         Button arrow = (Button)actionEvent.getTarget();
         int position = Integer.parseInt(arrow.getId());
         List<Subtask> subtaskList = openedCard.subtasks;
@@ -224,7 +298,7 @@ public class CardDetailsCtrl {
             }
         }
 
-        setOpenedCard(openedCard);
+        refreshOpenedCard();
     }
 
     /**
@@ -239,4 +313,149 @@ public class CardDetailsCtrl {
         subtaskList.set(i, subtaskList.get(j));
         subtaskList.set(j, tmp);
     }
+
+    /**
+     * Opens a text field for the user to input the new subtask
+     */
+    @FXML
+    public void addSubtask(){
+        inputsOpen++;
+
+        if(inputsOpen == 1){
+            taskList.getChildren().add(inputSubtask);
+        }
+        else {
+            subtaskName.setStyle("-fx-background-color: #ffcccc; " +
+                    "-fx-border-color: #b30000; -fx-background-radius: 4; " +
+                    "-fx-border-radius: 4;");
+            warningSubtask.setText("Please complete this action before \n attempting a new one!");
+            warningSubtask.setVisible(true);
+        }
+    }
+
+    /**
+     * Closes the text field and creates the new Subtask, then adds it
+     * to the subtasks list and to the database
+     */
+    @FXML
+    public void createSubtask(){
+        subtaskName.setStyle("");
+        warningSubtask.setVisible(false);
+
+        if(subtaskName.getText().equals("")){
+            subtaskName.setStyle("-fx-background-color: #ffcccc; " +
+                    "-fx-border-color: #b30000; -fx-background-radius: 4; " +
+                    "-fx-border-radius: 4;");
+            warningSubtask.setText("Name cannot be blank!");
+            warningSubtask.setVisible(true);
+        }
+        else {
+            int position;
+            boolean checked = false;
+
+            // when renaming a subtask, the actual subtask it deleted and a new one,
+            // with the same details as it, but with the new name is created
+            // therefore, the position and checked value of the subtask can be different from
+            // the initial ones when a subtask is just created
+            if(rename){
+                position = toRename.position;
+                checked = toRename.checked;
+            }
+            else {
+                position = taskList.getChildren().size() - 1;
+            }
+            Subtask newSubtask = new Subtask(subtaskName.getText(),
+                    checked, openedCard, position);
+            subtaskName.setStyle("");
+            warningSubtask.setVisible(false);
+            inputsOpen--;
+            subtaskName.setText("");
+
+            if(rename){
+                openedCard.subtasks.add(position, newSubtask);
+                rename = false;
+            }
+            else {
+                openedCard.subtasks.add(newSubtask);
+            }
+            refreshOpenedCard();
+        }
+
+    }
+
+    /**
+     * Deletes the subtask from the list of subtasks and from the database
+     * @param event Object containing information about the action event
+     */
+    private void deleteSubtask(ActionEvent event){
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        HBox toDelete = (HBox) popup.getOwnerNode().getParent();
+
+        Subtask subtask = (Subtask) toDelete.getProperties().get("subtask");
+        openedCard.subtasks.remove(subtask);
+        refreshOpenedCard();
+    }
+
+    /**
+     * Renames a subtask from the list,
+     * A text field for inputting the new name is shown instead of the subtask
+     * Renaming is done by deleting the actual subtask and creating
+     * another one, with the same details, but with the different titles
+     * @param event Object containing information about the action event
+     */
+    private void renameSubtask(ActionEvent event) {
+        MenuItem menuItem = (MenuItem) event.getSource();
+        ContextMenu popup = menuItem.getParentPopup();
+        HBox currentSubtask = (HBox) popup.getOwnerNode().getParent();
+        inputsOpen++;
+
+        if(inputsOpen == 1){
+            // will inform the createSubtask method that the new subtask is actually a renamed one
+            rename = true;
+            toRename = (Subtask) currentSubtask.getProperties().get("subtask");
+            subtaskName.setText(toRename.title);
+
+            int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
+            taskList.getChildren().set(indexInVbox, inputSubtask);
+
+            openedCard.subtasks.remove(toRename);
+        }
+        else {
+            subtaskName.setStyle("-fx-background-color: #ffcccc; " +
+                    "-fx-border-color: #b30000; -fx-background-radius: 4; " +
+                    "-fx-border-radius: 4;");
+            warningSubtask.setText("Please complete this action before \n attempting a new one!");
+            warningSubtask.setVisible(true);
+        }
+
+    }
+
+    /**
+     * Changes the completion state of a subtask when
+     * its corresponding checkbox is clicked
+     *
+     * @param event Object storing information about the action event
+     */
+
+    private void checkboxClicked(ActionEvent event) {
+        CheckBox checkBox = (CheckBox) event.getSource();
+        HBox subtaskContainer = (HBox) checkBox.getParent();
+
+        Subtask subtask = (Subtask) subtaskContainer.getProperties().get("subtask");
+        int subtaskIndex = openedCard.subtasks.indexOf(subtask);
+        Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
+        updatedSubtask.checked = checkBox.isSelected();
+        refreshOpenedCard();
+    }
+
+    /**
+     * Setter for the board property of the object
+     *
+     * @param board The new board object
+     */
+    public void setBoard(Boards board) {
+        this.board = board;
+    }
+
 }

@@ -9,7 +9,7 @@ public class User {
     @Id
     public String username;
 
-    @ManyToMany
+    @ManyToMany (cascade = CascadeType.ALL)
     public List<Boards> boards;
 
     public boolean isAdmin;

@@ -16,6 +16,7 @@
 package client.utils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -25,6 +26,7 @@ import commons.Cards;
 import commons.Lists;
 import commons.User;
 import jakarta.ws.rs.core.Response;
+import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -55,15 +57,22 @@ public class ServerUtils {
 
     /**
      * Find whether a user exists or not
-     * @param user a user which should be checked
      * @return true if user already in database, otherwise false
      */
-    public boolean existsUser(User user){
-        if(ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + user.username).
-                request(APPLICATION_JSON).accept(APPLICATION_JSON)
-                .get(new GenericType<User>(){}) == null) return false;
+    public boolean existsUser(){
+        if(findUser()== null) return false;
         return true;
+    }
+
+    /**
+     * Find whether current user is in the database
+     * @return the user if they exist
+     */
+    public User findUser(){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){});
     }
 
     /**
@@ -131,7 +140,7 @@ public class ServerUtils {
     public Cards removeCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-               post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
+                post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
     }
 
     /**
@@ -154,6 +163,28 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
+
+    /**
+     * Method that adds Subtask to the database
+     * @param subtask the subtask to be added
+     * @return the response object
+     */
+    public Subtask addSubtask(Subtask subtask){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/subtask").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(subtask, APPLICATION_JSON), Subtask.class);
+    }
+
+    /**
+     * Method that removes subtask from the database
+     * @param subtask the subtask to be deleted
+     * @return the response object
+     */
+    public Subtask deleteSubtask(Subtask subtask){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/subtask/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(subtask, APPLICATION_JSON), Subtask.class);
     }
 
     /**
@@ -216,6 +247,19 @@ public class ServerUtils {
     }
 
     /**
+     * Updates the information of a board
+     * The constraint is that the name remains the same
+     *
+     * @param board The board to be updated
+     * @return the updated board
+     */
+    public Boards updateBoard(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    /**
      * Setter method for the server attribute
      * @param server the server address to be set
      */
@@ -263,8 +307,6 @@ public class ServerUtils {
         }catch(Exception e) {
             return false;
         }
-
-
     }
 
     private StompSession session =  null;
@@ -333,16 +375,91 @@ public class ServerUtils {
     }
 
     /**
+     * Method that removes Board from user
+     * @param board the board to be removed
+     * @return the response object
+     */
+    public User hideBoardFromUser(Boards board){
+        // get the current user using the saved USERNAME
+        User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>() {});
+
+        // if the user has the board in their list of boards, remove it
+        if(user.boards != null && user.boards.size() != 0 && user.boards.contains(board)){
+            user.boards.remove(board);
+        }
+
+        // send the updated user to the server so that the database is changed too
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+
+    /**
      * Method that checks whether a user is an admin
-     * @param user the user to be checked
      * @return true if the user is admin, false otherwise
      */
-    public boolean checkAdmin(User user) {
+    public boolean checkAdmin() {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + user.username).
+                path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
                 }).isAdmin;
+    }
+
+
+    /**
+     * Method that adds the current board to the user
+     * @param board the current board
+     */
+    public void addBoardToUser(Boards board){
+        // get the current user using the saved USERNAME
+        User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>() {});
+
+        // if the user has no boards, make a new list
+        if(user.boards == null || user.boards.size() == 0) user.boards = new ArrayList<>(){};
+        // add the current board to the users list of boards if it isn't already in the list
+
+        boolean hasInList = false;
+        for(Boards boards : user.boards)
+            if (boards.id == board.id) {
+                hasInList = true;
+                break;
+            }
+        if(!hasInList)
+            user.boards.add(board);
+
+        updateUser(user);
+    }
+
+    /**
+     * Method that retrieves all boards a user has viewed
+     * @return the list of boards a user has seen
+     */
+    public List<Boards> viewedBoards(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(serverAddress).path("api/user/boards/" + USERNAME)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Boards>>() {});
+    }
+
+    /**
+     * Update the users attributes to new ones posted
+     * @param user the user to be updated
+     * @return the user that was updated
+     */
+    public User updateUser(User user){
+        // send the updated user to the server so that the database is changed too
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
 }

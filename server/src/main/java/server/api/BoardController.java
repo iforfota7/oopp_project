@@ -2,6 +2,7 @@ package server.api;
 
 import commons.Boards;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardsRepository;
 
@@ -13,13 +14,16 @@ import java.util.List;
 @RequestMapping("api/boards")
 public class BoardController {
     private final BoardsRepository repo;
+    private final SimpMessagingTemplate msgs;
 
     /**
      * Constructor method for repository of board
      * @param repo the board repository
+     * @param msgs used for websockets
      */
-    public BoardController(BoardsRepository repo) {
+    public BoardController(BoardsRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
+        this.msgs = msgs;
     }
 
     /**
@@ -70,6 +74,33 @@ public class BoardController {
     }
 
 
+    /**
+     * Updates information about the board
+     * The constraint is that the board cannot be renamed
+     *
+     * @param board The board to be updated
+     * @return The updated board
+     */
+    @Transactional
+    @PostMapping(path={"/update", "/update/"})
+    public ResponseEntity<Boards> updateBoard(@RequestBody Boards board) {
+        if(board == null || isNullOrEmpty(board.name))
+            return ResponseEntity.badRequest().build();
+
+        if(repo.findById(board.id).isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        Boards foundBoard = repo.findById(board.id).get();
+        if(!board.name.equals(foundBoard.name))
+            return ResponseEntity.badRequest().build();
+
+        Boards saved = repo.save(board);
+        msgs.convertAndSend("/topic/boards/update", saved);
+
+        return ResponseEntity.ok(saved);
+    }
+
+
 
     /**
      * A method used to find a board by its ID
@@ -102,7 +133,7 @@ public class BoardController {
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Void> removeBoard(@RequestBody Boards boards) {
         String boardName = boards.name;
-        System.out.println(boardName);
+
         if (boardName == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -113,6 +144,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
+        repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
         return ResponseEntity.ok().build();

@@ -309,7 +309,7 @@ public class ListControllerTest {
      */
     public Lists getList(String t, int p) {
 
-        Lists list = new Lists(t,p, new Boards("test", null));
+        Lists list = new Lists(t,p, new Boards("test", null, new ArrayList<>()));
         list.id = listCount;
         listCount++;
         return list;
