@@ -9,8 +9,7 @@ public class Shortcuts {
 
     /**
      * Whenever the user hovers above a card using their mouse,
-     * it will be highlighted iff the list of that card doesn't have
-     * a highlighted card, and the previously highlighted card (if any)
+     * it will be highlighted, and the previously highlighted card (if any)
      * will be un-highlighted.
      * @param mouseEvent Object containing information about the mouse event
      */
