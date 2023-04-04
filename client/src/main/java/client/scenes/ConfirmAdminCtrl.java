@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -16,19 +17,23 @@ public class ConfirmAdminCtrl {
     private  SelectServerCtrl selectServerCtrl;
 
     private MainCtrl mainCtrl;
+    private ServerUtils server;
 
     /**
      * Constructor method for ConfirmAdminCtrl
      * @param boardOverviewCtrl instance of BoardOverviewCtrl
      * @param selectServerCtrl instance of SelectServerCtrl
      * @param mainCtrl instance of MainCtrl
+     * @param server instance of ServerUtils
      */
     @Inject
     public ConfirmAdminCtrl(BoardOverviewCtrl boardOverviewCtrl,
-                            SelectServerCtrl selectServerCtrl, MainCtrl mainCtrl){
+                            SelectServerCtrl selectServerCtrl, MainCtrl mainCtrl,
+                            ServerUtils server){
         this.boardOverviewCtrl = boardOverviewCtrl;
         this.selectServerCtrl = selectServerCtrl;
         this.mainCtrl = mainCtrl;
+        this.server = server;
     }
     @FXML
     private PasswordField inputPassword;
@@ -43,8 +48,8 @@ public class ConfirmAdminCtrl {
      */
     @FXML
     void adminLogin() {
-        String adminPassword = "6464";
-        if(adminPassword.equals(inputPassword.getText())){
+        boolean check = server.checkPassword(inputPassword.getText());
+        if(check){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Login successful!");
             alert.setHeaderText(null);
