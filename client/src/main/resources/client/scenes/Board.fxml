@@ -34,6 +34,6 @@
             <Font size="10.0" />
          </font>
       </Button>
-      <Button fx:id = "tags" layoutX="449.0" layoutY="18.0" mnemonicParsing="false" text="Tags" onAction = "#openTag"/>
+      <Button fx:id="tags" layoutX="431.0" layoutY="17.0" mnemonicParsing="false" onAction="#openTag" prefHeight="27.0" prefWidth="71.2" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="97.80000000000001" AnchorPane.topAnchor="17.0" />
    </children>
 </AnchorPane>

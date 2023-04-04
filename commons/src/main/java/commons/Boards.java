@@ -2,6 +2,7 @@ package commons;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Boards {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @OrderBy("positionInsideBoard ASC")
+    @JsonIgnore
     public List<Lists> lists;
 
     @OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval = true)

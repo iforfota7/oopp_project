@@ -29,36 +29,37 @@ public class MainCtrl {
     private Stage primaryStage, secondaryStage, thirdStage;
 
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, tagControl, newTag;
-    private Scene tagDetails,  confirmUsername, boardOverview, addBoard, renameBoard;
+    private Scene cardDetails, newCard, confirmUsername;
+    private Scene boardOverview, addBoard, renameBoard;
+    private Scene tagControl, addTag, tagDetails;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
     private Scene confirmAdmin, help;
 
-    private RnListCtrl rnListCtrl;
-
-    private TagsCtrl tagsCtrl;
-    private DeListCtrl deListCtrl;
-    private AdListCtrl addListCtrl;
-    private CardDetailsCtrl cardDetailsCtrl;
-
-    private TagDetailsCtrl tagDetailsCtrl;
-
-    private NewCardCtrl newCardCtrl;
-    private ConfirmUsernameCtrl confirmUsernameCtrl;
-    private ConfirmAdminCtrl confirmAdminCtrl;
-    private BoardOverviewCtrl boardOverviewCtrl;
     private SelectServerCtrl selectServerCtrl;
+    private ConfirmUsernameCtrl confirmUsernameCtrl;
+
+    private BoardOverviewCtrl boardOverviewCtrl;
     private JoinBoardByIDCtrl joinBoardByIDCtrl;
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
-    private UserDetailsCtrl userDetailsCtrl;
-
-    private NewTagCtrl newTagCtrl;
-
     private RenameBoardCtrl renameBoardCtrl;
-    private HelpCtrl helpCtrl;
 
+    private HelpCtrl helpCtrl;
+    private UserDetailsCtrl userDetailsCtrl;
+    private ConfirmAdminCtrl confirmAdminCtrl;
+
+    private RnListCtrl rnListCtrl;
+    private DeListCtrl deListCtrl;
+    private AdListCtrl addListCtrl;
+
+    private CardDetailsCtrl cardDetailsCtrl;
+    private NewCardCtrl newCardCtrl;
     private DeCardCtrl deCardCtrl;
+
+    private AddTagCtrl addTagCtrl;
+    private TagsCtrl tagsCtrl;
+    private TagDetailsCtrl tagDetailsCtrl;
+
 
 
     /**
@@ -114,8 +115,8 @@ public class MainCtrl {
      * @param addList addListCtrl parent pair for addList scene
      */
     public void initializeLists( Stage primaryStage, Pair<RnListCtrl,Parent> renameList,
-                Pair<DeListCtrl, Parent> deleteList,
-                Pair<AdListCtrl, Parent> addList) {
+                                 Pair<DeListCtrl, Parent> deleteList,
+                                 Pair<AdListCtrl, Parent> addList) {
 
         this.primaryStage = primaryStage;
 
@@ -139,8 +140,8 @@ public class MainCtrl {
      * @param deCardCtrl deCardCtrl parent pair for deCard scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
-            Pair<NewCardCtrl, Parent> newCardCtrl,
-            Pair<DeCardCtrl, Parent> deCardCtrl) {
+                                Pair<NewCardCtrl, Parent> newCardCtrl,
+                                Pair<DeCardCtrl, Parent> deCardCtrl) {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
@@ -161,23 +162,23 @@ public class MainCtrl {
         this.helpCtrl = helpCtrl.getKey();
     }
 
-
     /**
-     * Method for initializing the scenes and controllers for tags
-     *
-     * @param tagDetails Pair of controller and parent for tag details
-     * @param newTagCtrl Pair of controller and parent for new tag scene
-     * @param tagControl Pair of controller and parent for the primary tag scene
+     * @param tagDetails tagDetailsCtrl parent pair for tagDetails scene
+     * @param addTagCtrl newTagCtrl parent pair for addTag
+     * @param tagControl tagControl parent pair for TagsController
      */
     public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails,
-                               Pair<NewTagCtrl, Parent> newTagCtrl,
+                               Pair<AddTagCtrl, Parent> addTagCtrl,
                                Pair<TagsCtrl, Parent> tagControl){
         this.tagDetails = new Scene(tagDetails.getValue());
         this.tagDetailsCtrl = tagDetails.getKey();
-        this.newTag = new Scene(newTagCtrl.getValue());
-        this.newTagCtrl = newTagCtrl.getKey();
+
+        this.addTag = new Scene(addTagCtrl.getValue());
+        this.addTagCtrl = addTagCtrl.getKey();
+
         this.tagControl = new Scene(tagControl.getValue());
         this.tagsCtrl = tagControl.getKey();
+
     }
 
     /**
@@ -288,6 +289,12 @@ public class MainCtrl {
         if(secondaryStage != null && secondaryStage.isShowing()) return;
         secondaryStage = new Stage();
         secondaryStage.setScene(cardDetails);
+
+        // card details are not saved if the window is closed
+        // using the 'x' button
+        secondaryStage.setOnCloseRequest(event -> {
+            cardDetailsCtrl.close();
+        });
         secondaryStage.setTitle("Card Details");
         cardDetailsCtrl.init();
         secondaryStage.show();
@@ -328,10 +335,10 @@ public class MainCtrl {
     public void showAddTag(Boards board){
         if(thirdStage != null && thirdStage.isShowing()) return;
         thirdStage = new Stage();
-        thirdStage.setScene(newTag);
+        thirdStage.setScene(addTag);
         thirdStage.setTitle("Add new Tag");
         thirdStage.show();
-        newTagCtrl.initialize(board);
+        addTagCtrl.initialize(board);
     }
 
     /**
@@ -354,7 +361,6 @@ public class MainCtrl {
      *
      */
     public void closeThirdStage(){thirdStage.close();}
-
 
     /**
      * Opens a secondary window which asks for confirmation for

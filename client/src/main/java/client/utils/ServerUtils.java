@@ -140,7 +140,7 @@ public class ServerUtils {
     public Cards removeCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-               post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
+                post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
     }
 
     /**
@@ -163,6 +163,28 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
+
+    /**
+     * Method that adds Subtask to the database
+     * @param subtask the subtask to be added
+     * @return the response object
+     */
+    public Subtask addSubtask(Subtask subtask){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/subtask").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(subtask, APPLICATION_JSON), Subtask.class);
+    }
+
+    /**
+     * Method that removes subtask from the database
+     * @param subtask the subtask to be deleted
+     * @return the response object
+     */
+    public Subtask deleteSubtask(Subtask subtask){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/subtask/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(subtask, APPLICATION_JSON), Subtask.class);
     }
 
     /**
@@ -375,6 +397,7 @@ public class ServerUtils {
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
+
     /**
      * Method that checks whether a user is an admin
      * @return true if the user is admin, false otherwise
@@ -386,6 +409,7 @@ public class ServerUtils {
                 .get(new GenericType<User>() {
                 }).isAdmin;
     }
+
 
     /**
      * Method that adds the current board to the user
@@ -401,7 +425,15 @@ public class ServerUtils {
         // if the user has no boards, make a new list
         if(user.boards == null || user.boards.size() == 0) user.boards = new ArrayList<>(){};
         // add the current board to the users list of boards if it isn't already in the list
-        if(!user.boards.contains(board)) user.boards.add(board);
+
+        boolean hasInList = false;
+        for(Boards boards : user.boards)
+            if (boards.id == board.id) {
+                hasInList = true;
+                break;
+            }
+        if(!hasInList)
+            user.boards.add(board);
 
         updateUser(user);
     }

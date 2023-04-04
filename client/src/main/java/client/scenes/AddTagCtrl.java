@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 
-public class NewTagCtrl {
+public class AddTagCtrl {
     @FXML
     private TextField cardTitleInput;
     @FXML
@@ -32,7 +32,8 @@ public class NewTagCtrl {
      * @param mainCtrl instance of the mainCtrl class
      */
     @Inject
-    public NewTagCtrl(ServerUtils server, MainCtrl mainCtrl){
+    public AddTagCtrl(ServerUtils server, MainCtrl mainCtrl){
+
         this.server = server;
         this.mainCtrl = mainCtrl;
     }

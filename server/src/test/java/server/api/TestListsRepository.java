@@ -213,6 +213,7 @@ public class TestListsRepository implements ListsRepository {
     public void delete(Lists entity) {
 
         call("delete");
+        removeCardsInsideList(entity.id);
         lists.remove(entity);
     }
 
