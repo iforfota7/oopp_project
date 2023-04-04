@@ -27,7 +27,6 @@ import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage, thirdStage;
-
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername;
     private Scene boardOverview, addBoard, renameBoard;
@@ -119,6 +118,7 @@ public class MainCtrl {
                                  Pair<AdListCtrl, Parent> addList) {
 
         this.primaryStage = primaryStage;
+        primaryStage.setResizable(false);
 
         this.renameList = new Scene(renameList.getValue());
         this.rnListCtrl = renameList.getKey();
