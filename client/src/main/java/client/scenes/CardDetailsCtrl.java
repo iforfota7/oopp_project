@@ -255,7 +255,7 @@ public class CardDetailsCtrl {
     public void menuButtonStyling(HBox subtaskContainer) {
         // styling for the menu button with a 'pen' on it
         MenuButton menuButton = new MenuButton();
-        menuButton.setPrefWidth(25);
+        menuButton.setPrefWidth(20);
         menuButton.setPrefHeight(18);
         String menuButtonStyle = "-fx-padding: -5 -22 -5 -5; -fx-background-color:  #fff2cc; " +
                 "-fx-border-color:  #f0cca8; -fx-background-radius:  4; -fx-border-radius: 4;";
