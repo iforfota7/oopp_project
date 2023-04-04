@@ -638,6 +638,30 @@ public class BoardCtrl {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Creates a new hyperlink for a card
+     * @return the created hyperlink
+     */
+    public Hyperlink newHyperlink(){
+        Hyperlink card = new Hyperlink();
+
+        // set positioning, sizing, text alignment, and background color of the hyperlink
+        card.setLayoutX(41);
+        card.setLayoutY(1);
+        card.setPrefSize(95, 23);
+        card.setAlignment(Pos.CENTER);
+        card.setStyle("-fx-background-color:  #E6E6FA");
+        card.setOnDragDetected(drag::dragDetected);
+
+        // set the card to execute cardDetail on action
+//        card.setOnAction(this::cardDetail);
+        card.setOnMouseClicked(this::cardDetail);
+        return card;
+    }
+
+    /**
+>>>>>>> dev
      * Create a new delete card button for a card
      * @return a new button
      */
