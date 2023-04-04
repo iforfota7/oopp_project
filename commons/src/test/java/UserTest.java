@@ -19,9 +19,9 @@ public class UserTest {
     @BeforeEach
     void setUp(){
 
-        board1 = new Boards("Board 1", new ArrayList<>());
-        board2 = new Boards("Board 2", new ArrayList<>());
-        board3 = new Boards("Board 1", new ArrayList<>());
+        board1 = new Boards("Board 1", new ArrayList<>(), new ArrayList<>());
+        board2 = new Boards("Board 2", new ArrayList<>(), new ArrayList<>());
+        board3 = new Boards("Board 1", new ArrayList<>(), new ArrayList<>());
 
         List<Boards> boards1 = new ArrayList<>();
         List<Boards> boards2 = new ArrayList<>();

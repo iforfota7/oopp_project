@@ -26,6 +26,7 @@ import commons.Cards;
 import commons.Lists;
 import commons.User;
 import jakarta.ws.rs.core.Response;
+import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -220,6 +221,19 @@ public class ServerUtils {
     public Boards renameBoard(Boards board){
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/boards/rename").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
+
+    /**
+     * Updates the information of a board
+     * The constraint is that the name remains the same
+     *
+     * @param board The board to be updated
+     * @return the updated board
+     */
+    public Boards updateBoard(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
     }
 

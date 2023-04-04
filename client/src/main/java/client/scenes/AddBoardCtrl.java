@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
 /**
  *  Controller for Add Board
@@ -47,7 +48,7 @@ public class AddBoardCtrl {
     void saveNewBoard(){
         warning.setVisible(false);
         try {
-            Boards b = server.addBoard(new Boards(boardName.getText(), null));
+            Boards b = server.addBoard(new Boards(boardName.getText(), null, new ArrayList<>()));
             boardName.setText("");
             server.addBoardToUser(b);
             mainCtrl.closeSecondaryStage();
