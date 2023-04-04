@@ -3,6 +3,7 @@ package commons;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +27,9 @@ public class Cards {
     @OrderBy("position ASC")
     public List<Subtask> subtasks;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    public List<Tags> tags;
+
 
 
     /**
@@ -36,6 +40,8 @@ public class Cards {
 
     /**
      * Constructor method for the cards class
+     * The tags list will initially be empty
+     *
      * @param title the name of the card
      * @param positionInsideList the position of card inside its list container
      * @param list the list in which the card is
@@ -49,6 +55,8 @@ public class Cards {
         this.list = list;
         this.description = description;
         this.subtasks = subtasks;
+
+        this.tags = new ArrayList<>();
     }
 
     /**
@@ -64,7 +72,8 @@ public class Cards {
         return id == cards.id && positionInsideList == cards.positionInsideList
                 && Objects.equals(title, cards.title) && list.id==cards.list.id
                 && Objects.equals(description, cards.description)
-                && Objects.equals(subtasks, cards.subtasks);
+                && Objects.equals(subtasks, cards.subtasks)
+                && Objects.equals(tags, cards.tags);
     }
 
     /**
@@ -73,7 +82,7 @@ public class Cards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, list.id, positionInsideList, description, subtasks);
+        return Objects.hash(id, title, list.id, positionInsideList, description, subtasks, tags);
     }
 
     /**
@@ -90,6 +99,7 @@ public class Cards {
                 ", description='" + description + '\'' +
                 ", list.id=" + list.id +
                 ", subtasks=" + subtasks.toString() +
+                ", tags=" + tags +
                 '}';
     }
 }

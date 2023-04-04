@@ -57,7 +57,7 @@ public class Tags {
         if (o == null || getClass() != o.getClass()) return false;
         Tags tags = (Tags) o;
         return id == tags.id && Objects.equals(color, tags.color) &&
-                Objects.equals(title, tags.title) && Objects.equals(board, tags.board);
+                Objects.equals(title, tags.title) && board.id == tags.board.id;
     }
 
     /**
@@ -67,7 +67,7 @@ public class Tags {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, color, board);
+        return Objects.hash(id, title, color, board.id);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Tags {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", color=" + color +
-                ", boards=" + board +
+                ", boards=" + board.id +
                 '}';
     }
 }

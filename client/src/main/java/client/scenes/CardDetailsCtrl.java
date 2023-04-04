@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.scenes.config.TagsCardDetails;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Boards;
@@ -43,6 +44,7 @@ public class CardDetailsCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private TagsCardDetails tagsCardDetails;
 
     private Subtask toRename;
     private Cards openedCard;
@@ -52,6 +54,9 @@ public class CardDetailsCtrl {
 
     /**
      * Initializes the card details controller object
+     * An instance of TagsCardDetails is initialized
+     * in order to separate tag logic from the rest
+     *
      * @param server Used for sending requests to the server
      * @param mainCtrl Used for navigating through different scenes
      */
@@ -177,6 +182,9 @@ public class CardDetailsCtrl {
         sceneOpened = true;
 
         this.openedCard = card;
+
+        tagsCardDetails = new TagsCardDetails(tagList);
+        tagsCardDetails.renderTags(openedCard);
 
         cardTitleInput.setText(card.title);
         description.setText(card.description);
