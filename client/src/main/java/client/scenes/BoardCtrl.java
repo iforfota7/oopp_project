@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.scenes.config.Draggable;
+import client.scenes.config.Shortcuts;
 import client.utils.ServerUtils;
 import commons.Boards;
 import commons.Lists;
@@ -52,6 +53,8 @@ public class BoardCtrl {
     private Cards currentCard;
 
     private final Draggable drag;
+    private final Shortcuts shortcuts;
+
     private List<String> serverURLS;
 
 
@@ -172,6 +175,7 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
+        this.shortcuts = new Shortcuts();
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
@@ -496,6 +500,9 @@ public class BoardCtrl {
         over.setOnDragDropped(drag::dragDropped);
         over.setOnMouseClicked(this::cardDetail);
 
+        over.setId("card"+Long.toString(c.id));
+        over.setOnMouseEntered(shortcuts::onMouseHover);
+
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
 
@@ -503,6 +510,12 @@ public class BoardCtrl {
         newCard.getChildren().addAll(deleteCard, card, over);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
+
+        if(shortcuts.getCurrentCard()!=null &&
+                newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
+            over.setStyle("-fx-border-color: red; -fx-border-style:solid");
+            shortcuts.setCurrentCard(over);
+        }
 
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
     }
