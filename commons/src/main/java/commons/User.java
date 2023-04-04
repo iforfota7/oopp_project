@@ -1,7 +1,9 @@
 package commons;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +15,11 @@ public class User {
     public List<Boards> boards;
 
     public boolean isAdmin;
+    @ElementCollection
+    @CollectionTable(name = "color_preset", joinColumns = @JoinColumn(name = "username"))
+    @MapKeyColumn(name = "preset_name")
+    @Column(name = "color")
+    public Map<String, String> colorPreset = new HashMap<>();
 
     /**
      * Constructor method for User class
@@ -24,6 +31,12 @@ public class User {
         this.username = username;
         this.boards = boards;
         this.isAdmin = isAdmin;
+        Map<String, String> colorPreset = new HashMap<>();
+        colorPreset.put("default", "#4169E1 #FFFFF0");
+        colorPreset.put("HighLight", "#F08080 #DDA0DD");
+        colorPreset.put("Less relevant", "#E0FFFF #AFEEEE");
+        this.colorPreset = colorPreset;
+
     }
 
     /**

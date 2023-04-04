@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class CardDetailsCtrl {
@@ -43,6 +44,7 @@ public class CardDetailsCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final SelectServerCtrl selectServerCtrl;
 
     private Subtask toRename;
     private Cards openedCard;
@@ -52,13 +54,17 @@ public class CardDetailsCtrl {
 
     /**
      * Initializes the card details controller object
-     * @param server Used for sending requests to the server
-     * @param mainCtrl Used for navigating through different scenes
+     *
+     * @param server            Used for sending requests to the server
+     * @param mainCtrl          Used for navigating through different scenes
+     * @param selectServerCtrl  Used for navigating through different scenes
      */
     @Inject
-    public CardDetailsCtrl(ServerUtils server, MainCtrl mainCtrl){
+    public CardDetailsCtrl(ServerUtils server, MainCtrl mainCtrl,
+                           SelectServerCtrl selectServerCtrl){
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.selectServerCtrl = selectServerCtrl;
         serverURLS = new ArrayList<>();
     }
 
@@ -170,6 +176,7 @@ public class CardDetailsCtrl {
         setOpenedCard(openedCard);
     }
 
+
     /**
      * Sets openedCard to be the current card
      * Also displays information about the opened card
@@ -224,6 +231,12 @@ public class CardDetailsCtrl {
         checkBox.setOnAction(this::checkboxClicked);
         subtaskContainer.getChildren().add(checkBox);
         checkBox.setSelected(subtask.checked);
+        // color
+        String taskColor = selectServerCtrl.getCurrentUser().colorPreset.get(subtask.taskColor);
+        String[] colors = taskColor.split(" ");
+        if(checkBox.isSelected()){
+            subtaskContainer.setStyle("-fx-background-color: "+colors[1]+";");
+        }else {subtaskContainer.setStyle("-fx-background-color: "+colors[0]+";");}
 
         // styling for the up arrow button
         Button upArrow = new Button();
@@ -274,6 +287,29 @@ public class CardDetailsCtrl {
         delete.setOnAction(this::deleteSubtask);
         rename.setOnAction(this::renameSubtask);
         menuButton.getItems().addAll(rename, delete);
+
+        // add color menu
+        Menu colorMenu = new Menu("Color");
+        Map<String, String> colorTaker = selectServerCtrl.getCurrentUser().colorPreset;
+        String[] colorOptions = colorTaker.keySet().toArray(new String[0]);
+        for (String colorOption : colorOptions) {
+            MenuItem colorItem = new MenuItem(colorOption);
+            colorMenu.getItems().add(colorItem);
+            colorItem.setOnAction(event -> {
+                MenuItem menuItem = (MenuItem) event.getSource();
+                HBox toSet = subtaskContainer;
+                Subtask toSetColor = (Subtask) toSet.getProperties().get("subtask");
+                toSetColor.taskColor = colorOption;
+                for (Subtask subtask : openedCard.subtasks) {
+                    if(subtask.title==toSetColor.title){
+                        subtask.taskColor = toSetColor.taskColor;
+                    }
+                }
+                refreshOpenedCard();
+            });
+        }
+        menuButton.getItems().add(colorMenu);
+
         subtaskContainer.getChildren().add(menuButton);
         HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
     }
@@ -449,6 +485,11 @@ public class CardDetailsCtrl {
         int subtaskIndex = openedCard.subtasks.indexOf(subtask);
         Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
         updatedSubtask.checked = checkBox.isSelected();
+//        String taskColor = selectServerCtrl.getCurrentUser().colorPreset.get(subtask.taskColor);
+//        String[] colors = taskColor.split(" ");
+//        if(checkBox.isSelected()){
+//            subtaskContainer.setStyle("-fx-background-color: "+colors[1]+";");
+//        }else {subtaskContainer.setStyle("-fx-background-color: "+colors[0]+";");}
         refreshOpenedCard();
     }
 
@@ -460,5 +501,6 @@ public class CardDetailsCtrl {
     public void setBoard(Boards board) {
         this.board = board;
     }
+
 
 }

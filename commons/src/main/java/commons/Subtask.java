@@ -23,6 +23,8 @@ public class Subtask {
 
     public int position;
 
+    public String taskColor;
+
     /**
      * Constructor method for the Subtask class
      * @param title the title of the card
@@ -37,6 +39,7 @@ public class Subtask {
         this.checked = checked;
         this.card = card;
         this.position = position;
+        this.taskColor = "default";
     }
 
     /**

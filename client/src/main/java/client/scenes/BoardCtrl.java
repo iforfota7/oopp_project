@@ -574,13 +574,13 @@ public class BoardCtrl {
         innerShadow.setWidth(18.66);
         innerShadow.setHeight(18.66);
 
-        //properties settings
-        cardBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
+        cardBody.setStyle("-fx-background-color: " +
+                board.cardBgColor + "; "+ "-fx-background-radius: 4;");
         cardBody.setEffect(innerShadow);
 
         HBox cardOverviewInfo = newCardOverviewBody(c);
         HBox cardTags = newCardTagsBody();
-
+        cardTags.setStyle("-fx-background-color: " + board.cardBgColor + ";");
         cardBody.getChildren().addAll(cardOverviewInfo, cardTags);
         return cardBody;
     }
@@ -606,7 +606,10 @@ public class BoardCtrl {
         cardTitle.setPrefHeight(25.6);
         cardTitle.setPadding(new Insets(0, 0, -2, 10));
         cardTitle.setStyle("-fx-font-size: 11;");
-
+        cardDetailsOverview.setStyle("-fx-background-color: " + board.cardBgColor + ";"
+                + "-fx-text-fill: " + board.cardFtColor + ";");
+        cardTitle.setStyle("-fx-background-color: " + board.cardBgColor + ";"
+                + "-fx-text-fill: " + board.cardFtColor + ";");
         cardOverviewBody.getChildren().addAll(cardTitle, cardDetailsOverview);
         return cardOverviewBody;
     }
@@ -622,8 +625,32 @@ public class BoardCtrl {
     public VBox newCardDetailsOverview(Cards card){
         VBox cardDetailsOverview = new VBox();
         cardDetailsOverview.setPrefWidth(61);
-        cardDetailsOverview.setPrefHeight(25.6);
+        cardDetailsOverview.setPrefHeight(50);
 
+        Label subtasksCount = createSubtasksCountLabel(card);
+        ProgressBar subtasksProgressBar = createSubtasksProgressBar(card);
+        String labelText = "Description: no";
+        if(!card.description.equals(""))
+            labelText = "Description: yes";
+        Label descriptionExistence = new Label(labelText);
+        descriptionExistence.setStyle("-fx-font-size: 7;");
+        descriptionExistence.setAlignment(Pos.CENTER_RIGHT);
+        descriptionExistence.setPrefWidth(61);
+        descriptionExistence.setPrefHeight(10);
+        descriptionExistence.setPadding(new Insets(0, 10, 0, 0));
+
+        cardDetailsOverview.getChildren().addAll(subtasksCount,
+                subtasksProgressBar, descriptionExistence);
+        return cardDetailsOverview;
+    }
+
+    /**
+     * regarding the number of subtasks and whether the card also has a
+     * description or not
+     * @param card Object containing information about the card
+     * @return the 'title' part of the body of the given card
+     */
+    private Label createSubtasksCountLabel(Cards card) {
         String subtasksLabelText = "no subtasks";
         if(card.subtasks != null && card.subtasks.size() > 0) {
             int total = card.subtasks.size();
@@ -634,26 +661,40 @@ public class BoardCtrl {
             subtasksLabelText = done + "/" + total + " subtasks";
         }
         Label subtasksCount = new Label(subtasksLabelText);
-
-        String descriptionLabelText = "Description: no";
-        if(!card.description.equals(""))
-            descriptionLabelText = "Description: yes";
-        Label descriptionExistence = new Label(descriptionLabelText);
-
         subtasksCount.setStyle("-fx-font-size: 7;");
         subtasksCount.setAlignment(Pos.CENTER_RIGHT);
         subtasksCount.setPrefWidth(61);
-        subtasksCount.setPrefHeight(13);
-        subtasksCount.setPadding(new Insets(0, 10, -5, 0));
+        subtasksCount.setPrefHeight(10);
+        subtasksCount.setPadding(new Insets(0, 10, 0, 0));
+        return subtasksCount;
+    }
 
-        descriptionExistence.setStyle("-fx-font-size: 7;");
-        descriptionExistence.setAlignment(Pos.CENTER_RIGHT);
-        descriptionExistence.setPrefWidth(61);
-        descriptionExistence.setPrefHeight(13);
-        descriptionExistence.setPadding(new Insets(-1, 10, 1, 0));
-
-        cardDetailsOverview.getChildren().addAll(subtasksCount, descriptionExistence);
-        return cardDetailsOverview;
+    /**
+     *To create a progress bar for a task:
+     * @param card Object containing information about the card
+     * @return the 'progress bar' part of the body of the given card
+     */
+    private ProgressBar createSubtasksProgressBar(Cards card) {
+        ProgressBar subtasksProgressBar = new ProgressBar();
+        subtasksProgressBar.setPrefWidth(61);
+        subtasksProgressBar.setPrefHeight(30);
+        double progress = 0;
+        if (card.subtasks != null && card.subtasks.size() > 0) {
+            int total = card.subtasks.size();
+            int done = 0;
+            for(Subtask subtask : card.subtasks)
+                if(subtask.checked)
+                    done++;
+            progress = (double) done / total;
+            subtasksProgressBar.setProgress(progress);
+            if (progress == 1.0) {
+                subtasksProgressBar.setStyle("-fx-accent: green;");
+            } else if (progress > 0) {
+                subtasksProgressBar.setStyle("-fx-accent: orange;");
+            }
+        }
+        subtasksProgressBar.setPadding(new Insets(0,10,0,0));
+        return subtasksProgressBar;
     }
 
     /**
@@ -666,7 +707,7 @@ public class BoardCtrl {
 
         cardTagsBody.setPrefWidth(114.4);
         cardTagsBody.setPrefHeight(6.4);
-        cardTagsBody.setPadding(new Insets(0, 0, 0, 8));
+        cardTagsBody.setPadding(new Insets(0, 10, 0, 8));
         cardTagsBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
 
         return cardTagsBody;

@@ -34,6 +34,7 @@ public class MainCtrl {
     private Scene tagControl, addTag, tagDetails;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
     private Scene confirmAdmin, help;
+    private Scene customization;
 
     private SelectServerCtrl selectServerCtrl;
     private ConfirmUsernameCtrl confirmUsernameCtrl;

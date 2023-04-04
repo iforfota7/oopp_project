@@ -8,6 +8,7 @@ import server.database.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -50,7 +51,6 @@ public class UserController {
         if(repo.findById(username).isEmpty()) return null;
         return repo.findById(username).get();
     }
-
     /**
      * Update method for the user
      * @param user the user
@@ -75,6 +75,23 @@ public class UserController {
         }
         boolean admin = user.isAdmin;
         user.isAdmin = admin;
+        repo.save(user);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Get the color presets stored by the user in the database
+     * @param user current user
+     * @return user with new color preset
+     */
+    @PostMapping(path = {"/setTaskColor", "/setTaskColor/"})
+    @ResponseBody
+    public ResponseEntity<Object> refreshTaskColor(@RequestBody User user){
+        if (user == null || user.username == null || user.username.equals("")) {
+            return ResponseEntity.badRequest().build();
+        }
+        Map<String, String> colorPreset = user.colorPreset;
+        user.colorPreset = colorPreset;
         repo.save(user);
         return ResponseEntity.ok().build();
     }
