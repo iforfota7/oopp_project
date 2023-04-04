@@ -16,14 +16,21 @@
 package client;
 
 import client.scenes.*;
+import client.scenes.UserDetailsCtrl;
+import client.utils.ServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 
 public class MyModule implements Module {
 
+    /**
+     * Configure method
+     * @param binder the binder to which controllers are bound
+     */
     @Override
     public void configure(Binder binder) {
+        binder.bind(ServerUtils.class).in(Scopes.SINGLETON);
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(BoardCtrl.class).in(Scopes.SINGLETON);
         binder.bind(BoardOverviewCtrl.class).in(Scopes.SINGLETON);
@@ -36,5 +43,6 @@ public class MyModule implements Module {
         binder.bind(ConfirmUsernameCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddBoardCtrl.class).in(Scopes.SINGLETON);
         binder.bind(JoinBoardByIDCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(UserDetailsCtrl.class).in(Scopes.SINGLETON);
     }
 }

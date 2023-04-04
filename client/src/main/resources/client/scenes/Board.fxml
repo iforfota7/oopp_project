@@ -29,10 +29,11 @@
             <Font size="10.0" />
          </font>
       </Button>
-      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="538.0" layoutY="360.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="22.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="15.8">
+      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="538.0" layoutY="360.0" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="23.0" prefWidth="22.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER" AnchorPane.bottomAnchor="16.8" AnchorPane.rightAnchor="15.8">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
+      <Button fx:id="tags" layoutX="431.0" layoutY="17.0" mnemonicParsing="false" onAction="#openTag" prefHeight="27.0" prefWidth="71.2" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="97.80000000000001" AnchorPane.topAnchor="17.0" />
    </children>
 </AnchorPane>

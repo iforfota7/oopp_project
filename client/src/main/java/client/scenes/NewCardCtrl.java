@@ -11,8 +11,13 @@ public class NewCardCtrl {
     @FXML
     private Text warning;
 
+
     private final BoardCtrl boardCtrl;
 
+    /**
+     * Constructor method for NewCardCtrl
+     * @param boardCtrl instance of BoardCtrl
+     */
     @Inject
     public NewCardCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;
@@ -24,7 +29,10 @@ public class NewCardCtrl {
      * This method sends the information entered in cardDetail
      * to the board to display the card name.
      * A warning is displayed if the input field is empty.
+     *
      */
+
+
     @FXML
     void save() {
         warning.setVisible(false);

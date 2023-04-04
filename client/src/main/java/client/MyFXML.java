@@ -33,10 +33,21 @@ public class MyFXML {
 
     private Injector injector;
 
+    /**
+     * Constructor method for myFXML
+     * @param injector the injector to be set
+     */
     public MyFXML(Injector injector) {
         this.injector = injector;
     }
 
+    /**
+     * Loads fxml file
+     * @param c the class of the linked controller
+     * @param parts the parts making up the url of the fxml file
+     * @return a pair of the controller and its parent
+     * @param <T> type of controller
+     */
     public <T> Pair<T, Parent> load(Class<T> c, String... parts) {
         try {
             var loader = new FXMLLoader(getLocation(parts),
@@ -49,13 +60,26 @@ public class MyFXML {
         }
     }
 
+    /**
+     * Method to get the location of a fxml file
+     * @param parts the parts making up the file location
+     * @return the url of the file
+     */
     private URL getLocation(String... parts) {
         var path = Path.of("", parts).toString();
         return MyFXML.class.getClassLoader().getResource(path);
     }
 
+    /**
+     * Nested class to make builder
+     */
     private class MyFactory implements BuilderFactory, Callback<Class<?>, Object> {
 
+        /**
+         * Builder for type
+         * @param type the given type or null
+         * @return the builder for the given type
+         */
         @Override
         @SuppressWarnings("rawtypes")
         public Builder<?> getBuilder(Class<?> type) {
@@ -67,6 +91,12 @@ public class MyFXML {
             };
         }
 
+        /**
+         * Call method
+         * @param type The single argument upon which the returned value should be
+         *         determined.
+         * @return an instance of the injector with the specified type
+         */
         @Override
         public Object call(Class<?> type) {
             return injector.getInstance(type);

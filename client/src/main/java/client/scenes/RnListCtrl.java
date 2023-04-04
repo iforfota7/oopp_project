@@ -10,8 +10,12 @@ import javax.inject.Inject;
  * Change list name controller
  */
 public class RnListCtrl {
-    private BoardCtrl boardCtrl;
+    private final BoardCtrl boardCtrl;
 
+    /**
+     * Constructor method for RnListCtrl
+     * @param boardCtrl instance of BoardCtrl
+     */
     @Inject
     public RnListCtrl(BoardCtrl boardCtrl){
         this.boardCtrl = boardCtrl;

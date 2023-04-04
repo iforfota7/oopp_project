@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RenameBoardCtrl">
+    <children>
+        <Label layoutX="83.0" layoutY="33.0" prefHeight="26.0" prefWidth="150.0" text="Rename the board" AnchorPane.leftAnchor="83.0" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="33.0">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="28.0" layoutY="98.0" text="Board name:" AnchorPane.leftAnchor="28.0">
+            <font>
+                <Font size="13.0" />
+            </font>
+        </Label>
+        <TextField fx:id="boardName" layoutX="115.0" layoutY="95.0" prefHeight="26.0" prefWidth="149.0" AnchorPane.rightAnchor="35.400000000000006" />
+        <Button layoutX="202.0" layoutY="151.0" mnemonicParsing="false" onAction="#saveNewBoard" prefHeight="26.0" prefWidth="62.0" text="Save" AnchorPane.bottomAnchor="22.599999999999994" AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="35.60000000000002" />
+        <Button layoutX="33.0" layoutY="151.0" mnemonicParsing="false" onAction="#cancel" prefHeight="26.0" prefWidth="62.0" text="Cancel" />
+        <Label fx:id="warning" layoutX="132.0" layoutY="121.0" text="This name is already used!" textFill="RED" visible="false">
+            <font>
+                <Font size="10.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
