@@ -17,17 +17,13 @@ public class Shortcuts {
     public void onMouseHover(MouseEvent mouseEvent) {
 
         AnchorPane hovered = (AnchorPane) mouseEvent.getSource();
-        if(currentCard==null ||
-                ((AnchorPane) mouseEvent.getSource()).getParent()
-                        .getParent()!=currentCard.getParent().getParent()) {
 
-            if(currentCard!=null)
-                currentCard.setStyle("");
+        if(currentCard!=null)
+            currentCard.setStyle("");
 
-            hovered.setStyle(
-                    "-fx-border-color: red; -fx-border-style:solid");
-            currentCard = hovered;
-        }
+        hovered.setStyle(
+                "-fx-border-color: red; -fx-border-style:solid");
+        currentCard = hovered;
 
         mouseEvent.consume();
     }
