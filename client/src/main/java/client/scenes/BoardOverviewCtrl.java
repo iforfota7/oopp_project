@@ -47,9 +47,6 @@ public class BoardOverviewCtrl{
 
     @FXML
     private Label adminLabel;
-    @FXML
-    private Label userLabel;
-
     private boolean adminLock;
 
     /**
@@ -113,7 +110,7 @@ public class BoardOverviewCtrl{
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
         gridPane.add(newBoard, positionInColumn, row);
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
-                new Insets(10, 10 , 10 ,10));
+                new Insets(20, 20 , 20 ,20));
     }
 
     /**
@@ -127,14 +124,14 @@ public class BoardOverviewCtrl{
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
-        newBoard.setPrefWidth(160.8);
-        newBoard.setPrefHeight(73.6);
-        newBoard.setMinWidth(160.8);
-        newBoard.setMinHeight(73.6);
+        newBoard.setPrefWidth(263.2);
+        newBoard.setPrefHeight(110.4);
+        newBoard.setMinWidth(263.2);
+        newBoard.setMinHeight(110.4);
         newBoard.setAlignment(Pos.CENTER);
         newBoard.setText(b.name);
         newBoard.getProperties().put("board", b);
-        newBoard.setFont(new Font(15));
+        newBoard.setFont(new Font(16));
         newBoard.setOnMouseClicked(this::goToBoard);
 
         StackPane stackPane = new StackPane();
@@ -249,8 +246,7 @@ public class BoardOverviewCtrl{
     public void openAdminFeatures() {
         adminLock = true;
         mainCtrl.closeSecondaryStage();
-        adminLabel.setVisible(true);
-        userLabel.setVisible(false);
+        adminLabel.setText("Admin Label");
     }
 
     /**
@@ -258,8 +254,7 @@ public class BoardOverviewCtrl{
      * Hide delete buttons.
      */
     public void closeAdminFeatures(){
-        adminLabel.setVisible(false);
-        userLabel.setVisible(true);
+        adminLabel.setText("User Label");
     }
 
     /**
