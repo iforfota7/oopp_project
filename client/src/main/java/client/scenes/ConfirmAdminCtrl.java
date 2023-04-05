@@ -48,8 +48,7 @@ public class ConfirmAdminCtrl {
      */
     @FXML
     void adminLogin() {
-        boolean check = server.checkPassword(inputPassword.getText());
-        if(check){
+        if(!inputPassword.getText().equals("") && server.checkPassword(inputPassword.getText())){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Login successful!");
             alert.setHeaderText(null);
