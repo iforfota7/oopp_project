@@ -33,7 +33,7 @@ public class MainCtrl {
     private Scene boardOverview, addBoard, renameBoard;
     private Scene tagControl, addTag, tagDetails;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
-    private Scene confirmAdmin, help;
+    private Scene confirmAdmin, help, helpOverview;
 
     private SelectServerCtrl selectServerCtrl;
     private ConfirmUsernameCtrl confirmUsernameCtrl;
@@ -156,10 +156,14 @@ public class MainCtrl {
     /**
      * Initialise method for 'useful' scenes
      * @param helpCtrl helpCtrl parent pair for Help scene
+     * @param helpOverviewCtrl helpOverview parent pair for Help scene in board overview
      */
-    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl){
+    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl,
+                                Pair<HelpCtrl, Parent> helpOverviewCtrl){
         this.help = new Scene(helpCtrl.getValue());
         this.helpCtrl = helpCtrl.getKey();
+
+        this.helpOverview = new Scene(helpOverviewCtrl.getValue()); // uses same ctrl as help
     }
 
     /**
@@ -436,13 +440,25 @@ public class MainCtrl {
 
     /**
      * Shows in a second window the guide to use the application
-     * after pressing the 'H' button -> help
+     * in the board after pressing the 'help' button
      */
     public void showHelpScene(){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
         secondaryStage = new Stage();
         secondaryStage.setTitle("Help");
         secondaryStage.setScene(help);
+        secondaryStage.show();
+    }
+
+    /**
+     * Shows in a second window the guide to use the application
+     * in the board Overview after pressing the 'help' button
+     */
+    public void showHelpOverviewScene(){
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Help");
+        secondaryStage.setScene(helpOverview);
         secondaryStage.show();
     }
 
