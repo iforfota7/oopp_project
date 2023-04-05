@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -182,6 +183,12 @@ public class CardDetailsCtrl {
         sceneOpened = true;
 
         this.openedCard = card;
+        List<Node> tagContainers = new ArrayList<>();
+        for(Node child : tagList.getChildren())
+            if(child.getProperties().get("tag") != null)
+                tagContainers.add(child);
+        tagList.getChildren().removeAll(tagContainers);
+
 
         tagsCardDetails = new TagsCardDetails(tagList);
         tagsCardDetails.renderTags(openedCard);
@@ -471,7 +478,7 @@ public class CardDetailsCtrl {
      *
      */
     public void showAddTagToCard() {
-        mainCtrl.showAddTagToCard();
+        mainCtrl.showAddTagToCard(openedCard, board);
     }
 
 }

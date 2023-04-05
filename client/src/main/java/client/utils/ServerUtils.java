@@ -462,4 +462,17 @@ public class ServerUtils {
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
+    /**
+     * Method for removing references from all cards
+     * to a specific tag
+     *
+     * @param tags The tag object we are removing
+     * @return The removed tag object
+     */
+    public Tags removeTagFromCards(Tags tags) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/cards/removeTag").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(tags, APPLICATION_JSON), Tags.class);
+    }
+
 }

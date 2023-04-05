@@ -143,6 +143,8 @@ public class TagsCtrl {
         Tags t = (Tags) ((Label)((AnchorPane)deleteCard.getParent())
                 .getChildren().get(0)).getProperties().get("tag");
         board.tags.remove(t);
+
+        server.removeTagFromCards(t);
         server.updateBoard(board);
     }
 

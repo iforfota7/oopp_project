@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Cards;
 import commons.Tags;
 import commons.User;
 import commons.Boards;
@@ -363,9 +364,13 @@ public class MainCtrl {
     /**
      * Opens the add tag to card scene
      *
+     * @param openedCard Reference to the card object
+     * @param board Reference to the board object
+     *
      */
-    public void showAddTagToCard() {
+    public void showAddTagToCard(Cards openedCard, Boards board) {
         if(thirdStage != null && thirdStage.isShowing()) return;
+        addTagToCardCtrl.init(openedCard, board);
         thirdStage = new Stage();
         thirdStage.setScene(addTagToCard);
         thirdStage.setTitle("Add Tag to Card");
