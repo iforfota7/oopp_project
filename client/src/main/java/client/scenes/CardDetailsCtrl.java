@@ -466,4 +466,12 @@ public class CardDetailsCtrl {
         this.board = board;
     }
 
+    /**
+     * Pressing the '+' button will make the add tag scene appear
+     *
+     */
+    public void showAddTagToCard() {
+        mainCtrl.showAddTagToCard();
+    }
+
 }

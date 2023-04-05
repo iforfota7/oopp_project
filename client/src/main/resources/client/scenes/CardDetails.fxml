@@ -145,7 +145,7 @@
                <Insets left="9.0" />
             </padding>
          </Label>
-         <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="21.0" style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-background-color: #d0fbd0; -fx-border-color: #8cd98c;" text="+" GridPane.columnIndex="3" GridPane.rowIndex="2">
+         <Button mnemonicParsing="false" onAction="#showAddTagToCard" prefHeight="20.0" prefWidth="21.0" style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-background-color: #d0fbd0; -fx-border-color: #8cd98c;" text="+" GridPane.columnIndex="3" GridPane.rowIndex="2">
             <GridPane.margin>
                <Insets left="83.0" right="-2.0" top="2.0" />
             </GridPane.margin>
