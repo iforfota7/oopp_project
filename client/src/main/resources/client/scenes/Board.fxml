@@ -35,5 +35,10 @@
          </font>
       </Button>
       <Button fx:id="tags" layoutX="431.0" layoutY="17.0" mnemonicParsing="false" onAction="#openTag" prefHeight="27.0" prefWidth="71.2" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="97.80000000000001" AnchorPane.topAnchor="17.0" />
+      <Button fx:id="customization" alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="360.0" mnemonicParsing="false" onAction="#openCustomization" prefHeight="23.0" prefWidth="75.0" style="-fx-background-color: #ffcccc; -fx-alignment: bottom-right; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 0);" text="Customization" textAlignment="CENTER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="25.0">
+      <font>
+         <Font size="10.0" />
+      </font>
+      </Button>
    </children>
 </AnchorPane>

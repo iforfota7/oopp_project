@@ -90,7 +90,6 @@ public class Main extends Application {
         var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
 
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
-
         var cardCustomization =
                 FXML.load(CardCustomizationCtrl.class,
                         "client", "scenes", "CardCustomization.fxml");
@@ -100,8 +99,6 @@ public class Main extends Application {
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene, helpOverviewScene);
-
-
         mainCtrl.initializeAdmin(confirmAdmin);
         mainCtrl.initializeCustomization(customization,cardCustomization);
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
