@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #E6E6FA;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CustomizationCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="300.0" style="-fx-background-color: #E6E6FA;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CustomizationCtrl">
    <children>
       <Label alignment="CENTER" layoutX="78.0" layoutY="14.0" prefHeight="23.0" prefWidth="145.0" text="Customization" AnchorPane.leftAnchor="78.0" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="14.0">
          <font>
