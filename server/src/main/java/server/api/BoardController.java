@@ -1,14 +1,19 @@
 package server.api;
 
 import commons.Boards;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.database.BoardsRepository;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.List;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("api/boards")
@@ -26,6 +31,33 @@ public class BoardController {
         this.msgs = msgs;
     }
 
+
+    private Map<Object, Consumer<Boards>> listeners = new HashMap<>();
+
+    /** Long Polling request server endpoint.
+     * @return nothing if it timeouts, else board for deletion
+     */
+    @GetMapping(path = {"/longPolling", "/longPolling/"})
+    public DeferredResult<ResponseEntity<Boards>> getUpdates() {
+
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        var res = new DeferredResult<ResponseEntity<Boards>>(5000L, noContent);
+
+        var key = new Object();
+        listeners.put(key, b -> {
+            res.setResult(ResponseEntity.ok(b));
+
+        });
+
+        res.onCompletion(()->{
+            listeners.remove(key);
+        });
+
+        return res;
+    }
+
+
     /**
      * Get all boards from database
      * @return a list of all boards
@@ -34,6 +66,11 @@ public class BoardController {
     public List<Boards> getAll() {
         return repo.findAll();
     }
+
+
+
+
+
 
     /**
      * Add new board to database
@@ -143,6 +180,8 @@ public class BoardController {
         if (optionalBoard.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
+        listeners.forEach((k, l)->l.accept(boards));
 
         repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
