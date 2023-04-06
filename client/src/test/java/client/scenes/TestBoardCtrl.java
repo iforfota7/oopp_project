@@ -34,4 +34,10 @@ public class TestBoardCtrl extends BoardCtrl {
     public HBox getFirstRow() {
         return firstRow;
     }
+
+    @Override
+    public void deleteCard(){}
+
+    @Override
+    public void undeleteCard(){}
 }
