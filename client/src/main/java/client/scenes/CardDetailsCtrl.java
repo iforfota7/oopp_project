@@ -40,11 +40,10 @@ public class CardDetailsCtrl {
     private Text warningSubtask;
     private int inputsOpen = 0;
     private boolean rename = false;
-    @FXML
 
     private final ServerUtils server;
-    @FXML
     private final MainCtrl mainCtrl;
+
     private Subtask toRename;
     public Cards openedCard;
     private Boards board;
@@ -52,15 +51,10 @@ public class CardDetailsCtrl {
     private List<String> serverURLS;
 
     public String colors;
-
-
-
-
     /**
      * Initializes the card details controller object
-     *
-     * @param server            Used for sending requests to the server
-     * @param mainCtrl          Used for navigating through different scenes
+     * @param server Used for sending requests to the server
+     * @param mainCtrl Used for navigating through different scenes
      */
     @Inject
     public CardDetailsCtrl(ServerUtils server, MainCtrl mainCtrl){
@@ -80,6 +74,7 @@ public class CardDetailsCtrl {
             serverURLS.add(server.getServer());
             websocketConfig();
         }
+        warning.setVisible(false);
     }
 
     /**
@@ -108,7 +103,6 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id && sceneOpened) {
                         mainCtrl.closeSecondaryStage();
-                        mainCtrl.showBoard(board);
                     }
                 }
             });
@@ -160,6 +154,7 @@ public class CardDetailsCtrl {
     void close(){
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
+        mainCtrl.showBoard(board);
     }
 
     /**
@@ -177,7 +172,6 @@ public class CardDetailsCtrl {
         cardTitleInput.setStyle("-fx-text-fill: " + colors[1] + ";");
         description.setStyle("-fx-text-fill: " + colors[1] + ";");
     }
-
 
     /**
      * Sets openedCard to be the current card
@@ -233,6 +227,7 @@ public class CardDetailsCtrl {
         checkBox.setOnAction(this::checkboxClicked);
         subtaskContainer.getChildren().add(checkBox);
         checkBox.setSelected(subtask.checked);
+
         // styling for the up arrow button
         Button upArrow = new Button();
         upArrow.setText("\uD83D\uDD3C");
@@ -282,9 +277,6 @@ public class CardDetailsCtrl {
         delete.setOnAction(this::deleteSubtask);
         rename.setOnAction(this::renameSubtask);
         menuButton.getItems().addAll(rename, delete);
-
-
-
         subtaskContainer.getChildren().add(menuButton);
         HBox.setMargin(menuButton, new Insets(0, 0, 0, 5));
     }

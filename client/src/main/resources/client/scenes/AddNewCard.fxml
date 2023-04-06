@@ -21,5 +21,5 @@
             <Font name="Hiragino Sans GB W3" size="16.0" />
         </font>
     </Label>
-   <Text fx:id="warning" fill="RED" layoutX="88.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
+    <Text fx:id="warning" fill="RED" layoutX="88.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
 </AnchorPane>

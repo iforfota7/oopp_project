@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.scenes.config.Draggable;
+import client.scenes.config.Shortcuts;
 import client.utils.ServerUtils;
 import commons.Boards;
 import commons.Lists;
@@ -52,9 +53,9 @@ public class BoardCtrl {
 
     private Cards currentCard;
 
-    private List<Lists> lists;
-
     private final Draggable drag;
+    private final Shortcuts shortcuts;
+
     private List<String> serverURLS;
 
 
@@ -158,54 +159,11 @@ public class BoardCtrl {
     public void refresh(){
         this.board = server.getBoardByID(boardName.getText());
         firstRow.getChildren().clear();
-        lists = server.getListsByBoard(board.id);
-        for (Lists list : lists) {
+        board.lists = server.getListsByBoard(board.id);
+        for (Lists list : board.lists) {
             addNewList(list);
         }
         refreshCustomization();
-    }
-
-    /**
-     * Method that gets lists for a specific board
-     */
-    public void refreshData(){
-        lists = server.getListsByBoard(board.id);
-        refreshLists(lists);
-    }
-
-    /**
-     * Method that refreshes all the cards in a list
-     * @param listContainer the container of the list
-     * @param c the list of cards
-     */
-    public void refreshCards(VBox listContainer, List<Cards> c){
-        int j = 0;
-        for(Node i : listContainer.getChildren()){
-
-            Cards card = (Cards) i.getProperties().get("card");
-
-            if(card!=null){
-              i.getProperties().remove("card");
-              i.getProperties().put("card", c.get(j));
-              j++;
-            }
-        }
-    }
-
-    /**
-     * Method that refreshes all the lists in a board
-     * @param l a list of lists to be redrawn
-     */
-    public void refreshLists(List<Lists> l){
-        int j = 0;
-        for(Node i : firstRow.getChildren()){
-            Lists list = (Lists) i.getProperties().get("list");
-            if(list!=null){
-                i.getProperties().put("list", l.get(j));
-                refreshCards((VBox) ((VBox) i).getChildren().get(0), l.get(j).cards);
-                j++;
-            }
-        }
     }
 
     /**
@@ -223,6 +181,7 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
+        this.shortcuts = new Shortcuts();
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
@@ -443,7 +402,8 @@ public class BoardCtrl {
     }
 
     /**
-     * Method tha deletes the card from the database and closes the secondary scene
+     * Deletes a card from the database, after the user confirmed
+     * the deletion
      */
     void deleteCard() {
         server.removeCard(currentCard);
@@ -451,14 +411,15 @@ public class BoardCtrl {
     }
 
     /**
-     * Method that cancels the deletion and closes the secondary scene
+     * Closes the scene which asks for confirmation of deleting a card
      */
     void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
     /**
-     * Method that shows the help scene
+     * Opens the Help Scene of a board when the button 'H' from
+     * bottom right is pushed
      */
     public void showHelpScene(){
         mainCtrl.showHelpScene();
@@ -479,7 +440,8 @@ public class BoardCtrl {
             /*VBox currentCard = (VBox) ((AnchorPane)(
                     (AnchorPane)event.getSource()).getParent()).getChildren().get(1);
             Cards openedCard = (Cards) currentCard.getProperties().get("card");*/
-            //cardDetailsCtrl.setBoard(board);
+
+            cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
             cardDetailsCtrl.colors = board.colorPreset.get(openedCard.colorStyle);
             mainCtrl.closeSecondaryStage();
@@ -516,7 +478,6 @@ public class BoardCtrl {
      * @param position the position of the list
      */
     public void addListToBoard(String text, int position){
-        // the following two lines causes a stack overflow
         Lists list = new Lists(text, position, board);
 
         try {
@@ -551,6 +512,9 @@ public class BoardCtrl {
         over.setOnDragDropped(drag::dragDropped);
         over.setOnMouseClicked(this::cardDetail);
 
+        over.setId("card"+Long.toString(c.id));
+        over.setOnMouseEntered(shortcuts::onMouseHover);
+
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
 
@@ -558,6 +522,12 @@ public class BoardCtrl {
         newCard.getChildren().addAll(deleteCard, card, over);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
+
+        if(shortcuts.getCurrentCard()!=null &&
+                newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
+            over.setStyle("-fx-border-color: red; -fx-border-style:solid");
+            shortcuts.setCurrentCard(over);
+        }
 
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
     }
@@ -745,6 +715,30 @@ public class BoardCtrl {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Creates a new hyperlink for a card
+     * @return the created hyperlink
+     */
+    public Hyperlink newHyperlink(){
+        Hyperlink card = new Hyperlink();
+
+        // set positioning, sizing, text alignment, and background color of the hyperlink
+        card.setLayoutX(41);
+        card.setLayoutY(1);
+        card.setPrefSize(95, 23);
+        card.setAlignment(Pos.CENTER);
+        card.setStyle("-fx-background-color:  #E6E6FA");
+        card.setOnDragDetected(drag::dragDetected);
+
+        // set the card to execute cardDetail on action
+//        card.setOnAction(this::cardDetail);
+        card.setOnMouseClicked(this::cardDetail);
+        return card;
+    }
+
+    /**
+>>>>>>> dev
      * Create a new delete card button for a card
      * @return a new button
      */
@@ -786,7 +780,7 @@ public class BoardCtrl {
      * Method that adds board to users visited boards
      * @param board the board to be added
      */
-    public void addBoardToList(Boards board){
+    public void addBoardToUser(Boards board){
         server.addBoardToUser(board);
     }
 

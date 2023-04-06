@@ -62,7 +62,7 @@ public class AddTagCtrl {
         server.updateBoard(board);
 
         cardTitleInput.clear();
-        this.mainCtrl.closeNewTag();
+        this.mainCtrl.closeThirdStage();
     }
 
     /**

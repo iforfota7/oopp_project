@@ -84,7 +84,6 @@ public class BoardController {
     @Transactional
     @PostMapping(path={"/update", "/update/"})
     public ResponseEntity<Boards> updateBoard(@RequestBody Boards board) {
-        System.out.println(board.tags);
         if(board == null || isNullOrEmpty(board.name))
             return ResponseEntity.badRequest().build();
 
@@ -145,6 +144,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
+        repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
         return ResponseEntity.ok().build();

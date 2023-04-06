@@ -33,7 +33,7 @@ public class MainCtrl {
     private Scene boardOverview, addBoard, renameBoard;
     private Scene tagControl, addTag, tagDetails;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
-    private Scene confirmAdmin, help;
+    private Scene confirmAdmin, help, helpOverview;
     private Scene customization, cardCustomization;
 
     private SelectServerCtrl selectServerCtrl;
@@ -44,11 +44,12 @@ public class MainCtrl {
     private BoardCtrl boardCtrl;
     private AddBoardCtrl addBoardCtrl;
     private RenameBoardCtrl renameBoardCtrl;
+
+    private HelpCtrl helpCtrl;
     private UserDetailsCtrl userDetailsCtrl;
 
     private CustomizationCtrl customizationCtrl;
 
-    private HelpCtrl helpCtrl;
     private ConfirmAdminCtrl confirmAdminCtrl;
 
     private RnListCtrl rnListCtrl;
@@ -118,8 +119,8 @@ public class MainCtrl {
      * @param addList addListCtrl parent pair for addList scene
      */
     public void initializeLists( Stage primaryStage, Pair<RnListCtrl,Parent> renameList,
-                Pair<DeListCtrl, Parent> deleteList,
-                Pair<AdListCtrl, Parent> addList) {
+                                 Pair<DeListCtrl, Parent> deleteList,
+                                 Pair<AdListCtrl, Parent> addList) {
 
         this.primaryStage = primaryStage;
 
@@ -140,11 +141,11 @@ public class MainCtrl {
      * Initialize method for card related scenes
      * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
-     * @param deCardCtrl deCardCtrl parent pair for deleteCard scene
+     * @param deCardCtrl deCardCtrl parent pair for deCard scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
-            Pair<NewCardCtrl, Parent> newCardCtrl,
-            Pair<DeCardCtrl, Parent> deCardCtrl) {
+                                Pair<NewCardCtrl, Parent> newCardCtrl,
+                                Pair<DeCardCtrl, Parent> deCardCtrl) {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
@@ -157,12 +158,16 @@ public class MainCtrl {
     }
 
     /**
-     * Initialize method for utils related scenes
-     * @param helpCtrl helpCtrl parent pair for help scene
+     * Initialise method for 'useful' scenes
+     * @param helpCtrl helpCtrl parent pair for Help scene
+     * @param helpOverviewCtrl helpOverview parent pair for Help scene in board overview
      */
-    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl){
+    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl,
+                                Pair<HelpCtrl, Parent> helpOverviewCtrl){
         this.help = new Scene(helpCtrl.getValue());
         this.helpCtrl = helpCtrl.getKey();
+
+        this.helpOverview = new Scene(helpOverviewCtrl.getValue()); // uses same ctrl as help
     }
 
     /**
@@ -220,7 +225,7 @@ public class MainCtrl {
      */
     public void showBoard(Boards b) {
         boardCtrl.setBoardName(b);
-        boardCtrl.addBoardToList(b);
+        boardCtrl.addBoardToUser(b);
         primaryStage.setTitle("Board");
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
@@ -324,7 +329,8 @@ public class MainCtrl {
      */
 
     public void showTagDetail(Tags t, Boards board){
-       thirdStage = new Stage();
+        if(thirdStage != null && thirdStage.isShowing()) return;
+        thirdStage = new Stage();
         thirdStage.setScene(tagDetails);
         thirdStage.setTitle("Tag Details");
         thirdStage.show();
@@ -348,6 +354,7 @@ public class MainCtrl {
      * @param board The board object inside which we add a tag
      */
     public void showAddTag(Boards board){
+        if(thirdStage != null && thirdStage.isShowing()) return;
         thirdStage = new Stage();
         thirdStage.setScene(addTag);
         thirdStage.setTitle("Add new Tag");
@@ -361,6 +368,7 @@ public class MainCtrl {
      * @param b The board object for which we open this scene
      */
     public void showTagControl(Boards b){
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
         secondaryStage = new Stage();
         secondaryStage.setScene(tagControl);
         secondaryStage.setTitle("Tags Control");
@@ -370,14 +378,14 @@ public class MainCtrl {
 
 
     /**
-     * Closes the created tag scene
+     * Closes an instance of a third stage
      *
      */
-    public void closeNewTag(){thirdStage.close();}
-
+    public void closeThirdStage(){thirdStage.close();}
 
     /**
-     * Method that shows the confirmation scene for deleting a card
+     * Opens a secondary window which asks for confirmation for
+     * deleting a card
      */
     public void showDeleteCard(){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
@@ -446,8 +454,10 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+
     /**
-     * Method that shows the help scene
+     * Shows in a second window the guide to use the application
+     * in the board after pressing the 'help' button
      */
     public void showHelpScene(){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
@@ -458,8 +468,21 @@ public class MainCtrl {
     }
 
     /**
-     * Method that shows the current users details
-     * @param currentUser the current user
+     * Shows in a second window the guide to use the application
+     * in the board Overview after pressing the 'help' button
+     */
+    public void showHelpOverviewScene(){
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Help");
+        secondaryStage.setScene(helpOverview);
+        secondaryStage.show();
+    }
+
+    /**
+     * Shows in a second window the user's details: username, server
+     * address and whether it is an admin or not
+     * @param currentUser the user whose details are shown
      */
     public void showUserDetails(User currentUser){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
@@ -498,14 +521,5 @@ public class MainCtrl {
         cardCustomizationCtrl.checkColorPreset();
         secondaryStage.show();
     }
-
-    /**
-     * Closes the tags scene
-     *
-     */
-    public void closeTags(){
-        secondaryStage.close();
-    }
-
 
 }

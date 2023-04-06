@@ -77,9 +77,9 @@ public interface ListsRepository extends JpaRepository<Lists, Long> {
      */
     @Modifying
     @Query(value = "SELECT * " +
-                    "FROM LISTS " +
-                    "WHERE LISTS.BOARD_ID = ?1",
-                    nativeQuery = true)
+            "FROM LISTS " +
+            "WHERE LISTS.BOARD_ID = ?1",
+            nativeQuery = true)
     List<Lists> findAllByOrderByPositionInsideBoardAsc(long boardName);
 
     /**

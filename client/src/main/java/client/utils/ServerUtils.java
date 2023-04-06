@@ -57,15 +57,44 @@ public class ServerUtils {
 
     /**
      * Find whether a user exists or not
-     * @param user a user which should be checked
      * @return true if user already in database, otherwise false
      */
-    public boolean existsUser(User user){
-        if(ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + user.username).
-                request(APPLICATION_JSON).accept(APPLICATION_JSON)
-                .get(new GenericType<User>(){}) == null) return false;
+    public boolean existsUser(){
+        if(findUser()== null) return false;
         return true;
+    }
+
+    /**
+     * Find whether current user is in the database
+     * @return the user if they exist
+     */
+    public User findUser(){
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/find/" + USERNAME).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get(new GenericType<User>(){});
+    }
+
+    /**
+     * Generate the password for becoming an admin on the server
+     */
+    public void generatePassword(){
+        ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/admin/").
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get();
+    }
+
+    /**
+     * Test whether the user input password is correct
+     * @param password the input password
+     * @return true if the password is right, otherwise false
+     */
+    public boolean checkPassword(String password){
+        String x = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/admin/password").request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(password, APPLICATION_JSON), String.class);
+        return x.equals("true");
     }
     /**
      * Find whether a board exists or not using its ID
@@ -132,7 +161,7 @@ public class ServerUtils {
     public Cards removeCard(Cards card){
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/remove").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-               post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
+                post(Entity.entity(card, APPLICATION_JSON_TYPE), Cards.class);
     }
 
     /**
@@ -246,7 +275,6 @@ public class ServerUtils {
      * @return the updated board
      */
     public Boards updateBoard(Boards board) {
-        System.out.println(board.tags);
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/boards/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(board, APPLICATION_JSON), Boards.class);
@@ -390,14 +418,14 @@ public class ServerUtils {
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
+
     /**
      * Method that checks whether a user is an admin
-     * @param user the user to be checked
      * @return true if the user is admin, false otherwise
      */
-    public boolean checkAdmin(User user) {
+    public boolean checkAdmin() {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + user.username).
+                path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
                 }).isAdmin;
@@ -439,12 +467,17 @@ public class ServerUtils {
         // if the user has no boards, make a new list
         if(user.boards == null || user.boards.size() == 0) user.boards = new ArrayList<>(){};
         // add the current board to the users list of boards if it isn't already in the list
-        if(!user.boards.contains(board)) user.boards.add(board);
 
-        // send the updated user to the server so that the database is changed too
-        ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-                post(Entity.entity(user, APPLICATION_JSON), User.class);
+        boolean hasInList = false;
+        for(Boards boards : user.boards)
+            if (boards.id == board.id) {
+                hasInList = true;
+                break;
+            }
+        if(!hasInList)
+            user.boards.add(board);
+
+        updateUser(user);
     }
 
     /**
@@ -458,4 +491,17 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
     }
+
+    /**
+     * Update the users attributes to new ones posted
+     * @param user the user to be updated
+     * @return the user that was updated
+     */
+    public User updateUser(User user){
+        // send the updated user to the server so that the database is changed too
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
 }

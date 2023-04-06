@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Boards;
 import commons.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,6 +10,7 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SelectServerCtrl {
 
@@ -30,7 +32,6 @@ public class SelectServerCtrl {
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
-    private BoardOverviewCtrl boardOverviewCtrl;
 
     /**
      * Constructor method for SelectServerCtrl
@@ -77,17 +78,23 @@ public class SelectServerCtrl {
             // set the username in the frontend
             ServerUtils.setUsername(username);
             // create user from information
-            User user = new User(username, new ArrayList<>(), false);
-            exists = server.existsUser(user);
+
+            exists = server.existsUser();
             if(!exists){
                 try{
+                    User user = new User(username, new ArrayList<>(), false);
                     server.addUser(user); // try to add user if not already in database
+                    this.currentUser = user;
                 }
                 catch(Exception e){
                     System.out.println(e); // probably need a better way of communicating the error
                 }
             }
-            this.currentUser = user;
+            else{
+                User user = server.findUser();
+                this.currentUser = user;
+            }
+
         }
         else serverWarning.setVisible(true);
         // if server exists
@@ -96,9 +103,6 @@ public class SelectServerCtrl {
             // otherwise show confirmation scene
             if(!exists) mainCtrl.showBoardOverview();
             else{
-                if(currentUser.isAdmin){
-                    boardOverviewCtrl.openAdminFeatures();
-                }
                 mainCtrl.showConfirmUsername();
             }
         }
@@ -127,5 +131,11 @@ public class SelectServerCtrl {
         mainCtrl.showUserDetails(currentUser);
     }
 
-
+    /**
+     * Set the boards of the current user
+     * @param boards the new list of boards
+     */
+    public void setBoardsOfCurrentUser(List<Boards> boards){
+        this.currentUser.boards = boards;
+    }
 }

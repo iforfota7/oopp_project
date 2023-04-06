@@ -50,15 +50,14 @@ public class BoardOverviewCtrl{
     @FXML
     private Label userLabel;
 
-
-    private boolean adminLock = false;
+    private boolean adminLock;
 
     /**
      * Sets lock for admin
      * @return the lock
      */
     public boolean getAdminLock() {
-        adminLock = server.checkAdmin(selectServerCtrl.getCurrentUser());
+        adminLock = server.checkAdmin();
         return adminLock;
     }
 
@@ -89,6 +88,7 @@ public class BoardOverviewCtrl{
      * to the Board Overview scene
      */
     public void disconnect() {
+        server.updateUser(selectServerCtrl.getCurrentUser());
         mainCtrl.showSelectServer();
     }
 
@@ -109,11 +109,8 @@ public class BoardOverviewCtrl{
         int positionInColumn = (numberOfBoards - 1) % 3;
         int row = (numberOfBoards - 1) / 3;
 
-
         StackPane newBoard = createNewBoard(b);
-
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
-
         gridPane.add(newBoard, positionInColumn, row);
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
                 new Insets(10, 10 , 10 ,10));
@@ -130,8 +127,10 @@ public class BoardOverviewCtrl{
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
                 "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
                 "-fx-z-index: 999;");
-        newBoard.setPrefWidth(165);
-        newBoard.setPrefHeight(75);
+        newBoard.setPrefWidth(160.8);
+        newBoard.setPrefHeight(73.6);
+        newBoard.setMinWidth(160.8);
+        newBoard.setMinHeight(73.6);
         newBoard.setAlignment(Pos.CENTER);
         newBoard.setText(b.name);
         newBoard.getProperties().put("board", b);
@@ -160,7 +159,6 @@ public class BoardOverviewCtrl{
         stackPane.getChildren().add(hideBoardButton);
         StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
 
-
         Button renameBoardButton = new Button("rename");
         renameBoardButton.setStyle("-fx-background-color: #f08080;" +
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
@@ -168,6 +166,7 @@ public class BoardOverviewCtrl{
         renameBoardButton.setUserData(b.name);
         stackPane.getChildren().add(renameBoardButton);
         StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
+
         return stackPane;
     }
     /**
@@ -187,7 +186,7 @@ public class BoardOverviewCtrl{
      * Causes board to be hidden from a user in their board overview
      * @param mouseEvent mouse click on button
      */
-    private void hideBoard(MouseEvent mouseEvent){
+    private void hideBoard(MouseEvent mouseEvent) {
         Button removeButton = (Button) mouseEvent.getSource();
         Boards board = (Boards) removeButton.getParent().getProperties().get("board");
         server.hideBoardFromUser(board);
@@ -219,15 +218,17 @@ public class BoardOverviewCtrl{
      */
     public void refresh(){
         gridPane.getChildren().clear();
-        boolean isAdmin = server.checkAdmin(selectServerCtrl.getCurrentUser());
+        adminLock = server.checkAdmin();
 
-        if(isAdmin){
+        if(adminLock){
             boardsList = server.getBoards();
         }
         else{
             boardsList = server.viewedBoards();
+            selectServerCtrl.setBoardsOfCurrentUser(boardsList);
         }
 
+        selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
             addNewBoard(boards);
@@ -264,7 +265,8 @@ public class BoardOverviewCtrl{
     /**
      * Method that shows the help scene
      */
+    @FXML
     public void showHelpScene(){
-        mainCtrl.showHelpScene();
+        mainCtrl.showHelpOverviewScene();
     }
 }

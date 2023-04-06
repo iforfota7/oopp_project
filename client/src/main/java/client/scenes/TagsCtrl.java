@@ -43,7 +43,6 @@ public class TagsCtrl {
         }
 
         this.board = board;
-        System.out.println(board.tags.size());
         tagList.getChildren().clear();
         for(Tags tags : board.tags)
             addNewTag(tags);
@@ -53,11 +52,11 @@ public class TagsCtrl {
      * Initialises the websockets for the tags
      */
     private void webSocketTags() {
-        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+        server.registerForMessages("/topic/boards/update", Boards.class, board -> {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    initialize(b);
+                    initialize(board);
                 }
             });
         });
@@ -161,7 +160,7 @@ public class TagsCtrl {
      */
     @FXML
     void close()  {
-        mainCtrl.closeTags();
+        mainCtrl.closeSecondaryStage();
     }
 
     /**

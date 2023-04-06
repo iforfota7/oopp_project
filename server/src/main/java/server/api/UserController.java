@@ -8,12 +8,14 @@ import server.database.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Random;
 
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     private final UserRepository repo;
+    private String password;
 
     /**
      * Constructor method
@@ -87,5 +89,37 @@ public class UserController {
     @ResponseBody
     public List<Boards> getAllBoards(@PathVariable String username) {
         return repo.findById(username).get().boards;
+    }
+
+    /**
+     * Generate a random alphanumerical String of length 15 and print it in the server terminal
+     */
+    @GetMapping (path = {"/admin", "/admin/"})
+    public void getPassword(){
+        Random random = new Random();
+        password = random.ints(48, 123)
+                .filter(i -> (i <= 57 || i >= 65 && i <= 90 || i >= 97))
+                .limit(15)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        // print the password so the admin can see it
+        System.out.println(password);
+    }
+
+    /**
+     * Check whether the password of the user matches the randomly generated one
+     * @param password the password of the user
+     * @return null/empty string if the password is wrong, "true" if the password is correct
+     */
+    @Transactional
+    @PostMapping(path = "/admin/password")
+    @ResponseBody
+    public String checkPassword(@RequestBody String password){
+        if(this.password == null || password == null){
+            return null;
+        }
+        if(this.password.equals(password)) return "true";
+        return null;
     }
 }

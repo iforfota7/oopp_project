@@ -68,7 +68,7 @@ public class TagDetailsCtrl {
 
         server.updateBoard(board);
 
-        mainCtrl.closeNewTag();
+        mainCtrl.closeThirdStage();
 
     }
 }

@@ -19,7 +19,7 @@ public class Tags {
 
     public String title;
 
-   public String color;
+    public String color;
 
     @ManyToOne
     public Boards board;
