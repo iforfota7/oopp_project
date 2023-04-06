@@ -180,9 +180,8 @@ public class BoardController {
         savedBoard.boardFtColor = boards.boardFtColor;
         savedBoard.listBgColor = boards.listBgColor;
         savedBoard.listFtColor = boards.listFtColor;
-        savedBoard.cardBgColor = boards.cardBgColor;
-        savedBoard.cardFtColor = boards.cardFtColor;
-
+        savedBoard.colorPreset = boards.colorPreset;
+        savedBoard.defaultColor = boards.defaultColor;
         Boards saved = repo.save(savedBoard);
         return ResponseEntity.ok(saved);
     }

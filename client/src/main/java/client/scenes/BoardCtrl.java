@@ -41,7 +41,7 @@ public class BoardCtrl {
     @FXML
     private HBox firstRow;
     @FXML
-    private Label boardName;
+    public Label boardName;
 
     private Boards board;
 
@@ -56,6 +56,9 @@ public class BoardCtrl {
 
     private final Draggable drag;
     private List<String> serverURLS;
+
+
+    private String currentCardColor;
 
 
     /**
@@ -478,7 +481,10 @@ public class BoardCtrl {
             Cards openedCard = (Cards) currentCard.getProperties().get("card");*/
             //cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
+            cardDetailsCtrl.colors = board.colorPreset.get(openedCard.colorStyle);
+            mainCtrl.closeSecondaryStage();
             mainCtrl.showCardDetail();
+            cardDetailsCtrl.refreshOpenedCard();
         }
     }
 
@@ -499,6 +505,7 @@ public class BoardCtrl {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         Cards c = new Cards(text, l.cards.size(), l, "", new ArrayList<>());
         c.list = l;
+        c.colorStyle = board.defaultColor;
         server.addCard(c);
         mainCtrl.closeSecondaryStage();
     }
@@ -573,14 +580,18 @@ public class BoardCtrl {
         innerShadow.setRadius(8.83);
         innerShadow.setWidth(18.66);
         innerShadow.setHeight(18.66);
-
+        if(c.colorStyle == null || !(board.colorPreset.containsKey(c.colorStyle))){
+            currentCardColor = board.colorPreset.get(board.defaultColor);}
+        else{currentCardColor = board.colorPreset.get(c.colorStyle);}
+        String[] colors = currentCardColor.split(" ");
         cardBody.setStyle("-fx-background-color: " +
-                board.cardBgColor + "; "+ "-fx-background-radius: 4;");
+                colors[0] + "; "+ "-fx-background-radius: 4;");
         cardBody.setEffect(innerShadow);
 
         HBox cardOverviewInfo = newCardOverviewBody(c);
         HBox cardTags = newCardTagsBody();
-        cardTags.setStyle("-fx-background-color: " + board.cardBgColor + ";");
+        cardTags.setStyle("-fx-background-color: " + colors[0] +
+                "; -fx-background-radius: 4;");
         cardBody.getChildren().addAll(cardOverviewInfo, cardTags);
         return cardBody;
     }
@@ -606,10 +617,17 @@ public class BoardCtrl {
         cardTitle.setPrefHeight(25.6);
         cardTitle.setPadding(new Insets(0, 0, -2, 10));
         cardTitle.setStyle("-fx-font-size: 11;");
-        cardDetailsOverview.setStyle("-fx-background-color: " + board.cardBgColor + ";"
-                + "-fx-text-fill: " + board.cardFtColor + ";");
-        cardTitle.setStyle("-fx-background-color: " + board.cardBgColor + ";"
-                + "-fx-text-fill: " + board.cardFtColor + ";");
+        if(c.colorStyle == null||!(board.colorPreset.containsKey(c.colorStyle))){
+            currentCardColor = board.colorPreset.get(board.defaultColor);}
+        else{currentCardColor = board.colorPreset.get(c.colorStyle);}
+        String[] colors = currentCardColor.split(" ");
+
+        cardDetailsOverview.setStyle("-fx-background-color: " + colors[0] + ";"
+                + "-fx-text-fill: " + colors[1] + "; " +
+                "-fx-background-radius: 4;");
+        cardTitle.setStyle("-fx-background-color: " + colors[0] + ";"
+                + "-fx-text-fill: " + colors[1] + "; " +
+                "-fx-background-radius: 4;");
         cardOverviewBody.getChildren().addAll(cardTitle, cardDetailsOverview);
         return cardOverviewBody;
     }

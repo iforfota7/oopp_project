@@ -3,12 +3,13 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
-import commons.User;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,21 +27,17 @@ public class CustomizationCtrl {
     private final MainCtrl mainCtrl;
     private final BoardCtrl boardCtrl;
     private final ServerUtils server;
-    private final SelectServerCtrl selectServerCtrl;
-    private final BoardOverviewCtrl boardOverviewCtrl;
 
     @FXML
-    private List<ColorPicker> colorPickers = new ArrayList<>();
+    private final List<ColorPicker> colorPickers = new ArrayList<>();
     @FXML
     private ColorPicker boardBgColor;
     @FXML
     private ColorPicker boardFtColor;
-    @FXML
-    private ColorPicker cardBgColor;
 
     @FXML
-    private ColorPicker cardFtColor;
-
+    private GridPane defaultChoice;
+    public String defaultColor;
 
     @FXML
     private ColorPicker listBgColor;
@@ -48,9 +45,11 @@ public class CustomizationCtrl {
     @FXML
     private ColorPicker listFtColor;
     private Boards setBoard;
-    private Map<String, String> currentColorPreset = new HashMap<>();
+    public Map<String, String> currentColorPreset = new HashMap<>();
     @FXML
     private VBox taskColor;
+    @FXML
+    private ChoiceBox<?> choice;
 
     /**
      * Initialize method for Customization related currentBoard
@@ -59,8 +58,6 @@ public class CustomizationCtrl {
     public void initialize() {
         colorPickers.add(boardBgColor);
         colorPickers.add(boardFtColor);
-        colorPickers.add(cardBgColor);
-        colorPickers.add(cardFtColor);
         colorPickers.add(listBgColor);
         colorPickers.add(listFtColor);
     }
@@ -75,8 +72,6 @@ public class CustomizationCtrl {
         idToColorMap.put("boardFtColor", currentBoard.boardFtColor);
         idToColorMap.put("listBgColor", currentBoard.listBgColor);
         idToColorMap.put("listFtColor", currentBoard.listFtColor);
-        idToColorMap.put("cardBgColor", currentBoard.cardBgColor);
-        idToColorMap.put("cardFtColor", currentBoard.cardFtColor);
         for (ColorPicker colorPicker : colorPickers) {
             String id = colorPicker.getId();
             String color = idToColorMap.get(id);
@@ -94,18 +89,14 @@ public class CustomizationCtrl {
      *                          by a class of window controllers
      * @param boardCtrl         instance of BoardCtrl
      * @param server            Used for connection to backend and websockets to function
-     * @param selectServerCtrl  Used for connection to selectServerCtrl function
-     * @param boardOverviewCtrl
      */
     @Inject
     public CustomizationCtrl(MainCtrl mainCtrl, BoardCtrl boardCtrl,
-                             ServerUtils server, SelectServerCtrl selectServerCtrl,
-                             BoardOverviewCtrl boardOverviewCtrl) {
+                             ServerUtils server) {
         this.mainCtrl = mainCtrl;
         this.boardCtrl = boardCtrl;
         this.server = server;
-        this.selectServerCtrl = selectServerCtrl;
-        this.boardOverviewCtrl = boardOverviewCtrl;
+
     }
     /**
      *Store all color information, then add it to the server,
@@ -113,15 +104,12 @@ public class CustomizationCtrl {
      */
     @FXML
     void saveCustomization() {
+        saveCardColor();
         readCustomizationChange();
         setBoardToDB();
-        boardCtrl.refreshCustomization();
+        boardCtrl.refresh();
         mainCtrl.closeSecondaryStage();
-        saveTaskColor();
-        User currentUser = selectServerCtrl.getCurrentUser();
-        currentUser.isAdmin = server.checkAdmin(currentUser);
-        currentUser.colorPreset = currentColorPreset;
-        server.refreshTaskColor(currentUser);
+
     }
 
     /**
@@ -139,8 +127,8 @@ public class CustomizationCtrl {
         setBoard.boardFtColor = idToColorMap.get("boardFtColor");
         setBoard.listBgColor = idToColorMap.get("listBgColor");
         setBoard.listFtColor = idToColorMap.get("listFtColor");
-        setBoard.cardBgColor = idToColorMap.get("cardBgColor");
-        setBoard.cardFtColor = idToColorMap.get("cardFtColor");
+        setBoard.colorPreset = currentColorPreset;
+        setBoard.defaultColor = (String) this.choice.getSelectionModel().getSelectedItem();
         boardCtrl.setCurrentBoard(setBoard);
     }
 
@@ -151,8 +139,6 @@ public class CustomizationCtrl {
     void revertCustomization() {
         boardBgColor.setValue(Color.rgb(230, 230, 250));
         boardFtColor.setValue(Color.rgb(0, 0, 0));
-        cardBgColor.setValue(Color.rgb(230, 230, 250));
-        cardFtColor.setValue(Color.rgb(0, 0, 0));
         listBgColor.setValue(Color.rgb(255, 255, 255));
         listFtColor.setValue(Color.rgb(0, 0, 0));
     }
@@ -171,8 +157,7 @@ public class CustomizationCtrl {
      * All information is mapped to colorPickers through Strings for display.
      */
     void checkTaskColor() {
-        taskColor.getChildren().clear();
-        currentColorPreset = server.checkTaskColor(selectServerCtrl.getCurrentUser());
+        createChoiceBox();
         for (Map.Entry<String, String> entry : currentColorPreset.entrySet()) {
             String name = entry.getKey();
             String[] colors = entry.getValue().split(" ");
@@ -182,38 +167,126 @@ public class CustomizationCtrl {
             taskBox.setSpacing(10);
             taskBox.setStyle("-fx-background-color: #e6f2ff; " +
                     "-fx-background-radius: 3; -fx-padding: 5px;");
-
             Label nameLabel = new Label(name);
-            nameLabel.setPrefWidth(100);
+            nameLabel.setPrefWidth(90);
+            Button editButton = createNameBtn(nameLabel,taskBox);
 
-            ColorPicker colorPicker1 = new ColorPicker(Color.web(colors[0]));
-            colorPicker1.setMaxWidth(60);
-            colorPicker1.setStyle("-fx-background-color: #e6f2ff; " +
-                    "-fx-background-radius: 3; -fx-padding: 3px;");
-
-            ColorPicker colorPicker2 = new ColorPicker(Color.web(colors[1]));
-            colorPicker2.setMaxWidth(60);
-            colorPicker2.setStyle("-fx-background-color: #e6f2ff; " +
-                    "-fx-background-radius: 3; -fx-padding: 3px;");
-
+            ColorPicker colorPicker1= createColorPicker(Color.web(colors[0]));
+            ColorPicker colorPicker2= createColorPicker(Color.web(colors[1]));
             Button deleteButton = new Button("X");
             deleteButton.setPrefSize(26, 26);
             deleteButton.setStyle("-fx-background-color: #FF9999; " +
                     "-fx-background-radius: 3; -fx-text-fill: white;");
-
+            if(nameLabel.getText()==this.choice.getSelectionModel().getSelectedItem()){
+                deleteButton.setVisible(false);
+                editButton.setVisible(false);
+            }
             deleteButton.setOnAction(e -> {
                 currentColorPreset.remove(name);
                 taskColor.getChildren().remove(taskBox);
             });
-            if(name=="default"){
-                deleteButton.setVisible(false);
-            }
-            taskBox.getChildren().addAll(nameLabel, colorPicker1, colorPicker2, deleteButton);
+            taskBox.getChildren().addAll(nameLabel, editButton,
+                    colorPicker1, colorPicker2, deleteButton);
             taskColor.getChildren().add(taskBox);
         }
         HBox addTaskBox = createAddTaskBox();
         taskColor.getChildren().add(addTaskBox);
     }
+
+    /**
+     * By creating an edit button and a text field, the renaming function is implemented.
+     * When the edit button is clicked, a new UI replaces the original one.
+     * Clicking on "S" button will save the latest settings.
+     * @param nameLabel name Label
+     * @param taskBox color preset HBox
+     * @return new edit button
+     */
+    private Button createNameBtn(Label nameLabel, HBox taskBox) {
+        TextField newName = new TextField();
+        newName.setPromptText("Rename");
+        newName.setPrefWidth(90);
+        Button checkButton = new Button("S");
+        checkButton.setPrefSize(10, 13);
+        checkButton.setStyle("-fx-background-color: #90EE90; " +
+                "-fx-background-radius: 3; -fx-text-fill: white;");
+        Button editButton = new Button("R");
+        editButton.setPrefSize(10, 13);
+        editButton.setStyle("-fx-background-color: #90EE90; " +
+                "-fx-background-radius: 3; -fx-text-fill: white;");
+        editButton.setOnAction(e -> {
+            taskBox.getChildren().removeAll(editButton, nameLabel);
+            taskBox.getChildren().add(0, newName);
+            taskBox.getChildren().add(1, checkButton);
+        });
+        checkButton.setOnAction(e -> {
+            String inputName = newName.getText();
+            if (inputName.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText("Name cannot be empty.");
+                alert.showAndWait();
+            } else {
+                nameLabel.setText(inputName);
+                newName.clear();
+                taskBox.getChildren().removeAll(checkButton, newName);
+                taskBox.getChildren().add(0, nameLabel);
+                taskBox.getChildren().add(1, editButton);
+
+            }
+        });
+        return editButton;
+
+    }
+
+    /**
+     *  Create a new color button
+     * @param color The name of the color that should be displayed
+     * @return new colorPicker
+     */
+    private ColorPicker createColorPicker(Color color) {
+        ColorPicker colorPicker1 = new ColorPicker(color);
+        colorPicker1.setMaxWidth(60);
+        colorPicker1.setStyle("-fx-background-color: #e6f2ff; " +
+                "-fx-background-radius: 3; -fx-padding: 3px;");
+        return colorPicker1;
+    }
+
+    /**
+     * This method implements the function of setting the default color preset.
+     * Firstly, it adds the default color value of the current board
+     * to the top of the choice box in the customization section.
+     * Then, it adds all the presets to the choice box.
+     * Finally, it sets an action to the choice box,
+     * so that it can save the user's current default value when clicked
+     */
+    private void createChoiceBox() {
+        taskColor.getChildren().clear();
+        this.currentColorPreset = boardCtrl.getCurrentBoard().colorPreset;
+        String[] choices = currentColorPreset.keySet().toArray(new String[0]);
+
+        for (int i = 1; i < choices.length; i++) {
+            if (Objects.equals(choices[i], boardCtrl.getCurrentBoard().defaultColor)) {
+                String temp = choices[i];
+                choices[i] = choices[0];
+                choices[0] = temp;
+                break;
+            }
+        }
+
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        defaultChoice.add(choiceBox, 1, 0);
+        choiceBox.setMaxHeight(15);
+        choiceBox.setMaxWidth(100);
+        this.choice = choiceBox;
+        choiceBox.setStyle("-fx-background-color: #e6f2ff;" +
+                "-fx-background-radius: 3; -fx-padding: 3px;");
+        ObservableList<String> items = choiceBox.getItems();
+        items.clear();
+        items.addAll(choices);
+        choiceBox.getSelectionModel().selectFirst();
+        choiceBox.setOnAction(event -> this.defaultColor = choiceBox.getValue());
+    }
+
 
     /**
      * In addition to displaying all corresponding preset color schemes,
@@ -231,7 +304,7 @@ public class CustomizationCtrl {
                 "-fx-background-radius: 3; -fx-padding: 5px;");
 
         TextField nameInput = new TextField();
-        nameInput.setPromptText("Task name");
+        nameInput.setPromptText("New name");
         nameInput.setPrefWidth(100);
 
         ColorPicker colorPicker1 = new ColorPicker();
@@ -273,10 +346,7 @@ public class CustomizationCtrl {
     void addTaskColor(String name, Color color1, Color color2) {
         String value = color1.toString() + " " + color2.toString();
         currentColorPreset.put(name, value);
-        User currentUser = selectServerCtrl.getCurrentUser();
-        currentUser.isAdmin = server.checkAdmin(currentUser);
-        currentUser.colorPreset = currentColorPreset;
-        server.refreshTaskColor(currentUser);
+        boardCtrl.getCurrentBoard().colorPreset = currentColorPreset;
         checkTaskColor();
     }
 
@@ -284,14 +354,14 @@ public class CustomizationCtrl {
      * Retrieve the colors modified by the user and store
      * them back to the storage map of color presets.
      */
-    void saveTaskColor() {
+    void saveCardColor() {
         for (Node node : taskColor.getChildren()) {
             if (node instanceof HBox) {
                 HBox taskBox = (HBox) node;
                 if (!"newTask".equals(taskBox.getId())) {
                     Label nameLabel = (Label) taskBox.getChildren().get(0);
-                    ColorPicker colorPicker1 = (ColorPicker) taskBox.getChildren().get(1);
-                    ColorPicker colorPicker2 = (ColorPicker) taskBox.getChildren().get(2);
+                    ColorPicker colorPicker1 = (ColorPicker) taskBox.getChildren().get(2);
+                    ColorPicker colorPicker2 = (ColorPicker) taskBox.getChildren().get(3);
 
                     String name = nameLabel.getText();
                     String color1 = "#" + colorPicker1.getValue().toString().substring(2, 8);

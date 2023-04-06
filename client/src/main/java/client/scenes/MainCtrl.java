@@ -34,7 +34,7 @@ public class MainCtrl {
     private Scene tagControl, addTag, tagDetails;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
     private Scene confirmAdmin, help;
-    private Scene customization;
+    private Scene customization, cardCustomization;
 
     private SelectServerCtrl selectServerCtrl;
     private ConfirmUsernameCtrl confirmUsernameCtrl;
@@ -62,7 +62,7 @@ public class MainCtrl {
     private AddTagCtrl addTagCtrl;
     private TagsCtrl tagsCtrl;
     private TagDetailsCtrl tagDetailsCtrl;
-
+    private CardCustomizationCtrl cardCustomizationCtrl;
 
 
     /**
@@ -195,11 +195,16 @@ public class MainCtrl {
 
     /**
      * Initialize method for Customization related scenes
-     * @param customization CustomizationCtrl parent pair for Customization scene
+     *
+     * @param customization     CustomizationCtrl parent pair for Customization scene
+     * @param cardCustomization CustomizationCtrl parent pair for CardCustomization scene
      */
-    public void initializeCustomization(Pair<CustomizationCtrl, Parent> customization) {
+    public void initializeCustomization(Pair<CustomizationCtrl, Parent> customization,
+                                        Pair<CardCustomizationCtrl, Parent> cardCustomization) {
         this.customization = new Scene(customization.getValue());
         this.customizationCtrl = customization.getKey();
+        this.cardCustomization = new Scene(cardCustomization.getValue());
+        this.cardCustomizationCtrl = cardCustomization.getKey();
     }
     /**
      * Show selectServer scene
@@ -365,7 +370,7 @@ public class MainCtrl {
 
 
     /**
-     * Closes the create tag scene
+     * Closes the created tag scene
      *
      */
     public void closeNewTag(){thirdStage.close();}
@@ -483,6 +488,16 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     *  Open a new window that displays the CardCustomization scene
+     */
+    public void openCardCustomization() {
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Customization for Card");
+        secondaryStage.setScene(cardCustomization);
+        cardCustomizationCtrl.checkColorPreset();
+        secondaryStage.show();
+    }
 
     /**
      * Closes the tags scene
@@ -491,4 +506,6 @@ public class MainCtrl {
     public void closeTags(){
         secondaryStage.close();
     }
+
+
 }

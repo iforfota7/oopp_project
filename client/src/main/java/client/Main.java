@@ -90,16 +90,17 @@ public class Main extends Application {
 
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
 
+        var cardCustomization =
+                FXML.load(CardCustomizationCtrl.class,
+                        "client", "scenes", "CardCustomization.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene);
-
-
         mainCtrl.initializeAdmin(confirmAdmin);
-        mainCtrl.initializeCustomization(customization);
+        mainCtrl.initializeCustomization(customization,cardCustomization);
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
     }
 

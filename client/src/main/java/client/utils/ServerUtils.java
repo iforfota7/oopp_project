@@ -18,7 +18,6 @@ package client.utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -458,29 +457,5 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
-    }
-
-    /**
-     * Refresh the database with the new color presets based on user information.
-     * @param user current user with new color
-     * @return new user with new color
-     */
-    public User refreshTaskColor(User user) {
-        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/setTaskColor").request(APPLICATION_JSON).accept(APPLICATION_JSON).
-                post(Entity.entity(user, APPLICATION_JSON), User.class);
-    }
-
-    /**
-     * get the database with  color presets based on user information.
-     * @param user urrent user with old color
-     * @return user with new color
-     */
-    public Map<String, String> checkTaskColor(User user) {
-            return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                    path("api/user/find/" + user.username).
-                    request(APPLICATION_JSON).accept(APPLICATION_JSON)
-                    .get(new GenericType<User>() {
-                    }).colorPreset;
     }
 }

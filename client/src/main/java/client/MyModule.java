@@ -45,5 +45,7 @@ public class MyModule implements Module {
         binder.bind(JoinBoardByIDCtrl.class).in(Scopes.SINGLETON);
         binder.bind(UserDetailsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(CustomizationCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(CardCustomizationCtrl.class).in(Scopes.SINGLETON);
+
     }
 }
