@@ -76,6 +76,7 @@ public class Main extends Application {
                 "client","scenes","JoinBoardByID.fxml");
         var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
         var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
+        var helpOverviewScene = FXML.load(HelpCtrl.class, "client", "scenes", "HelpOverview.fxml");
 
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
@@ -94,7 +95,7 @@ public class Main extends Application {
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
-        mainCtrl.initializeUtils(helpScene);
+        mainCtrl.initializeUtils(helpScene, helpOverviewScene);
 
 
         mainCtrl.initializeAdmin(confirmAdmin);
