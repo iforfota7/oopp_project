@@ -260,7 +260,8 @@ public class BoardOverviewCtrl{
     /**
      * Method that shows the help scene
      */
+    @FXML
     public void showHelpScene(){
-        mainCtrl.showHelpScene();
+        mainCtrl.showHelpOverviewScene();
     }
 }

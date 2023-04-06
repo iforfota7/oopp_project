@@ -64,6 +64,7 @@ public class UserDetailsCtrl {
     public void setUser(User currentUser) {
         this.username.setText(currentUser.username);
         this.serverAddress.setText(server.getServer());
+
         if(boardOverviewCtrl.getAdminLock()){
             this.isAdmin.setText("Yes!");
             adminLogin.setVisible(false);
@@ -78,10 +79,13 @@ public class UserDetailsCtrl {
     }
 
     /**
-     * show the login admin scene.
+     * show the login admin scene and generate a random password
+     * on the server that is printed. Since only an admin has access to
+     * the terminal of the server, this will allow the admin to log in.
      */
     @FXML
     void adminLogin() {
+        server.generatePassword();
         if (boardOverviewCtrl.getAdminLock()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Admin!");
