@@ -53,9 +53,9 @@ class CardsTest {
         card6 = new Cards("Card 1", 1, list,
                 "This is Card 1", listSubtasks2);
 
-        subtask1 = new Subtask("Subtask 1", false, card1, 1);
-        subtask2 = new Subtask("Subtask 2", false, card2, 2);
-        subtask3 = new Subtask("Subtask 3", false, card2, 1);
+        subtask1 = new Subtask("Subtask 1", false, 1);
+        subtask2 = new Subtask("Subtask 2", false, 2);
+        subtask3 = new Subtask("Subtask 3", false, 1);
 
         listSubtasks1.add(subtask1);
         listSubtasks2.add(subtask2);
@@ -136,7 +136,7 @@ class CardsTest {
         String stringCard1 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
                 "description='This is Card 1', list.id=1, " +
                 "subtasks=[Subtask{id=0, title='Subtask 1', " +
-                "checked=false, card.id=0, position=1}], tags=[]}";
+                "checked=false, position=1}], tags=[]}";
 
         assertEquals(card1.toString(), stringCard1);
         assertEquals(card1.toString(), card11.toString());

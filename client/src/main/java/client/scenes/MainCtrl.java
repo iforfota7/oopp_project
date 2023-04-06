@@ -370,11 +370,12 @@ public class MainCtrl {
      *
      * @param openedCard Reference to the card object
      * @param board Reference to the board object
-     *
+     * @param cardDetailsCtrl Reference to the card details
+     *                        controller
      */
-    public void showAddTagToCard(Cards openedCard, Boards board) {
+    public void showAddTagToCard(Cards openedCard, Boards board, CardDetailsCtrl cardDetailsCtrl) {
         if(thirdStage != null && thirdStage.isShowing()) return;
-        addTagToCardCtrl.init(openedCard, board);
+        addTagToCardCtrl.init(openedCard, board, cardDetailsCtrl);
         thirdStage = new Stage();
         thirdStage.setScene(addTagToCard);
         thirdStage.setTitle("Add Tag to Card");

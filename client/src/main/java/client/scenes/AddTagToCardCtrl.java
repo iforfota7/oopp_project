@@ -7,6 +7,7 @@ import commons.Tags;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -18,6 +19,9 @@ public class AddTagToCardCtrl {
     private final MainCtrl mainCtrl;
     @FXML
     private VBox tagList;
+    private List<Tags> selectedTags;
+    private Cards openedCard;
+    private CardDetailsCtrl cardDetailsCtrl;
 
     /**
      * Creates an instance of AddTagToCardCtrl
@@ -38,13 +42,32 @@ public class AddTagToCardCtrl {
     }
 
     /**
+     * Method used for adding all selected tags
+     * to the list of tags of the opened card
+     *
+     */
+    public void addTags() {
+        if(openedCard.tags == null)
+            openedCard.tags = new ArrayList<>();
+        openedCard.tags.addAll(selectedTags);
+
+        cardDetailsCtrl.refreshOpenedCard();
+        mainCtrl.closeThirdStage();
+    }
+
+    /**
      * Initializes the scene by rendering tags
      *
      * @param openedCard Reference to the card object
      * @param board Reference to the board object
+     * @param cardDetailsCtrl Reference to the card details scene
+     *                        controller
      */
-    public void init(Cards openedCard, Boards board) {
+    public void init(Cards openedCard, Boards board, CardDetailsCtrl cardDetailsCtrl) {
+        this.openedCard = openedCard;
         tagList.getChildren().clear();
+        selectedTags = new ArrayList<>();
+        this.cardDetailsCtrl = cardDetailsCtrl;
 
         List<Tags> renderedTags = renderedTags(openedCard, board);
         for(Tags tag : renderedTags)
@@ -101,19 +124,47 @@ public class AddTagToCardCtrl {
         tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.color);
 
         Label tagTitle = new Label(tag.title);
+        tagTitle.setOnMouseClicked(this::selectDeselectTags);
         tagTitle.setPrefHeight(18.4);
         tagTitle.setPrefWidth(98);
         AnchorPane.setTopAnchor(tagTitle, 5.0);
         AnchorPane.setRightAnchor(tagTitle, 5.0);
         AnchorPane.setBottomAnchor(tagTitle, 5.0);
         AnchorPane.setLeftAnchor(tagTitle, 5.0);
-//        tagTitle.setLayoutX(4);
-//        tagTitle.setLayoutY(5);
+
         tagTitle.setAlignment(Pos.CENTER);
         tagTitle.setStyle("-fx-background-color: #fafafa; -fx-background-radius: 4;");
 
         tagBody.getChildren().addAll(tagTitle);
         return tagBody;
+    }
+
+    /**
+     * Method used for highlighting/un-highlighting
+     * the selected tags
+     * The body of the tags will be colored with the color
+     * of their border
+     *
+     * @param mouseEvent
+     */
+    public void selectDeselectTags(MouseEvent mouseEvent) {
+        Label tagContainer = (Label)mouseEvent.getSource();
+        Tags clickedTag = (Tags)tagContainer.getProperties().get("tag");
+
+        // select a tag if it isn't selected
+        if(!selectedTags.contains(clickedTag)) {
+            String tagColor = clickedTag.color;
+            tagContainer.setStyle("-fx-background-color: "+
+                    tagColor + "; -fx-background-radius: 4;");
+            selectedTags.add(clickedTag);
+        }
+
+        // deselect a tag if it is already selected
+        else {
+            tagContainer.setStyle("-fx-background-color: #fafafa; -fx-background-radius: 4;");
+            selectedTags.remove(clickedTag);
+        }
+
     }
 
 }

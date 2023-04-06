@@ -1,9 +1,12 @@
 package client.scenes.config;
 
+import client.scenes.CardDetailsCtrl;
 import commons.Cards;
 import commons.Tags;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -13,14 +16,18 @@ import javafx.util.Pair;
 public class TagsCardDetails {
 
     private GridPane tagList;
+    private Cards openedCard;
+    private CardDetailsCtrl cardDetailsCtrl;
 
     /**
      * Creates a new instance of the TagsCardDetails class
      *
      * @param tagList the grid pane that contains the tags in card details
+     * @param cardDetailsCtrl reference to the card details controller
      */
-    public TagsCardDetails(GridPane tagList) {
+    public TagsCardDetails(GridPane tagList, CardDetailsCtrl cardDetailsCtrl) {
         this.tagList = tagList;
+        this.cardDetailsCtrl = cardDetailsCtrl;
     }
 
     /**
@@ -30,6 +37,7 @@ public class TagsCardDetails {
      *             the list of tags to be rendered
      */
     public void renderTags(Cards card) {
+        this.openedCard = card;
 
         if(card.tags != null)
             for(int i=0; i<card.tags.size(); i++)
@@ -94,11 +102,22 @@ public class TagsCardDetails {
         deleteTag.setText("x");
         deleteTag.setStyle("-fx-font-size: 10; -fx-background-color: #ffffff");
         deleteTag.setPadding(new Insets(-2, 5, -2, 5));
+        deleteTag.setOnAction(this::removeTagFromCard);
+        deleteTag.getProperties().put("tag", tag);
 
         tagBody.getChildren().addAll(tagTitle, deleteTag);
 
         GridPane.setMargin(tagBody, new Insets(2, 2, 2, 2));
         return tagBody;
     }
+
+    private void removeTagFromCard(ActionEvent actionEvent) {
+        Tags removedTag = (Tags)((Node)actionEvent.getTarget()).getProperties().get("tag");
+        if(openedCard.tags != null)
+            openedCard.tags.remove(removedTag);
+
+        cardDetailsCtrl.refreshOpenedCard();
+    }
+
 
 }

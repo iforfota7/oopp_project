@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Boards;
 import commons.Cards;
+import commons.Lists;
 import commons.Subtask;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -145,6 +146,9 @@ public class CardDetailsCtrl {
         }
 
         subtaskName.setText("");
+        Lists blankList = new Lists(null, 0, null);
+        blankList.id = openedCard.list.id;
+        openedCard.list = blankList;
 
         server.renameCard(openedCard);
         sceneOpened = false;
@@ -190,7 +194,7 @@ public class CardDetailsCtrl {
         tagList.getChildren().removeAll(tagContainers);
 
 
-        tagsCardDetails = new TagsCardDetails(tagList);
+        tagsCardDetails = new TagsCardDetails(tagList, this);
         tagsCardDetails.renderTags(openedCard);
 
         cardTitleInput.setText(card.title);
@@ -380,7 +384,7 @@ public class CardDetailsCtrl {
                 position = taskList.getChildren().size() - 1;
             }
             Subtask newSubtask = new Subtask(subtaskName.getText(),
-                    checked, openedCard, position);
+                    checked, position); // openedCard,
             subtaskName.setStyle("");
             warningSubtask.setVisible(false);
             inputsOpen--;
@@ -478,7 +482,7 @@ public class CardDetailsCtrl {
      *
      */
     public void showAddTagToCard() {
-        mainCtrl.showAddTagToCard(openedCard, board);
+        mainCtrl.showAddTagToCard(openedCard, board, this);
     }
 
 }

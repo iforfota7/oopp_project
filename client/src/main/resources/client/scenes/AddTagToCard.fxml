@@ -35,7 +35,7 @@
                 </InnerShadow>
             </effect>
         </Button>
-      <Button layoutX="171.0" layoutY="363.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #d4d4f7; -fx-background-radius: 4;" text="Add Tag">
+      <Button layoutX="171.0" layoutY="363.0" mnemonicParsing="false" onAction="#addTags" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #d4d4f7; -fx-background-radius: 4;" text="Add Tags">
          <effect>
             <InnerShadow height="8.0" radius="3.25" width="7.0">
                <color>
