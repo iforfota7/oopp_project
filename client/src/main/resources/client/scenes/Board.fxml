@@ -13,7 +13,7 @@
    <children>
       <ScrollPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background: #e6e6fa; -fx-border-color: #e6e6fa;">
          <content>
-            <HBox fx:id="firstRow" prefHeight="400.0" prefWidth="998.0" spacing="27.0" style="-fx-background-color: #E6E6FA;">
+            <HBox fx:id="firstRow" fillHeight="false" prefHeight="400.0" prefWidth="998.0" spacing="27.0" style="-fx-background-color: #E6E6FA;">
                <padding>
                   <Insets left="40.0" right="40.0" />
                </padding>
