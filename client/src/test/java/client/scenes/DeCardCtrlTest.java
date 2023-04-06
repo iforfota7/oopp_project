@@ -9,6 +9,9 @@ public class DeCardCtrlTest {
     private TestBoardCtrl testBoardCtrl;
     private DeCardCtrl sut;
 
+    /**
+     * Execute this before each test
+     */
     @BeforeEach
     public void setup() {
         testBoardCtrl = new TestBoardCtrl();
