@@ -409,7 +409,7 @@ public class BoardCtrl {
      * Deletes a card from the database, after the user confirmed
      * the deletion
      */
-    void deleteCard() {
+    public void deleteCard() {
         server.removeCard(currentCard);
         mainCtrl.closeSecondaryStage();
     }
@@ -417,7 +417,7 @@ public class BoardCtrl {
     /**
      * Closes the scene which asks for confirmation of deleting a card
      */
-    void undeleteCard() {
+    public void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
@@ -686,7 +686,6 @@ public class BoardCtrl {
     }
 
     /**
->>>>>>> dev
      * Create a new delete card button for a card
      * @return a new button
      */

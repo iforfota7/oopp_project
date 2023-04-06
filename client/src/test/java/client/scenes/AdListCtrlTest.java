@@ -14,7 +14,6 @@ class AdListCtrlTest {
 
     @BeforeEach
     public void setup() {
-
         testBoardCtrl = new TestBoardCtrl();
         testMainCtrl = new TestMainCtrl();
         adListCtrlServices = new AdListCtrlServices();

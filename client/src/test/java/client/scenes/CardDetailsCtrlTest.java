@@ -18,7 +18,6 @@ class CardDetailsCtrlTest {
 
     @BeforeEach
     public void setUp() {
-
         testServerUtils = new TestServerUtils();
         testMainCtrl = new TestMainCtrl();
         sut = new CardDetailsCtrl(testServerUtils, testMainCtrl);
