@@ -74,7 +74,7 @@ public class ListController {
 
         Lists saved = repo.save(list);
 
-        msgs.convertAndSend("/topic/lists", saved);
+        msgs.convertAndSend("/topic/client/refresh", saved);
 
         return ResponseEntity.ok(saved);
     }
@@ -103,7 +103,7 @@ public class ListController {
         repo.findById(list.id).get().title = list.title;
 
         Lists saved = repo.save(repo.findById(list.id).get());
-        msgs.convertAndSend("/topic/lists/rename", saved);
+        msgs.convertAndSend("/topic/client/refresh", saved);
 
         return ResponseEntity.ok(saved);
     }
@@ -133,7 +133,7 @@ public class ListController {
             // the entry with the provided id actually exists
             repo.delete(list);
             repo.decrementListPositions(list.positionInsideBoard);
-            msgs.convertAndSend("/topic/lists/remove",list);
+            msgs.convertAndSend("/topic/client/refresh",list);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

@@ -55,7 +55,7 @@ public class CardController {
 
         repo.incrementCardPosition(card.positionInsideList, card.list.id);
         Cards saved = repo.save(card);
-        msgs.convertAndSend("/topic/cards/add", saved);
+        msgs.convertAndSend("/topic/client/refresh", saved);
         return ResponseEntity.ok(saved);
     }
 
@@ -86,7 +86,8 @@ public class CardController {
             return ResponseEntity.badRequest().build();
 
         Cards saved = repo.save(card);
-        msgs.convertAndSend("/topic/cards/rename", saved);
+        msgs.convertAndSend("/topic/client/refresh", saved);
+        msgs.convertAndSend("/topic/card/rename", saved);
         return ResponseEntity.ok(saved);
     }
 
@@ -109,6 +110,7 @@ public class CardController {
             // if the entry with the provided id actually exists
             repo.delete(card);
             repo.decrementCardPosition(card.positionInsideList, card.list.id);
+            msgs.convertAndSend("/topic/client/refresh", card);
             msgs.convertAndSend("/topic/cards/remove", card);
             return ResponseEntity.ok().build();
         }else {
