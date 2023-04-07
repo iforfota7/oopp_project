@@ -606,7 +606,8 @@ public class BoardCtrl {
 
         String[] colors = currentCardColor.split(" ");
 
-        cardOverviewBody.setStyle("-fx-background-color: " + colors[0] + "; -fx-background-radius: 4;");
+        cardOverviewBody.setStyle("-fx-background-color: " +
+                colors[0] + "; -fx-background-radius: 4;");
         cardDetailsOverview.setStyle("-fx-background-color: " + colors[0] + ";"
                 + "-fx-text-fill: " + colors[1] + "; " +
                 "-fx-background-radius: 4;");
