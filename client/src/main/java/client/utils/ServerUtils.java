@@ -20,11 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import commons.Boards;
 import commons.Cards;
 import commons.Lists;
 import commons.User;
+import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.Response;
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
@@ -32,6 +37,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -181,8 +187,24 @@ public class ServerUtils {
      * @param card the card to be moved
      * @return the response object
      */
-    public Cards moveCard(Cards card){
-        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+    public Cards moveCard(Cards card) {
+
+        Client client = ClientBuilder.newClient(new ClientConfig().register(
+                new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME),
+                Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, 10000)));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+        try {
+            String json = objectMapper.writeValueAsString(card);
+            System.out.println(json);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
     }
