@@ -96,7 +96,6 @@ public class ServerUtils {
                 .post(Entity.entity(password, APPLICATION_JSON), String.class);
         return x.equals("true");
     }
-
     /**
      * Find whether a board exists or not using its ID
      * @param boardName the id of the board that is being searched for
@@ -431,7 +430,28 @@ public class ServerUtils {
                 .get(new GenericType<User>() {
                 }).isAdmin;
     }
-
+    /**
+     * Find the board from the server by boardID and return the Board
+     * @param boardID ID of the board to be found.
+     * @return Target board
+     */
+    public Boards getBoardByID(String boardID) {
+        return  ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/get/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){});
+    }
+    /**
+     * By sending the current Board to the server, compare and store the new color information,
+     * and update the database
+     * @param board User's newly revised board
+     * @return new board
+     */
+    public Boards setBoardCss(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/setCss/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 
     /**
      * Method that adds the current board to the user

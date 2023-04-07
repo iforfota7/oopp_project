@@ -22,6 +22,8 @@ public class Cards {
     @ManyToOne
     public Lists list;
 
+    public String colorStyle;
+
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("position ASC")
     public List<Subtask> subtasks;

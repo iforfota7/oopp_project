@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -25,6 +27,16 @@ public class Boards {
     @OrderBy("positionInsideBoard ASC")
     @JsonIgnore
     public List<Lists> lists;
+    public String boardBgColor;
+    public String boardFtColor;
+    public String listBgColor;
+    public String listFtColor;
+    public String defaultColor;
+    @ElementCollection
+    @CollectionTable(name = "color_preset", joinColumns = @JoinColumn(name = "username"))
+    @MapKeyColumn(name = "preset_name")
+    @Column(name = "color")
+    public Map<String, String> colorPreset = new HashMap<>();
 
     @OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Tags> tags;
@@ -38,7 +50,15 @@ public class Boards {
     public Boards(String name, List<Lists> lists, List<Tags> tags){
         this.name = name;
         this.lists = lists;
+        this.boardBgColor = "#E6E6FA";
+        this.boardFtColor = "#000000";
+        this.listBgColor = "#ffffff";
+        this.listFtColor = "#000000";
+        this.defaultColor = "default";
         this.tags = tags;
+        Map<String, String> colorPreset = new HashMap<>();
+        colorPreset.put("default", "#e6e6fa #000000");
+        this.colorPreset = colorPreset;
     }
 
     /**

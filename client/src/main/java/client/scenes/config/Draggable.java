@@ -12,10 +12,10 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-
 public class Draggable {
 
     private ServerUtils server;
+    private Background background;
 
     /**
      * Constructor method for Draggable
@@ -53,6 +53,7 @@ public class Draggable {
                 ((AnchorPane) event.getGestureSource()).getParent() != event.getSource() &&
                 event.getSource() instanceof VBox){
 
+            this.background = ((Region) event.getSource()).getBackground();
             ((Region) event.getSource()).setBackground(  new Background(
                     new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -70,8 +71,7 @@ public class Draggable {
         if(event.getGestureSource()!=event.getSource() &&
                 ((AnchorPane)event.getGestureSource()).getParent()!=event.getSource() &&
                 event.getSource() instanceof VBox){
-            ((Region) event.getSource()).setBackground(  new Background(
-                    new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+            ((Region) event.getSource()).setBackground(background);
         }
 
         if(event.getSource() instanceof  VBox) {

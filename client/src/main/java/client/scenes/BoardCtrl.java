@@ -41,7 +41,9 @@ public class BoardCtrl {
     @FXML
     private HBox firstRow;
     @FXML
-    private Label boardName;
+    public Label boardName;
+    @FXML
+    public ScrollPane scrollPane;
 
     private Boards board;
 
@@ -56,6 +58,9 @@ public class BoardCtrl {
     private final Shortcuts shortcuts;
 
     private List<String> serverURLS;
+
+
+    private String currentCardColor;
 
 
     /**
@@ -154,11 +159,13 @@ public class BoardCtrl {
      * server and displaying them
      */
     public void refresh(){
+        this.board = server.getBoardByID(boardName.getText());
         firstRow.getChildren().clear();
         board.lists = server.getListsByBoard(board.id);
         for (Lists list : board.lists) {
             addNewList(list);
         }
+        refreshCustomization();
     }
 
     /**
@@ -171,7 +178,8 @@ public class BoardCtrl {
      *                         the card details scene for a card
      */
     @Inject
-    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server, CardDetailsCtrl cardDetailsCtrl){
+    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server, CardDetailsCtrl
+            cardDetailsCtrl){
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
@@ -226,7 +234,7 @@ public class BoardCtrl {
     }
 
     /**
-     * Method closes the secondary scene, cancelling the delete
+     * Method closes the secondary scene, cancelling to delete
      */
     void undeleteL() {
         mainCtrl.closeSecondaryStage();
@@ -294,9 +302,14 @@ public class BoardCtrl {
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
 
+        System.out.println("Color: " + board.listBgColor);
+
         list.getChildren().addAll(headerList, footerList);
         list.setId("list"+Long.toString(l.id));
         list.getProperties().put("list", l);
+        listName.setStyle("-fx-font-size: 16px; -fx-content-display: CENTER; " +
+                "-fx-padding: 7 10 0 10; -fx-text-fill: " + board.listFtColor + ";");
+        list.setStyle("-fx-background-color: " + board.listBgColor + ";");
         return list;
     }
 
@@ -434,7 +447,10 @@ public class BoardCtrl {
 
             cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
+            cardDetailsCtrl.colors = board.colorPreset.get(openedCard.colorStyle);
+            mainCtrl.closeSecondaryStage();
             mainCtrl.showCardDetail();
+            cardDetailsCtrl.refreshOpenedCard();
         }
     }
 
@@ -455,6 +471,7 @@ public class BoardCtrl {
         Lists l = (Lists) this.currentList.getProperties().get("list");
         Cards c = new Cards(text, l.cards.size(), l, "", new ArrayList<>());
         c.list = l;
+        c.colorStyle = board.defaultColor;
         server.addCard(c);
         mainCtrl.closeSecondaryStage();
     }
@@ -512,7 +529,7 @@ public class BoardCtrl {
 
         if(shortcuts.getCurrentCard()!=null &&
                 newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
-            blanket.setStyle("-fx-border-color: red; -fx-border-style:solid; " +
+            blanket.setStyle("-fx-border-color: red;  " +
                     "-fx-border-radius: 4;");
             shortcuts.setCurrentCard(blanket);
         }
@@ -543,13 +560,18 @@ public class BoardCtrl {
         innerShadow.setWidth(18.66);
         innerShadow.setHeight(18.66);
 
-        //properties settings
-        cardBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
+        if(c.colorStyle == null || !(board.colorPreset.containsKey(c.colorStyle))){
+            currentCardColor = board.colorPreset.get(board.defaultColor);}
+        else{currentCardColor = board.colorPreset.get(c.colorStyle);}
+        String[] colors = currentCardColor.split(" ");
+        cardBody.setStyle("-fx-background-color: " +
+                colors[0] + ";-fx-background-radius: 4;");
         cardBody.setEffect(innerShadow);
 
         HBox cardOverviewInfo = newCardOverviewBody(c);
         HBox cardTags = newCardTagsBody();
-
+        cardTags.setStyle("-fx-background-color: " + colors[0] +
+                "; -fx-background-radius: 4;");
         cardBody.getChildren().addAll(cardOverviewInfo, cardTags);
         return cardBody;
     }
@@ -566,7 +588,6 @@ public class BoardCtrl {
 
         cardOverviewBody.setPrefWidth(122);
         cardOverviewBody.setPrefHeight(31);
-        cardOverviewBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
 
         Label cardTitle = new Label(c.title);
         VBox cardDetailsOverview = newCardDetailsOverview(c);
@@ -576,7 +597,24 @@ public class BoardCtrl {
         cardTitle.setPadding(new Insets(0, 0, -2, 12));
         cardTitle.setStyle("-fx-font-size: 11; -fx-font-family: Bell MT;");
 
+        if(c.colorStyle == null||!(board.colorPreset.containsKey(c.colorStyle))) {
+            currentCardColor = board.colorPreset.get(board.defaultColor);
+        }
+        else {
+            currentCardColor = board.colorPreset.get(c.colorStyle);
+        }
+
+        String[] colors = currentCardColor.split(" ");
+
+        cardOverviewBody.setStyle("-fx-background-color: " + colors[0] + "; -fx-background-radius: 4;");
+        cardDetailsOverview.setStyle("-fx-background-color: " + colors[0] + ";"
+                + "-fx-text-fill: " + colors[1] + "; " +
+                "-fx-background-radius: 4;");
+        cardTitle.setStyle("-fx-background-color: " + colors[0] + ";"
+                + "-fx-text-fill: " + colors[1] + "; " +
+                "-fx-background-radius: 4;");
         cardOverviewBody.getChildren().addAll(cardTitle, cardDetailsOverview);
+
         return cardOverviewBody;
     }
 
@@ -593,6 +631,32 @@ public class BoardCtrl {
         cardDetailsOverview.setPrefWidth(66.4);
         cardDetailsOverview.setPrefHeight(31.2);
 
+        Label subtasksCount = createSubtasksCountLabel(card);
+        ProgressBar subtasksProgressBar = createSubtasksProgressBar(card);
+        String labelText = "Description: no";
+        if(!card.description.equals(""))
+            labelText = "Description: yes";
+        Label descriptionExistence = new Label(labelText);
+        descriptionExistence.setStyle("-fx-font-size: 8;");
+        descriptionExistence.setAlignment(Pos.CENTER_LEFT);
+        descriptionExistence.setPrefWidth(50.4);
+        descriptionExistence.setPrefHeight(7);
+        descriptionExistence.setPadding(new Insets(0, -6, 0, 2));
+
+        cardDetailsOverview.setAlignment(Pos.TOP_LEFT);
+        cardDetailsOverview.getChildren().addAll(subtasksCount,
+                subtasksProgressBar, descriptionExistence);
+
+        return cardDetailsOverview;
+    }
+
+    /**
+     * regarding the number of subtasks and whether the card also has a
+     * description or not
+     * @param card Object containing information about the card
+     * @return the 'title' part of the body of the given card
+     */
+    private Label createSubtasksCountLabel(Cards card) {
         String subtasksLabelText = "no subtasks";
         if(card.subtasks != null && card.subtasks.size() > 0) {
             int total = card.subtasks.size();
@@ -614,15 +678,36 @@ public class BoardCtrl {
         subtasksCount.setPrefWidth(65.6);
         subtasksCount.setPrefHeight(16);
         subtasksCount.setPadding(new Insets(0, 10, -5, 0));
+        return subtasksCount;
+    }
 
-        descriptionExistence.setStyle("-fx-font-size: 7;");
-        descriptionExistence.setAlignment(Pos.CENTER_RIGHT);
-        descriptionExistence.setPrefWidth(66.4);
-        descriptionExistence.setPrefHeight(16);
-        descriptionExistence.setPadding(new Insets(-1, 10, 1, 0));
 
-        cardDetailsOverview.getChildren().addAll(subtasksCount, descriptionExistence);
-        return cardDetailsOverview;
+    /**
+     *To create a progress bar for a task:
+     * @param card Object containing information about the card
+     * @return the 'progress bar' part of the body of the given card
+     */
+    private ProgressBar createSubtasksProgressBar(Cards card) {
+        ProgressBar subtasksProgressBar = new ProgressBar();
+        subtasksProgressBar.setPrefWidth(40);
+        subtasksProgressBar.setPrefHeight(2.4);
+        double progress = 0;
+        if (card.subtasks != null && card.subtasks.size() > 0) {
+            int total = card.subtasks.size();
+            int done = 0;
+            for (Subtask subtask : card.subtasks)
+                if (subtask.checked)
+                    done++;
+            progress = (double) done / total;
+            subtasksProgressBar.setProgress(progress);
+            if (progress == 1.0) {
+                subtasksProgressBar.setStyle("-fx-accent: green;");
+            } else if (progress > 0) {
+                subtasksProgressBar.setStyle("-fx-accent: orange;");
+            }
+        }
+        subtasksProgressBar.setPadding(new Insets(0, -16, 0, 11));
+        return subtasksProgressBar;
     }
 
     /**
@@ -689,7 +774,6 @@ public class BoardCtrl {
      */
     public void setBoardName(Boards b) {
         this.boardName.setText(b.name);
-
         this.board = b;
     }
 
@@ -706,6 +790,43 @@ public class BoardCtrl {
      */
     public void exitBoard() {
         mainCtrl.showBoardOverview();
+    }
+
+    /**
+     * Open a Customization window to modify the color and font of this board.
+     */
+    @FXML
+    void openCustomization() {
+        mainCtrl.showCustomization(boardName.getText());
+    }
+
+    /**
+     * confirm the board elements.
+     * @return current board
+     */
+    public Boards getCurrentBoard() {
+        return board;
+    }
+
+    /**
+     * Update board elements
+     * @param currentBoard board after set color
+     */
+    public void setCurrentBoard(Boards currentBoard) {
+        this.board = currentBoard;
+    }
+    /**
+     *Reset the corresponding colors of the current board
+     *  based on the color information stored in the board.
+     */
+    public void refreshCustomization() {
+        //boards color CSS setting
+        boardName.getScene().getRoot().lookup("#firstRow").
+                setStyle("-fx-background-color: " + board.boardBgColor + ";");
+        boardName.getScene().getRoot()
+                .setStyle("-fx-background-color: " + board.boardBgColor + ";");
+        scrollPane.setStyle("-fx-background: " + board.boardBgColor + ";");
+        boardName.setStyle("-fx-text-fill: " + board.boardFtColor  + ";");
     }
 
     /**
