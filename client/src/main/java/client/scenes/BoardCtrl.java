@@ -642,11 +642,11 @@ public class BoardCtrl {
         descriptionExistence.setAlignment(Pos.CENTER_LEFT);
         descriptionExistence.setPrefWidth(50.4);
         descriptionExistence.setPrefHeight(7);
-        descriptionExistence.setPadding(new Insets(0, -6, 0, 2));
+        descriptionExistence.setPadding(new Insets(0, -6, -8, 2));
 
         cardDetailsOverview.setAlignment(Pos.TOP_LEFT);
-        cardDetailsOverview.getChildren().addAll(subtasksCount,
-                subtasksProgressBar, descriptionExistence);
+        cardDetailsOverview.getChildren().addAll(descriptionExistence, subtasksCount,
+                subtasksProgressBar);
 
         return cardDetailsOverview;
     }
@@ -673,12 +673,11 @@ public class BoardCtrl {
         if(!card.description.equals(""))
             descriptionLabelText = "Description: yes";
         Label descriptionExistence = new Label(descriptionLabelText);
-
         subtasksCount.setStyle("-fx-font-size: 7;");
         subtasksCount.setAlignment(Pos.CENTER_RIGHT);
         subtasksCount.setPrefWidth(65.6);
         subtasksCount.setPrefHeight(16);
-        subtasksCount.setPadding(new Insets(0, 10, -5, 0));
+        subtasksCount.setPadding(new Insets(-3, 10, -8, 0));
         return subtasksCount;
     }
 
@@ -691,7 +690,7 @@ public class BoardCtrl {
     private ProgressBar createSubtasksProgressBar(Cards card) {
         ProgressBar subtasksProgressBar = new ProgressBar();
         subtasksProgressBar.setPrefWidth(40);
-        subtasksProgressBar.setPrefHeight(2.4);
+        subtasksProgressBar.setPrefHeight(12);
         double progress = 0;
         if (card.subtasks != null && card.subtasks.size() > 0) {
             int total = card.subtasks.size();
