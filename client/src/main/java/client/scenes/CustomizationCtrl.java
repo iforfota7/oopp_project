@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -173,9 +174,10 @@ public class CustomizationCtrl {
 
             ColorPicker colorPicker1= createColorPicker(Color.web(colors[0]));
             ColorPicker colorPicker2= createColorPicker(Color.web(colors[1]));
-            Button deleteButton = new Button("X");
-            deleteButton.setPrefSize(26, 26);
-            deleteButton.setStyle("-fx-background-color: #FF9999; " +
+            Button deleteButton = new Button("x");
+            deleteButton.setPrefSize(35, 24);
+            deleteButton.setPadding(new Insets(0, 5, 0, 4));
+            deleteButton.setStyle("-fx-background-color: #e05252; " +
                     "-fx-background-radius: 3; -fx-text-fill: white;");
             if(nameLabel.getText()==this.choice.getSelectionModel().getSelectedItem()){
                 deleteButton.setVisible(false);
@@ -206,12 +208,14 @@ public class CustomizationCtrl {
         newName.setPromptText("Rename");
         newName.setPrefWidth(90);
         Button checkButton = new Button("S");
-        checkButton.setPrefSize(10, 13);
-        checkButton.setStyle("-fx-background-color: #90EE90; " +
+        checkButton.setPrefSize(35, 23);
+        checkButton.setPadding(new Insets(2, 8, 1, 6));
+        checkButton.setStyle("-fx-background-color: #66cc66; " +
                 "-fx-background-radius: 3; -fx-text-fill: white;");
         Button editButton = new Button("R");
-        editButton.setPrefSize(10, 13);
-        editButton.setStyle("-fx-background-color: #90EE90; " +
+        editButton.setPrefSize(35, 23);
+        editButton.setPadding(new Insets(2, 8, 1, 6));
+        editButton.setStyle("-fx-background-color: #66cc66; " +
                 "-fx-background-radius: 3; -fx-text-fill: white;");
         editButton.setOnAction(e -> {
             taskBox.getChildren().removeAll(editButton, nameLabel);
@@ -318,9 +322,10 @@ public class CustomizationCtrl {
                 "-fx-background-radius: 3; -fx-padding: 3px;");
 
         Button addButton = new Button("+");
-        addButton.setPrefSize(26, 26);
-        addButton.setStyle("-fx-background-color: #99FF99; " +
-                "-fx-background-radius: 3; -fx-text-fill: white;");
+        addButton.setPrefSize(26, 23);
+        addButton.setPadding(new Insets(-2, 0, -2, 0));
+        addButton.setStyle("-fx-background-color: #66cc66;" +
+                "-fx-background-radius: 3; -fx-text-fill: white; -fx-font-size: 15");
         addButton.setOnAction(e -> {
             String taskName = nameInput.getText();
             if (taskName.isEmpty()) {

@@ -38,6 +38,10 @@ public class CardDetailsCtrl {
     private TextField subtaskName;
     @FXML
     private Text warningSubtask;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button closeButton;
     private int inputsOpen = 0;
     private boolean rename = false;
 

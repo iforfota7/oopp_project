@@ -52,12 +52,12 @@ public class Boards {
         this.lists = lists;
         this.boardBgColor = "#E6E6FA";
         this.boardFtColor = "#000000";
-        this.listBgColor = "#E6E6FA";
+        this.listBgColor = "#ffffff";
         this.listFtColor = "#000000";
         this.defaultColor = "default";
         this.tags = tags;
         Map<String, String> colorPreset = new HashMap<>();
-        colorPreset.put("default", "#4169E1 #FFFFF0");
+        colorPreset.put("default", "#e6e6fa #000000");
         this.colorPreset = colorPreset;
     }
 

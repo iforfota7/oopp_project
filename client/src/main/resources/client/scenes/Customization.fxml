@@ -138,7 +138,7 @@
                               </GridPane>
                            </children>
                         </AnchorPane>
-                        <Label text="Color preset     B                F">
+                        <Label prefHeight="26.0" prefWidth="230.0" text="Color preset       B            F">
                            <font>
                               <Font size="16.0" />
                            </font>
