@@ -246,7 +246,7 @@ public class BoardOverviewCtrl{
     public void openAdminFeatures() {
         adminLock = true;
         mainCtrl.closeSecondaryStage();
-        adminLabel.setText("Admin Label");
+        adminLabel.setText("Admin Mode");
     }
 
     /**
@@ -254,7 +254,7 @@ public class BoardOverviewCtrl{
      * Hide delete buttons.
      */
     public void closeAdminFeatures(){
-        adminLabel.setText("User Label");
+        adminLabel.setText("User Mode");
     }
 
     /**
