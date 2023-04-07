@@ -58,7 +58,7 @@ public class AddTagCtrl {
             return;
         }
 
-        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(picker.getValue()), board));
+        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(picker.getValue())));
         server.updateBoard(board);
 
         cardTitleInput.clear();

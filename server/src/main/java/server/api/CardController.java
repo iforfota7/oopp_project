@@ -1,12 +1,14 @@
 package server.api;
 
 import commons.Cards;
+import commons.Tags;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -134,6 +136,27 @@ public class CardController {
         ResponseEntity<Cards> addResponse = addCard(card);
         if(addResponse.equals(ResponseEntity.badRequest().build())) {
             throw new RuntimeException("Failed to add card");
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Given a tag, it removes all references from cards
+     * to that specific tag
+     *
+     * @param tag The given tag object
+     * @return OK iff the operation was successfully performed
+     */
+    @Transactional
+    @PostMapping(path = {"/removeTag", "/removeTag/"})
+    public ResponseEntity<Tags> removeTagFromCards(@RequestBody Tags tag) {
+        if(tag == null)
+            return ResponseEntity.badRequest().build();
+
+        List<Cards> cardsList = repo.findAll();
+        for(Cards card : cardsList) {
+            card.tags.removeIf(tag::equals);
         }
 
         return ResponseEntity.ok().build();

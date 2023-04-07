@@ -21,21 +21,16 @@ public class Tags {
 
     public String color;
 
-    @ManyToOne
-    public Boards board;
-
 
     /**
      * Constructor for the Tags entity
      *
      * @param title the title of the tag
      * @param color the color of the tag
-     * @param boards reference to the board object
      */
-    public Tags(String title, String color, Boards boards) {
+    public Tags(String title, String color) {
         this.title = title;
         this.color = color;
-        this.board = boards;
     }
 
     /**
@@ -57,7 +52,7 @@ public class Tags {
         if (o == null || getClass() != o.getClass()) return false;
         Tags tags = (Tags) o;
         return id == tags.id && Objects.equals(color, tags.color) &&
-                Objects.equals(title, tags.title) && Objects.equals(board, tags.board);
+                Objects.equals(title, tags.title);
     }
 
     /**
@@ -67,7 +62,7 @@ public class Tags {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, color, board);
+        return Objects.hash(id, title, color);
     }
 
     /**
@@ -81,7 +76,6 @@ public class Tags {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", color=" + color +
-                ", boards=" + board +
                 '}';
     }
 }

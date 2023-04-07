@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Cards;
 import commons.Tags;
 import commons.User;
 import commons.Boards;
@@ -31,7 +32,7 @@ public class MainCtrl {
     private Scene board, renameList, deleteList, addList;
     private Scene cardDetails, newCard, confirmUsername;
     private Scene boardOverview, addBoard, renameBoard;
-    private Scene tagControl, addTag, tagDetails;
+    private Scene tagControl, addTag, tagDetails, addTagToCard;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
     private Scene confirmAdmin, help, helpOverview;
 
@@ -59,7 +60,7 @@ public class MainCtrl {
     private AddTagCtrl addTagCtrl;
     private TagsCtrl tagsCtrl;
     private TagDetailsCtrl tagDetailsCtrl;
-
+    private AddTagToCardCtrl addTagToCardCtrl;
 
 
     /**
@@ -170,10 +171,12 @@ public class MainCtrl {
      * @param tagDetails tagDetailsCtrl parent pair for tagDetails scene
      * @param addTagCtrl newTagCtrl parent pair for addTag
      * @param tagControl tagControl parent pair for TagsController
+     * @param addTagToCard addTagToCardCtrl parent pair for addTagToCard
      */
     public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails,
                                Pair<AddTagCtrl, Parent> addTagCtrl,
-                               Pair<TagsCtrl, Parent> tagControl){
+                               Pair<TagsCtrl, Parent> tagControl,
+                               Pair<AddTagToCardCtrl, Parent> addTagToCard){
         this.tagDetails = new Scene(tagDetails.getValue());
         this.tagDetailsCtrl = tagDetails.getKey();
 
@@ -182,6 +185,9 @@ public class MainCtrl {
 
         this.tagControl = new Scene(tagControl.getValue());
         this.tagsCtrl = tagControl.getKey();
+
+        this.addTagToCard = new Scene(addTagToCard.getValue());
+        this.addTagToCardCtrl = addTagToCard.getKey();
 
     }
 
@@ -357,6 +363,23 @@ public class MainCtrl {
         secondaryStage.setTitle("Tags Control");
         secondaryStage.show();
         tagsCtrl.initialize(b);
+    }
+
+    /**
+     * Opens the add tag to card scene
+     *
+     * @param openedCard Reference to the card object
+     * @param board Reference to the board object
+     * @param cardDetailsCtrl Reference to the card details
+     *                        controller
+     */
+    public void showAddTagToCard(Cards openedCard, Boards board, CardDetailsCtrl cardDetailsCtrl) {
+        if(thirdStage != null && thirdStage.isShowing()) return;
+        addTagToCardCtrl.init(openedCard, board, cardDetailsCtrl);
+        thirdStage = new Stage();
+        thirdStage.setScene(addTagToCard);
+        thirdStage.setTitle("Add Tag to Card");
+        thirdStage.show();
     }
 
 
