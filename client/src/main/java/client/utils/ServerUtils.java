@@ -486,7 +486,7 @@ public class ServerUtils {
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
-    private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
+    private static final ExecutorService EXEC = Executors.newCachedThreadPool();
 
     /** Calls endpoint on backend for long polling constantly when it recieves the board
      * @param consumer - Deleted board...
@@ -520,6 +520,7 @@ public class ServerUtils {
      * Shutdowns Thread executor service.
      */
     public void stop(){
+        System.out.println("Shutdown");
         EXEC.shutdownNow();
     }
 
