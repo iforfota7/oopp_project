@@ -42,16 +42,27 @@ public class AdListCtrl {
      */
     @FXML
     public void saveNewList() {
-        adListCtrlServices.setCtrl(this, boardCtrl);
+        adListCtrlServices.setCtrl(this, boardCtrl, mainCtrl);
 
-        if(adListCtrlServices.saveNewList(newListName.getText()))
+        if(adListCtrlServices.saveNewList(newListName.getText())) {
             mainCtrl.closeSecondaryStage();
+        }
     }
 
+    /**
+     * Setter for the visibility of the warning
+     *
+     * @param isVisible True iff the warning should be visible
+     */
     public void setWarningVisibility(Boolean isVisible) {
         warning.setVisible(isVisible);
     }
 
+    /**
+     * Setter for the text found in the text field
+     *
+     * @param text The new text in the text field
+     */
     public void setNewListName(String text) {
         newListName.setText(text);
     }
