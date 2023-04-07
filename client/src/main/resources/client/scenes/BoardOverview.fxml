@@ -59,9 +59,9 @@
                 <Font size="16.0" />
             </font>
         </Label>
-        <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="541.6" layoutY="357.8" mnemonicParsing="false" prefHeight="24.0" prefWidth="42.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Help" textAlignment="CENTER" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="16.0" />
-        <Button layoutX="316.0" layoutY="358.0" mnemonicParsing="false" onAction="#addBoard" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Create Board" AnchorPane.bottomAnchor="14.800000000000011" AnchorPane.rightAnchor="196.8" />
-        <Button layoutX="411.40000000000003" layoutY="358.0" mnemonicParsing="false" onAction="#joinBoardByID" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Join Board by Name" AnchorPane.bottomAnchor="14.800000000000011" AnchorPane.rightAnchor="63.799999999999955" />
+        <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="548.6" layoutY="357.8" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="27.0" prefWidth="42.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Help" textAlignment="CENTER" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="9.0" />
+        <Button layoutX="323.0" layoutY="358.0" mnemonicParsing="false" onAction="#addBoard" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Create Board" AnchorPane.bottomAnchor="14.800000000000011" AnchorPane.rightAnchor="189.8" />
+        <Button layoutX="417.40000000000003" layoutY="358.0" mnemonicParsing="false" onAction="#joinBoardByID" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Join Board by Name" AnchorPane.bottomAnchor="14.800000000000011" AnchorPane.rightAnchor="57.799999999999955" />
         <Button layoutX="562.0" layoutY="25.0" mnemonicParsing="false" onAction="#showUserDetails" prefHeight="22.0" prefWidth="23.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 3; -fx-background-radius: 3;" text="i" AnchorPane.rightAnchor="14.799999999999955" AnchorPane.topAnchor="25.0">
             <font>
                 <Font name="Bodoni MT Bold" size="11.0" />

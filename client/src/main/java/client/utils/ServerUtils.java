@@ -76,6 +76,28 @@ public class ServerUtils {
     }
 
     /**
+     * Generate the password for becoming an admin on the server
+     */
+    public void generatePassword(){
+        ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/admin/").
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get();
+    }
+
+    /**
+     * Test whether the user input password is correct
+     * @param password the input password
+     * @return true if the password is right, otherwise false
+     */
+    public boolean checkPassword(String password){
+        String x = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/admin/password").request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(password, APPLICATION_JSON), String.class);
+        return x.equals("true");
+    }
+
+    /**
      * Find whether a board exists or not using its ID
      * @param boardName the id of the board that is being searched for
      * @return true if the board is in the database, otherwise false
