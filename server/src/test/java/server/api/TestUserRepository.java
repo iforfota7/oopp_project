@@ -8,11 +8,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import server.database.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 public class TestUserRepository implements UserRepository {
+
+    public final List<User>  users = new ArrayList<>();
+
     @Override
     public List<User> findAll() {
         return null;
@@ -40,12 +44,12 @@ public class TestUserRepository implements UserRepository {
 
     @Override
     public void deleteById(String s) {
-
+        users.removeIf(x-> x.username.equals(s));
     }
 
     @Override
     public void delete(User entity) {
-
+        users.remove(entity);
     }
 
     @Override
@@ -65,7 +69,18 @@ public class TestUserRepository implements UserRepository {
 
     @Override
     public <S extends User> S save(S entity) {
-        return null;
+        boolean userExists = false;
+        for(User u : users){
+            if(u.username == entity.username){
+                userExists = true;
+                users.remove(u);
+                users.add(entity);
+            }
+
+        }
+        if(userExists == false)
+            users.add(entity);
+        return entity;
     }
 
     @Override
@@ -75,11 +90,21 @@ public class TestUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(String s) {
+        for(User u : users){
+            if(u.username.equals(s)){
+                return Optional.of(u);
+            }
+        }
         return Optional.empty();
     }
 
     @Override
     public boolean existsById(String s) {
+        for(int i = 0; i<users.size(); i++){
+            User user = users.get(i);
+            if(user.username.equals(s))
+                return true;
+        }
         return false;
     }
 

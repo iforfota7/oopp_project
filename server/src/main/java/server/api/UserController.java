@@ -95,9 +95,9 @@ public class UserController {
     /**
      * Generate a random alphanumerical String of length 15 and print it in the server terminal
      */
-    @GetMapping (path = {"/admin", "/admin/"})
-    public void getPassword(){
-        Random random = new Random();
+
+    public String passwordCreate(){
+        Random random = new Random(100);
         password = random.ints(48, 123)
                 .filter(i -> (i <= 57 || i >= 65 && i <= 90 || i >= 97))
                 .limit(15)
@@ -105,7 +105,11 @@ public class UserController {
                 .toString();
 
         // print the password so the admin can see it
-        System.out.println(password);
+        return password;
+    }
+    @GetMapping (path = {"/admin", "/admin/"})
+    public void getPassword(){
+        System.out.println(passwordCreate());
     }
 
     /**

@@ -4,6 +4,7 @@ package server.api;
 import commons.Boards;
 import commons.Tags;
 import org.apache.commons.lang3.builder.ToStringExclude;
+import org.apache.coyote.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -187,6 +188,22 @@ public class BoardControllerTest {
         assertEquals(1, repo.boards.size());
         assertEquals("eee", repo.boards.get(0).tags.get(0).title);
     }
+
+    @Test
+    void updateBoardUsernameWrong(){
+        Boards b = getBoards("a");
+        sut.addBoard(b);
+
+        assertEquals(1, repo.boards.size());
+        assertEquals("a", repo.boards.get(0).name);
+
+        Boards b2 = getBoards("b");
+        b2.tags = new ArrayList<>();
+        b2.tags.add(new Tags("eee", "black", b2));
+        b2.id = b.id;
+        assertEquals(ResponseEntity.badRequest().build(),   sut.updateBoard(b2));
+    }
+
 
     @Test
     void updateBoardNull(){
