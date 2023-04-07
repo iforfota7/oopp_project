@@ -33,7 +33,7 @@ public class Boards {
     public String listFtColor;
     public String defaultColor;
     @ElementCollection
-    @CollectionTable(name = "color_preset", joinColumns = @JoinColumn(name = "username"))
+    @CollectionTable(name = "color_preset", joinColumns = @JoinColumn(name = "boardId"))
     @MapKeyColumn(name = "preset_name")
     @Column(name = "color")
     public Map<String, String> colorPreset = new HashMap<>();
