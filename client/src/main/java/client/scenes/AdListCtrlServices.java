@@ -5,27 +5,42 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdListCtrlServices {
 
+    private AdListCtrl adListCtrl;
+    private BoardCtrl boardCtrl;
+    private MainCtrl mainCtrl;
+
     /**
-     * Calls the addListToBoard method of boardCtrl with the given list name and
-     * position inside the board.
-     * @param boardCtrl the board controller, which we use to add a list
-     * @param newListName the name of the new list
-     * @param positionInsideBoard the position of the list inside the board
-     * @return true if adding the list was successful
+     * Checks if a new list is added to the board
+     * Adds the list if listTitle is not blank and closes the scene
+     * Otherwise, a warning will be shown
+     *
+     * @param listTitle The title of the new list
+     * @return True iff a new list is rendered
      */
-    public boolean addListToBoard(BoardCtrl boardCtrl,
-                                  String newListName, int positionInsideBoard) {
-        boardCtrl.addListToBoard(newListName, positionInsideBoard);
+    public boolean saveNewList(String listTitle) {
+        adListCtrl.setWarningVisibility(false);
+        if(listTitle.isBlank()){
+            adListCtrl.setWarningVisibility(true);
+            return false;
+        }
+
+        int positionInsideBoard = boardCtrl.getFirstRow().getChildren().size();
+        boardCtrl.addListToBoard(listTitle, positionInsideBoard);
+        adListCtrl.setNewListName("");
+        mainCtrl.closeSecondaryStage();
         return true;
     }
 
     /**
-     * Gets the position inside the board of a newly created list
-     * @param boardCtrl the board controller, from which we determine the position
-     * @return the position of the list inside the board
+     * Used to set all controller needed for this service
+     *
+     * @param adListCtrl Reference to adListCtrl
+     * @param boardCtrl Reference to boardCtrl
+     * @param mainCtrl Reference to mainCtrl
      */
-    public int getPositionOfListInsideBoard(BoardCtrl boardCtrl) {
-
-        return boardCtrl.getFirstRow().getChildren().size();
+    public void setCtrl(AdListCtrl adListCtrl, BoardCtrl boardCtrl, MainCtrl mainCtrl) {
+        this.adListCtrl = adListCtrl;
+        this.boardCtrl = boardCtrl;
+        this.mainCtrl = mainCtrl;
     }
 }
