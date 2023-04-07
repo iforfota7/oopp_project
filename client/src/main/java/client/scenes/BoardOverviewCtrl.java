@@ -48,7 +48,7 @@ public class BoardOverviewCtrl{
     /**
      * This method configures websockets related to the board overview
      */
-    private void websocket(){
+    private void websocketBoards(){
         server.registerForMessages("/topic/boards/add", Boards.class, board ->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -84,7 +84,9 @@ public class BoardOverviewCtrl{
                 }
             });
         });
+    }
 
+    private void websocketUsers(){
         server.registerForMessages("/topic/users/refresh", User.class, user ->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -129,7 +131,8 @@ public class BoardOverviewCtrl{
      */
     public void init() {
         boardsList = new ArrayList<>();
-        websocket();
+        websocketBoards();
+        websocketUsers();
         refresh();
     }
 
