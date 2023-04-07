@@ -2,6 +2,8 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
+import commons.User;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -42,6 +44,30 @@ public class BoardOverviewCtrl{
         serverURLS = new ArrayList<>();
         this.selectServerCtrl = selectServerCtrl;
     }
+
+    /**
+     * This method configures websockets related to the board overview
+     */
+    private void websocket(){
+        server.registerForMessages("/topic/boards/refresh", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/users", User.class, user ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+    }
+
     @FXML
     GridPane gridPane;
 
@@ -67,6 +93,7 @@ public class BoardOverviewCtrl{
      */
     public void init() {
         boardsList = new ArrayList<>();
+        websocket();
         refresh();
     }
 
