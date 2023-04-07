@@ -26,6 +26,9 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 
@@ -57,6 +60,8 @@ public class BoardCtrl {
 
     private List<String> serverURLS;
 
+    Font font = Font.font("Bell MT", FontWeight.NORMAL,
+            FontPosture.REGULAR, 12);
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -290,6 +295,9 @@ public class BoardCtrl {
         // creating the label for the name of the list, aligning and customising it
         Label listName = createListTitle(l.title);
         listName.setId("list_title_"+l.id);
+        Font fontList = Font.font("Bell MT", FontWeight.NORMAL,
+                FontPosture.REGULAR, 17);;
+        listName.setFont(fontList);
 
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
@@ -310,8 +318,8 @@ public class BoardCtrl {
         refactorButtonList.setText("Edit List");
         refactorButtonList.setPrefWidth(97);
         refactorButtonList.setPrefHeight(25);
-        refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 11px; " +
-                "-fx-font-family: Bell MT;");
+        refactorButtonList.setStyle("-fx-background-color: #f08080;");
+        refactorButtonList.setFont(font);
 
         MenuItem renameOption = new MenuItem();
         renameOption.setText("Rename List");
@@ -364,7 +372,7 @@ public class BoardCtrl {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
-        listName.setStyle("-fx-font-size: 16px; -fx-content-display: " +
+        listName.setStyle("-fx-content-display: " +
                 "CENTER; -fx-padding: 7 10 0 10;");
         listName.setAlignment(Pos.CENTER);
         return listName;
@@ -570,7 +578,7 @@ public class BoardCtrl {
         cardTitle.setPrefWidth(96.8);
         cardTitle.setPrefHeight(31.2);
         cardTitle.setPadding(new Insets(0, 0, -2, 12));
-        cardTitle.setStyle("-fx-font-size: 11; -fx-font-family: Bell MT;");
+        cardTitle.setFont(font);
 
         cardOverviewBody.getChildren().addAll(cardTitle, cardDetailsOverview);
         return cardOverviewBody;
