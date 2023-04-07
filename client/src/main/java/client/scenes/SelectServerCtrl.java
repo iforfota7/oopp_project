@@ -34,6 +34,7 @@ public class SelectServerCtrl {
      * Constructor method for SelectServerCtrl
      * @param server instance of ServerUtils
      * @param mainCtrl instance of MainCtrl
+     * @param selectServerCtrlServices instance of SelectServerCtrlServices
      */
     @Inject
     public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl,
@@ -77,6 +78,7 @@ public class SelectServerCtrl {
      * Method that connects the user to the board overview
      * @param address sets it as server url in ServerUtils if valid
      * @param username sets it as username in ServerUtils and finds current user
+     * @return true if the method completed successfully and the user sees a new scene
      */
     public boolean connect(String address, String username){
         this.currentUser = selectServerCtrlServices.checkConnection(address, username, server);
@@ -100,6 +102,7 @@ public class SelectServerCtrl {
 
     /**
      * Set user's permission level to admin in the database.
+     * @return true if the user was successfully set as admin
      */
     public boolean setAdmin() {
         currentUser.isAdmin = true;
@@ -109,6 +112,7 @@ public class SelectServerCtrl {
 
     /**
      * Set user's permission level back to user in the database.
+     * @return true if the user was successfully removed as an admin
      */
     public boolean removeAdmin() {
         currentUser.isAdmin = false;
@@ -118,6 +122,7 @@ public class SelectServerCtrl {
 
     /**
      * Display the updated user information after refresh.
+     * @return true if the scene was successfully shown
      */
     public boolean refreshUserDetails() {
         mainCtrl.showUserDetails(currentUser);

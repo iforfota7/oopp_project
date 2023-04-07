@@ -9,6 +9,14 @@ import java.util.ArrayList;
 @Service
 public class SelectServerCtrlServices {
 
+    /**
+     * Method that checks whether a connection to the server can be established
+     * @param address the server address
+     * @param username the username of the user
+     * @param server instance of ServerUtils
+     * @return the user if they can exist or can be created as well as connected
+     *          to the server, otherwise null
+     */
     public User checkConnection(String address, String username, ServerUtils server){
         //if address is empty do nothing
         if(address == null || address.equals("")){
