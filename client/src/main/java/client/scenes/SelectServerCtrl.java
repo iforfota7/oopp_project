@@ -33,15 +33,19 @@ public class SelectServerCtrl {
 
     private final MainCtrl mainCtrl;
 
+    private final SelectServerCtrlServices selectServerCtrlServices;
+
     /**
      * Constructor method for SelectServerCtrl
      * @param server instance of ServerUtils
      * @param mainCtrl instance of MainCtrl
      */
     @Inject
-    public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl){
+    public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl,
+                            SelectServerCtrlServices selectServerCtrlServices){
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.selectServerCtrlServices = selectServerCtrlServices;
     }
 
     /**
@@ -60,43 +64,13 @@ public class SelectServerCtrl {
     public void connect() {
         String address = inputServer.getText();
         String username = inputUsername.getText();
-        boolean exists = false;
-        //if address is empty do nothing
-        if(address == null || address.equals("")){
-            return;
-        }
-        // transforms to complete url
-        // if begins with colon assumed to be localhost address with specified port
-        if(address.startsWith("http://")) server.setServer(address);
-        else if(address.startsWith(":")) server.setServer("http://localhost" + address);
-        else server.setServer("http://" + address);
-        // if you can connect to the specified server address
-        if(server.checkServer()){
-            serverWarning.setVisible(false);
-            server.setWebsockets();
 
-            // set the username in the frontend
-            ServerUtils.setUsername(username);
-            // create user from information
+        this.currentUser = selectServerCtrlServices.checkConnection(address, username, server);
+        boolean exists = currentUser != null;
 
-            exists = server.existsUser();
-            if(!exists){
-                try{
-                    User user = new User(username, new ArrayList<>(), false);
-                    server.addUser(user); // try to add user if not already in database
-                    this.currentUser = user;
-                }
-                catch(Exception e){
-                    System.out.println(e); // probably need a better way of communicating the error
-                }
-            }
-            else{
-                User user = server.findUser();
-                this.currentUser = user;
-            }
+        if(!exists) serverWarning.setVisible(true);
+        else serverWarning.setVisible(false);
 
-        }
-        else serverWarning.setVisible(true);
         // if server exists
         if(!serverWarning.isVisible()){
             // if user does not exist, continue
