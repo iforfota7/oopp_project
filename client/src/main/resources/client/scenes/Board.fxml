@@ -24,9 +24,13 @@
          </padding>
       </ScrollPane>
       <Button layoutX="898.2" layoutY="32.0" mnemonicParsing="false" onAction="#exitBoard" prefWidth="80.0" style="-fx-background-color: #fad1d1; -fx-border-radius: 2; -fx-border-color: #821717;" text="Exit Board" AnchorPane.rightAnchor="21.799999999999955" AnchorPane.topAnchor="32.0" />
+      <Button layoutX="898.2" layoutY="32.0" mnemonicParsing="false" onAction="#exitBoard" prefWidth="80.0" style="-fx-background-color: #fad1d1; -fx-border-radius: 2; -fx-border-color: #821717;" text="Exit Board" AnchorPane.rightAnchor="21.799999999999955" AnchorPane.topAnchor="32.0">
+         <font>
+            <Font name="Bell MT" size="13.0" />
+         </font></Button>
       <Label fx:id="boardName" alignment="CENTER" layoutX="233.0" layoutY="28.0" text="Board Name" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="243.0" AnchorPane.topAnchor="28.0">
          <font>
-            <Font size="21.0" />
+            <Font name="Bell MT" size="21.0" />
          </font>
       </Label>
       <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0" />
@@ -43,6 +47,9 @@
             <Font name="Bell MT" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="tags" layoutX="805.2" layoutY="32.0" mnemonicParsing="false" onAction="#openTag" prefHeight="27.0" prefWidth="80.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="114.79999999999995" AnchorPane.topAnchor="32.0" />
+      <Button fx:id="tags" layoutX="805.2" layoutY="32.0" mnemonicParsing="false" onAction="#openTag" prefHeight="27.0" prefWidth="80.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="114.79999999999995" AnchorPane.topAnchor="32.0">
+         <font>
+            <Font name="Bell MT" size="13.0" />
+         </font></Button>
    </children>
 </AnchorPane>

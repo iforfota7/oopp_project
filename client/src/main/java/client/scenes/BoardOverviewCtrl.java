@@ -12,6 +12,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -25,6 +27,9 @@ public class BoardOverviewCtrl{
     private Boards currentBoard;
     private int numberOfBoards = 0;
     private List<String> serverURLS;
+
+    Font font = Font.font("Bell MT", FontWeight.NORMAL,
+            FontPosture.REGULAR, 19);
 
 
     /**
@@ -119,6 +124,46 @@ public class BoardOverviewCtrl{
      * @return The Label controller that will be displayed
      */
     public StackPane createNewBoard(Boards b) {
+        Label newBoard = boardBody(b);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(newBoard);
+        stackPane.getProperties().put("board", b);
+
+        Button removeBoardButton = new Button("delete");
+        removeBoardButton.setFont(font);
+        removeBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px; " +
+                "-fx-font-family: Bell MT;");
+        removeBoardButton.setOnMouseClicked(this::removeBoard);
+        removeBoardButton.setUserData(b.name);
+        removeBoardButton.setVisible(adminLock);
+        stackPane.getChildren().add(removeBoardButton);
+        StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
+
+        Button hideBoardButton = new Button("hide");
+        hideBoardButton.setFont(font);
+        hideBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        hideBoardButton.setOnMouseClicked(this::hideBoard);
+        hideBoardButton.setUserData(b.name);
+        hideBoardButton.setVisible(!adminLock);
+        stackPane.getChildren().add(hideBoardButton);
+        StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
+
+        Button renameBoardButton = new Button("rename");
+        renameBoardButton.setFont(font);
+        renameBoardButton.setStyle("-fx-background-color: #f08080;" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+        renameBoardButton.setOnMouseClicked(this::showRenameBoard);
+        renameBoardButton.setUserData(b.name);
+        stackPane.getChildren().add(renameBoardButton);
+        StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
+
+        return stackPane;
+    }
+
+    private Label boardBody(Boards b){
         Label newBoard = new Label(b.name);
 
         newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
@@ -131,40 +176,10 @@ public class BoardOverviewCtrl{
         newBoard.setAlignment(Pos.CENTER);
         newBoard.setText(b.name);
         newBoard.getProperties().put("board", b);
-        newBoard.setFont(new Font(16));
+        newBoard.setFont(font);
         newBoard.setOnMouseClicked(this::goToBoard);
 
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(newBoard);
-        stackPane.getProperties().put("board", b);
-
-        Button removeBoardButton = new Button("delete");
-        removeBoardButton.setStyle("-fx-background-color: #f08080;" +
-                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
-        removeBoardButton.setOnMouseClicked(this::removeBoard);
-        removeBoardButton.setUserData(b.name);
-        removeBoardButton.setVisible(adminLock);
-        stackPane.getChildren().add(removeBoardButton);
-        StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
-
-        Button hideBoardButton = new Button("hide");
-        hideBoardButton.setStyle("-fx-background-color: #f08080;" +
-                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
-        hideBoardButton.setOnMouseClicked(this::hideBoard);
-        hideBoardButton.setUserData(b.name);
-        hideBoardButton.setVisible(!adminLock);
-        stackPane.getChildren().add(hideBoardButton);
-        StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
-
-        Button renameBoardButton = new Button("rename");
-        renameBoardButton.setStyle("-fx-background-color: #f08080;" +
-                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
-        renameBoardButton.setOnMouseClicked(this::showRenameBoard);
-        renameBoardButton.setUserData(b.name);
-        stackPane.getChildren().add(renameBoardButton);
-        StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
-
-        return stackPane;
+        return newBoard;
     }
     /**
      * The functionality of the delete current board button will be displayed
@@ -246,7 +261,7 @@ public class BoardOverviewCtrl{
     public void openAdminFeatures() {
         adminLock = true;
         mainCtrl.closeSecondaryStage();
-        adminLabel.setText("Admin Label");
+        adminLabel.setText("Admin Mode");
     }
 
     /**
@@ -254,7 +269,7 @@ public class BoardOverviewCtrl{
      * Hide delete buttons.
      */
     public void closeAdminFeatures(){
-        adminLabel.setText("User Label");
+        adminLabel.setText("User Mode");
     }
 
     /**

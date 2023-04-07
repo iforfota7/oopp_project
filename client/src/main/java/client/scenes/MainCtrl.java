@@ -222,6 +222,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(renameBoard);
         secondaryStage.setTitle("Rename board!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -241,6 +242,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(renameList);
         secondaryStage.setTitle("Rename list!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -252,6 +254,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(this.deleteList);
         secondaryStage.setTitle("Delete List!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -263,6 +266,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(addList);
         secondaryStage.setTitle("New List!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -274,6 +278,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(confirmUsername);
         secondaryStage.setTitle("Confirm Username!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -300,6 +305,7 @@ public class MainCtrl {
             cardDetailsCtrl.close();
         });
         secondaryStage.setTitle("Card Details");
+        secondaryStage.setResizable(false);
         cardDetailsCtrl.init();
         secondaryStage.show();
     }
@@ -316,6 +322,7 @@ public class MainCtrl {
         thirdStage = new Stage();
         thirdStage.setScene(tagDetails);
         thirdStage.setTitle("Tag Details");
+        thirdStage.setResizable(false);
         thirdStage.show();
         tagDetailsCtrl.initialize(t, board);
     }
@@ -328,6 +335,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(newCard);
         secondaryStage.setTitle("Add new Card");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -341,6 +349,7 @@ public class MainCtrl {
         thirdStage = new Stage();
         thirdStage.setScene(addTag);
         thirdStage.setTitle("Add new Tag");
+        thirdStage.setResizable(false);
         thirdStage.show();
         addTagCtrl.initialize(board);
     }
@@ -355,6 +364,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(tagControl);
         secondaryStage.setTitle("Tags Control");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
         tagsCtrl.initialize(b);
     }
@@ -375,6 +385,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(deleteCard);
         secondaryStage.setTitle("Delete Card");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -392,6 +403,8 @@ public class MainCtrl {
         }
         boardOverviewCtrl.init();
         primaryStage.setTitle("Board Overview"+titleLabel);
+        primaryStage.setX(300);
+        primaryStage.setY(100);
         primaryStage.setScene(boardOverview);
     }
 
@@ -411,6 +424,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(addBoard);
         secondaryStage.setTitle("Add a new Board!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -423,6 +437,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(confirmAdmin);
         secondaryStage.setTitle("Admin LogIn");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -434,6 +449,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Join board by ID");
         secondaryStage.setScene(joinBoardByID);
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -447,6 +463,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Help");
         secondaryStage.setScene(help);
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -459,6 +476,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Help");
         secondaryStage.setScene(helpOverview);
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -472,7 +490,7 @@ public class MainCtrl {
         userDetailsCtrl.setUser(currentUser);
         secondaryStage = new Stage();
         secondaryStage.setScene(userDetails);
-        secondaryStage.setTitle("User Details");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
