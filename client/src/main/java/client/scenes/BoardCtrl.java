@@ -78,19 +78,22 @@ public class BoardCtrl {
         refresh();
         server.registerForUpdates(b->{
 
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(board.id == b.id){
-                                firstRow.getChildren().clear();
-                                firstRow.getChildren().add(new
-                                Label("This board has been deleted " +
-                                "by admin, we advise you" +
-                                " to exit this board!"));
-                            }
-                        }
-                    });
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board.id == b.id){
 
+
+                        Alert e = new Alert(Alert.AlertType.WARNING, "This board has been deleted by admin");
+                        e.show();
+                        mainCtrl.showBoardOverview();
+
+
+                    }
+
+
+                }
+            });
         });
     }
 

@@ -492,7 +492,6 @@ public class ServerUtils {
      * @param consumer - Deleted board...
      */
     public void registerForUpdates(Consumer<Boards> consumer) {
-        System.out.println(EXEC);
 
         EXEC.submit(()->{
                 while(!EXEC.isShutdown()) {
@@ -520,7 +519,6 @@ public class ServerUtils {
      * Shutdowns Thread executor service.
      */
     public void stop(){
-        System.out.println("Shutdown");
         EXEC.shutdownNow();
     }
 

@@ -45,6 +45,7 @@ public class BoardController {
         var res = new DeferredResult<ResponseEntity<Boards>>(5000L, noContent);
 
         var key = new Object();
+        //used for long polling
         listeners.put(key, b -> {
             res.setResult(ResponseEntity.ok(b));
 
