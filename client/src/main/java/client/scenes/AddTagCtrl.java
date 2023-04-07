@@ -18,7 +18,9 @@ public class AddTagCtrl {
     private Text warning;
 
     @FXML
-    private ColorPicker picker;
+    private ColorPicker backgroundPicker;
+    @FXML
+    private ColorPicker fontPicker;
 
     private final ServerUtils server;
 
@@ -58,7 +60,8 @@ public class AddTagCtrl {
             return;
         }
 
-        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(picker.getValue())));
+        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(backgroundPicker.getValue()),
+                                    colorTag(fontPicker.getValue())));
         server.updateBoard(board);
 
         cardTitleInput.clear();

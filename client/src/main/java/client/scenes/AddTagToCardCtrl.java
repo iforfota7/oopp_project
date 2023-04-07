@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,10 +122,11 @@ public class AddTagToCardCtrl {
         tagBody.setPrefWidth(125.6);
         tagBody.setPrefHeight(28);
 
-        tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.color);
+        tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.backgroundColor);
 
         Label tagTitle = new Label(tag.title);
         tagTitle.setOnMouseClicked(this::selectDeselectTags);
+        tagTitle.setTextFill(Color.web(tag.fontColor));
         tagTitle.setPrefHeight(18.4);
         tagTitle.setPrefWidth(98);
         AnchorPane.setTopAnchor(tagTitle, 5.0);
@@ -153,7 +155,7 @@ public class AddTagToCardCtrl {
 
         // select a tag if it isn't selected
         if(!selectedTags.contains(clickedTag)) {
-            String tagColor = clickedTag.color;
+            String tagColor = clickedTag.backgroundColor;
             tagContainer.setStyle("-fx-background-color: "+
                     tagColor + "; -fx-background-radius: 4;");
             selectedTags.add(clickedTag);
