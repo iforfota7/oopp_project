@@ -84,7 +84,8 @@ public class BoardCtrl {
                     if(board.id == b.id){
 
 
-                        Alert e = new Alert(Alert.AlertType.WARNING, "This board has been deleted by admin");
+                        Alert e = new Alert(Alert.AlertType.WARNING,
+                    "This board has been deleted by admin");
                         e.show();
                         mainCtrl.showBoardOverview();
 
