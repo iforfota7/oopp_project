@@ -1,6 +1,7 @@
 package client.scenes;
 
 import commons.Boards;
+import commons.User;
 
 public class TestMainCtrl extends MainCtrl {
 
@@ -20,5 +21,20 @@ public class TestMainCtrl extends MainCtrl {
     public void showBoard(Boards b) {
 
         System.out.println("Successfully showed board");
+    }
+
+    @Override
+    public void showBoardOverview(){
+        System.out.println("Successfully showed board overview");
+    }
+
+    @Override
+    public void showConfirmUsername(){
+        System.out.println("Successfully showed confirmation scene for username");
+    }
+
+    @Override
+    public void showUserDetails(User user){
+        System.out.println("Successfully showed user details");
     }
 }

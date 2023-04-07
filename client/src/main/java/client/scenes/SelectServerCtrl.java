@@ -4,12 +4,10 @@ import client.utils.ServerUtils;
 import commons.Boards;
 import commons.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SelectServerCtrl {
@@ -23,9 +21,6 @@ public class SelectServerCtrl {
 
     @FXML
     private TextField inputUsername;
-
-    @FXML
-    private Button connect;
 
     private User currentUser;
 
@@ -57,14 +52,33 @@ public class SelectServerCtrl {
     }
 
     /**
+     * Setter method for current user primarily used for testing
+     * @param user the user to be set to
+     */
+    public void setCurrentUser(User user) {this.currentUser = user; }
+
+    /**
+     * Setter method for the serverWarning primarily used for tests
+     * @param text the text serverWarning should be set to
+     */
+    public void setServerWarning(Text text) {this.serverWarning = text; }
+
+    /**
      * Method to be executed when connect button is clicked
-     * Gets url from text-field and sets it as server url in ServerUtils
-     * Gets username from text-field and sets it as username in ServerUtils
+     * Gets url username from text-field
      */
     public void connect() {
         String address = inputServer.getText();
         String username = inputUsername.getText();
+        connect(address, username);
+    }
 
+    /**
+     * Method that connects the user to the board overview
+     * @param address sets it as server url in ServerUtils if valid
+     * @param username sets it as username in ServerUtils and finds current user
+     */
+    public boolean connect(String address, String username){
         this.currentUser = selectServerCtrlServices.checkConnection(address, username, server);
         boolean exists = currentUser != null;
 
@@ -79,30 +93,35 @@ public class SelectServerCtrl {
             else{
                 mainCtrl.showConfirmUsername();
             }
+            return true;
         }
+        return false;
     }
 
     /**
      * Set user's permission level to admin in the database.
      */
-    public void setAdmin() {
+    public boolean setAdmin() {
         currentUser.isAdmin = true;
         server.refreshAdmin(currentUser);
+        return true;
     }
 
     /**
      * Set user's permission level back to user in the database.
      */
-    public void removeAdmin() {
+    public boolean removeAdmin() {
         currentUser.isAdmin = false;
         server.refreshAdmin(currentUser);
+        return true;
     }
 
     /**
      * Display the updated user information after refresh.
      */
-    public void refreshUserDetails() {
+    public boolean refreshUserDetails() {
         mainCtrl.showUserDetails(currentUser);
+        return true;
     }
 
     /**

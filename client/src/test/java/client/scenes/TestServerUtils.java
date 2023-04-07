@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.User;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -68,4 +69,9 @@ public class TestServerUtils extends ServerUtils {
      */
     @Override
     public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) { }
+
+    @Override
+    public User refreshAdmin(User user){
+        return user;
+    }
 }
