@@ -5,7 +5,7 @@ import javafx.scene.layout.HBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestBoardCtrl extends BoardCtrl {
+public class MockBoardCtrl extends BoardCtrl {
 
     public HBox firstRow;
     public List<String> calledMethods;
@@ -13,7 +13,7 @@ public class TestBoardCtrl extends BoardCtrl {
     /**
      * Constructor of the TestBoardCtrl class
      */
-    public TestBoardCtrl() {
+    public MockBoardCtrl() {
 
         super();
         firstRow = new HBox();

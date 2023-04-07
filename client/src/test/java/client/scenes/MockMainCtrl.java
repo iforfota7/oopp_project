@@ -3,7 +3,7 @@ package client.scenes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestMainCtrl extends MainCtrl {
+public class MockMainCtrl extends MainCtrl {
 
     public List<String> calledMethods;
 
@@ -11,7 +11,7 @@ public class TestMainCtrl extends MainCtrl {
      * Default constructor for TestMainCtrl
      *
      */
-    public TestMainCtrl() {
+    public MockMainCtrl() {
         super();
         calledMethods = new ArrayList<>();
     }

@@ -5,21 +5,21 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestAdListCtrl extends AdListCtrl{
+public class MockAdListCtrl extends AdListCtrl{
     public Text warning;
     public List<String> calledMethods;
 
     /**
      * Constructor for the TestAddListCtrl
      *
-     * @param testBoardCtrl Reference to testBoardCtrl
-     * @param testMainCtrl Reference to testMainCtrl
+     * @param mockBoardCtrl Reference to testBoardCtrl
+     * @param mockMainCtrl Reference to testMainCtrl
      * @param adListCtrlServices Reference to addListCtrlServices
      */
-    public TestAdListCtrl(BoardCtrl testBoardCtrl, MainCtrl testMainCtrl,
-                      AdListCtrlServices adListCtrlServices){
+    public MockAdListCtrl(BoardCtrl mockBoardCtrl, MainCtrl mockMainCtrl,
+                          AdListCtrlServices adListCtrlServices){
 
-        super(testBoardCtrl, testMainCtrl, adListCtrlServices);
+        super(mockBoardCtrl, mockMainCtrl, adListCtrlServices);
 
         this.warning = new Text();
         calledMethods = new ArrayList<>();

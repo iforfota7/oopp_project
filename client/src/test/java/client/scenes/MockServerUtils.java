@@ -7,7 +7,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.util.function.Consumer;
 
-public class TestServerUtils extends ServerUtils {
+public class MockServerUtils extends ServerUtils {
 
     /**
      * Mocks the behaviour of the connect method in ServerUtils
