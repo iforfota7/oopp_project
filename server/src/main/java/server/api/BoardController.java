@@ -169,6 +169,8 @@ public class BoardController {
     @Transactional
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Void> removeBoard(@RequestBody Boards boards) {
+        if(boards == null)
+            return ResponseEntity.badRequest().build();
         String boardName = boards.name;
 
         if (boardName == null) {
