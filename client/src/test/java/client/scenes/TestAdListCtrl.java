@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestAdListCtrl extends AdListCtrl{
-
-    private TestBoardCtrl boardCtrl;
-    private TestMainCtrl mainCtrl;
-    private AdListCtrlServices adListCtrlServices;
     public Text warning;
     public List<String> calledMethods;
 
