@@ -56,14 +56,26 @@ public class Shortcuts {
 
         if(keyEvent.getCode() == KeyCode.H)
             openHelpScene();
-        else if (keyEvent.getCode() == KeyCode.UP)
+        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isControlDown())
             moveHighlightUp();
-        else if (keyEvent.getCode() == KeyCode.DOWN)
+        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isControlDown())
             moveHighlightDown();
-        else if (keyEvent.getCode() == KeyCode.RIGHT)
+        else if (keyEvent.getCode() == KeyCode.RIGHT && keyEvent.isControlDown())
             moveHighlightRight();
-        else if (keyEvent.getCode() == KeyCode.LEFT)
+        else if (keyEvent.getCode() == KeyCode.LEFT && keyEvent.isControlDown())
             moveHighlightLeft();
+    }
+
+    /**
+     * Closes the shortcuts help scene by pressing "H" while
+     * it is in focus.
+     * @param keyEvent an object containing information about the pressed key
+     */
+    public void closeHelpScene(KeyEvent keyEvent) {
+
+        if(keyEvent.getCode() == KeyCode.H) {
+            mainCtrl.closeSecondaryStage();
+        }
     }
 
     /**

@@ -60,8 +60,6 @@ public class MainCtrl {
     private TagDetailsCtrl tagDetailsCtrl;
     private Shortcuts shortcuts;
 
-
-
     /**
      * Initialize method for board related scenes
      * @param board boardCtrl parent pair for board scene
@@ -167,6 +165,9 @@ public class MainCtrl {
 
         this.helpOverview = new Scene(helpOverviewCtrl.getValue()); // uses same ctrl as help
         this.helpShortcuts = new Scene(helpShortcutsCtrl.getValue()); // uses same ctrl as help
+
+        shortcuts = new Shortcuts(this);
+        helpShortcuts.setOnKeyPressed(shortcuts::closeHelpScene);
     }
 
     /**
