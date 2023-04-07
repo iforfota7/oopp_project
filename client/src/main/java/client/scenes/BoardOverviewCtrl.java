@@ -133,7 +133,7 @@ public class BoardOverviewCtrl{
         Button removeBoardButton = new Button("delete");
         removeBoardButton.setFont(font);
         removeBoardButton.setStyle("-fx-background-color: #f08080;" +
-                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px" +
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px; " +
                 "-fx-font-family: Bell MT;");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
         removeBoardButton.setUserData(b.name);

@@ -403,6 +403,8 @@ public class MainCtrl {
         }
         boardOverviewCtrl.init();
         primaryStage.setTitle("Board Overview"+titleLabel);
+        primaryStage.setX(300);
+        primaryStage.setY(100);
         primaryStage.setScene(boardOverview);
     }
 
