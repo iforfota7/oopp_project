@@ -340,7 +340,7 @@ public class ServerUtils {
      * @param url the url for the websockets
      * @return StompSession
      */
-    private StompSession connect(String url){
+    public StompSession connect(String url){
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
         stomp.setMessageConverter(new MappingJackson2MessageConverter());

@@ -209,6 +209,18 @@ public class BoardCtrl {
     }
 
     /**
+     * Default constructor of BoardCtrl
+     */
+    public BoardCtrl() {
+
+        mainCtrl=new MainCtrl();
+        server=new ServerUtils();
+        cardDetailsCtrl=new CardDetailsCtrl(server,mainCtrl);
+        shortcuts=new Shortcuts();
+        drag = new Draggable(server);
+    }
+
+    /**
      *Trigger function for the change List name option in the drop-down options button
      * @param event List name change process
      */
