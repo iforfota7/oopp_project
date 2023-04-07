@@ -53,7 +53,7 @@ public class BoardCtrl {
     private Cards currentCard;
 
     private final Draggable drag;
-    private final Shortcuts shortcuts;
+    private Shortcuts shortcuts;
 
     private List<String> serverURLS;
 
@@ -67,6 +67,8 @@ public class BoardCtrl {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
+
+        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
 
         if(!serverURLS.contains(server.getServer())) {
             serverURLS.add(server.getServer());
@@ -516,8 +518,6 @@ public class BoardCtrl {
         over.setId("card"+Long.toString(c.id));
         over.setOnMouseEntered(shortcuts::onMouseHover);
 
-        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
-
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
 
@@ -737,6 +737,8 @@ public class BoardCtrl {
      * Exits the specific board to show board overview
      */
     public void exitBoard() {
+
+        shortcuts = new Shortcuts(mainCtrl, server);
         mainCtrl.showBoardOverview();
     }
 
