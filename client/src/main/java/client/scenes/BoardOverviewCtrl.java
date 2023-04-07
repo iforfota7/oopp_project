@@ -49,7 +49,7 @@ public class BoardOverviewCtrl{
      * This method configures websockets related to the board overview
      */
     private void websocket(){
-        server.registerForMessages("/topic/boards/refresh", Boards.class, board ->{
+        server.registerForMessages("/topic/boards/add", Boards.class, board ->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -58,7 +58,43 @@ public class BoardOverviewCtrl{
             });
         });
 
-        server.registerForMessages("/topic/users", User.class, user ->{
+        server.registerForMessages("/topic/boards/rename", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/remove", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/users/refresh", User.class, user ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/users/update", User.class, user ->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -249,10 +285,12 @@ public class BoardOverviewCtrl{
 
         if(adminLock){
             boardsList = server.getBoards();
+            openAdminFeatures();
         }
         else{
             boardsList = server.viewedBoards();
             selectServerCtrl.setBoardsOfCurrentUser(boardsList);
+            closeAdminFeatures();
         }
 
         selectServerCtrl.getCurrentUser().boards = boardsList;

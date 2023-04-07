@@ -71,7 +71,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
 
         Boards saved = repo.save(board);
-        msgs.convertAndSend("/topic/boards/refresh", saved);
+        msgs.convertAndSend("/topic/boards/rename", saved);
 
         return ResponseEntity.ok(saved);
     }
@@ -98,7 +98,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
 
         Boards saved = repo.save(board);
-        msgs.convertAndSend("/topic/boards/refresh", saved);
+        msgs.convertAndSend("/topic/boards/update", saved);
 
         return ResponseEntity.ok(saved);
     }
@@ -150,7 +150,7 @@ public class BoardController {
         repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
-        msgs.convertAndSend("/topic/boards/refresh", boards);
+        msgs.convertAndSend("/topic/boards/remove", boards);
 
         return ResponseEntity.ok().build();
     }

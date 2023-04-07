@@ -65,6 +65,7 @@ public class UserController {
     @Transactional
     @PostMapping (path = {"/update", "/update/"})
     public User updateUser(@RequestBody User user){
+        msgs.convertAndSend("/topic/users/update", user);
         return repo.save(user);
     }
 
@@ -82,7 +83,7 @@ public class UserController {
         boolean admin = user.isAdmin;
         user.isAdmin = admin;
         repo.save(user);
-        msgs.convertAndSend("/topic/users", user);
+        msgs.convertAndSend("/topic/users/refresh", user);
 
         return ResponseEntity.ok().build();
     }
@@ -95,7 +96,9 @@ public class UserController {
     @GetMapping (path = "/boards/{username}")
     @ResponseBody
     public List<Boards> getAllBoards(@PathVariable String username) {
-        return repo.findById(username).get().boards;
+        List<Boards> boards = repo.findById(username).get().boards;
+        msgs.convertAndSend("/topic/users/boards", boards.get(0));
+        return boards;
     }
 
     /**
