@@ -2,11 +2,14 @@ package server.api;
 
 
 import commons.Boards;
+import commons.Tags;
 import org.apache.commons.lang3.builder.ToStringExclude;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.AbstractMessageChannel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,12 @@ public class BoardControllerTest {
     public void setup(){
         this.boardCount = 0;
         repo =  new TestBoardsRepository();
+        msgs = new SimpMessagingTemplate(new AbstractMessageChannel() {
+            @Override
+            protected boolean sendInternal(Message<?> message, long timeout) {
+                return true;
+            }
+        });
         sut = new BoardController(repo, msgs);
            }
 
@@ -85,13 +94,13 @@ public class BoardControllerTest {
         assertEquals(ResponseEntity.badRequest().build(), sut.addBoard(b1));
     }
 
-   /* @Test
+    @Test
     void addBoardAlreadyExistsTest(){
         Boards b1 = getBoards("fsdfsd");
         sut.addBoard(b1);
 
         assertEquals(ResponseEntity.badRequest().build(), sut.addBoard(b1));
-    }*/
+    }
 
     @Test
     void addBoardEmptyTitleTest(){
@@ -160,7 +169,51 @@ public class BoardControllerTest {
     }
 
 
+    @Test
+    void updateBoardSuccessfully(){
+        Boards b = getBoards("a");
+        sut.addBoard(b);
 
+        assertEquals(1, repo.boards.size());
+        assertEquals("a", repo.boards.get(0).name);
+
+        Boards b2 = getBoards("a");
+        b2.tags = new ArrayList<>();
+        b2.tags.add(new Tags("eee", "black", b2));
+        b2.id = b.id;
+
+        sut.updateBoard(b2);
+
+        assertEquals(1, repo.boards.size());
+        assertEquals("eee", repo.boards.get(0).tags.get(0).title);
+    }
+
+    @Test
+    void updateBoardNull(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.updateBoard(null));
+    }
+
+    @Test
+    void updateBoardBoardNullName(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.updateBoard(getBoards(null)));
+    }
+
+    @Test
+    void updateBoardNotExists(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.updateBoard(getBoards("ff")));
+    }
+
+    @Test
+    void findBoardFail(){
+        assertEquals(null, sut.findBoard("eee"));
+    }
+
+    @Test
+    void findBoardSuccessful(){
+        Boards b4 = getBoards("55");
+        sut.addBoard(b4);
+        assertEquals("55", sut.findBoard("55").name);
+    }
 
 
 

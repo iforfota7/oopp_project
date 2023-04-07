@@ -106,10 +106,13 @@ private void call(String name) {calledMethods.add(name);}
     public <S extends Boards> S save(S entity) {
         call("save");
         boolean cardExists = false;
+
         for(Boards b : boards){
             if(b.id == entity.id){
                 cardExists = true;
-                b = entity;
+               boards.remove(b);
+               boards.add(entity);
+
             }
             if(b.name == entity.name)
                 cardExists = true;
@@ -118,7 +121,7 @@ private void call(String name) {calledMethods.add(name);}
                 boards.add(entity);
 
 
-        return null;
+        return entity;
     }
 
     @Override
@@ -128,6 +131,7 @@ private void call(String name) {calledMethods.add(name);}
 
     @Override
     public Optional<Boards> findById(Long aLong) {
+        call("findById");
         for(Boards b : boards){
             if(b.id == aLong){
                 return Optional.of(b);
