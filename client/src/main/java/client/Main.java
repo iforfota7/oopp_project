@@ -76,16 +76,13 @@ public class Main extends Application {
         var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
         var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
         var helpOverviewScene = FXML.load(HelpCtrl.class, "client", "scenes", "HelpOverview.fxml");
-
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
         var customization = FXML.load(CustomizationCtrl.class,
                 "client","scenes","Customization.fxml");
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
-
         var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
-
         var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
         var cardCustomization =
@@ -97,16 +94,11 @@ public class Main extends Application {
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene, helpOverviewScene);
-
-
         mainCtrl.initializeAdmin(confirmAdmin);
         mainCtrl.initializeCustomization(customization,cardCustomization);
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
         primaryStage.setOnCloseRequest(e -> {
            board.getKey().stop();
         });
-
-
-
     }
 }
