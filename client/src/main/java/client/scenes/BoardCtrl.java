@@ -26,6 +26,9 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 
@@ -57,6 +60,8 @@ public class BoardCtrl {
 
     private List<String> serverURLS;
 
+    Font font = Font.font("Bell MT", FontWeight.NORMAL,
+            FontPosture.REGULAR, 12);
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -64,6 +69,7 @@ public class BoardCtrl {
      * @param board - sets variable board from class to specific board
      */
     public void initialize(Boards board) {
+
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
@@ -72,8 +78,37 @@ public class BoardCtrl {
             serverURLS.add(server.getServer());
             webSocketLists();
             webSocketCards();
+
         }
         refresh();
+        server.registerForUpdates(b->{
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board.id == b.id){
+
+
+                        Alert e = new Alert(Alert.AlertType.WARNING,
+                    "This board has been deleted by admin");
+                        e.show();
+                        mainCtrl.showBoardOverview();
+
+
+                    }
+
+
+                }
+            });
+        });
+    }
+
+
+    /**
+     * Calls method for stopping Thread Executor service from server.
+     */
+    public void stop(){
+        server.stop();
     }
 
     /**
@@ -179,6 +214,7 @@ public class BoardCtrl {
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
+
     }
 
     /**
@@ -274,13 +310,13 @@ public class BoardCtrl {
     public VBox createNewList(Lists l){
         // creating the listView element
         VBox list = createListBody();
-        VBox headerList = new VBox(6);
+        VBox headerList = new VBox(7);
         HBox footerList = new HBox(30);
 
         headerList.setId("header");
 
-        headerList.setMinSize(150, 235);
-        footerList.setMinSize(150, 25);
+        headerList.setMinSize(200, 360);
+        footerList.setMinSize(200, 40);
         headerList.setAlignment(Pos.TOP_CENTER);
         footerList.setAlignment(Pos.TOP_CENTER);
         footerList.setStyle("-fx-padding: 0 7 0 7");
@@ -302,6 +338,9 @@ public class BoardCtrl {
         // creating the label for the name of the list, aligning and customising it
         Label listName = createListTitle(l.title);
         listName.setId("list_title_"+l.id);
+        Font fontList = Font.font("Bell MT", FontWeight.NORMAL,
+                FontPosture.REGULAR, 17);;
+        listName.setFont(fontList);
 
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
@@ -320,9 +359,10 @@ public class BoardCtrl {
     public MenuButton createRefactorButton(){
         MenuButton refactorButtonList = new MenuButton();
         refactorButtonList.setText("Edit List");
-        refactorButtonList.setPrefWidth(60);
-        refactorButtonList.setPrefHeight(22);
-        refactorButtonList.setStyle("-fx-background-color: #f08080; -fx-font-size: 9px;");
+        refactorButtonList.setPrefWidth(97);
+        refactorButtonList.setPrefHeight(25);
+        refactorButtonList.setStyle("-fx-background-color: #f08080;");
+        refactorButtonList.setFont(font);
 
         MenuItem renameOption = new MenuItem();
         renameOption.setText("Rename List");
@@ -359,9 +399,10 @@ public class BoardCtrl {
         addButton.setText("+");
         addButton.setStyle("-fx-border-radius: 50; -fx-background-radius: 70; " +
                 "-fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; " +
-                "-fx-font-size: 10px;");
-        addButton.setPrefWidth(24);
-        addButton.setPrefHeight(23);
+                "-fx-font-size: 15px;");
+        addButton.setPadding(new Insets(-1, 0, 0, 0));
+        addButton.setPrefWidth(28);
+        addButton.setPrefHeight(26.4);
         addButton.setOnAction(this::openAddNewCard);
         return addButton;
     }
@@ -374,8 +415,8 @@ public class BoardCtrl {
     public Label createListTitle(String newListName){
         Label listName = new Label();
         listName.setText(newListName);
-        listName.setStyle("-fx-font-size: 13px; -fx-content-display: " +
-                "CENTER; -fx-padding: 5 10 0 10;");
+        listName.setStyle("-fx-content-display: " +
+                "CENTER; -fx-padding: 7 10 0 10;");
         listName.setAlignment(Pos.CENTER);
         return listName;
     }
@@ -386,8 +427,8 @@ public class BoardCtrl {
      */
     public VBox createListBody(){
         VBox vbox = new VBox();
-        vbox.setPrefWidth(150);
-        vbox.setPrefHeight(260);
+        vbox.setPrefWidth(200);
+        vbox.setPrefHeight(400);
         vbox.setStyle("-fx-background-color: #ffffff;");
         return vbox;
     }
@@ -441,9 +482,6 @@ public class BoardCtrl {
             AnchorPane currentCard = (AnchorPane) event.getSource();
             Cards openedCard = (Cards) ((AnchorPane)currentCard.getParent())
                     .getChildren().get(1).getProperties().get("card");
-            /*VBox currentCard = (VBox) ((AnchorPane)(
-                    (AnchorPane)event.getSource()).getParent()).getChildren().get(1);
-            Cards openedCard = (Cards) currentCard.getProperties().get("card");*/
 
             cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
@@ -502,18 +540,18 @@ public class BoardCtrl {
         Button deleteCard = newDeleteCardButton();
 
         VBox card = newCardBody(c);
-        AnchorPane over = newAnchorPane();
-        over.setPrefWidth(114.4);
-        over.setPrefHeight(34.4);
-        over.setLayoutX(30);
-        over.setOnDragDetected(drag::dragDetected);
-        over.setOnDragExited(drag::dragExited);
-        over.setOnDragEntered(drag::dragEntered);
-        over.setOnDragDropped(drag::dragDropped);
-        over.setOnMouseClicked(this::cardDetail);
+        AnchorPane blanket = newAnchorPane();
+        blanket.setPrefWidth(162.4);
+        blanket.setPrefHeight(40);
+        blanket.setLayoutX(30);
+        blanket.setOnDragDetected(drag::dragDetected);
+        blanket.setOnDragExited(drag::dragExited);
+        blanket.setOnDragEntered(drag::dragEntered);
+        blanket.setOnDragDropped(drag::dragDropped);
+        blanket.setOnMouseClicked(this::cardDetail);
 
-        over.setId("card"+Long.toString(c.id));
-        over.setOnMouseEntered(shortcuts::onMouseHover);
+        blanket.setId("card"+Long.toString(c.id));
+        blanket.setOnMouseEntered(shortcuts::onMouseHover);
 
         mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
 
@@ -521,14 +559,15 @@ public class BoardCtrl {
         card.setId("card"+Long.toString(c.id));
 
         // add text and the delete button for the card
-        newCard.getChildren().addAll(deleteCard, card, over);
+        newCard.getChildren().addAll(deleteCard, card, blanket);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
 
         if(shortcuts.getCurrentCard()!=null &&
                 newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
-            over.setStyle("-fx-border-color: red; -fx-border-style:solid");
-            shortcuts.setCurrentCard(over);
+            blanket.setStyle("-fx-border-color: red; -fx-border-style:solid; " +
+                    "-fx-border-radius: 4;");
+            shortcuts.setCurrentCard(blanket);
         }
 
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
@@ -542,8 +581,8 @@ public class BoardCtrl {
     public VBox newCardBody(Cards c){
         VBox cardBody = new VBox();
         //layout settings
-        cardBody.setPrefWidth(114.4);
-        cardBody.setPrefHeight(34.4);
+        cardBody.setPrefWidth(162.4);
+        cardBody.setPrefHeight(40);
         cardBody.setFillWidth(true);
         cardBody.setLayoutX(30);
 
@@ -574,17 +613,17 @@ public class BoardCtrl {
     public HBox newCardOverviewBody(Cards c){
         HBox cardOverviewBody = new HBox();
 
-        cardOverviewBody.setPrefWidth(114.4);
-        cardOverviewBody.setPrefHeight(25.6);
+        cardOverviewBody.setPrefWidth(122);
+        cardOverviewBody.setPrefHeight(31);
         cardOverviewBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
 
         Label cardTitle = new Label(c.title);
         VBox cardDetailsOverview = newCardDetailsOverview(c);
 
-        cardTitle.setPrefWidth(54.4);
-        cardTitle.setPrefHeight(25.6);
-        cardTitle.setPadding(new Insets(0, 0, -2, 10));
-        cardTitle.setStyle("-fx-font-size: 11;");
+        cardTitle.setPrefWidth(96.8);
+        cardTitle.setPrefHeight(31.2);
+        cardTitle.setPadding(new Insets(0, 0, -2, 12));
+        cardTitle.setFont(font);
 
         cardOverviewBody.getChildren().addAll(cardTitle, cardDetailsOverview);
         return cardOverviewBody;
@@ -600,8 +639,8 @@ public class BoardCtrl {
      */
     public VBox newCardDetailsOverview(Cards card){
         VBox cardDetailsOverview = new VBox();
-        cardDetailsOverview.setPrefWidth(61);
-        cardDetailsOverview.setPrefHeight(25.6);
+        cardDetailsOverview.setPrefWidth(66.4);
+        cardDetailsOverview.setPrefHeight(31.2);
 
         String subtasksLabelText = "no subtasks";
         if(card.subtasks != null && card.subtasks.size() > 0) {
@@ -621,14 +660,14 @@ public class BoardCtrl {
 
         subtasksCount.setStyle("-fx-font-size: 7;");
         subtasksCount.setAlignment(Pos.CENTER_RIGHT);
-        subtasksCount.setPrefWidth(61);
-        subtasksCount.setPrefHeight(13);
+        subtasksCount.setPrefWidth(65.6);
+        subtasksCount.setPrefHeight(16);
         subtasksCount.setPadding(new Insets(0, 10, -5, 0));
 
         descriptionExistence.setStyle("-fx-font-size: 7;");
         descriptionExistence.setAlignment(Pos.CENTER_RIGHT);
-        descriptionExistence.setPrefWidth(61);
-        descriptionExistence.setPrefHeight(13);
+        descriptionExistence.setPrefWidth(66.4);
+        descriptionExistence.setPrefHeight(16);
         descriptionExistence.setPadding(new Insets(-1, 10, 1, 0));
 
         cardDetailsOverview.getChildren().addAll(subtasksCount, descriptionExistence);
@@ -641,10 +680,10 @@ public class BoardCtrl {
      * @return the part where are displayed the tags assessed to the card
      */
     public HBox newCardTagsBody(){
-        HBox cardTagsBody = new HBox(6);
+        HBox cardTagsBody = new HBox(11.5);
 
-        cardTagsBody.setPrefWidth(114.4);
-        cardTagsBody.setPrefHeight(6.4);
+        cardTagsBody.setPrefWidth(162.4);
+        cardTagsBody.setPrefHeight(9.6);
         cardTagsBody.setPadding(new Insets(0, 0, 0, 8));
         cardTagsBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
 
@@ -657,32 +696,11 @@ public class BoardCtrl {
      */
     public AnchorPane newAnchorPane(){
         AnchorPane anchor = new AnchorPane();
-        anchor.setPrefWidth(150.4);
-        anchor.setPrefHeight(36);
+        anchor.setPrefWidth(200);
+        anchor.setPrefHeight(40);
         anchor.setOnDragDetected(drag::dragDetected);
 
         return anchor;
-    }
-
-    /**
-     * Creates a new hyperlink for a card
-     * @return the created hyperlink
-     */
-    public Hyperlink newHyperlink(){
-        Hyperlink card = new Hyperlink();
-
-        // set positioning, sizing, text alignment, and background color of the hyperlink
-        card.setLayoutX(41);
-        card.setLayoutY(1);
-        card.setPrefSize(95, 23);
-        card.setAlignment(Pos.CENTER);
-        card.setStyle("-fx-background-color:  #E6E6FA");
-        card.setOnDragDetected(drag::dragDetected);
-
-        // set the card to execute cardDetail on action
-//        card.setOnAction(this::cardDetail);
-        card.setOnMouseClicked(this::cardDetail);
-        return card;
     }
 
     /**
@@ -695,7 +713,7 @@ public class BoardCtrl {
         // set the text, positioning, mnemonic parsing, and style of the button
         button.setText("X");
         button.setLayoutX(6);
-        button.setLayoutY(7);
+        button.setLayoutY(11);
         button.setMnemonicParsing(false);
         button.setStyle("-fx-background-color: #f08080; -fx-font-size: 9.0");
         button.setPadding(new Insets(3, 6, 1.5, 6));
