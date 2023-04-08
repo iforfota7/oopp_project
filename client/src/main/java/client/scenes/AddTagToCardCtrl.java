@@ -1,9 +1,11 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Boards;
 import commons.Cards;
 import commons.Tags;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -25,16 +27,22 @@ public class AddTagToCardCtrl {
     private Text tagLimitText;
     private List<Tags> selectedTags;
     private Cards openedCard;
+    private Boards board;
     private CardDetailsCtrl cardDetailsCtrl;
+    private final ServerUtils server;
+    private final List<String> serverURLS;
 
     /**
      * Creates an instance of AddTagToCardCtrl
      *
      * @param mainCtrl Used for navigating through different scenes
+     * @param server Used for configuring websockets
      */
     @Inject
-    public AddTagToCardCtrl(MainCtrl mainCtrl) {
+    public AddTagToCardCtrl(MainCtrl mainCtrl, ServerUtils server) {
         this.mainCtrl = mainCtrl;
+        this.server = server;
+        serverURLS = new ArrayList<>();
     }
 
     /**
@@ -73,14 +81,48 @@ public class AddTagToCardCtrl {
      */
     public void init(Cards openedCard, Boards board, CardDetailsCtrl cardDetailsCtrl) {
         this.openedCard = openedCard;
+        this.board = board;
         tagList.getChildren().clear();
         selectedTags = new ArrayList<>();
         this.cardDetailsCtrl = cardDetailsCtrl;
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketConfig();
+        }
 
         updateTagLimitText();
         List<Tags> renderedTags = renderedTags(openedCard, board);
         for(Tags tag : renderedTags)
             addNewTag(tag);
+    }
+
+    /**
+     * The add tag to card scene should reload when
+     * changes occur in the tag management scene
+     * or when the tags for cards are modified
+     *
+     */
+    public void websocketConfig() {
+        server.registerForMessages("/topic/boards/update", Boards.class, b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null && board.id == b.id)
+                        init(openedCard, b, cardDetailsCtrl);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/cards/rename", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && c.id == openedCard.id)
+                        init(c, board, cardDetailsCtrl);
+                }
+            });
+        });
     }
 
     /**
@@ -155,7 +197,8 @@ public class AddTagToCardCtrl {
      * The body of the tags will be colored with the color
      * of their border
      *
-     * @param mouseEvent
+     * @param mouseEvent Object containing information
+     *                   about the mouse event
      */
     public void selectDeselectTags(MouseEvent mouseEvent) {
         Label tagContainer = (Label)mouseEvent.getSource();
