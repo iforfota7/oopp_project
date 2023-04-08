@@ -53,10 +53,9 @@ public class Main extends Application {
      * @throws IOException possibly throws this exception
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        var selectServer = FXML.load(SelectServerCtrl.class,
+    public void start(Stage primaryStage)  throws IOException {
+                  var selectServer = FXML.load(SelectServerCtrl.class,
                 "client", "scenes", "SelectServer.fxml");
-
         // List rename&delete&add scene loader
         var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RnList.fxml" );
         var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
@@ -81,6 +80,8 @@ public class Main extends Application {
         var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
         var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
         var helpOverviewScene = FXML.load(HelpCtrl.class, "client", "scenes", "HelpOverview.fxml");
+        var helpShortcuts = FXML.load(HelpCtrl.class, "client", "scenes", "HelpShortcuts.fxml");
+
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
 
@@ -90,16 +91,19 @@ public class Main extends Application {
         var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
         var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
-
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
+        mainCtrl.initializeCards(cardDetails, addCard, deleteCard, confirmCloseCard, warningCardDeletion);
+        mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard,
                 confirmCloseCard, warningCardDeletion);
-        mainCtrl.initializeUtils(helpScene, helpOverviewScene);
+        mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
         mainCtrl.initializeAdmin(confirmAdmin);
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
-
+        primaryStage.setOnCloseRequest(e -> {
+           board.getKey().stop();
+        });
     }
 }

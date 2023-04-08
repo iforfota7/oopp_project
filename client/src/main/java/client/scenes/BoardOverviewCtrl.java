@@ -70,6 +70,7 @@ public class BoardOverviewCtrl{
     public void init() {
         boardsList = new ArrayList<>();
         refresh();
+
     }
 
     /**
