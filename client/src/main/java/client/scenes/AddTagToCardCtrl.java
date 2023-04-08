@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ public class AddTagToCardCtrl {
     private final MainCtrl mainCtrl;
     @FXML
     private VBox tagList;
+    @FXML
+    private Text tagLimitText;
     private List<Tags> selectedTags;
     private Cards openedCard;
     private CardDetailsCtrl cardDetailsCtrl;
@@ -45,11 +48,15 @@ public class AddTagToCardCtrl {
     /**
      * Method used for adding all selected tags
      * to the list of tags of the opened card
+     * If the number of selected tags is above 10,
+     * clicking this button has no effect
      *
      */
     public void addTags() {
-        if(openedCard.tags == null)
-            openedCard.tags = new ArrayList<>();
+        int tagCount = openedCard.tags.size() + selectedTags.size();
+        if(tagCount > 10)
+            return;
+
         openedCard.tags.addAll(selectedTags);
 
         cardDetailsCtrl.refreshOpenedCard();
@@ -70,6 +77,7 @@ public class AddTagToCardCtrl {
         selectedTags = new ArrayList<>();
         this.cardDetailsCtrl = cardDetailsCtrl;
 
+        updateTagLimitText();
         List<Tags> renderedTags = renderedTags(openedCard, board);
         for(Tags tag : renderedTags)
             addNewTag(tag);
@@ -163,10 +171,41 @@ public class AddTagToCardCtrl {
 
         // deselect a tag if it is already selected
         else {
-            tagContainer.setStyle("-fx-background-color: #fafafa; -fx-background-radius: 4;");
+            tagContainer.setStyle("-fx-background-color: #fafafa; " +
+                    "-fx-background-radius: 4;");
             selectedTags.remove(clickedTag);
         }
 
+        updateTagLimitText();
+    }
+
+    /**
+     * Updates the text which lets the user know how many tags
+     * they have selected
+     * If this number is above 10, the text becomes red
+     * allowing the user to understand that they have to deselect
+     * some tags
+     *
+     */
+    public void updateTagLimitText() {
+        int tagCount = openedCard.tags.size() + selectedTags.size();
+        tagLimitText.setText(setTagLimitText(tagCount));
+
+        if(tagCount <= 10)
+            tagLimitText.setFill(Color.BLACK);
+        else
+            tagLimitText.setFill(Color.RED);
+    }
+
+    /**
+     * Creates the tag limit text using the amount of tags
+     * the user has selected for the card
+     *
+     * @param tagCount The amount of tags the user selected
+     * @return The computed String object
+     */
+    public String setTagLimitText(int tagCount) {
+        return "You have selected " + tagCount + " out of 10 tags";
     }
 
 }

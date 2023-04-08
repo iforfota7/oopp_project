@@ -42,9 +42,15 @@ public class AddTagCtrl {
 
     /**
      * Initialises the NewCardCtrl to the board which the tag is to be created into
+     * Moreover, it sets the default colors for the font and background
+     * of the tag
      * @param b the board which the tag is to be created into
      */
-    public void initialize(Boards b){this.board = b;}
+    public void initialize(Boards b){
+        this.board = b;
+        backgroundPicker.setValue(Color.WHITE);
+        fontPicker.setValue(Color.BLACK);
+    }
 
     /**
      * Saves the new created tag into the application
