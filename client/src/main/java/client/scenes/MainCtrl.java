@@ -58,9 +58,8 @@ public class MainCtrl {
     private AddTagCtrl addTagCtrl;
     private TagsCtrl tagsCtrl;
     private TagDetailsCtrl tagDetailsCtrl;
-    private Shortcuts shortcuts;
     private AddTagToCardCtrl addTagToCardCtrl;
-
+    private Shortcuts shortcuts;
 
     /**
      * Initialize method for board related scenes

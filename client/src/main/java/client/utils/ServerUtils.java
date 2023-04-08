@@ -486,7 +486,6 @@ public class ServerUtils {
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
     }
 
-
     /**
      * Method for removing references from all cards
      * to a specific tag
@@ -499,7 +498,6 @@ public class ServerUtils {
                 path("api/cards/removeTag").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(tags, APPLICATION_JSON), Tags.class);
     }
-
     private static final ExecutorService EXEC = Executors.newCachedThreadPool();
 
     /** Calls endpoint on backend for long polling constantly when it recieves the board
