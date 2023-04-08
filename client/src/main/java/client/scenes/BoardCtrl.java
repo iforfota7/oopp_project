@@ -208,7 +208,7 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
-        this.shortcuts = new Shortcuts();
+        this.shortcuts = new Shortcuts(mainCtrl);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
@@ -223,7 +223,7 @@ public class BoardCtrl {
         mainCtrl=new MainCtrl();
         server=new ServerUtils();
         cardDetailsCtrl=new CardDetailsCtrl(server,mainCtrl);
-        shortcuts=new Shortcuts();
+        shortcuts=new Shortcuts(mainCtrl);
         drag = new Draggable(server);
     }
 
@@ -293,7 +293,7 @@ public class BoardCtrl {
      */
     public void addNewList(Lists l) {
         VBox newList = createNewList(l);
-        mainCtrl.addNewList(newList, firstRow);
+        firstRow.getChildren().add(newList);
         for(int i = 0; i<l.cards.size(); i++){
             Cards c = l.cards.get(i);
             addNewCard((VBox)newList.getChildren().get(0), c);
@@ -550,6 +550,8 @@ public class BoardCtrl {
 
         blanket.setId("card"+Long.toString(c.id));
         blanket.setOnMouseEntered(shortcuts::onMouseHover);
+
+        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
 
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
