@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 public class TagsCardDetails {
@@ -87,10 +88,11 @@ public class TagsCardDetails {
     public HBox createNewTag(Tags tag){
         HBox tagBody = new HBox(5);
 
-        tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.color);
+        tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.backgroundColor);
         tagBody.setAlignment(Pos.CENTER);
 
         Label tagTitle = new Label(tag.title);
+        tagTitle.setTextFill(Color.web(tag.fontColor));
         tagTitle.setPrefHeight(11);
         tagTitle.setPrefWidth(70);
 

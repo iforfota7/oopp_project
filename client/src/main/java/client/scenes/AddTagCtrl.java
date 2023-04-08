@@ -18,7 +18,9 @@ public class AddTagCtrl {
     private Text warning;
 
     @FXML
-    private ColorPicker picker;
+    private ColorPicker backgroundPicker;
+    @FXML
+    private ColorPicker fontPicker;
 
     private final ServerUtils server;
 
@@ -40,9 +42,15 @@ public class AddTagCtrl {
 
     /**
      * Initialises the NewCardCtrl to the board which the tag is to be created into
+     * Moreover, it sets the default colors for the font and background
+     * of the tag
      * @param b the board which the tag is to be created into
      */
-    public void initialize(Boards b){this.board = b;}
+    public void initialize(Boards b){
+        this.board = b;
+        backgroundPicker.setValue(Color.WHITE);
+        fontPicker.setValue(Color.BLACK);
+    }
 
     /**
      * Saves the new created tag into the application
@@ -58,7 +66,8 @@ public class AddTagCtrl {
             return;
         }
 
-        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(picker.getValue())));
+        board.tags.add(new Tags(cardTitleInput.getText(), colorTag(backgroundPicker.getValue()),
+                                    colorTag(fontPicker.getValue())));
         server.updateBoard(board);
 
         cardTitleInput.clear();

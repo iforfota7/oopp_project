@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class TagsCtrl {
         tagBody.setPrefWidth(125.6);
         tagBody.setPrefHeight(28);
 
-        tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.color);
+        tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.backgroundColor);
 
         Label tagTitle = new Label(tag.title);
         tagTitle.setPrefHeight(18.4);
@@ -108,6 +109,7 @@ public class TagsCtrl {
         tagTitle.setLayoutX(4);
         tagTitle.setLayoutY(5);
         tagTitle.setAlignment(Pos.CENTER);
+        tagTitle.setTextFill(Color.web(tag.fontColor));
         tagTitle.setStyle("-fx-background-color: #fafafa; -fx-background-radius: 4;");
         tagTitle.setOnMouseClicked(this::tagDetail);
 
