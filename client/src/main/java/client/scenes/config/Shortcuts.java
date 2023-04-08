@@ -95,9 +95,9 @@ public class Shortcuts {
         }
 
         else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown())
-            swapAboveCard();
+            swapCard(y-1);
         else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown())
-            swapBelowCard();
+            swapCard(y+1);
     }
 
     /**
@@ -181,50 +181,30 @@ public class Shortcuts {
     }
 
     /**
-     * swaps up
+     * Swaps the current card with the one below or above based on y
+     * @param y position of card inside list
      */
-    private void swapAboveCard() {
+    private void swapCard(int y) {
 
         if(currentCard==null) return;
+        System.out.println(((Cards)currentCard.getParent().getProperties().get("card")).title);
 
-        int positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
+        //-2 to exclude label and separator
+        int sizeOfCurrentList = ((VBox)currentList.getChildren().get(0))
+                .getChildrenUnmodifiable().size()-2;
 
-        if(positionInsideList==0) return;
+        if(y==-1 || y==sizeOfCurrentList) return;
 
-        Cards aboveCard = ((Cards)
+        Cards adjacentCard = ((Cards)
                 ((VBox) currentList.getChildrenUnmodifiable()
-                .get(0)).getChildren().get(positionInsideList+1)
-                .getProperties().get("card"));
-
-        aboveCard.positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
-
-        server.moveCard(aboveCard);
-    }
-
-    /**
-     * swaps down
-     */
-    private void swapBelowCard() {
-
-        if(currentCard==null) return;
-
-        int positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
-
-        if(positionInsideList==currentCard.getParent().getParent()
-                .getChildrenUnmodifiable().size()-3) return;
-
-        Cards belowCard = ((Cards)
-                ((VBox) currentList.getChildrenUnmodifiable()
-                        .get(0)).getChildren().get(positionInsideList+3)
+                        .get(0)).getChildren().get(y+2)
                         .getProperties().get("card"));
 
-        belowCard.positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
+        adjacentCard.positionInsideList = this.y;
 
-        server.moveCard(belowCard);
+        server.moveCard(adjacentCard);
+
+        this.y = y;
     }
 
     /**
