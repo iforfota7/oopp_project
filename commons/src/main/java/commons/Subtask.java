@@ -18,8 +18,8 @@ public class Subtask {
     public String title;
     public boolean checked;
 
-    @ManyToOne
-    public Cards card;
+//    @ManyToOne
+//    public Cards card;
 
     public int position;
 
@@ -28,14 +28,13 @@ public class Subtask {
      * @param title the title of the card
      * @param checked a boolean which defines the state of the checkbox
      *                of the subtask-> finished or not
-     * @param card the parent card of the subtask
+//     * @param card the parent card of the subtask
      * @param position the position of the subtask is the subtasks list
      *                 of a card
      */
-    public Subtask(String title, boolean checked, Cards card, int position) {
+    public Subtask(String title, boolean checked, int position) {
         this.title = title;
         this.checked = checked;
-        this.card = card;
         this.position = position;
     }
 
@@ -57,7 +56,6 @@ public class Subtask {
         Subtask subtask = (Subtask) o;
         return id == subtask.id && checked == subtask.checked
                 && Objects.equals(title, subtask.title)
-                && Objects.equals(card.id, subtask.card.id)
                 && position == subtask.position;
     }
 
@@ -67,7 +65,7 @@ public class Subtask {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, checked, card.id, position);
+        return Objects.hash(id, title, checked,  position);
     }
 
     /**
@@ -81,7 +79,6 @@ public class Subtask {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", checked=" + checked +
-                ", card.id=" + card.id +
                 ", position=" + position +
                 '}';
     }

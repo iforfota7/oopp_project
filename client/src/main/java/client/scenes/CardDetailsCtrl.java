@@ -1,9 +1,11 @@
 package client.scenes;
 
+import client.scenes.config.TagsCardDetails;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Boards;
 import commons.Cards;
+import commons.Lists;
 import commons.Subtask;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -11,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -43,6 +46,7 @@ public class CardDetailsCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private TagsCardDetails tagsCardDetails;
 
     private Subtask toRename;
     private Cards openedCard;
@@ -52,6 +56,9 @@ public class CardDetailsCtrl {
 
     /**
      * Initializes the card details controller object
+     * An instance of TagsCardDetails is initialized
+     * in order to separate tag logic from the rest
+     *
      * @param server Used for sending requests to the server
      * @param mainCtrl Used for navigating through different scenes
      */
@@ -106,6 +113,19 @@ public class CardDetailsCtrl {
                 }
             });
         });
+
+        // when tags are updated, the card details scene needs to
+        // receive this information
+        server.registerForMessages("/topic/boards/update", Boards.class, b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null && board.id == b.id) {
+                        board = b;
+                    }
+                }
+            });
+        });
     }
 
     /**
@@ -139,6 +159,9 @@ public class CardDetailsCtrl {
         }
 
         subtaskName.setText("");
+        Lists blankList = new Lists(null, 0, null);
+        blankList.id = openedCard.list.id;
+        openedCard.list = blankList;
 
         server.renameCard(openedCard);
         sceneOpened = false;
@@ -177,6 +200,15 @@ public class CardDetailsCtrl {
         sceneOpened = true;
 
         this.openedCard = card;
+        List<Node> tagContainers = new ArrayList<>();
+        for(Node child : tagList.getChildren())
+            if(child.getProperties().get("tag") != null)
+                tagContainers.add(child);
+        tagList.getChildren().removeAll(tagContainers);
+
+
+        tagsCardDetails = new TagsCardDetails(tagList, this);
+        tagsCardDetails.renderTags(openedCard);
 
         cardTitleInput.setText(card.title);
         description.setText(card.description);
@@ -255,7 +287,7 @@ public class CardDetailsCtrl {
     public void menuButtonStyling(HBox subtaskContainer) {
         // styling for the menu button with a 'pen' on it
         MenuButton menuButton = new MenuButton();
-        menuButton.setPrefWidth(25);
+        menuButton.setPrefWidth(20);
         menuButton.setPrefHeight(18);
         String menuButtonStyle = "-fx-padding: -5 -22 -5 -5; -fx-background-color:  #fff2cc; " +
                 "-fx-border-color:  #f0cca8; -fx-background-radius:  4; -fx-border-radius: 4;";
@@ -365,7 +397,7 @@ public class CardDetailsCtrl {
                 position = taskList.getChildren().size() - 1;
             }
             Subtask newSubtask = new Subtask(subtaskName.getText(),
-                    checked, openedCard, position);
+                    checked, position); // openedCard,
             subtaskName.setStyle("");
             warningSubtask.setVisible(false);
             inputsOpen--;
@@ -456,6 +488,14 @@ public class CardDetailsCtrl {
      */
     public void setBoard(Boards board) {
         this.board = board;
+    }
+
+    /**
+     * Pressing the '+' button will make the add tag scene appear
+     *
+     */
+    public void showAddTagToCard() {
+        mainCtrl.showAddTagToCard(openedCard, board, this);
     }
 
 }
