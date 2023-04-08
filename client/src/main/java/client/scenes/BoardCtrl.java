@@ -60,8 +60,7 @@ public class BoardCtrl {
 
     private List<String> serverURLS;
 
-    Font font = Font.font("Bell MT", FontWeight.NORMAL,
-            FontPosture.REGULAR, 12);
+    private Font font;
 
     /**
      * The method adds the cardContainers and the listContainers into arrayLists in order to access
@@ -69,7 +68,8 @@ public class BoardCtrl {
      * @param board - sets variable board from class to specific board
      */
     public void initialize(Boards board) {
-
+        font = Font.font("Bell MT", FontWeight.NORMAL,
+                FontPosture.REGULAR, 12);
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
