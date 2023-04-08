@@ -155,5 +155,5 @@
          </Button>
       </children>
    </GridPane>
-   <Button fx:id="saveDetails1" layoutX="342.0" layoutY="334.0" mnemonicParsing="false" onAction="#close" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #badeba;" text="Close" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="342.0" />
+   <Button fx:id="saveDetails1" layoutX="342.0" layoutY="334.0" mnemonicParsing="false" onAction="#closeCardDetails" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #badeba;" text="Close" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="342.0" />
 </AnchorPane>

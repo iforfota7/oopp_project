@@ -102,6 +102,7 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id && sceneOpened) {
                         mainCtrl.closeSecondaryStage();
+                        mainCtrl.showWarningCardDeletion();
                     }
                 }
             });
@@ -147,12 +148,36 @@ public class CardDetailsCtrl {
 
     /**
      * The user can close the card details without the modifications made
-     * to be saved by pressing the 'close' button
+     * to be saved by pressing the 'Close' button. However, because this
+     * can happen accidentally, a warning asking for confirmation of
+     * closing the card without saving the modifications is displayed
      */
     @FXML
-    void close(){
+    public void closeCardDetails(){
+        mainCtrl.showConfirmCloseCard();
+    }
+
+    /**
+     * When the warning regarding the confirmation of closing the card without
+     * saving the modifications appears, the user can choose to not close the card
+     * by pressing on the 'No' button
+     */
+    @FXML
+    public void noClose(){
+        mainCtrl.closeThirdStage();
+        mainCtrl.showCardDetail();
+    }
+
+    /**
+     * The user can close the card details without the modifications made
+     * to be saved by pressing the 'Yes' button on the warning that appears
+     * once the user has pressed the 'close' button on the card details scene
+     */
+    @FXML
+    public void closeDefinitive(){
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
+        mainCtrl.closeThirdStage();
         mainCtrl.showBoard(board);
     }
 
@@ -456,6 +481,17 @@ public class CardDetailsCtrl {
      */
     public void setBoard(Boards board) {
         this.board = board;
+    }
+
+    /**
+     * If a user deletes a card another user is currently viewing the details of,
+     * the second user receives a warning regarding the deletion of the current
+     * card and the fact that they have been redirected to the board
+     * This method serves to close the window of the warning scene
+     */
+    @FXML
+    public void closeWarningCardDeletion(){
+        mainCtrl.closeSecondaryStage();
     }
 
 }

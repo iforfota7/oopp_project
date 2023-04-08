@@ -63,6 +63,10 @@ public class Main extends Application {
         var addList = FXML.load(AdListCtrl.class,"client", "scenes", "AdList.fxml" );
         var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes",
                 "CardDetails.fxml" );
+        var confirmCloseCard = FXML.load(CardDetailsCtrl.class, "client",
+                "scenes", "CardDetailsConfirmExit.fxml");
+        var warningCardDeletion = FXML.load(CardDetailsCtrl.class, "client",
+                "scenes", "WarningDeletionCard.fxml");
         var addCard = FXML.load(NewCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
         var confirmUsername = FXML.load(ConfirmUsernameCtrl.class,
                 "client", "scenes", "ConfirmUsername.fxml");
@@ -77,7 +81,6 @@ public class Main extends Application {
         var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
         var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
         var helpOverviewScene = FXML.load(HelpCtrl.class, "client", "scenes", "HelpOverview.fxml");
-
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
 
@@ -85,19 +88,16 @@ public class Main extends Application {
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
 
         var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
-
         var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
-
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
-        mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
+        mainCtrl.initializeCards(cardDetails, addCard, deleteCard,
+                confirmCloseCard, warningCardDeletion);
         mainCtrl.initializeUtils(helpScene, helpOverviewScene);
-
-
         mainCtrl.initializeAdmin(confirmAdmin);
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
 
