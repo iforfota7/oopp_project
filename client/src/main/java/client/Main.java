@@ -95,8 +95,6 @@ public class Main extends Application {
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
-        mainCtrl.initializeCards(cardDetails, addCard, deleteCard, confirmCloseCard, warningCardDeletion);
-        mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard,
                 confirmCloseCard, warningCardDeletion);
         mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
