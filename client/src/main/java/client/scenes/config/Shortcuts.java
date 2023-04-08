@@ -1,7 +1,6 @@
 package client.scenes.config;
 
 import client.scenes.MainCtrl;
-import client.utils.ServerUtils;
 import commons.Cards;
 import commons.Lists;
 import javafx.scene.input.KeyCode;
@@ -17,23 +16,9 @@ public class Shortcuts {
     private VBox currentList;
     private HBox currentBoard;
     private MainCtrl mainCtrl;
-    private ServerUtils server;
 
     /**
-     * Constructor for Shortcuts class,
-     * to be used inside BoardCtrl
-     * @param mainCtrl an instance of MainCtrl
-     * @param server an instance of ServerUtils
-     */
-    public Shortcuts(MainCtrl mainCtrl, ServerUtils server) {
-
-        this.mainCtrl = mainCtrl;
-        this.server = server;
-
-    }
-    /**
-     * Constructor for Shortcuts class,
-     * to be used inside MainCtrl
+     * Constructor for Shortcuts class
      * @param mainCtrl an instance of MainCtrl
      */
     public Shortcuts(MainCtrl mainCtrl) {
@@ -79,10 +64,6 @@ public class Shortcuts {
             moveHighlightRight();
         else if (keyEvent.getCode() == KeyCode.LEFT && keyEvent.isControlDown())
             moveHighlightLeft();
-        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown())
-            swapAboveCard();
-        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown())
-            swapBelowCard();
     }
 
     /**
@@ -95,7 +76,6 @@ public class Shortcuts {
         if(keyEvent.getCode() == KeyCode.H) {
             mainCtrl.closeSecondaryStage();
         }
-        keyEvent.consume();
     }
 
     /**
@@ -259,59 +239,6 @@ public class Shortcuts {
 
         currentCard.setStyle(
                 "-fx-border-color: red; -fx-border-style:solid");
-    }
-
-    /**
-     * swaps up
-     */
-    private void swapAboveCard() {
-
-        if(currentCard==null) return;
-
-        int positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
-
-        if(positionInsideList==0) return;
-
-        Cards aboveCard = ((Cards)
-                ((VBox) currentList.getChildrenUnmodifiable()
-                .get(0)).getChildren().get(positionInsideList+1)
-                .getProperties().get("card"));
-
-        aboveCard.positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
-//
-//        ((Cards) currentCard.getParent()
-//                .getProperties().get("card")).positionInsideList-=1;
-
-        server.moveCard(aboveCard);
-    }
-
-    /**
-     * swaps down
-     */
-    private void swapBelowCard() {
-
-        if(currentCard==null) return;
-
-        int positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
-
-        if(positionInsideList==currentCard.getParent().getParent()
-                .getChildrenUnmodifiable().size()-3) return;
-
-        Cards belowCard = ((Cards)
-                ((VBox) currentList.getChildrenUnmodifiable()
-                        .get(0)).getChildren().get(positionInsideList+3)
-                        .getProperties().get("card"));
-
-        belowCard.positionInsideList = ((Cards) currentCard.getParent()
-                .getProperties().get("card")).positionInsideList;
-//
-//        ((Cards) currentCard.getParent()
-//                .getProperties().get("card")).positionInsideList+=1;
-
-        server.moveCard(belowCard);
     }
 
     /**

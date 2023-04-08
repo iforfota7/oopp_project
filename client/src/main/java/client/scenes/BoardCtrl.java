@@ -175,7 +175,7 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
-        this.shortcuts = new Shortcuts(this.mainCtrl, this.server);
+        this.shortcuts = new Shortcuts(mainCtrl);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
@@ -189,8 +189,7 @@ public class BoardCtrl {
         mainCtrl=new MainCtrl();
         server=new ServerUtils();
         cardDetailsCtrl=new CardDetailsCtrl(server,mainCtrl);
-        shortcuts=new Shortcuts(mainCtrl, server);
-
+        shortcuts=new Shortcuts();
         drag = new Draggable(server);
     }
 
