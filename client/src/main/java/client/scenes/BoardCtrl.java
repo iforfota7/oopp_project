@@ -62,8 +62,7 @@ public class BoardCtrl {
 
     private List<String> serverURLS;
 
-    Font font = Font.font("Bell MT", FontWeight.NORMAL,
-            FontPosture.REGULAR, 12);
+    private Font font;
 
     private String currentCardColor;
 
@@ -74,6 +73,8 @@ public class BoardCtrl {
      * @param board - sets variable board from class to specific board
      */
     public void initialize(Boards board) {
+        font = Font.font("Bell MT", FontWeight.NORMAL,
+                FontPosture.REGULAR, 12);
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
@@ -82,8 +83,37 @@ public class BoardCtrl {
             serverURLS.add(server.getServer());
             webSocketLists();
             webSocketCards();
+
         }
         refresh();
+        server.registerForUpdates(b->{
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board.id == b.id){
+
+
+                        Alert e = new Alert(Alert.AlertType.WARNING,
+                    "This board has been deleted by admin");
+                        e.show();
+                        mainCtrl.showBoardOverview();
+
+
+                    }
+
+
+                }
+            });
+        });
+    }
+
+
+    /**
+     * Calls method for stopping Thread Executor service from server.
+     */
+    public void stop(){
+        server.stop();
     }
 
     /**
@@ -192,6 +222,7 @@ public class BoardCtrl {
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
+
     }
 
     /**
