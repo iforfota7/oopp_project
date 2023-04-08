@@ -27,7 +27,7 @@ public class Cards {
     @OrderBy("position ASC")
     public List<Subtask> subtasks;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     public List<Tags> tags;
 
 
