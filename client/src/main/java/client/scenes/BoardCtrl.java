@@ -726,7 +726,7 @@ public class BoardCtrl {
                 subtasksProgressBar.setStyle("-fx-accent: orange;");
             }
         }
-        subtasksProgressBar.setPadding(new Insets(0, -16, 0, 11));
+        subtasksProgressBar.setPadding(new Insets(0, -16, 0, 13));
         return subtasksProgressBar;
     }
 
