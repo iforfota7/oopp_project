@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Boards;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -68,4 +69,11 @@ public class MockServerUtils extends ServerUtils {
      */
     @Override
     public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) { }
+
+    /**
+     * Mocks the behaviour of the registerForUpdates method in ServerUtils
+     * @param consumer - Deleted board...
+     */
+    @Override
+    public void registerForUpdates(Consumer<Boards> consumer) {}
 }

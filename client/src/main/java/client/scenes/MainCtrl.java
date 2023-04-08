@@ -15,13 +15,12 @@
  */
 package client.scenes;
 
+import client.scenes.config.Shortcuts;
 import commons.Tags;
 import commons.User;
 import commons.Boards;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -32,7 +31,7 @@ public class MainCtrl {
     private Scene boardOverview, addBoard, renameBoard;
     private Scene tagControl, addTag, tagDetails;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
-    private Scene confirmAdmin, help, helpOverview;
+    private Scene confirmAdmin, help, helpOverview, helpShortcuts;
 
     private SelectServerCtrl selectServerCtrl;
     private ConfirmUsernameCtrl confirmUsernameCtrl;
@@ -58,8 +57,7 @@ public class MainCtrl {
     private AddTagCtrl addTagCtrl;
     private TagsCtrl tagsCtrl;
     private TagDetailsCtrl tagDetailsCtrl;
-
-
+    private Shortcuts shortcuts;
 
     /**
      * Initialize method for board related scenes
@@ -156,14 +154,20 @@ public class MainCtrl {
     /**
      * Initialise method for 'useful' scenes
      * @param helpCtrl helpCtrl parent pair for Help scene
-     * @param helpOverviewCtrl helpOverview parent pair for Help scene in board overview
+     * @param helpOverviewCtrl helpOverviewCtrl parent pair for Help scene in board overview
+     * @param helpShortcutsCtrl helpShortcutsCtrl parent pair for keyboard shortcuts Help scene
      */
     public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl,
-                                Pair<HelpCtrl, Parent> helpOverviewCtrl){
+                                Pair<HelpCtrl, Parent> helpOverviewCtrl,
+                                Pair<HelpCtrl, Parent> helpShortcutsCtrl){
         this.help = new Scene(helpCtrl.getValue());
         this.helpCtrl = helpCtrl.getKey();
 
         this.helpOverview = new Scene(helpOverviewCtrl.getValue()); // uses same ctrl as help
+        this.helpShortcuts = new Scene(helpShortcutsCtrl.getValue()); // uses same ctrl as help
+
+        shortcuts = new Shortcuts(this);
+        helpShortcuts.setOnKeyPressed(shortcuts::closeHelpScene);
     }
 
     /**
@@ -211,8 +215,11 @@ public class MainCtrl {
         boardCtrl.addBoardToUser(b);
         primaryStage.setTitle("Board");
         primaryStage.setScene(board);
-        if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
+        if(secondaryStage!=null && secondaryStage.isShowing()) {secondaryStage.close();}
+
+
         boardCtrl.initialize(b);
+
     }
 
     /**
@@ -280,15 +287,6 @@ public class MainCtrl {
         secondaryStage.setTitle("Confirm Username!");
         secondaryStage.setResizable(false);
         secondaryStage.show();
-    }
-
-    /**
-     * Adds a new list to the board
-     * @param list the list to be added to the board
-     * @param row the hbox to which the list should be added (the row)
-     */
-    public void addNewList(VBox list, HBox row){
-        row.getChildren().add(list);
     }
 
     /**
@@ -480,6 +478,19 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+
+    /**
+     * Shows in a second window the list of available keyboard shortcuts
+     * after pressing 'H' anywhere in the board scene.
+     */
+    public void showHelpShortcutsScene(){
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Keyboard shortcuts");
+        secondaryStage.setScene(helpShortcuts);
+        secondaryStage.show();
+    }
+
     /**
      * Shows in a second window the user's details: username, server
      * address and whether it is an admin or not
@@ -492,6 +503,14 @@ public class MainCtrl {
         secondaryStage.setScene(userDetails);
         secondaryStage.setResizable(false);
         secondaryStage.show();
+    }
+
+    /**
+     * Getter for the board scene
+     * @return the board scene
+     */
+    public Scene getBoard() {
+        return board;
     }
 
     /**
