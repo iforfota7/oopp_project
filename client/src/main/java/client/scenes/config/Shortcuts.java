@@ -18,8 +18,6 @@ public class Shortcuts {
     private HBox currentBoard;
     private MainCtrl mainCtrl;
     private ServerUtils server;
-    private int x; //position of list inside board
-    private int y; //position of card inside list
 
     /**
      * Constructor for Shortcuts class,
@@ -62,9 +60,6 @@ public class Shortcuts {
         currentList = (VBox) hovered.getParent().getParent().getParent();
         currentBoard = (HBox) currentList.getParent();
 
-        x = ((Cards) currentCard.getParent().getProperties().get("card")).positionInsideList;
-        y = ((Lists) currentList.getProperties().get("list")).positionInsideBoard;
-
         mouseEvent.consume();
     }
 
@@ -76,86 +71,18 @@ public class Shortcuts {
 
         if(keyEvent.getCode() == KeyCode.H)
             openHelpScene();
-
-        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x, y-1);
-            highlightCardAtPosition(x, y);
-        }
-        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x, y+1);
-            highlightCardAtPosition(x, y);
-        }
-        else if (keyEvent.getCode() == KeyCode.LEFT && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x-1, y);
-            highlightCardAtPosition(x, y);
-        }
-        else if (keyEvent.getCode() == KeyCode.RIGHT && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x+1, y);
-            highlightCardAtPosition(x, y);
-        }
-
+        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isControlDown())
+            moveHighlightUp();
+        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isControlDown())
+            moveHighlightDown();
+        else if (keyEvent.getCode() == KeyCode.RIGHT && keyEvent.isControlDown())
+            moveHighlightRight();
+        else if (keyEvent.getCode() == KeyCode.LEFT && keyEvent.isControlDown())
+            moveHighlightLeft();
         else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown())
             swapAboveCard();
         else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown())
             swapBelowCard();
-    }
-
-    /**
-     * Calculates new coordinates of the highlight
-     * @param x new position of list inside board
-     * @param y new position of card inside list
-     */
-    private void calculateNewHighlightPosition(int x, int y) {
-
-        if(currentCard==null) return;
-
-        //-2 to exclude label and separator
-        int sizeOfCurrentList = ((VBox)currentList.getChildren().get(0))
-                .getChildrenUnmodifiable().size()-2;
-
-        int sizeOfCurrentBoard = currentBoard.getChildrenUnmodifiable().size();
-
-        if(y==-1 || y==sizeOfCurrentList) return;
-        if(x==-1 || x==sizeOfCurrentBoard) return;
-
-        if(x!=this.x) {
-
-            //-2 to exclude label and separator
-            int sizeOfAdjacentList = ((VBox) ((VBox) currentBoard.getChildren().get(x))
-                            .getChildrenUnmodifiable().get(0))
-                            .getChildrenUnmodifiable().size()-2;
-
-            if(sizeOfAdjacentList==0) return;
-
-            if(y>=sizeOfAdjacentList-1) {
-                this.y = sizeOfAdjacentList - 1;
-                this.x = x;
-                return;
-            }
-        }
-
-        //if in the same list, or at same position in other list
-        this.y=y; this.x=x;
-    }
-
-    /**
-     * Highlights the card at the given (x,y) position
-     * @param x position of list inside board
-     * @param y position of card inside list
-     */
-    private void highlightCardAtPosition(int x, int y) {
-
-        if(currentCard==null) return;
-
-        currentCard.setStyle("");
-
-        currentCard = (AnchorPane) ((AnchorPane) ((VBox) ((VBox) currentBoard.getChildren().get(x))
-                .getChildren().get(0)).getChildren().get(y+2)).getChildren().get(2);
-
-        currentList = (VBox) currentCard.getParent().getParent().getParent();
-        currentBoard = (HBox) currentList.getParent();
-
-        currentCard.setStyle("-fx-border-color: red; -fx-border-style:solid");
     }
 
     /**
@@ -181,6 +108,160 @@ public class Shortcuts {
     }
 
     /**
+     * Moves the highlight to the card above the
+     * current one using the UP arrow key
+     */
+    public void moveHighlightUp() {
+
+        if(currentCard==null) return;
+
+        int positionInsideList = ((Cards) currentCard.getParent()
+                .getProperties().get("card")).positionInsideList;
+
+        if(positionInsideList==0) return;
+
+        currentCard.setStyle("");
+
+        //positionInsideList+1 is the above card, because we set the indexes from 2
+        currentCard = (AnchorPane) ((AnchorPane) currentCard.getParent().getParent()
+                .getChildrenUnmodifiable().get(positionInsideList+1))
+                .getChildrenUnmodifiable().get(2);
+
+        currentCard.setStyle(
+                "-fx-border-color: red; -fx-border-style:solid");
+    }
+
+    /**
+     * Moves the highlight to the card below the
+     * current one using the DOWN arrow key
+     */
+    private void moveHighlightDown() {
+
+        if(currentCard==null) return;
+
+        int positionInsideList = ((Cards) currentCard.getParent()
+                .getProperties().get("card")).positionInsideList;
+
+        //size()-3 to exclude label and separator, as well as to
+        //align size with 0-index
+        if(positionInsideList==currentCard.getParent().getParent()
+                .getChildrenUnmodifiable().size()-3) return;
+
+        currentCard.setStyle("");
+
+        //positionInsideList+3 is the below card, because we set the indexes from 2
+        currentCard = (AnchorPane) ((AnchorPane) currentCard.getParent().getParent()
+                .getChildrenUnmodifiable().get(positionInsideList+3))
+                .getChildrenUnmodifiable().get(2);
+
+        currentCard.setStyle(
+                "-fx-border-color: red; -fx-border-style:solid");
+    }
+
+    /**
+     * Moves the highlight to the opposing card in the list to
+     * the right of the current card using the RIGHT arrow key
+     */
+    private void moveHighlightRight() {
+
+        if(currentCard==null) return;
+
+        int positionInsideList = ((Cards) currentCard.getParent()
+                .getProperties().get("card")).positionInsideList;
+
+        int positionInsideBoard = ((Lists) currentList
+                .getProperties().get("list")).positionInsideBoard;
+
+        if (positionInsideBoard == currentBoard
+                .getChildrenUnmodifiable().size()-1) return;
+
+        int sizeOfAdjacentList = ((VBox) ((VBox) currentBoard
+                .getChildrenUnmodifiable().get(positionInsideBoard+1))
+                .getChildrenUnmodifiable().get(0))
+                .getChildrenUnmodifiable().size();
+
+        if(sizeOfAdjacentList==2) return;
+
+        currentCard.setStyle("");
+
+        if(positionInsideList >= sizeOfAdjacentList-3) {
+
+            currentCard = (AnchorPane) ((AnchorPane)
+                    ((VBox) ((VBox) currentBoard
+                            .getChildrenUnmodifiable().get(positionInsideBoard + 1))
+                            .getChildrenUnmodifiable().get(0))
+                            .getChildrenUnmodifiable().get(sizeOfAdjacentList-1))
+                    .getChildrenUnmodifiable().get(2);
+        }
+        else {
+
+            currentCard = (AnchorPane) ((AnchorPane)
+                    ((VBox) ((VBox) currentBoard
+                            .getChildrenUnmodifiable().get(positionInsideBoard + 1))
+                            .getChildrenUnmodifiable().get(0))
+                            .getChildrenUnmodifiable().get(positionInsideList+2))
+                    .getChildrenUnmodifiable().get(2);
+        }
+
+        currentList = (VBox) currentCard.getParent().getParent().getParent();
+        currentBoard = (HBox) currentList.getParent();
+
+        currentCard.setStyle(
+                "-fx-border-color: red; -fx-border-style:solid");
+    }
+
+    /**
+     * Moves the highlight to the opposing card in the list to
+     * the left of the current card using the LEFT arrow key
+     */
+    private void moveHighlightLeft() {
+
+        if(currentCard==null) return;
+
+        int positionInsideList = ((Cards) currentCard.getParent()
+                .getProperties().get("card")).positionInsideList;
+
+        int positionInsideBoard = ((Lists) currentList
+                .getProperties().get("list")).positionInsideBoard;
+
+        if (positionInsideBoard == 0) return;
+
+        int sizeOfAdjacentList = ((VBox) ((VBox) currentBoard
+                .getChildrenUnmodifiable().get(positionInsideBoard-1))
+                .getChildrenUnmodifiable().get(0))
+                .getChildrenUnmodifiable().size();
+
+        if(sizeOfAdjacentList==2) return;
+
+        currentCard.setStyle("");
+
+        if(positionInsideList >= sizeOfAdjacentList-3) {
+
+            currentCard = (AnchorPane) ((AnchorPane)
+                    ((VBox) ((VBox) currentBoard
+                            .getChildrenUnmodifiable().get(positionInsideBoard - 1))
+                            .getChildrenUnmodifiable().get(0))
+                            .getChildrenUnmodifiable().get(sizeOfAdjacentList-1))
+                    .getChildrenUnmodifiable().get(2);
+        }
+        else {
+
+            currentCard = (AnchorPane) ((AnchorPane)
+                    ((VBox) ((VBox) currentBoard
+                            .getChildrenUnmodifiable().get(positionInsideBoard - 1))
+                            .getChildrenUnmodifiable().get(0))
+                            .getChildrenUnmodifiable().get(positionInsideList+2))
+                    .getChildrenUnmodifiable().get(2);
+        }
+
+        currentList = (VBox) currentCard.getParent().getParent().getParent();
+        currentBoard = (HBox) currentList.getParent();
+
+        currentCard.setStyle(
+                "-fx-border-color: red; -fx-border-style:solid");
+    }
+
+    /**
      * swaps up
      */
     private void swapAboveCard() {
@@ -199,6 +280,9 @@ public class Shortcuts {
 
         aboveCard.positionInsideList = ((Cards) currentCard.getParent()
                 .getProperties().get("card")).positionInsideList;
+//
+//        ((Cards) currentCard.getParent()
+//                .getProperties().get("card")).positionInsideList-=1;
 
         server.moveCard(aboveCard);
     }
@@ -223,6 +307,9 @@ public class Shortcuts {
 
         belowCard.positionInsideList = ((Cards) currentCard.getParent()
                 .getProperties().get("card")).positionInsideList;
+//
+//        ((Cards) currentCard.getParent()
+//                .getProperties().get("card")).positionInsideList+=1;
 
         server.moveCard(belowCard);
     }
