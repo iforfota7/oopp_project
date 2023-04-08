@@ -76,6 +76,7 @@ public class Main extends Application {
         var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
         var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
         var helpOverviewScene = FXML.load(HelpCtrl.class, "client", "scenes", "HelpOverview.fxml");
+        var helpShortcuts = FXML.load(HelpCtrl.class, "client", "scenes", "HelpShortcuts.fxml");
 
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
@@ -92,14 +93,11 @@ public class Main extends Application {
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
-        mainCtrl.initializeUtils(helpScene, helpOverviewScene);
+        mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
         mainCtrl.initializeAdmin(confirmAdmin);
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
         primaryStage.setOnCloseRequest(e -> {
            board.getKey().stop();
         });
-
-
-
     }
 }
