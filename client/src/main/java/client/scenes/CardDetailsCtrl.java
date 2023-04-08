@@ -146,6 +146,11 @@ public class CardDetailsCtrl {
         }
 
         subtaskName.setText("");
+
+        // this new list is created because otherwise there would be errors
+        // when serializing
+        // because the list references the board that references tags, meaning
+        // there would be conflicts in ids
         Lists blankList = new Lists(null, 0, null);
         blankList.id = openedCard.list.id;
         openedCard.list = blankList;

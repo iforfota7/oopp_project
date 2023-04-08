@@ -18,9 +18,6 @@ public class Subtask {
     public String title;
     public boolean checked;
 
-//    @ManyToOne
-//    public Cards card;
-
     public int position;
 
     /**
@@ -28,7 +25,6 @@ public class Subtask {
      * @param title the title of the card
      * @param checked a boolean which defines the state of the checkbox
      *                of the subtask-> finished or not
-//     * @param card the parent card of the subtask
      * @param position the position of the subtask is the subtasks list
      *                 of a card
      */
