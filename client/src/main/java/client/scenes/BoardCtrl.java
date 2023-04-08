@@ -225,7 +225,7 @@ public class BoardCtrl {
         mainCtrl=new MainCtrl();
         server=new ServerUtils();
         cardDetailsCtrl=new CardDetailsCtrl(server,mainCtrl);
-        shortcuts=new Shortcuts();
+        shortcuts=new Shortcuts(mainCtrl);
         drag = new Draggable(server);
     }
 
