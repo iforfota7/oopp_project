@@ -53,10 +53,9 @@ public class Main extends Application {
      * @throws IOException possibly throws this exception
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        var selectServer = FXML.load(SelectServerCtrl.class,
+    public void start(Stage primaryStage)  throws IOException {
+                  var selectServer = FXML.load(SelectServerCtrl.class,
                 "client", "scenes", "SelectServer.fxml");
-
         // List rename&delete&add scene loader
         var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RnList.fxml" );
         var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
@@ -96,10 +95,12 @@ public class Main extends Application {
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene, helpOverviewScene);
-
-
         mainCtrl.initializeAdmin(confirmAdmin);
+
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl, addTagToCard);
+        primaryStage.setOnCloseRequest(e -> {
+           board.getKey().stop();
+        });
 
     }
 }

@@ -79,7 +79,7 @@ public class Boards {
         return "Boards{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lists=" + lists.toString() +
+                ", lists=" + lists+
                 '}';
     }
 }

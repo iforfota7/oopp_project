@@ -217,8 +217,11 @@ public class MainCtrl {
         boardCtrl.addBoardToUser(b);
         primaryStage.setTitle("Board");
         primaryStage.setScene(board);
-        if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
+        if(secondaryStage!=null && secondaryStage.isShowing()) {secondaryStage.close();}
+
+
         boardCtrl.initialize(b);
+
     }
 
     /**
