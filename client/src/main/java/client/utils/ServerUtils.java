@@ -19,6 +19,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import commons.Boards;
@@ -482,6 +484,42 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    private static final ExecutorService EXEC = Executors.newCachedThreadPool();
+
+    /** Calls endpoint on backend for long polling constantly when it recieves the board
+     * @param consumer - Deleted board...
+     */
+    public void registerForUpdates(Consumer<Boards> consumer) {
+
+        EXEC.submit(()->{
+                while(!EXEC.isShutdown()) {
+                    try {
+                        var res = ClientBuilder.newClient(new ClientConfig()).
+                                target(serverAddress).path("api/boards/longPolling").
+                                request(APPLICATION_JSON).
+                                accept(APPLICATION_JSON).get(Response.class);
+                        if (res.getStatus() == 204) {
+                            continue;
+                        }
+                        var q = res.readEntity(Boards.class);
+                        consumer.accept(q);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+
+        });
+
+
+    }
+
+    /**
+     * Shutdowns Thread executor service.
+     */
+    public void stop(){
+        EXEC.shutdownNow();
     }
 
 }
