@@ -50,8 +50,8 @@ public class CardDetailsCtrl {
     private Boards board;
     private boolean sceneOpened = false;
     public boolean changes = false;
-    private int initialTags;
     private List<String> serverURLS;
+    private List<Tags> initialTags;
 
     /**
      * Initializes the card details controller object
@@ -80,9 +80,12 @@ public class CardDetailsCtrl {
             websocketConfig();
         }
         changes = false;
+        initialTags = new ArrayList<>();
         if(openedCard != null){
             if(openedCard.tags != null) {
-                initialTags = openedCard.tags.size();
+                for(Tags t : openedCard.tags){
+                    initialTags.add(t);
+                }
             }
         }
         warning.setVisible(false);
@@ -102,7 +105,6 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id && sceneOpened)
                         setOpenedCard(c);
-                    initialTags = openedCard.tags.size();
                 }
             });
         });
@@ -194,8 +196,10 @@ public class CardDetailsCtrl {
             changes = true;
         }
 
-        if(openedCard.tags.size() != initialTags){
-            changes = true;
+        if(openedCard.tags != null){
+            if(!openedCard.tags.equals(initialTags)){
+                changes = true;
+            }
         }
 
         if(changes){
