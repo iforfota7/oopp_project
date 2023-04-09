@@ -76,15 +76,18 @@ public class Main extends Application {
         var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
         var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
         var helpOverviewScene = FXML.load(HelpCtrl.class, "client", "scenes", "HelpOverview.fxml");
+        var helpShortcuts = FXML.load(HelpCtrl.class, "client", "scenes", "HelpShortcuts.fxml");
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
         var customization = FXML.load(CustomizationCtrl.class,
                 "client","scenes","Customization.fxml");
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
-        var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
-        var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
+        var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "TagsController.fxml");
+        var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "TagDetail.fxml");
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
+        var addTagToCard = FXML.load(AddTagToCardCtrl.class,
+                "client", "scenes", "AddTagToCard.fxml");
         var cardCustomization =
                 FXML.load(CardCustomizationCtrl.class,
                         "client", "scenes", "CardCustomization.fxml");
@@ -93,12 +96,15 @@ public class Main extends Application {
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
-        mainCtrl.initializeUtils(helpScene, helpOverviewScene);
+        mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
         mainCtrl.initializeAdmin(confirmAdmin);
+        mainCtrl.initializeTags(tagDetails, addTag, tagsControl, addTagToCard);
         mainCtrl.initializeCustomization(customization,cardCustomization);
-        mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
         primaryStage.setOnCloseRequest(e -> {
            board.getKey().stop();
         });
+
+
+
     }
 }

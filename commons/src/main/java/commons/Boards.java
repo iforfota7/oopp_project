@@ -38,7 +38,7 @@ public class Boards {
     @Column(name = "color")
     public Map<String, String> colorPreset = new HashMap<>();
 
-    @OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Tags> tags;
 
     /**

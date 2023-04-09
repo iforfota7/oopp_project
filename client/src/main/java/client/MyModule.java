@@ -46,6 +46,6 @@ public class MyModule implements Module {
         binder.bind(UserDetailsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(CustomizationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(CardCustomizationCtrl.class).in(Scopes.SINGLETON);
-
+        binder.bind(AddTagToCardCtrl.class).in(Scopes.SINGLETON);
     }
 }

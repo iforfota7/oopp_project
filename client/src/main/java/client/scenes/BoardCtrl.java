@@ -3,10 +3,7 @@ package client.scenes;
 import client.scenes.config.Draggable;
 import client.scenes.config.Shortcuts;
 import client.utils.ServerUtils;
-import commons.Boards;
-import commons.Lists;
-import commons.Cards;
-import commons.Subtask;
+import commons.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -26,6 +23,7 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -218,7 +216,7 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
-        this.shortcuts = new Shortcuts();
+        this.shortcuts = new Shortcuts(mainCtrl);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
@@ -233,7 +231,7 @@ public class BoardCtrl {
         mainCtrl=new MainCtrl();
         server=new ServerUtils();
         cardDetailsCtrl=new CardDetailsCtrl(server,mainCtrl);
-        shortcuts=new Shortcuts();
+        shortcuts=new Shortcuts(mainCtrl);
         drag = new Draggable(server);
     }
 
@@ -303,7 +301,7 @@ public class BoardCtrl {
      */
     public void addNewList(Lists l) {
         VBox newList = createNewList(l);
-        mainCtrl.addNewList(newList, firstRow);
+        firstRow.getChildren().add(newList);
         for(int i = 0; i<l.cards.size(); i++){
             Cards c = l.cards.get(i);
             addNewCard((VBox)newList.getChildren().get(0), c);
@@ -353,7 +351,6 @@ public class BoardCtrl {
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
 
-        System.out.println("Color: " + board.listBgColor);
 
         list.getChildren().addAll(headerList, footerList);
         list.setId("list"+Long.toString(l.id));
@@ -570,6 +567,8 @@ public class BoardCtrl {
         blanket.setId("card"+Long.toString(c.id));
         blanket.setOnMouseEntered(shortcuts::onMouseHover);
 
+        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
+
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
 
@@ -724,6 +723,7 @@ public class BoardCtrl {
         if(!card.description.equals(""))
             descriptionLabelText = "Description: yes";
         Label descriptionExistence = new Label(descriptionLabelText);
+
         subtasksCount.setStyle("-fx-font-size: 7;");
         subtasksCount.setAlignment(Pos.CENTER_RIGHT);
         subtasksCount.setPrefWidth(65.6);
@@ -764,15 +764,23 @@ public class BoardCtrl {
     /**
      * Creates the part of the body of a card where are displayed the tags assessed
      * to the card
+     * @param card The card whose tags we render
      * @return the part where are displayed the tags assessed to the card
      */
-    public HBox newCardTagsBody(){
+    public HBox newCardTagsBody(Cards card){
         HBox cardTagsBody = new HBox(11.5);
 
         cardTagsBody.setPrefWidth(162.4);
         cardTagsBody.setPrefHeight(9.6);
         cardTagsBody.setPadding(new Insets(0, 0, 0, 8));
         cardTagsBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
+
+        for(Tags tag : card.tags) {
+            Circle circle = new Circle();
+            circle.setRadius(2);
+            circle.setFill(Color.web(tag.backgroundColor));
+            cardTagsBody.getChildren().add(circle);
+        }
 
         return cardTagsBody;
     }

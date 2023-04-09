@@ -16,7 +16,9 @@ public class TagDetailsCtrl {
     @FXML
     private Text warning;
     @FXML
-    private ColorPicker picker;
+    private ColorPicker backgroundPicker;
+    @FXML
+    private ColorPicker fontPicker;
     private Tags tag;
     private ServerUtils server;
     private MainCtrl mainCtrl;
@@ -30,7 +32,9 @@ public class TagDetailsCtrl {
      */
     public void initialize(Tags t, Boards board){
         this.tag = t;
-        picker.setValue(Color.valueOf(this.tag.color));
+        backgroundPicker.setValue(Color.valueOf(this.tag.backgroundColor));
+        fontPicker.setValue(Color.valueOf(this.tag.fontColor));
+
         cardTitleInput.setText(this.tag.title);
         this.board = board;
     }
@@ -62,8 +66,11 @@ public class TagDetailsCtrl {
         int tagPositionInBoard = board.tags.indexOf(tag);
 
         tag.title = cardTitleInput.getText();
-        String color = "#" + picker.getValue().toString().substring(2, 8);
-        tag.color = color;
+        String backgroundColor = "#" + backgroundPicker.getValue().toString().substring(2, 8);
+        String fontColor = "#" + fontPicker.getValue().toString().substring(2, 8);
+
+        tag.backgroundColor = backgroundColor;
+        tag.fontColor = fontColor;
         board.tags.set(tagPositionInBoard, tag);
 
         server.updateBoard(board);
