@@ -3,10 +3,7 @@ package client.scenes;
 import client.scenes.config.Draggable;
 import client.scenes.config.Shortcuts;
 import client.utils.ServerUtils;
-import commons.Boards;
-import commons.Lists;
-import commons.Cards;
-import commons.Subtask;
+import commons.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -26,6 +23,7 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -601,7 +599,7 @@ public class BoardCtrl {
         cardBody.setEffect(innerShadow);
 
         HBox cardOverviewInfo = newCardOverviewBody(c);
-        HBox cardTags = newCardTagsBody();
+        HBox cardTags = newCardTagsBody(c);
 
         cardBody.getChildren().addAll(cardOverviewInfo, cardTags);
         return cardBody;
@@ -681,15 +679,23 @@ public class BoardCtrl {
     /**
      * Creates the part of the body of a card where are displayed the tags assessed
      * to the card
+     * @param card The card whose tags we render
      * @return the part where are displayed the tags assessed to the card
      */
-    public HBox newCardTagsBody(){
+    public HBox newCardTagsBody(Cards card){
         HBox cardTagsBody = new HBox(11.5);
 
         cardTagsBody.setPrefWidth(162.4);
         cardTagsBody.setPrefHeight(9.6);
         cardTagsBody.setPadding(new Insets(0, 0, 0, 8));
         cardTagsBody.setStyle("-fx-background-color: #e6e6fa; -fx-background-radius: 4;");
+
+        for(Tags tag : card.tags) {
+            Circle circle = new Circle();
+            circle.setRadius(2);
+            circle.setFill(Color.web(tag.backgroundColor));
+            cardTagsBody.getChildren().add(circle);
+        }
 
         return cardTagsBody;
     }
