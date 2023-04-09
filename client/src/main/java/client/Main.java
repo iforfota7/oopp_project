@@ -56,7 +56,6 @@ public class Main extends Application {
     public void start(Stage primaryStage)  throws IOException {
                   var selectServer = FXML.load(SelectServerCtrl.class,
                 "client", "scenes", "SelectServer.fxml");
-        // List rename&delete&add scene loader
         var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RnList.fxml" );
         var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
         var addList = FXML.load(AdListCtrl.class,"client", "scenes", "AdList.fxml" );
@@ -88,8 +87,7 @@ public class Main extends Application {
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
         var addTagToCard = FXML.load(AddTagToCardCtrl.class,
                 "client", "scenes", "AddTagToCard.fxml");
-        var cardCustomization =
-                FXML.load(CardCustomizationCtrl.class,
+        var cardCustomization = FXML.load(CardCustomizationCtrl.class,
                         "client", "scenes", "CardCustomization.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
@@ -103,8 +101,5 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(e -> {
            board.getKey().stop();
         });
-
-
-
     }
 }
