@@ -68,6 +68,7 @@ public class BoardCtrl {
         listCards = new ArrayList<>();
         this.board = board;
 
+        shortcuts=new Shortcuts(mainCtrl, server, this);
         mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
 
         if(!serverURLS.contains(server.getServer())) {
@@ -158,6 +159,10 @@ public class BoardCtrl {
     public void refresh(){
         firstRow.getChildren().clear();
         board.lists = server.getListsByBoard(board.id);
+
+        shortcuts=new Shortcuts(mainCtrl, server, this);
+        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
+
         for (Lists list : board.lists) {
             addNewList(list);
         }
@@ -177,7 +182,6 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
-        this.shortcuts = new Shortcuts(this.mainCtrl, this.server);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
@@ -191,7 +195,6 @@ public class BoardCtrl {
         mainCtrl=new MainCtrl();
         server=new ServerUtils();
         cardDetailsCtrl=new CardDetailsCtrl(server,mainCtrl);
-        shortcuts=new Shortcuts(mainCtrl, server);
 
         drag = new Draggable(server);
     }
@@ -738,7 +741,7 @@ public class BoardCtrl {
      */
     public void exitBoard() {
 
-        shortcuts = new Shortcuts(mainCtrl, server);
+        shortcuts = new Shortcuts(mainCtrl, server, this);
         mainCtrl.showBoardOverview();
     }
 
@@ -747,5 +750,13 @@ public class BoardCtrl {
      */
     public void openTag(){
         mainCtrl.showTagControl(board);
+    }
+
+    /**
+     * Gets the board object of the current board
+     * @return this board's board object
+     */
+    public Boards getBoard() {
+        return board;
     }
 }

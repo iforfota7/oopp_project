@@ -1,9 +1,10 @@
 package client.scenes.config;
 
+import client.scenes.BoardCtrl;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
+import commons.Boards;
 import commons.Cards;
-import commons.Lists;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -14,10 +15,11 @@ import javafx.scene.layout.VBox;
 public class Shortcuts {
 
     private AnchorPane currentCard;
-    private VBox currentList;
+    private Boards board;
     private HBox currentBoard;
     private MainCtrl mainCtrl;
     private ServerUtils server;
+    private BoardCtrl boardCtrl;
     private int x; //position of list inside board
     private int y; //position of card inside list
 
@@ -26,12 +28,16 @@ public class Shortcuts {
      * to be used inside BoardCtrl
      * @param mainCtrl an instance of MainCtrl
      * @param server an instance of ServerUtils
+     * @param boardCtrl an instance of BoardCtrl
      */
-    public Shortcuts(MainCtrl mainCtrl, ServerUtils server) {
+    public Shortcuts(MainCtrl mainCtrl, ServerUtils server, BoardCtrl boardCtrl) {
 
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.boardCtrl = boardCtrl;
 
+        board = boardCtrl.getBoard();
+        currentBoard = boardCtrl.getFirstRow();
     }
     /**
      * Constructor for Shortcuts class,
@@ -59,11 +65,9 @@ public class Shortcuts {
         hovered.setStyle(
                 "-fx-border-color: red; -fx-border-style:solid");
         currentCard = hovered;
-        currentList = (VBox) hovered.getParent().getParent().getParent();
-        currentBoard = (HBox) currentList.getParent();
 
         x = ((Cards) currentCard.getParent().getProperties().get("card")).positionInsideList;
-        y = ((Lists) currentList.getProperties().get("list")).positionInsideBoard;
+        y = board.lists.get(x).positionInsideBoard;
 
         mouseEvent.consume();
     }
@@ -109,11 +113,9 @@ public class Shortcuts {
 
         if(currentCard==null) return;
 
-        //-2 to exclude label and separator
-        int sizeOfCurrentList = ((VBox)currentList.getChildren().get(0))
-                .getChildrenUnmodifiable().size()-2;
+        int sizeOfCurrentList = board.lists.get(this.x).cards.size();
 
-        int sizeOfCurrentBoard = currentBoard.getChildrenUnmodifiable().size();
+        int sizeOfCurrentBoard = board.lists.size();
 
         if(y==-1 || y==sizeOfCurrentList) return;
         if(x==-1 || x==sizeOfCurrentBoard) return;
@@ -121,9 +123,7 @@ public class Shortcuts {
         if(x!=this.x) {
 
             //-2 to exclude label and separator
-            int sizeOfAdjacentList = ((VBox) ((VBox) currentBoard.getChildren().get(x))
-                            .getChildrenUnmodifiable().get(0))
-                            .getChildrenUnmodifiable().size()-2;
+            int sizeOfAdjacentList = board.lists.get(x).cards.size();
 
             if(sizeOfAdjacentList==0) return;
 
@@ -152,8 +152,7 @@ public class Shortcuts {
         currentCard = (AnchorPane) ((AnchorPane) ((VBox) ((VBox) currentBoard.getChildren().get(x))
                 .getChildren().get(0)).getChildren().get(y+2)).getChildren().get(2);
 
-        currentList = (VBox) currentCard.getParent().getParent().getParent();
-        currentBoard = (HBox) currentList.getParent();
+        currentBoard = boardCtrl.getFirstRow();
 
         currentCard.setStyle("-fx-border-color: red; -fx-border-style:solid");
     }
@@ -190,21 +189,15 @@ public class Shortcuts {
         System.out.println(((Cards)currentCard.getParent().getProperties().get("card")).title);
 
         //-2 to exclude label and separator
-        int sizeOfCurrentList = ((VBox)currentList.getChildren().get(0))
-                .getChildrenUnmodifiable().size()-2;
+        int sizeOfCurrentList = board.lists.get(this.x).cards.size();
 
         if(y==-1 || y==sizeOfCurrentList) return;
 
-        Cards adjacentCard = ((Cards)
-                ((VBox) currentList.getChildrenUnmodifiable()
-                        .get(0)).getChildren().get(y+2)
-                        .getProperties().get("card"));
+        Cards adjacentCard = board.lists.get(this.x).cards.get(y);
 
         adjacentCard.positionInsideList = this.y;
 
         server.moveCard(adjacentCard);
-
-        this.y = y;
     }
 
     /**
