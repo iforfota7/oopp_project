@@ -1,12 +1,14 @@
 package server.api;
 
 import commons.Cards;
+import commons.Tags;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardsRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -29,6 +31,8 @@ public class CardController {
      * @param card the card to be added to the repo
      * @return a 200 OK response for a successful http request
      */
+
+
 
     @Transactional
     @PostMapping(path = {"", "/"})
@@ -58,8 +62,8 @@ public class CardController {
     }
 
     /**
-     * Method for updating the title of a card.
-     * A card can only be renamed if it or any of its fields are not null
+     * Method for updating information of a card that is related to card details.
+     * A card can only be updated if it or any of its fields are not null
      * if it already exists in the repo,
      * if it's position is the same as the version of the card in the repo
      * and lastly if the card's list is the same as the list of the card specified in the repo
@@ -134,6 +138,27 @@ public class CardController {
         ResponseEntity<Cards> addResponse = addCard(card);
         if(addResponse.equals(ResponseEntity.badRequest().build())) {
             throw new RuntimeException("Failed to add card");
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Given a tag, it removes all references from cards
+     * to that specific tag
+     *
+     * @param tag The given tag object
+     * @return OK iff the operation was successfully performed
+     */
+    @Transactional
+    @PostMapping(path = {"/removeTag", "/removeTag/"})
+    public ResponseEntity<Tags> removeTagFromCards(@RequestBody Tags tag) {
+        if(tag == null)
+            return ResponseEntity.badRequest().build();
+
+        List<Cards> cardsList = repo.findAll();
+        for(Cards card : cardsList) {
+            card.tags.removeIf(tag::equals);
         }
 
         return ResponseEntity.ok().build();

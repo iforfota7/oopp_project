@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootTagContainer" minHeight="398.0" prefHeight="418.0" prefWidth="295.0" style="-fx-background-color: #E6E6FA; -fx-min-height: 400; -fx-max-width: 600;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.TagsCtrl">
+   <children>
+      <Label layoutX="76.0" layoutY="29.0" prefHeight="38.0" prefWidth="127.0" text="Tags of this board">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <ScrollPane hbarPolicy="NEVER" layoutX="69.0" layoutY="81.0" prefHeight="260.0" prefWidth="158.0" vbarPolicy="ALWAYS">
+         <content>
+            <VBox fx:id="tagList" prefHeight="257.0" prefWidth="143.0" spacing="6.0">
+               <padding>
+                  <Insets left="9.0" right="9.0" top="15.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+      <Button layoutX="203.0" layoutY="39.0" mnemonicParsing="false" onAction="#openAddNewTag" prefHeight="18.0" prefWidth="20.0" text="+">
+         <padding>
+            <Insets bottom="-3.0" top="-3.0" />
+         </padding>
+      </Button>
+      <Button layoutX="108.0" layoutY="363.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #d4d4f7; -fx-background-radius: 4;" text="Close">
+         <effect>
+            <InnerShadow height="8.0" radius="3.25" width="7.0">
+               <color>
+                  <Color red="0.6783625483512878" green="0.6228070259094238" blue="0.7894737124443054" />
+               </color>
+            </InnerShadow>
+         </effect>
+      </Button>
+   </children>
+</AnchorPane>

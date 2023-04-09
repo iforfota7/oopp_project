@@ -2,8 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.User;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -19,6 +17,7 @@ public class UserDetailsCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils server;
     private final SelectServerCtrl selectServerCtrl;
+    private final BoardOverviewCtrl boardOverviewCtrl;
 
     @FXML
     private Label username;
@@ -31,32 +30,42 @@ public class UserDetailsCtrl {
 
     @FXML
     private Button adminLogin;
+
+    /**
+     * Constructor method for UserDetailsCtrl
+     * @param mainCtrl instance of MainCtrl
+     * @param server instance of ServerUtils
+     * @param selectServerCtrl instance of SelectServerCtrl
+     * @param boardOverviewCtrl instance of BoardOverviewCtrl
+     */
     @Inject
     public UserDetailsCtrl(MainCtrl mainCtrl, ServerUtils server,
-                           SelectServerCtrl selectServerCtrl){
+                           SelectServerCtrl selectServerCtrl, BoardOverviewCtrl boardOverviewCtrl){
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.selectServerCtrl = selectServerCtrl;
+        this.boardOverviewCtrl = boardOverviewCtrl;
     }
-    private BooleanProperty adminLock = new SimpleBooleanProperty(false);
 
     /**
      * Method to close the secondary stage which shows the user's details
      */
     @FXML
     void closeUserDetails(){
-        mainCtrl.closeUserDetails();
+        mainCtrl.closeSecondaryStage();
         mainCtrl.showBoardOverview();
     }
 
     /**
      * Display different button prompts and button colors based on the logged-in user.
+     * Also displays the current server address
      * @param currentUser Current user element
      */
     public void setUser(User currentUser) {
-        this.adminLock.set(server.checkAdmin(selectServerCtrl.getCurrentUser()));
-        this.username.setText(currentUser.getUsername());
-        if(adminLock.get()){
+        this.username.setText(currentUser.username);
+        this.serverAddress.setText(server.getServer());
+
+        if(boardOverviewCtrl.getAdminLock()){
             this.isAdmin.setText("Yes!");
             adminLogin.setVisible(false);
             adminLogout.setVisible(true);
@@ -66,21 +75,25 @@ public class UserDetailsCtrl {
             adminLogin.setText("Input password to become admin");
             adminLogout.setVisible(false);
         }
+        boardOverviewCtrl.refresh();
     }
 
     /**
-     * show the login admin scene.
+     * show the login admin scene and generate a random password
+     * on the server that is printed. Since only an admin has access to
+     * the terminal of the server, this will allow the admin to log in.
      */
     @FXML
     void adminLogin() {
-        if (adminLock.getValue()) {
+        server.generatePassword();
+        if (boardOverviewCtrl.getAdminLock()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Admin!");
             alert.setHeaderText(null);
             alert.setContentText("Admin has been unlocked!");
             alert.showAndWait();
         } else {
-            mainCtrl.closeUserDetails();
+            mainCtrl.closeSecondaryStage();
             mainCtrl.showConfirmAdmin();
         }
     }
@@ -92,7 +105,7 @@ public class UserDetailsCtrl {
     @FXML
     void adminLogout() {
         selectServerCtrl.removeAdmin();
-        mainCtrl.closeUserDetails();
+        mainCtrl.closeSecondaryStage();
         mainCtrl.showBoardOverview();
     }
 }

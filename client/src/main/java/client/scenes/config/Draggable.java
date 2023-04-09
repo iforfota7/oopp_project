@@ -6,16 +6,21 @@ import commons.Cards;
 import commons.Lists;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+
 public class Draggable {
 
     private ServerUtils server;
 
+    /**
+     * Constructor method for Draggable
+     * @param server instance of ServerUtils
+     */
     @Inject
     public Draggable(ServerUtils server){
         this.server = server;
@@ -26,12 +31,13 @@ public class Draggable {
      *
      * @param mouseEvent Object containing information about the mouse event
      */
-
     public void dragDetected(MouseEvent mouseEvent) {
-        Hyperlink dragged = (Hyperlink) mouseEvent.getSource();
+        AnchorPane dragged = (AnchorPane) mouseEvent.getSource();
         Dragboard db = dragged.startDragAndDrop(TransferMode.ANY);
         ClipboardContent content = new ClipboardContent();
-        content.putString(dragged.getText());
+        Label cardTitle = (Label)((HBox)((VBox)((AnchorPane)dragged.getParent())
+                .getChildren().get(1)).getChildren().get(0)).getChildren().get(0);
+        content.putString(cardTitle.getText());
         db.setContent(content);
         mouseEvent.consume();
     }
@@ -42,10 +48,9 @@ public class Draggable {
      *
      * @param event Object containing information about the drag event
      */
-
     public void dragEntered(DragEvent event){
-        if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
+        if(event.getGestureSource() != event.getSource() &&
+                ((AnchorPane) event.getGestureSource()).getParent() != event.getSource() &&
                 event.getSource() instanceof VBox){
 
             ((Region) event.getSource()).setBackground(  new Background(
@@ -63,13 +68,15 @@ public class Draggable {
      */
     public void dragExited(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource()).getParent()!=event.getSource() &&
+                ((AnchorPane)event.getGestureSource()).getParent()!=event.getSource() &&
                 event.getSource() instanceof VBox){
             ((Region) event.getSource()).setBackground(  new Background(
                     new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
-        removeVisualCue((Node)event.getSource());
+        if(event.getSource() instanceof  VBox) {
+            removeVisualCue((Node)event.getSource());
+        }
 
         event.consume();
     }
@@ -80,7 +87,6 @@ public class Draggable {
      * @param dropTarget The element on which the card is dropped
      * @return The list container
      */
-
     private VBox getListContainerFromDropTarget(Node dropTarget) {
         //this while statement takes care of the case where the card is dropped on a card
         while(!(dropTarget instanceof VBox))
@@ -99,7 +105,6 @@ public class Draggable {
      * @param dropTarget The element on which the card could be dropped
      * @return The list object associated with this element
      */
-
     private Lists computeTargetList(Node dropTarget) {
         dropTarget = getListContainerFromDropTarget(dropTarget);
         return (Lists)dropTarget.getParent().getProperties().get("list");
@@ -110,7 +115,6 @@ public class Draggable {
      *
      * @param dropTarget The node on which the card would be dropped
      */
-
     private void removeVisualCue(Node dropTarget) {
         dropTarget = getListContainerFromDropTarget(dropTarget);
         for(Node child : ((VBox) dropTarget).getChildren()) {
@@ -131,7 +135,6 @@ public class Draggable {
      * @param node The element on which the card could be dropped
      * @return The new position of the dragged card
      */
-
     private int positionOfDroppedCard(DragEvent event, Cards sourceCard, Node node) {
         Lists targetList = computeTargetList(node);
         node = getListContainerFromDropTarget(node);
@@ -182,7 +185,6 @@ public class Draggable {
      * @param positionInsideList The position at which the card will be dropped
      *                          at this moment in time
      */
-
     public void createVisualCue(Node dropTarget, Lists targetList,
                                 Cards sourceCard, int positionInsideList) {
 
@@ -225,14 +227,14 @@ public class Draggable {
      */
     public void dragOver(DragEvent event){
         if(event.getGestureSource()!=event.getSource() &&
-                ((Hyperlink)event.getGestureSource())
+                ((AnchorPane)event.getGestureSource())
                         .getParent()!=event.getSource()){
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
 
         // information about the dragged card
-        Cards sourceCard = (Cards) ((Node) event.getGestureSource())
-                .getParent().getProperties().get("card");
+        Cards sourceCard = (Cards) ((AnchorPane)((Node) event.getGestureSource())
+                .getParent()).getChildren().get(1).getProperties().get("card");
 
         // information about the node where the card has been dropped
         Node node = (Node)event.getSource();
@@ -253,8 +255,8 @@ public class Draggable {
      */
     public void dragDropped(DragEvent event){
         // information about the dragged card
-        Cards sourceCard = (Cards) ((Node) event.getGestureSource())
-                .getParent().getProperties().get("card");
+        Cards sourceCard = (Cards) ((AnchorPane)((Node) event.getGestureSource())
+                .getParent()).getChildren().get(1).getProperties().get("card");
 
         // information about the node where the card has been dropped
         Node node = (Node)event.getSource();
@@ -267,10 +269,7 @@ public class Draggable {
 
         event.setDropCompleted(true);
         event.consume();
-    }
 
-    public void dragDone(DragEvent event){
-        event.consume();
     }
 
 }
