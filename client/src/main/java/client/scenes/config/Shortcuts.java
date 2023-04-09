@@ -5,6 +5,7 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Boards;
 import commons.Cards;
+import commons.Lists;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +16,7 @@ import javafx.scene.layout.VBox;
 public class Shortcuts {
 
     private AnchorPane currentCard;
+    private Cards currentCardObject;
     private Boards board;
     private HBox currentBoard;
     private MainCtrl mainCtrl;
@@ -29,23 +31,96 @@ public class Shortcuts {
      * @param mainCtrl an instance of MainCtrl
      * @param server an instance of ServerUtils
      * @param boardCtrl an instance of BoardCtrl
+     * @param currentCardObject the current highlighted object
      */
-    public Shortcuts(MainCtrl mainCtrl, ServerUtils server, BoardCtrl boardCtrl) {
+    public Shortcuts(MainCtrl mainCtrl, ServerUtils server, BoardCtrl boardCtrl,
+                     Cards currentCardObject) {
 
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.boardCtrl = boardCtrl;
+        this.currentCardObject = currentCardObject;
 
         board = boardCtrl.getBoard();
         currentBoard = boardCtrl.getFirstRow();
+
+        setPositionForCard();
     }
+
+    /**
+     * Getter for the card object
+     *
+     * @return The card object
+     */
+    public Cards getCurrentCardObject() {
+        return currentCardObject;
+    }
+
+    /**
+     * Given the container, it gets the card
+     *
+     * @return the card object that is stored in the
+     *          highlighted container
+     */
+    private Cards getCardFromContainer() {
+        return (Cards)currentCard.getProperties().get("card");
+    }
+
+    /**
+     * Sets the border style for the highlighted
+     * anchor pane
+     *
+     */
+    public void highlightCurrentCard() {
+        if(currentCard == null)
+            return;
+
+        currentCard.setStyle(
+                "-fx-border-color: red; -fx-border-style:solid");
+    }
+
+    /**
+     * Computes the x, y positions of a card
+     *
+     */
+    public void setPositionForCard() {
+        if(currentCardObject == null)
+            return;
+
+        if(!existsCardInBoard()) {
+            currentCardObject = null;
+            return;
+        }
+
+        y = currentCardObject.positionInsideList;
+        this.x = 0;
+        for(Lists list : board.lists) {
+            if(list.id == currentCardObject.list.id) {
+                break;
+            }
+            this.x++;
+        }
+    }
+
+    /**
+     * Checks if the current card exists in the board
+     *
+     * @return True iff the current card exists
+     */
+    public boolean existsCardInBoard() {
+        for(Lists lists : board.lists)
+            for(Cards cards : lists.cards)
+                if(cards.id == currentCardObject.id)
+                    return true;
+        return false;
+    }
+
     /**
      * Constructor for Shortcuts class,
      * to be used inside MainCtrl
      * @param mainCtrl an instance of MainCtrl
      */
     public Shortcuts(MainCtrl mainCtrl) {
-
         this.mainCtrl = mainCtrl;
     }
 
@@ -62,12 +137,10 @@ public class Shortcuts {
         if(currentCard!=null)
             currentCard.setStyle("");
 
-        hovered.setStyle(
-                "-fx-border-color: red; -fx-border-style:solid");
         currentCard = hovered;
-
-        x = ((Cards) currentCard.getParent().getProperties().get("card")).positionInsideList;
-        y = board.lists.get(x).positionInsideBoard;
+        highlightCurrentCard();
+        currentCardObject = getCardFromContainer();
+        setPositionForCard();
 
         mouseEvent.consume();
     }
@@ -83,19 +156,19 @@ public class Shortcuts {
 
         else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isControlDown()) {
             calculateNewHighlightPosition(x, y-1);
-            highlightCardAtPosition(x, y);
+            highlightCardAtPosition();
         }
         else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isControlDown()) {
             calculateNewHighlightPosition(x, y+1);
-            highlightCardAtPosition(x, y);
+            highlightCardAtPosition();
         }
         else if (keyEvent.getCode() == KeyCode.LEFT && keyEvent.isControlDown()) {
             calculateNewHighlightPosition(x-1, y);
-            highlightCardAtPosition(x, y);
+            highlightCardAtPosition();
         }
         else if (keyEvent.getCode() == KeyCode.RIGHT && keyEvent.isControlDown()) {
             calculateNewHighlightPosition(x+1, y);
-            highlightCardAtPosition(x, y);
+            highlightCardAtPosition();
         }
 
         else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown())
@@ -111,39 +184,48 @@ public class Shortcuts {
      */
     private void calculateNewHighlightPosition(int x, int y) {
 
-        if(currentCard==null) return;
+        if(currentCardObject==null) return;
 
         int sizeOfCurrentList = board.lists.get(this.x).cards.size();
-
         int sizeOfCurrentBoard = board.lists.size();
-
         if(y==-1 || y==sizeOfCurrentList) return;
         if(x==-1 || x==sizeOfCurrentBoard) return;
 
         if(x!=this.x) {
 
-            //-2 to exclude label and separator
-            int sizeOfAdjacentList = board.lists.get(x).cards.size();
+            int dir = x < this.x ? -1 : 1;
 
-            if(sizeOfAdjacentList==0) return;
+            boolean moved = false;
+            while(x >= 0 && x < board.lists.size()) {
+                int newListSize = board.lists.get(x).cards.size();
+                if(newListSize == 0) {
+                    x += dir;
+                    continue;
+                }
+                if(y >= newListSize)
+                    y = newListSize - 1;
 
-            if(y>=sizeOfAdjacentList-1) {
-                this.y = sizeOfAdjacentList - 1;
+                moved = true;
+                break;
+            }
+
+            if(moved) {
                 this.x = x;
+                this.y = y;
                 return;
             }
+
+            return;
         }
 
-        //if in the same list, or at same position in other list
-        this.y=y; this.x=x;
+        this.y=y;
+
     }
 
     /**
      * Highlights the card at the given (x,y) position
-     * @param x position of list inside board
-     * @param y position of card inside list
      */
-    private void highlightCardAtPosition(int x, int y) {
+    private void highlightCardAtPosition() {
 
         if(currentCard==null) return;
 
@@ -152,9 +234,8 @@ public class Shortcuts {
         currentCard = (AnchorPane) ((AnchorPane) ((VBox) ((VBox) currentBoard.getChildren().get(x))
                 .getChildren().get(0)).getChildren().get(y+2)).getChildren().get(2);
 
-        currentBoard = boardCtrl.getFirstRow();
-
         currentCard.setStyle("-fx-border-color: red; -fx-border-style:solid");
+        currentCardObject = getCardFromContainer();
     }
 
     /**
@@ -186,33 +267,27 @@ public class Shortcuts {
     private void swapCard(int y) {
 
         if(currentCard==null) return;
-        System.out.println(((Cards)currentCard.getParent().getProperties().get("card")).title);
 
-        //-2 to exclude label and separator
         int sizeOfCurrentList = board.lists.get(this.x).cards.size();
-
         if(y==-1 || y==sizeOfCurrentList) return;
 
-        Cards adjacentCard = board.lists.get(this.x).cards.get(y);
-
-        adjacentCard.positionInsideList = this.y;
-
-        server.moveCard(adjacentCard);
+        currentCardObject.positionInsideList = y;
+        currentCardObject = server.moveCard(currentCardObject);
     }
 
     /**
-     * Getter for the currently highlighted card
-     * @return the currently highlighted card
+     * Setter for the currently highlighted card container
+     * @param currentCard the currently highlighted card container
      */
-    public AnchorPane getCurrentCard() {
-        return currentCard;
+    public void setCurrentCard(AnchorPane currentCard) {
+        this.currentCard = currentCard;
     }
 
     /**
      * Setter for the currently highlighted card
-     * @param currentCard the currently highlighted card
+     * @param cards the currently highlighted card
      */
-    public void setCurrentCard(AnchorPane currentCard) {
-        this.currentCard = currentCard;
+    public void setCurrentCardObject(Cards cards) {
+        this.currentCardObject = cards;
     }
 }

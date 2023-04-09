@@ -72,9 +72,6 @@ public class BoardCtrl {
         listCards = new ArrayList<>();
         this.board = board;
 
-        shortcuts=new Shortcuts(mainCtrl, server, this);
-        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
-
         if(!serverURLS.contains(server.getServer())) {
             serverURLS.add(server.getServer());
             webSocketLists();
@@ -193,12 +190,16 @@ public class BoardCtrl {
         firstRow.getChildren().clear();
         board.lists = server.getListsByBoard(board.id);
 
-        shortcuts=new Shortcuts(mainCtrl, server, this);
+        Cards currentCardObject = null;
+        if(shortcuts != null)
+            currentCardObject = shortcuts.getCurrentCardObject();
+        shortcuts=new Shortcuts(mainCtrl, server, this, currentCardObject);
         mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
 
         for (Lists list : board.lists) {
             addNewList(list);
         }
+
     }
 
     /**
@@ -556,8 +557,12 @@ public class BoardCtrl {
 
         blanket.setId("card"+Long.toString(c.id));
         blanket.setOnMouseEntered(shortcuts::onMouseHover);
+        blanket.getProperties().put("card", c);
 
-        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
+        if(c.equals(shortcuts.getCurrentCardObject())) {
+            shortcuts.setCurrentCard(blanket);
+            shortcuts.highlightCurrentCard();
+        }
 
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
@@ -566,13 +571,6 @@ public class BoardCtrl {
         newCard.getChildren().addAll(deleteCard, card, blanket);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
-
-        if(shortcuts.getCurrentCard()!=null &&
-                newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
-            blanket.setStyle("-fx-border-color: red; -fx-border-style:solid; " +
-                    "-fx-border-radius: 4;");
-            shortcuts.setCurrentCard(blanket);
-        }
 
         if(c.positionInsideList > 5){
             Double prevHeight = anchor.getMinHeight();
@@ -770,8 +768,7 @@ public class BoardCtrl {
      * Exits the specific board to show board overview
      */
     public void exitBoard() {
-
-        shortcuts = new Shortcuts(mainCtrl, server, this);
+        shortcuts.setCurrentCardObject(null);
         mainCtrl.showBoardOverview();
     }
 
