@@ -1,4 +1,4 @@
-# Meeting Week 7
+# Meeting Week 8
 
 ### Chair: Ioana Forfota
 ### Minute Taker: Lazar Polovina
