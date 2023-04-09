@@ -98,8 +98,8 @@ public class TagsCtrl {
      */
     public AnchorPane createNewTag(Tags tag){
         AnchorPane tagBody = new AnchorPane();
-        tagBody.setPrefWidth(125.6);
-        tagBody.setPrefHeight(28);
+        tagBody.setMinWidth(125.6);
+        tagBody.setMinHeight(28);
 
         tagBody.setStyle("-fx-background-radius: 4; -fx-background-color: " + tag.backgroundColor);
 

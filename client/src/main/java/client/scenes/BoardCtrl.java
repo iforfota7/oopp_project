@@ -568,6 +568,10 @@ public class BoardCtrl {
             shortcuts.setCurrentCard(blanket);
         }
 
+        if(c.positionInsideList > 5){
+            Double prevHeight = anchor.getMinHeight();
+            anchor.setMinHeight(prevHeight + 47);
+        }
         anchor.getChildren().add(c.positionInsideList+ 2, newCard);
     }
 

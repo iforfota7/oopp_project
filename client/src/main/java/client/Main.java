@@ -97,10 +97,10 @@ public class Main extends Application {
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
         mainCtrl.initializeAdmin(confirmAdmin);
-
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl, addTagToCard);
         primaryStage.setOnCloseRequest(e -> {
            board.getKey().stop();
         });
+
     }
 }

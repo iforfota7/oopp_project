@@ -15,8 +15,8 @@
  */
 package client.scenes;
 
-import commons.Cards;
 import client.scenes.config.Shortcuts;
+import commons.Cards;
 import commons.Tags;
 import commons.User;
 import commons.Boards;
