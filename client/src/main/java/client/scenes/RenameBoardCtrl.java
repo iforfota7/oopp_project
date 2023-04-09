@@ -48,6 +48,7 @@ public class RenameBoardCtrl {
                 boardName.setText("");
                 mainCtrl.closeSecondaryStage();
                 boardOverviewCtrl.refresh();
+                warning.setVisible(false);
             } catch (Exception e) {
                 warning.setVisible(true);
             }
