@@ -38,16 +38,20 @@ public class RenameBoardCtrl {
     @FXML
     void saveNewBoard(){
         warning.setVisible(false);
-        try{
-            Boards board = boardOverviewCtrl.getCurrentBoard();
-            board.name = boardName.getText();
-            server.renameBoard(board);
-            boardName.setText("");
-            mainCtrl.closeSecondaryStage();
-            boardOverviewCtrl.refresh();
-        }
-        catch(Exception E){
-            warning.setVisible(true);
+        Boards board = boardOverviewCtrl.getCurrentBoard();
+        String name = boardName.getText();
+        if(name == null || name.equals("")) warning.setVisible(true);
+        else {
+            try {
+                board.name = name;
+                server.renameBoard(board);
+                boardName.setText("");
+                mainCtrl.closeSecondaryStage();
+                boardOverviewCtrl.refresh();
+                warning.setVisible(false);
+            } catch (Exception e) {
+                warning.setVisible(true);
+            }
         }
     }
 
