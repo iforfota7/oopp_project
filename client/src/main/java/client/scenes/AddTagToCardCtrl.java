@@ -160,7 +160,6 @@ public class AddTagToCardCtrl {
         newTag.setId("tag"+t.id);
 
         tagList.getChildren().add(newTag);
-        cardDetailsCtrl.changes = true;
     }
 
     /**
