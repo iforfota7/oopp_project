@@ -56,7 +56,6 @@ public class Main extends Application {
     public void start(Stage primaryStage)  throws IOException {
                   var selectServer = FXML.load(SelectServerCtrl.class,
                 "client", "scenes", "SelectServer.fxml");
-        // List rename&delete&add scene loader
         var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RnList.fxml" );
         var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
         var addList = FXML.load(AdListCtrl.class,"client", "scenes", "AdList.fxml" );
@@ -77,19 +76,19 @@ public class Main extends Application {
         var helpScene = FXML.load(HelpCtrl.class, "client", "scenes", "Help.fxml");
         var helpOverviewScene = FXML.load(HelpCtrl.class, "client", "scenes", "HelpOverview.fxml");
         var helpShortcuts = FXML.load(HelpCtrl.class, "client", "scenes", "HelpShortcuts.fxml");
-
         var userDetails = FXML.load(UserDetailsCtrl.class, "client", "scenes",
                 "UserDetails.fxml");
-
+        var customization = FXML.load(CustomizationCtrl.class,
+                "client","scenes","Customization.fxml");
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
-
         var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "TagsController.fxml");
         var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "TagDetail.fxml");
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
         var addTagToCard = FXML.load(AddTagToCardCtrl.class,
                 "client", "scenes", "AddTagToCard.fxml");
-
+        var cardCustomization = FXML.load(CardCustomizationCtrl.class,
+                        "client", "scenes", "CardCustomization.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
                 boardOverview, addBoard, joinBoard, userDetails, renameBoard);
@@ -98,9 +97,9 @@ public class Main extends Application {
         mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
         mainCtrl.initializeAdmin(confirmAdmin);
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl, addTagToCard);
+        mainCtrl.initializeCustomization(customization,cardCustomization);
         primaryStage.setOnCloseRequest(e -> {
            board.getKey().stop();
         });
-
     }
 }
