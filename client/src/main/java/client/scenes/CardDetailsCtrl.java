@@ -49,7 +49,8 @@ public class CardDetailsCtrl {
     private Cards openedCard;
     private Boards board;
     private boolean sceneOpened = false;
-    private boolean changes = false;
+    public boolean changes = false;
+    private int initialTags;
     private List<String> serverURLS;
 
     /**
@@ -78,6 +79,12 @@ public class CardDetailsCtrl {
             serverURLS.add(server.getServer());
             websocketConfig();
         }
+        changes = false;
+        if(openedCard != null){
+            if(openedCard.tags != null) {
+                initialTags = openedCard.tags.size();
+            }
+        }
         warning.setVisible(false);
     }
 
@@ -95,6 +102,7 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id && sceneOpened)
                         setOpenedCard(c);
+                    initialTags = openedCard.tags.size();
                 }
             });
         });
@@ -186,10 +194,15 @@ public class CardDetailsCtrl {
             changes = true;
         }
 
+        if(openedCard.tags.size() != initialTags){
+            changes = true;
+        }
+
         if(changes){
             mainCtrl.showConfirmCloseCard();
         }
         else {
+            changes = false;
             close();
         }
     }
