@@ -619,7 +619,7 @@ public class BoardCtrl {
         cardBody.setEffect(innerShadow);
 
         HBox cardOverviewInfo = newCardOverviewBody(c);
-        HBox cardTags = newCardTagsBody();
+        HBox cardTags = newCardTagsBody(c);
         cardTags.setStyle("-fx-background-color: " + colors[0] +
                 "; -fx-background-radius: 4;");
         cardBody.getChildren().addAll(cardOverviewInfo, cardTags);
@@ -884,7 +884,7 @@ public class BoardCtrl {
                 setStyle("-fx-background-color: " + board.boardBgColor + ";");
         boardName.getScene().getRoot()
                 .setStyle("-fx-background-color: " + board.boardBgColor + ";");
-        scrollPane.setStyle("-fx-background: " + board.boardBgColor + ";");
+//        scrollPane.setStyle("-fx-background: " + board.boardBgColor + ";");
         boardName.setStyle("-fx-text-fill: " + board.boardFtColor  + ";");
     }
 
