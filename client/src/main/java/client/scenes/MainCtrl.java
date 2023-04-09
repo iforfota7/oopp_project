@@ -550,6 +550,9 @@ public class MainCtrl {
      */
     public void closeSecondaryStage(){
         secondaryStage.close();
+        if(thirdStage != null && thirdStage.getScene().equals(confirmCloseCard)){
+            thirdStage.close();
+        }
     }
 
     /**
@@ -557,10 +560,12 @@ public class MainCtrl {
      * a card without saving its modifications
      */
     public void showConfirmCloseCard(){
-        thirdStage = new Stage();
-        thirdStage.setTitle("Confirm closing");
-        thirdStage.setScene(confirmCloseCard);
-        thirdStage.show();
+        if(thirdStage==null || !thirdStage.isShowing()){
+            thirdStage = new Stage();
+            thirdStage.setTitle("Confirm closing");
+            thirdStage.setScene(confirmCloseCard);
+            thirdStage.show();
+        }
     }
 
     /**

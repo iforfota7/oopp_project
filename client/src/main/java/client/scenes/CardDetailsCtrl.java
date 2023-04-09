@@ -233,9 +233,6 @@ public class CardDetailsCtrl {
             }
         }
 
-        System.out.println("Initial tags: " + initialTags.toString());
-        System.out.println("Now tags: " + openedCard.tags.toString());
-
         if(changesInTitleOrDescription || changesFromSubtasks || changesFromTags){
             mainCtrl.showConfirmCloseCard();
         }
