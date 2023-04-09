@@ -3,10 +3,7 @@ package client.scenes;
 import client.scenes.config.TagsCardDetails;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Boards;
-import commons.Cards;
-import commons.Lists;
-import commons.Subtask;
+import commons.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -52,6 +49,7 @@ public class CardDetailsCtrl {
     private Cards openedCard;
     private Boards board;
     private boolean sceneOpened = false;
+    private boolean changes = false;
     private List<String> serverURLS;
 
     /**
@@ -171,6 +169,7 @@ public class CardDetailsCtrl {
 
         server.renameCard(openedCard);
         sceneOpened = false;
+        changes = false;
         mainCtrl.closeSecondaryStage();
     }
 
@@ -182,7 +181,28 @@ public class CardDetailsCtrl {
      */
     @FXML
     public void closeCardDetails(){
-        mainCtrl.showConfirmCloseCard();
+        if(!openedCard.title.equals(cardTitleInput.getText()) ||
+                !openedCard.description.equals(description.getText())) {
+            changes = true;
+        }
+
+        if(changes){
+            mainCtrl.showConfirmCloseCard();
+        }
+        else {
+            close();
+        }
+    }
+
+    /**
+     * Simply closes the cardDetails scene without any warning, as no modifications
+     * has been made and need to be saved
+     */
+    public void close(){
+        sceneOpened = false;
+        changes = false;
+        mainCtrl.closeSecondaryStage();
+        mainCtrl.showBoard(board);
     }
 
     /**
@@ -202,7 +222,7 @@ public class CardDetailsCtrl {
      * once the user has pressed the 'close' button on the card details scene
      */
     @FXML
-    public void closeDefinitive(){
+    public void closeWithoutSaving(){
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
         mainCtrl.closeThirdStage();
@@ -215,6 +235,10 @@ public class CardDetailsCtrl {
      *
      */
     public void refreshOpenedCard() {
+        if(!openedCard.title.equals(cardTitleInput.getText()) ||
+            !openedCard.description.equals(description.getText())) {
+            changes = true;
+        }
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
@@ -343,7 +367,7 @@ public class CardDetailsCtrl {
      * @param actionEvent Object containing information about the action event
      */
     public void swapSubtasks(ActionEvent actionEvent) {
-//        changes = true;
+        changes = true;
         Button arrow = (Button)actionEvent.getTarget();
         int position = Integer.parseInt(arrow.getId());
         List<Subtask> subtaskList = openedCard.subtasks;
@@ -384,6 +408,7 @@ public class CardDetailsCtrl {
         inputsOpen++;
 
         if(inputsOpen == 1){
+            changes = true;
             taskList.getChildren().add(inputSubtask);
         }
         else {
@@ -456,6 +481,7 @@ public class CardDetailsCtrl {
 
         Subtask subtask = (Subtask) toDelete.getProperties().get("subtask");
         openedCard.subtasks.remove(subtask);
+        changes = true;
         refreshOpenedCard();
     }
 
@@ -475,6 +501,7 @@ public class CardDetailsCtrl {
         if(inputsOpen == 1){
             // will inform the createSubtask method that the new subtask is actually a renamed one
             rename = true;
+            changes = true;
             toRename = (Subtask) currentSubtask.getProperties().get("subtask");
             subtaskName.setText(toRename.title);
 
@@ -508,6 +535,8 @@ public class CardDetailsCtrl {
         int subtaskIndex = openedCard.subtasks.indexOf(subtask);
         Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
         updatedSubtask.checked = checkBox.isSelected();
+
+        changes = true;
         refreshOpenedCard();
     }
 
