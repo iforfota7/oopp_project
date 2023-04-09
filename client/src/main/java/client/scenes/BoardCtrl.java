@@ -44,7 +44,7 @@ public class BoardCtrl {
     @FXML
     private Label boardName;
 
-    private Boards board;
+     Boards board;
 
     List<VBox> listContainers;
     List<AnchorPane> listCards;
@@ -84,12 +84,15 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(board.id == b.id){
+
+                    if(mainCtrl.isBoard(b)){
 
 
                         Alert e = new Alert(Alert.AlertType.WARNING,
                     "This board has been deleted by admin");
                         e.show();
+                        mainCtrl.closeSecondaryStage();
+                        mainCtrl.closeThirdStage();
                         mainCtrl.showBoardOverview();
 
 

@@ -48,7 +48,6 @@ public class BoardController {
         //used for long polling
         listeners.put(key, b -> {
             res.setResult(ResponseEntity.ok(b));
-
         });
 
         res.onCompletion(()->{
