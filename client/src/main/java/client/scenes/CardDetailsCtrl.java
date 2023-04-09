@@ -49,9 +49,12 @@ public class CardDetailsCtrl {
     private Cards openedCard;
     private Boards board;
     private boolean sceneOpened = false;
-    public boolean changes = false;
+    public boolean changesFromTags;
+    private boolean changesFromSubtasks;
+    private boolean changesInTitleOrDescription;
     private List<String> serverURLS;
     private List<Tags> initialTags;
+    private List<Subtask> initialSubtasks;
 
     /**
      * Initializes the card details controller object
@@ -79,12 +82,22 @@ public class CardDetailsCtrl {
             serverURLS.add(server.getServer());
             websocketConfig();
         }
-        changes = false;
+
+        changesFromTags = false;
+        changesFromSubtasks = false;
+
         initialTags = new ArrayList<>();
+        initialSubtasks = new ArrayList<>();
+
         if(openedCard != null){
             if(openedCard.tags != null) {
                 for(Tags t : openedCard.tags){
                     initialTags.add(t);
+                }
+            }
+            if(openedCard.subtasks != null){
+                for(Subtask s : openedCard.subtasks){
+                    initialSubtasks.add(s);
                 }
             }
         }
@@ -179,7 +192,9 @@ public class CardDetailsCtrl {
 
         server.renameCard(openedCard);
         sceneOpened = false;
-        changes = false;
+        changesFromTags = false;
+        changesFromSubtasks = false;
+        changesInTitleOrDescription = false;
         mainCtrl.closeSecondaryStage();
     }
 
@@ -191,22 +206,40 @@ public class CardDetailsCtrl {
      */
     @FXML
     public void closeCardDetails(){
+
         if(!openedCard.title.equals(cardTitleInput.getText()) ||
                 !openedCard.description.equals(description.getText())) {
-            changes = true;
+            changesInTitleOrDescription = true;
+        }
+        else{
+            changesInTitleOrDescription = false;
         }
 
         if(openedCard.tags != null){
             if(!openedCard.tags.equals(initialTags)){
-                changes = true;
+                changesFromTags = true;
+            }
+            else {
+                changesFromTags = false;
             }
         }
 
-        if(changes){
+        if(openedCard.subtasks != null){
+            if(!openedCard.subtasks.equals(initialSubtasks)){
+                changesFromSubtasks = true;
+            }
+            else {
+                changesFromSubtasks = false;
+            }
+        }
+
+        System.out.println("Initial tags: " + initialTags.toString());
+        System.out.println("Now tags: " + openedCard.tags.toString());
+
+        if(changesInTitleOrDescription || changesFromSubtasks || changesFromTags){
             mainCtrl.showConfirmCloseCard();
         }
         else {
-            changes = false;
             close();
         }
     }
@@ -217,7 +250,6 @@ public class CardDetailsCtrl {
      */
     public void close(){
         sceneOpened = false;
-        changes = false;
         mainCtrl.closeSecondaryStage();
         mainCtrl.showBoard(board);
     }
@@ -254,7 +286,6 @@ public class CardDetailsCtrl {
     public void refreshOpenedCard() {
         if(!openedCard.title.equals(cardTitleInput.getText()) ||
             !openedCard.description.equals(description.getText())) {
-            changes = true;
         }
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
@@ -384,7 +415,6 @@ public class CardDetailsCtrl {
      * @param actionEvent Object containing information about the action event
      */
     public void swapSubtasks(ActionEvent actionEvent) {
-        changes = true;
         Button arrow = (Button)actionEvent.getTarget();
         int position = Integer.parseInt(arrow.getId());
         List<Subtask> subtaskList = openedCard.subtasks;
@@ -425,7 +455,6 @@ public class CardDetailsCtrl {
         inputsOpen++;
 
         if(inputsOpen == 1){
-            changes = true;
             taskList.getChildren().add(inputSubtask);
         }
         else {
@@ -445,6 +474,8 @@ public class CardDetailsCtrl {
     public void createSubtask(){
         subtaskName.setStyle("");
         warningSubtask.setVisible(false);
+
+        changesFromSubtasks = true;
 
         if(subtaskName.getText().equals("")){
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
@@ -498,7 +529,6 @@ public class CardDetailsCtrl {
 
         Subtask subtask = (Subtask) toDelete.getProperties().get("subtask");
         openedCard.subtasks.remove(subtask);
-        changes = true;
         refreshOpenedCard();
     }
 
@@ -518,7 +548,6 @@ public class CardDetailsCtrl {
         if(inputsOpen == 1){
             // will inform the createSubtask method that the new subtask is actually a renamed one
             rename = true;
-            changes = true;
             toRename = (Subtask) currentSubtask.getProperties().get("subtask");
             subtaskName.setText(toRename.title);
 
@@ -553,7 +582,6 @@ public class CardDetailsCtrl {
         Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
         updatedSubtask.checked = checkBox.isSelected();
 
-        changes = true;
         refreshOpenedCard();
     }
 
