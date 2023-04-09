@@ -884,7 +884,7 @@ public class BoardCtrl {
                 setStyle("-fx-background-color: " + board.boardBgColor + ";");
         boardName.getScene().getRoot()
                 .setStyle("-fx-background-color: " + board.boardBgColor + ";");
-//        scrollPane.setStyle("-fx-background: " + board.boardBgColor + ";");
+        scrollPane.setStyle("-fx-background: " + board.boardBgColor + ";");
         boardName.setStyle("-fx-text-fill: " + board.boardFtColor  + ";");
     }
 
