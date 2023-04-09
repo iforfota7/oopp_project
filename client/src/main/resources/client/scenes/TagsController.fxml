@@ -17,9 +17,9 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <ScrollPane layoutX="69.0" layoutY="81.0" prefHeight="260.0" prefWidth="158.0" vbarPolicy="ALWAYS">
+      <ScrollPane hbarPolicy="NEVER" layoutX="69.0" layoutY="81.0" prefHeight="260.0" prefWidth="158.0" vbarPolicy="ALWAYS">
          <content>
-            <VBox fx:id="tagList" prefHeight="335.0" prefWidth="143.0" spacing="6.0">
+            <VBox fx:id="tagList" prefHeight="257.0" prefWidth="143.0" spacing="6.0">
                <padding>
                   <Insets left="9.0" right="9.0" top="15.0" />
                </padding>

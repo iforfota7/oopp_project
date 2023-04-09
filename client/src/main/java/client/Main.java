@@ -53,10 +53,9 @@ public class Main extends Application {
      * @throws IOException possibly throws this exception
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        var selectServer = FXML.load(SelectServerCtrl.class,
+    public void start(Stage primaryStage)  throws IOException {
+                  var selectServer = FXML.load(SelectServerCtrl.class,
                 "client", "scenes", "SelectServer.fxml");
-
         // List rename&delete&add scene loader
         var renameList = FXML.load(RnListCtrl.class,"client", "scenes", "RnList.fxml" );
         var deleteList = FXML.load(DeListCtrl.class,"client", "scenes", "DeList.fxml" );
@@ -85,11 +84,11 @@ public class Main extends Application {
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
         var renameBoard = FXML.load(RenameBoardCtrl.class, "client", "scenes", "RnBoard.fxml");
 
-        var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
-
-        var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
-
+        var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "TagsController.fxml");
+        var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "TagDetail.fxml");
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
+        var addTagToCard = FXML.load(AddTagToCardCtrl.class,
+                "client", "scenes", "AddTagToCard.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initializeBoard(board, selectServer, confirmUsername,
@@ -97,10 +96,11 @@ public class Main extends Application {
         mainCtrl.initializeLists(primaryStage, renameList, deleteList, addList);
         mainCtrl.initializeCards(cardDetails, addCard, deleteCard);
         mainCtrl.initializeUtils(helpScene, helpOverviewScene, helpShortcuts);
-
-
         mainCtrl.initializeAdmin(confirmAdmin);
-        mainCtrl.initializeTags(tagDetails, addTag, tagsControl);
+        mainCtrl.initializeTags(tagDetails, addTag, tagsControl, addTagToCard);
+        primaryStage.setOnCloseRequest(e -> {
+           board.getKey().stop();
+        });
 
     }
 }
