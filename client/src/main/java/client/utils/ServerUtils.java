@@ -98,6 +98,7 @@ public class ServerUtils {
                 .post(Entity.entity(password, APPLICATION_JSON), String.class);
         return x.equals("true");
     }
+
     /**
      * Find whether a board exists or not using its ID
      * @param boardName the id of the board that is being searched for
@@ -432,6 +433,7 @@ public class ServerUtils {
                 .get(new GenericType<User>() {
                 }).isAdmin;
     }
+
     /**
      * Find the board from the server by boardID and return the Board
      * @param boardID ID of the board to be found.
@@ -443,6 +445,7 @@ public class ServerUtils {
                 request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 get(new GenericType<Boards>(){});
     }
+
     /**
      * By sending the current Board to the server, compare and store the new color information,
      * and update the database

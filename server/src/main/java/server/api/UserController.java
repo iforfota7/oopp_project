@@ -52,6 +52,7 @@ public class UserController {
         if(repo.findById(username).isEmpty()) return null;
         return repo.findById(username).get();
     }
+
     /**
      * Update method for the user
      * @param user the user

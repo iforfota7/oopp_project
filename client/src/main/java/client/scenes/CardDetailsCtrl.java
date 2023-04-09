@@ -504,8 +504,10 @@ public class CardDetailsCtrl {
     public void setBoard(Boards board) {
         this.board = board;
     }
-    @FXML
-    void customization() {
+    /**
+     * The trigger event of the button opens the personalization selection window for that card
+     */
+    public void customization() {
         mainCtrl.closeSecondaryStage();
         mainCtrl.openCardCustomization();
 

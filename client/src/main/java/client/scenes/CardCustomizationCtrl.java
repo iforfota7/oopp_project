@@ -29,7 +29,8 @@ public class CardCustomizationCtrl {
      * @param mainCtrl                  The master controller, which will later be replaced
      *                                  by a class of window controllers
      * @param server                    Used for connection to backend and websockets to function
-     * @param cardDetailsCtrl           Used for cardDetailsCtrl to function
+     * @param cardDetailsCtrl           Used to pass the information of
+     *                                  the current card to the scene
      */
     @Inject
     public CardCustomizationCtrl(BoardCtrl boardCtrl, MainCtrl mainCtrl,

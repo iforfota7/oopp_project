@@ -36,13 +36,9 @@ public class BoardCtrl {
     private final CardDetailsCtrl cardDetailsCtrl;
 
     @FXML
-    private Button tags;
-    @FXML
-    private AnchorPane rootContainer;
-    @FXML
     private HBox firstRow;
     @FXML
-    public Label boardName;
+    private Label boardName;
     @FXML
     public ScrollPane scrollPane;
 
@@ -211,8 +207,8 @@ public class BoardCtrl {
      *                         the card details scene for a card
      */
     @Inject
-    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server, CardDetailsCtrl
-            cardDetailsCtrl){
+    public BoardCtrl(MainCtrl mainCtrl, ServerUtils server,
+                     CardDetailsCtrl cardDetailsCtrl){
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
@@ -280,7 +276,7 @@ public class BoardCtrl {
     }
 
     /**
-     * Method closes the secondary scene, cancelling to delete
+     * Method closes the secondary scene, cancelling the deletion
      */
     void undeleteL() {
         mainCtrl.closeSecondaryStage();
@@ -692,7 +688,7 @@ public class BoardCtrl {
         descriptionExistence.setAlignment(Pos.CENTER_LEFT);
         descriptionExistence.setPrefWidth(50.4);
         descriptionExistence.setPrefHeight(7);
-        descriptionExistence.setPadding(new Insets(0, -6, -8, 2));
+        descriptionExistence.setPadding(new Insets(0, -7, -8, 1));
 
         cardDetailsOverview.setAlignment(Pos.TOP_LEFT);
         cardDetailsOverview.getChildren().addAll(descriptionExistence, subtasksCount,

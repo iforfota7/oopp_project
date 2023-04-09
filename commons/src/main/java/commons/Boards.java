@@ -75,10 +75,17 @@ public class Boards {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Boards)) return false;
         Boards boards = (Boards) o;
-        return id == boards.id && Objects.equals(name, boards.name)
-                && Objects.equals(lists, boards.lists);
+        return id == boards.id && Objects.equals(name, boards.name) &&
+                Objects.equals(lists, boards.lists) &&
+                Objects.equals(boardBgColor, boards.boardBgColor) &&
+                Objects.equals(boardFtColor, boards.boardFtColor) &&
+                Objects.equals(listBgColor, boards.listBgColor) &&
+                Objects.equals(listFtColor, boards.listFtColor) &&
+                Objects.equals(defaultColor, boards.defaultColor) &&
+                Objects.equals(colorPreset, boards.colorPreset) &&
+                Objects.equals(tags, boards.tags);
     }
 
     /**
@@ -87,7 +94,8 @@ public class Boards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lists);
+        return Objects.hash(id, name, lists, boardBgColor, boardFtColor,
+                listBgColor, listFtColor, defaultColor, colorPreset, tags);
     }
 
     /**

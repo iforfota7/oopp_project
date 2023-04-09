@@ -80,7 +80,7 @@ public class CustomizationCtrl {
                 colorPicker.setValue(Color.web(color));
             }
         }
-        checkTaskColor();
+        checkColor();
     }
 
     /**
@@ -157,7 +157,7 @@ public class CustomizationCtrl {
      * and generate a visual button window to display it in the customization section.
      * All information is mapped to colorPickers through Strings for display.
      */
-    void checkTaskColor() {
+    void checkColor() {
         createChoiceBox();
         for (Map.Entry<String, String> entry : currentColorPreset.entrySet()) {
             String name = entry.getKey();
@@ -191,7 +191,7 @@ public class CustomizationCtrl {
                     colorPicker1, colorPicker2, deleteButton);
             taskColor.getChildren().add(taskBox);
         }
-        HBox addTaskBox = createAddTaskBox();
+        HBox addTaskBox = createAddColorBox();
         taskColor.getChildren().add(addTaskBox);
     }
 
@@ -299,7 +299,7 @@ public class CustomizationCtrl {
      * then refresh the display.
      * @return New Button Entity
      */
-    private HBox createAddTaskBox() {
+    private HBox createAddColorBox() {
         HBox addTaskBox = new HBox();
         addTaskBox.setId("newTask");
         addTaskBox.setAlignment(Pos.CENTER_LEFT);
@@ -352,7 +352,7 @@ public class CustomizationCtrl {
         String value = color1.toString() + " " + color2.toString();
         currentColorPreset.put(name, value);
         boardCtrl.getCurrentBoard().colorPreset = currentColorPreset;
-        checkTaskColor();
+        checkColor();
     }
 
     /**
