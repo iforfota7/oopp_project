@@ -97,7 +97,7 @@ public class UserController {
     @ResponseBody
     public List<Boards> getAllBoards(@PathVariable String username) {
         List<Boards> boards = repo.findById(username).get().boards;
-        msgs.convertAndSend("/topic/users/boards", boards.get(0));
+        msgs.convertAndSend("/topic/users/boards", "deleted");
         return boards;
     }
 

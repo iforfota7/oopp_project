@@ -30,8 +30,7 @@ public class BoardOverviewCtrl{
     private int numberOfBoards = 0;
     private List<String> serverURLS;
 
-    Font font = Font.font("Bell MT", FontWeight.NORMAL,
-            FontPosture.REGULAR, 19);
+    Font font;
 
 
     /**
@@ -101,6 +100,15 @@ public class BoardOverviewCtrl{
             });
         });
 
+        server.registerForMessages("/topic/users/boards", String.class, message ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
         server.registerForMessages("/topic/users/update", User.class, user ->{
             Platform.runLater(new Runnable() {
                 @Override
@@ -109,6 +117,7 @@ public class BoardOverviewCtrl{
                 }
             });
         });
+
     }
 
     @FXML
@@ -129,12 +138,20 @@ public class BoardOverviewCtrl{
 
     /**
      * Creates a list of boards holding all labels
-     * Initializes the onMouseClicked event for these labels
+     * Also initialises the font for the boardOverview.fxml
+     * And initialises the websockets if the server isn't in serverURLS yet
      */
     public void init() {
         boardsList = new ArrayList<>();
-        websocketBoards();
-        websocketUsers();
+        font = Font.font("Bell MT", FontWeight.NORMAL,
+                FontPosture.REGULAR, 19);
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketBoards();
+            websocketUsers();
+        }
+
         refresh();
 
     }
