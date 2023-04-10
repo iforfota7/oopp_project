@@ -426,6 +426,15 @@ public class MainCtrl {
         thirdStage.show();
     }
 
+    /**
+     * Method for setting the shortcut activated to true
+     * in add tag to card controller
+     *
+     */
+    public void shortcutsActivatedAddTagToCard() {
+        addTagToCardCtrl.setShortcutActivated(true);
+    }
+
 
     /**
      * Closes an instance of a third stage
