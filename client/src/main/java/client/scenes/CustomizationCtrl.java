@@ -300,11 +300,11 @@ public class CustomizationCtrl {
      * @return New Button Entity
      */
     private HBox createAddColorBox() {
-        HBox addTaskBox = new HBox();
-        addTaskBox.setId("newTask");
-        addTaskBox.setAlignment(Pos.CENTER_LEFT);
-        addTaskBox.setSpacing(10);
-        addTaskBox.setStyle("-fx-background-color: #e6f2ff; " +
+        HBox addBox = new HBox();
+        addBox.setId("new");
+        addBox.setAlignment(Pos.CENTER_LEFT);
+        addBox.setSpacing(10);
+        addBox.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 5px;");
 
         TextField nameInput = new TextField();
@@ -333,13 +333,13 @@ public class CustomizationCtrl {
                         "Please input name!", ButtonType.OK);
                 alert.showAndWait();
             } else {
-                addTaskColor(taskName, colorPicker1.getValue(), colorPicker2.getValue());
+                addColor(taskName, colorPicker1.getValue(), colorPicker2.getValue());
                 nameInput.setText("");
             }
         });
 
-        addTaskBox.getChildren().addAll(nameInput, colorPicker1, colorPicker2, addButton);
-        return addTaskBox;
+        addBox.getChildren().addAll(nameInput, colorPicker1, colorPicker2, addButton);
+        return addBox;
     }
 
     /**
@@ -348,7 +348,7 @@ public class CustomizationCtrl {
      * @param color1 new before color of new task color preset
      * @param color2 new finish color of new task color preset
      */
-    void addTaskColor(String name, Color color1, Color color2) {
+    void addColor(String name, Color color1, Color color2) {
         String value = color1.toString() + " " + color2.toString();
         currentColorPreset.put(name, value);
         boardCtrl.getCurrentBoard().colorPreset = currentColorPreset;
@@ -363,7 +363,7 @@ public class CustomizationCtrl {
         for (Node node : taskColor.getChildren()) {
             if (node instanceof HBox) {
                 HBox taskBox = (HBox) node;
-                if (!"newTask".equals(taskBox.getId())) {
+                if (!"new".equals(taskBox.getId())) {
                     Label nameLabel = (Label) taskBox.getChildren().get(0);
                     ColorPicker colorPicker1 = (ColorPicker) taskBox.getChildren().get(2);
                     ColorPicker colorPicker2 = (ColorPicker) taskBox.getChildren().get(3);
