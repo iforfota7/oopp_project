@@ -57,8 +57,8 @@ public class CardDetailsCtrl {
     public Boards board;
     private boolean sceneOpened = false;
     private List<String> serverURLS;
-
     public String colors;
+
     /**
      * Initializes the card details controller object
      * An instance of TagsCardDetails is initialized
