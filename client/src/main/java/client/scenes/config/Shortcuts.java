@@ -27,8 +27,7 @@ public class Shortcuts {
      */
     public void activateShortcut(KeyEvent keyEvent) {
 
-        if(keyEvent.getCode() == KeyCode.H)
-            openHelpScene();
+        openHelpScene(keyEvent);
 
         moveHighlight(keyEvent);
 
@@ -300,10 +299,12 @@ public class Shortcuts {
     /**
      * Opens a help scene showing all available shortcuts if
      * the pressed key was "H"
+     * @param keyEvent an object containing information about the pressed key
      */
-    public void openHelpScene() {
+    public void openHelpScene(KeyEvent keyEvent) {
 
-        mainCtrl.showHelpShortcutsScene();
+        if(keyEvent.getCode() == KeyCode.H)
+            mainCtrl.showHelpShortcutsScene();
     }
 
     /**

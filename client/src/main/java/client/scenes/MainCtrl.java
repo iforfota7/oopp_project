@@ -101,6 +101,9 @@ public class MainCtrl {
         this.boardOverview = new Scene(boardOverview.getValue());
         this.boardOverviewCtrl = boardOverview.getKey();
 
+        shortcuts = new Shortcuts(this, boardCtrl);
+        this.boardOverview.setOnKeyPressed(shortcuts::openHelpScene);
+
         this.addBoard = new Scene(addBoard.getValue());
         this.addBoardCtrl = addBoard.getKey();
 
