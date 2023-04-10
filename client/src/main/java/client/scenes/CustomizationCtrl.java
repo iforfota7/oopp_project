@@ -104,13 +104,21 @@ public class CustomizationCtrl {
      * close this window, and finally refresh the displayed board colors.
      */
     @FXML
-    void saveCustomization() {
-        saveCardColor();
-        readCustomizationChange();
-        setBoardToDB();
+    void close() {
+        saveCustomization();
         boardCtrl.refresh();
         mainCtrl.closeSecondaryStage();
 
+    }
+
+    /**
+     * Method used for saving customization
+     *
+     */
+    public void saveCustomization() {
+        saveCardColor();
+        readCustomizationChange();
+        setBoardToDB();
     }
 
 
@@ -188,6 +196,7 @@ public class CustomizationCtrl {
             deleteButton.setOnAction(e -> {
                 currentColorPreset.remove(name);
                 taskColor.getChildren().remove(taskBox);
+                saveCustomization();
             });
             taskBox.getChildren().addAll(nameLabel, editButton,
                     colorPicker1, colorPicker2, deleteButton);
@@ -238,6 +247,7 @@ public class CustomizationCtrl {
                 taskBox.getChildren().removeAll(saveRename, newName);
                 taskBox.getChildren().add(0, nameLabel);
                 taskBox.getChildren().add(1, editButton);
+                saveCustomization();
             }
         });
         return editButton;
@@ -355,6 +365,7 @@ public class CustomizationCtrl {
         currentColorPreset.put(name, value);
         boardCtrl.getCurrentBoard().colorPreset = currentColorPreset;
         checkColor();
+        saveCustomization();
     }
 
     /**

@@ -571,6 +571,11 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Customization for "+name);
         secondaryStage.setScene(customization);
+
+        secondaryStage.setOnCloseRequest(event -> {
+            customizationCtrl.close();
+        });
+
         customizationCtrl.setColorPickers(boardCtrl.getCurrentBoard());
         secondaryStage.show();
     }
