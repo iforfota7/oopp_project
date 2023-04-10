@@ -9,17 +9,18 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.NewCardCtrl">
-    <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="37.0" layoutY="100.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="154.0">
+    <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="72.0" layoutY="100.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="154.0">
         <font>
             <Font name="Avenir Book" size="13.0" />
         </font>
     </TextField>
     <Accordion layoutX="85.0" layoutY="149.0" />
-    <Button fx:id="saveDetails" layoutX="211.0" layoutY="101.0" mnemonicParsing="false" onAction="#save" text="Save" />
+    <Button fx:id="saveDetails" layoutX="160.0" layoutY="140.0" mnemonicParsing="false" onAction="#save" text="Save" />
     <Label layoutX="90.0" layoutY="53.0" text="Create New Card">
         <font>
             <Font name="Hiragino Sans GB W3" size="16.0" />
         </font>
     </Label>
-    <Text fx:id="warning" fill="RED" layoutX="88.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
+    <Text fx:id="warning" fill="RED" layoutX="88.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
+   <Button layoutX="100.0" layoutY="140.0" mnemonicParsing="false" onAction="#close" text="Cancel" />
 </AnchorPane>

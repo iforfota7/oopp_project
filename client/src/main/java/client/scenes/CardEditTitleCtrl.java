@@ -39,7 +39,6 @@ public class CardEditTitleCtrl {
      */
     @FXML
     void save() {
-        warning.setVisible(false);
 
         if(cardTitleInput.getText().isBlank()) {
             warning.setVisible(true);
@@ -53,10 +52,20 @@ public class CardEditTitleCtrl {
     }
 
     /**
+     * Closes the window for editing a card's title.
+     */
+    @FXML
+    void close() {
+        mainCtrl.closeSecondaryStage();
+    }
+
+    /**
      * Sets the card object to the provided card
      * @param card the card to be edited
      */
     public void init(Cards card) {
         this.card = card;
+        warning.setVisible(false);
+        cardTitleInput.setText(card.title);
     }
 }

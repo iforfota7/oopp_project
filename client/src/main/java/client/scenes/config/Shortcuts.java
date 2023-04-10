@@ -105,7 +105,7 @@ public class Shortcuts {
         this.boardCtrl = boardCtrl;
         this.currentCardObject = currentCardObject;
 
-        board = boardCtrl.getBoard();
+        board = boardCtrl.getCurrentBoard();
         currentBoard = boardCtrl.getFirstRow();
 
         setPositionForCard();
@@ -322,13 +322,13 @@ public class Shortcuts {
     }
 
     /**
-     * Closes the card details of the  currently highlighted card.
+     * Closes the card details of the currently highlighted card.
      * @param keyEvent an object containing information about the pressed key
      */
     public void closeCardDetails(KeyEvent keyEvent) {
 
         if(keyEvent.getCode()==KeyCode.ESCAPE) {
-            mainCtrl.closeSecondaryStage();
+            boardCtrl.getCardDetailsCtrl().closeCardDetails();
         }
         else if(keyEvent.getCode()==KeyCode.ENTER) {
             boardCtrl.getCardDetailsCtrl().save();

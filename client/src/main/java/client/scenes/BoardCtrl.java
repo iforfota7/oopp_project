@@ -875,8 +875,8 @@ public class BoardCtrl {
     }
 
     /**
-     * confirm the board elements.
-     * @return current board
+     * Gets the board object of the current board
+     * @return this board's board object
      */
     public Boards getCurrentBoard() {
         return board;
@@ -908,14 +908,6 @@ public class BoardCtrl {
      */
     public void openTag(){
         mainCtrl.showTagControl(board);
-    }
-
-    /**
-     * Gets the board object of the current board
-     * @return this board's board object
-     */
-    public Boards getBoard() {
-        return board;
     }
 
     /**

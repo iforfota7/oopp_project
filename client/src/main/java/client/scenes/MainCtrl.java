@@ -577,6 +577,7 @@ public class MainCtrl {
      */
     public void closeSecondaryStage(){
         secondaryStage.close();
+        boardCtrl.getFirstRow().requestFocus();
     }
 
     /**
