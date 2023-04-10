@@ -493,6 +493,7 @@ public class CardDetailsCtrl {
             // therefore, the position and checked value of the subtask can be different from
             // the initial ones when a subtask is just created
             if(rename){
+                openedCard.subtasks.remove(toRename);
                 position = toRename.position;
                 checked = toRename.checked;
             }
@@ -554,7 +555,6 @@ public class CardDetailsCtrl {
             int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
             taskList.getChildren().set(indexInVbox, inputSubtask);
 
-            openedCard.subtasks.remove(toRename);
         }
         else {
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
