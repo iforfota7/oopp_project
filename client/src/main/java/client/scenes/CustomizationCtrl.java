@@ -316,10 +316,25 @@ public class CustomizationCtrl {
                 Color color1 = ((ColorPicker) taskBox.getChildren().get(2)).getValue();
                 Color color2 = ((ColorPicker) taskBox.getChildren().get(3)).getValue();
                 currentColorPreset.put(inputName, hexToColor(color1) + " " + hexToColor(color2));
+                renamePreset(inputName);
                 saveCustomization();
             }
         });
         return editButton;
+    }
+
+    /**
+     * When a preset is renamed, it gets removed and then re-added
+     * This method makes sure that the color style of the cards
+     * is changed according to the renamed preset and not reset to default
+     *
+     * @param newName The new name of the preset
+     */
+    public void renamePreset(String newName) {
+        String defaultColor = currentBoard.defaultColor;
+        currentBoard.defaultColor = newName;
+        server.revertPreset(currentBoard);
+        currentBoard.defaultColor = defaultColor;
     }
 
     /**
