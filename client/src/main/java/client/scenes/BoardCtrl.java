@@ -347,7 +347,7 @@ public class BoardCtrl {
         Label listName = createListTitle(l.title);
         listName.setId("list_title_"+l.id);
         Font fontList = Font.font("Bell MT", FontWeight.NORMAL,
-                FontPosture.REGULAR, 17);;
+                FontPosture.REGULAR, 17);
         listName.setFont(fontList);
 
         headerList.getChildren().addAll(listName, listSeparator);

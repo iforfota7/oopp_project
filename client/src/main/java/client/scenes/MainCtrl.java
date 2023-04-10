@@ -28,7 +28,7 @@ import javafx.util.Pair;
 public class MainCtrl {
     private Stage primaryStage, secondaryStage, thirdStage;
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername;
+    private Scene cardDetails, newCard, confirmCloseCard, warningCardDeletion, confirmUsername;
     private Scene boardOverview, addBoard, renameBoard;
     private Scene tagControl, addTag, tagDetails, addTagToCard;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
@@ -144,10 +144,15 @@ public class MainCtrl {
      * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
      * @param deCardCtrl deCardCtrl parent pair for deCard scene
+     * @param confirmCloseCard confirmCloseCard parent pair for confirmCloseCard scene
+     * @param warningCardDeletion warningCardDeletion parent pair for
+     *                            WarningCardDeletion scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
                                 Pair<NewCardCtrl, Parent> newCardCtrl,
-                                Pair<DeCardCtrl, Parent> deCardCtrl) {
+                                Pair<DeCardCtrl, Parent> deCardCtrl,
+                                Pair<CardDetailsCtrl, Parent> confirmCloseCard,
+                                Pair<CardDetailsCtrl, Parent> warningCardDeletion) {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
@@ -157,6 +162,9 @@ public class MainCtrl {
 
         this.deleteCard = new Scene(deCardCtrl.getValue());
         this.deCardCtrl = deCardCtrl.getKey();
+
+        this.confirmCloseCard = new Scene(confirmCloseCard.getValue());
+        this.warningCardDeletion = new Scene(warningCardDeletion.getValue());
     }
 
     /**
@@ -243,9 +251,7 @@ public class MainCtrl {
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) {secondaryStage.close();}
 
-
         boardCtrl.initialize(b);
-
     }
 
     /**
@@ -326,7 +332,7 @@ public class MainCtrl {
         // card details are not saved if the window is closed
         // using the 'x' button
         secondaryStage.setOnCloseRequest(event -> {
-            cardDetailsCtrl.close();
+            cardDetailsCtrl.closeCardDetails();
         });
         secondaryStage.setTitle("Card Details");
         secondaryStage.setResizable(false);
@@ -561,6 +567,30 @@ public class MainCtrl {
      */
     public void closeSecondaryStage(){
         secondaryStage.close();
+    }
+
+    /**
+     * Shows in a third window a warning that asks for confirmation for closing
+     * a card without saving its modifications
+     */
+    public void showConfirmCloseCard(){
+        if(thirdStage==null || !thirdStage.isShowing()){
+            thirdStage = new Stage();
+            thirdStage.setTitle("Confirm closing");
+            thirdStage.setScene(confirmCloseCard);
+            thirdStage.show();
+        }
+    }
+
+    /**
+     * Shows in a second window a warning regarding the fact that the current
+     * card the user was viewing has been deleted
+     */
+    public void showWarningCardDeletion(){
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Warning deleted card");
+        secondaryStage.setScene(warningCardDeletion);
+        secondaryStage.show();
     }
     /**
      * Open a new window that displays the customization scene

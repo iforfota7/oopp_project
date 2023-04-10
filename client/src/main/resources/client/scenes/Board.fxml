@@ -34,7 +34,7 @@
          </font>
       </Label>
       <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0" />
-      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="890.6" layoutY="543.0" mnemonicParsing="false" onAction="#addList" prefHeight="28.0" prefWidth="30.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="79.0">
+      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="879.6" layoutY="543.0" mnemonicParsing="false" onAction="#addList" prefHeight="28.0" prefWidth="30.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="90.0">
          <font>
             <Font name="Bell MT" size="20.0" />
          </font>
@@ -42,7 +42,7 @@
             <Insets bottom="1.0" right="7.3" top="-1.0" />
          </padding>
       </Button>
-      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="937.0" layoutY="541.4" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="29.0" prefWidth="32.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="31.0">
+      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="937.0" layoutY="541.4" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="30.0" prefWidth="45.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Help" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="31.0">
          <font>
             <Font name="Bell MT" size="12.0" />
          </font>
