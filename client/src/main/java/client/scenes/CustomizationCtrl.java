@@ -113,6 +113,7 @@ public class CustomizationCtrl {
 
     }
 
+
     /**
      * Synchronize and save the user's modified colors, and synchronize them back to the board.
      */
@@ -174,6 +175,7 @@ public class CustomizationCtrl {
 
             ColorPicker colorPicker1= createColorPicker(Color.web(colors[0]));
             ColorPicker colorPicker2= createColorPicker(Color.web(colors[1]));
+
             Button deleteButton = new Button("x");
             deleteButton.setPrefSize(35, 24);
             deleteButton.setPadding(new Insets(0, 5, 0, 4));
@@ -207,10 +209,10 @@ public class CustomizationCtrl {
         TextField newName = new TextField();
         newName.setPromptText("Rename");
         newName.setPrefWidth(90);
-        Button checkButton = new Button("S");
-        checkButton.setPrefSize(35, 23);
-        checkButton.setPadding(new Insets(2, 8, 1, 6));
-        checkButton.setStyle("-fx-background-color: #66cc66; " +
+        Button saveRename = new Button("S");
+        saveRename.setPrefSize(35, 23);
+        saveRename.setPadding(new Insets(2, 8, 1, 6));
+        saveRename.setStyle("-fx-background-color: #66cc66; " +
                 "-fx-background-radius: 3; -fx-text-fill: white;");
         Button editButton = new Button("R");
         editButton.setPrefSize(35, 23);
@@ -220,9 +222,9 @@ public class CustomizationCtrl {
         editButton.setOnAction(e -> {
             taskBox.getChildren().removeAll(editButton, nameLabel);
             taskBox.getChildren().add(0, newName);
-            taskBox.getChildren().add(1, checkButton);
+            taskBox.getChildren().add(1, saveRename);
         });
-        checkButton.setOnAction(e -> {
+        saveRename.setOnAction(e -> {
             String inputName = newName.getText();
             if (inputName.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -230,12 +232,12 @@ public class CustomizationCtrl {
                 alert.setHeaderText("Name cannot be empty.");
                 alert.showAndWait();
             } else {
+                currentColorPreset.remove(nameLabel.getText());
                 nameLabel.setText(inputName);
                 newName.clear();
-                taskBox.getChildren().removeAll(checkButton, newName);
+                taskBox.getChildren().removeAll(saveRename, newName);
                 taskBox.getChildren().add(0, nameLabel);
                 taskBox.getChildren().add(1, editButton);
-
             }
         });
         return editButton;

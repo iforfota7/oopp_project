@@ -191,7 +191,7 @@ public class CardDetailsCtrl {
 
     /**
      * Used to refresh the details of the opened card
-     * after something related to subtasks has changed
+     * after something related to it has changed
      *
      */
     public void refreshOpenedCard() {
@@ -508,7 +508,6 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.closeSecondaryStage();
         mainCtrl.openCardCustomization();
 
     }

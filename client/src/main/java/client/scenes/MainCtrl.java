@@ -567,6 +567,7 @@ public class MainCtrl {
      * @param name current board name
      */
     public void showCustomization(String name) {
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
         secondaryStage = new Stage();
         secondaryStage.setTitle("Customization for "+name);
         secondaryStage.setScene(customization);
@@ -578,11 +579,12 @@ public class MainCtrl {
      *  Open a new window that displays the CardCustomization scene
      */
     public void openCardCustomization() {
-        secondaryStage = new Stage();
-        secondaryStage.setTitle("Customization for Card");
-        secondaryStage.setScene(cardCustomization);
+        if(thirdStage != null && thirdStage.isShowing()) return;
+        thirdStage = new Stage();
+        thirdStage.setTitle("Customization for Card");
+        thirdStage.setScene(cardCustomization);
         cardCustomizationCtrl.checkColorPreset();
-        secondaryStage.show();
+        thirdStage.show();
     }
 
 }
