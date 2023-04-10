@@ -252,10 +252,6 @@ public class CardDetailsCtrl {
             changesInCustomization = false;
         }
 
-        System.out.println(changesInTitleOrDescription);
-        System.out.println(changesFromSubtasks);
-        System.out.println(changesFromTags);
-
         if(changesInTitleOrDescription || changesFromSubtasks
                 || changesFromTags || changesInCustomization){
             mainCtrl.showConfirmCloseCard();
