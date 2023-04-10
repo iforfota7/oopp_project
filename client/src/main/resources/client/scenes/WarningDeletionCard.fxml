@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #f9f9d2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
+   <children>
+      <Label layoutX="103.0" layoutY="49.0" text="This card has been deleted!">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="84.0" layoutY="82.0" text="You will be renturned to the board.">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Button layoutX="160.0" layoutY="134.0" mnemonicParsing="false" onAction="#closeWarningCardDeletion" prefHeight="26.0" prefWidth="78.0" style="-fx-background-color: #f7f7ba;" text="Close">
+         <effect>
+            <InnerShadow>
+               <color>
+                  <Color red="0.9368420839309692" green="0.9011033177375793" blue="0.5794541835784912" />
+               </color>
+            </InnerShadow>
+         </effect>
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+   </children>
+   <effect>
+      <InnerShadow height="29.0" radius="14.0" width="29.0">
+         <color>
+            <Color red="0.6631578803062439" green="0.6224678158760071" blue="0.31438595056533813" />
+         </color>
+      </InnerShadow>
+   </effect>
+</AnchorPane>
