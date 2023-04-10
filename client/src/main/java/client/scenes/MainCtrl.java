@@ -15,25 +15,24 @@
  */
 package client.scenes;
 
+import client.scenes.config.Shortcuts;
+import commons.Cards;
 import commons.Tags;
 import commons.User;
 import commons.Boards;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
     private Stage primaryStage, secondaryStage, thirdStage;
-
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmUsername;
+    private Scene cardDetails, newCard, confirmCloseCard, warningCardDeletion, confirmUsername;
     private Scene boardOverview, addBoard, renameBoard;
-    private Scene tagControl, addTag, tagDetails;
+    private Scene tagControl, addTag, tagDetails, addTagToCard;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
-    private Scene confirmAdmin, help;
+    private Scene confirmAdmin, help, helpOverview, helpShortcuts;
 
     private SelectServerCtrl selectServerCtrl;
     private ConfirmUsernameCtrl confirmUsernameCtrl;
@@ -59,8 +58,8 @@ public class MainCtrl {
     private AddTagCtrl addTagCtrl;
     private TagsCtrl tagsCtrl;
     private TagDetailsCtrl tagDetailsCtrl;
-
-
+    private AddTagToCardCtrl addTagToCardCtrl;
+    private Shortcuts shortcuts;
 
     /**
      * Initialize method for board related scenes
@@ -119,6 +118,7 @@ public class MainCtrl {
                                  Pair<AdListCtrl, Parent> addList) {
 
         this.primaryStage = primaryStage;
+        primaryStage.setResizable(false);
 
         this.renameList = new Scene(renameList.getValue());
         this.rnListCtrl = renameList.getKey();
@@ -138,10 +138,15 @@ public class MainCtrl {
      * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
      * @param deCardCtrl deCardCtrl parent pair for deCard scene
+     * @param confirmCloseCard confirmCloseCard parent pair for confirmCloseCard scene
+     * @param warningCardDeletion warningCardDeletion parent pair for
+     *                            WarningCardDeletion scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
                                 Pair<NewCardCtrl, Parent> newCardCtrl,
-                                Pair<DeCardCtrl, Parent> deCardCtrl) {
+                                Pair<DeCardCtrl, Parent> deCardCtrl,
+                                Pair<CardDetailsCtrl, Parent> confirmCloseCard,
+                                Pair<CardDetailsCtrl, Parent> warningCardDeletion) {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
@@ -151,25 +156,40 @@ public class MainCtrl {
 
         this.deleteCard = new Scene(deCardCtrl.getValue());
         this.deCardCtrl = deCardCtrl.getKey();
+
+        this.confirmCloseCard = new Scene(confirmCloseCard.getValue());
+        this.warningCardDeletion = new Scene(warningCardDeletion.getValue());
     }
 
     /**
      * Initialise method for 'useful' scenes
      * @param helpCtrl helpCtrl parent pair for Help scene
+     * @param helpOverviewCtrl helpOverviewCtrl parent pair for Help scene in board overview
+     * @param helpShortcutsCtrl helpShortcutsCtrl parent pair for keyboard shortcuts Help scene
      */
-    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl){
+    public void initializeUtils(Pair<HelpCtrl, Parent> helpCtrl,
+                                Pair<HelpCtrl, Parent> helpOverviewCtrl,
+                                Pair<HelpCtrl, Parent> helpShortcutsCtrl){
         this.help = new Scene(helpCtrl.getValue());
         this.helpCtrl = helpCtrl.getKey();
+
+        this.helpOverview = new Scene(helpOverviewCtrl.getValue()); // uses same ctrl as help
+        this.helpShortcuts = new Scene(helpShortcutsCtrl.getValue()); // uses same ctrl as help
+
+        shortcuts = new Shortcuts(this);
+        helpShortcuts.setOnKeyPressed(shortcuts::closeHelpScene);
     }
 
     /**
      * @param tagDetails tagDetailsCtrl parent pair for tagDetails scene
      * @param addTagCtrl newTagCtrl parent pair for addTag
      * @param tagControl tagControl parent pair for TagsController
+     * @param addTagToCard addTagToCardCtrl parent pair for addTagToCard
      */
     public void initializeTags(Pair<TagDetailsCtrl, Parent> tagDetails,
                                Pair<AddTagCtrl, Parent> addTagCtrl,
-                               Pair<TagsCtrl, Parent> tagControl){
+                               Pair<TagsCtrl, Parent> tagControl,
+                               Pair<AddTagToCardCtrl, Parent> addTagToCard){
         this.tagDetails = new Scene(tagDetails.getValue());
         this.tagDetailsCtrl = tagDetails.getKey();
 
@@ -178,6 +198,9 @@ public class MainCtrl {
 
         this.tagControl = new Scene(tagControl.getValue());
         this.tagsCtrl = tagControl.getKey();
+
+        this.addTagToCard = new Scene(addTagToCard.getValue());
+        this.addTagToCardCtrl = addTagToCard.getKey();
 
     }
 
@@ -207,7 +230,8 @@ public class MainCtrl {
         boardCtrl.addBoardToUser(b);
         primaryStage.setTitle("Board");
         primaryStage.setScene(board);
-        if(secondaryStage!=null && secondaryStage.isShowing()) secondaryStage.close();
+        if(secondaryStage!=null && secondaryStage.isShowing()) {secondaryStage.close();}
+
         boardCtrl.initialize(b);
     }
 
@@ -218,6 +242,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(renameBoard);
         secondaryStage.setTitle("Rename board!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -237,6 +262,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(renameList);
         secondaryStage.setTitle("Rename list!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -248,6 +274,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(this.deleteList);
         secondaryStage.setTitle("Delete List!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -259,6 +286,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(addList);
         secondaryStage.setTitle("New List!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -270,16 +298,8 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(confirmUsername);
         secondaryStage.setTitle("Confirm Username!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
-    }
-
-    /**
-     * Adds a new list to the board
-     * @param list the list to be added to the board
-     * @param row the hbox to which the list should be added (the row)
-     */
-    public void addNewList(VBox list, HBox row){
-        row.getChildren().add(list);
     }
 
     /**
@@ -293,9 +313,10 @@ public class MainCtrl {
         // card details are not saved if the window is closed
         // using the 'x' button
         secondaryStage.setOnCloseRequest(event -> {
-            cardDetailsCtrl.close();
+            cardDetailsCtrl.closeCardDetails();
         });
         secondaryStage.setTitle("Card Details");
+        secondaryStage.setResizable(false);
         cardDetailsCtrl.init();
         secondaryStage.show();
     }
@@ -312,6 +333,7 @@ public class MainCtrl {
         thirdStage = new Stage();
         thirdStage.setScene(tagDetails);
         thirdStage.setTitle("Tag Details");
+        thirdStage.setResizable(false);
         thirdStage.show();
         tagDetailsCtrl.initialize(t, board);
     }
@@ -324,6 +346,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(newCard);
         secondaryStage.setTitle("Add new Card");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -337,6 +360,7 @@ public class MainCtrl {
         thirdStage = new Stage();
         thirdStage.setScene(addTag);
         thirdStage.setTitle("Add new Tag");
+        thirdStage.setResizable(false);
         thirdStage.show();
         addTagCtrl.initialize(board);
     }
@@ -351,8 +375,26 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(tagControl);
         secondaryStage.setTitle("Tags Control");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
         tagsCtrl.initialize(b);
+    }
+
+    /**
+     * Opens the add tag to card scene
+     *
+     * @param openedCard Reference to the card object
+     * @param board Reference to the board object
+     * @param cardDetailsCtrl Reference to the card details
+     *                        controller
+     */
+    public void showAddTagToCard(Cards openedCard, Boards board, CardDetailsCtrl cardDetailsCtrl) {
+        if(thirdStage != null && thirdStage.isShowing()) return;
+        addTagToCardCtrl.init(openedCard, board, cardDetailsCtrl);
+        thirdStage = new Stage();
+        thirdStage.setScene(addTagToCard);
+        thirdStage.setTitle("Add Tag to Card");
+        thirdStage.show();
     }
 
 
@@ -371,6 +413,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(deleteCard);
         secondaryStage.setTitle("Delete Card");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -388,6 +431,8 @@ public class MainCtrl {
         }
         boardOverviewCtrl.init();
         primaryStage.setTitle("Board Overview"+titleLabel);
+        primaryStage.setX(300);
+        primaryStage.setY(100);
         primaryStage.setScene(boardOverview);
     }
 
@@ -407,6 +452,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(addBoard);
         secondaryStage.setTitle("Add a new Board!");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -419,6 +465,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setScene(confirmAdmin);
         secondaryStage.setTitle("Admin LogIn");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -430,19 +477,47 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Join board by ID");
         secondaryStage.setScene(joinBoardByID);
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
 
     /**
      * Shows in a second window the guide to use the application
-     * after pressing the 'H' button -> help
+     * in the board after pressing the 'help' button
      */
     public void showHelpScene(){
         if(secondaryStage != null && secondaryStage.isShowing()) return;
         secondaryStage = new Stage();
         secondaryStage.setTitle("Help");
         secondaryStage.setScene(help);
+        secondaryStage.setResizable(false);
+        secondaryStage.show();
+    }
+
+    /**
+     * Shows in a second window the guide to use the application
+     * in the board Overview after pressing the 'help' button
+     */
+    public void showHelpOverviewScene(){
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Help");
+        secondaryStage.setScene(helpOverview);
+        secondaryStage.setResizable(false);
+        secondaryStage.show();
+    }
+
+
+    /**
+     * Shows in a second window the list of available keyboard shortcuts
+     * after pressing 'H' anywhere in the board scene.
+     */
+    public void showHelpShortcutsScene(){
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Keyboard shortcuts");
+        secondaryStage.setScene(helpShortcuts);
         secondaryStage.show();
     }
 
@@ -456,8 +531,16 @@ public class MainCtrl {
         userDetailsCtrl.setUser(currentUser);
         secondaryStage = new Stage();
         secondaryStage.setScene(userDetails);
-        secondaryStage.setTitle("User Details");
+        secondaryStage.setResizable(false);
         secondaryStage.show();
+    }
+
+    /**
+     * Getter for the board scene
+     * @return the board scene
+     */
+    public Scene getBoard() {
+        return board;
     }
 
     /**
@@ -465,5 +548,29 @@ public class MainCtrl {
      */
     public void closeSecondaryStage(){
         secondaryStage.close();
+    }
+
+    /**
+     * Shows in a third window a warning that asks for confirmation for closing
+     * a card without saving its modifications
+     */
+    public void showConfirmCloseCard(){
+        if(thirdStage==null || !thirdStage.isShowing()){
+            thirdStage = new Stage();
+            thirdStage.setTitle("Confirm closing");
+            thirdStage.setScene(confirmCloseCard);
+            thirdStage.show();
+        }
+    }
+
+    /**
+     * Shows in a second window a warning regarding the fact that the current
+     * card the user was viewing has been deleted
+     */
+    public void showWarningCardDeletion(){
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Warning deleted card");
+        secondaryStage.setScene(warningCardDeletion);
+        secondaryStage.show();
     }
 }
