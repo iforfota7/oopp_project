@@ -56,10 +56,12 @@ public class CardDetailsCtrl {
     public boolean changesFromTags;
     private boolean changesFromSubtasks;
     private boolean changesInTitleOrDescription;
+    private boolean changesInCustomization;
     private List<String> serverURLS;
     public String colors;
     private List<Tags> initialTags;
     private List<Subtask> initialSubtasks;
+    private String initialCardColors;
 
     /**
      * Initializes the card details controller object
@@ -91,6 +93,7 @@ public class CardDetailsCtrl {
         changesFromTags = false;
         changesFromSubtasks = false;
         changesInTitleOrDescription = false;
+        changesInCustomization = false;
 
         initialTags = new ArrayList<>();
         initialSubtasks = new ArrayList<>();
@@ -108,6 +111,7 @@ public class CardDetailsCtrl {
                     initialSubtasks.add(subtask);
                 }
             }
+            initialCardColors = openedCard.colorStyle;
         }
         warning.setVisible(false);
     }
@@ -240,11 +244,20 @@ public class CardDetailsCtrl {
                 changesFromSubtasks = false;
             }
         }
+
+        if(!openedCard.colorStyle.equals(initialCardColors)){
+            changesInCustomization = true;
+        }
+        else{
+            changesInCustomization = false;
+        }
+
         System.out.println(changesInTitleOrDescription);
         System.out.println(changesFromSubtasks);
         System.out.println(changesFromTags);
 
-        if(changesInTitleOrDescription || changesFromSubtasks || changesFromTags){
+        if(changesInTitleOrDescription || changesFromSubtasks
+                || changesFromTags || changesInCustomization){
             mainCtrl.showConfirmCloseCard();
         }
         else {
@@ -299,12 +312,10 @@ public class CardDetailsCtrl {
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
         String[] colors = this.colors.split(" ");
-//        cardTitleInput.getScene().getRoot()
-//                .setStyle("-fx-background-color: " + colors[0] + ";");
         String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
         cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
-        cardTitleInput.setStyle("-fx-text-fill: " + colors[1] + ";");
-        description.setStyle("-fx-text-fill: " + colors[1] + ";");
+        cardTitleInput.setStyle("-fx-text-fill: " + newColors[1] + ";");
+        description.setStyle("-fx-text-fill: " + newColors[1] + ";");
     }
 
     /**
