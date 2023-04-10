@@ -167,7 +167,7 @@ public class CardController {
 
     /**
      * Each card that had its preset removed
-     * will revert back to the default preset
+     * will revert to the default preset
      *
      * @param board Board object used to obtain the map
      *              of presets and default preset
@@ -190,6 +190,19 @@ public class CardController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Method to find and return a card by its id
+     * @param cardId the id of the card to be found
+     * @return the card of cardId id
+     */
+    @GetMapping(path = "/get/{cardId}")
+    public ResponseEntity<Cards> getCardById(@PathVariable long cardId){
+        if(repo.findById(cardId).isEmpty())
+            return ResponseEntity.badRequest().build();
+        Cards card = repo.findById(cardId).get();
+        return ResponseEntity.ok(card);
     }
 
     /**
