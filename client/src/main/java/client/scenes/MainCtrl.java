@@ -396,7 +396,7 @@ public class MainCtrl {
      * Closes an instance of a third stage
      *
      */
-    public void closeThirdStage(){thirdStage.close();}
+    public void closeThirdStage(){if(thirdStage!=null)thirdStage.close();}
 
     /**
      * Opens a secondary window which asks for confirmation for
@@ -541,6 +541,7 @@ public class MainCtrl {
      * This method closes any general secondary stage
      */
     public void closeSecondaryStage(){
+        if(secondaryStage!=null)
         secondaryStage.close();
     }
     public boolean isBoard(Boards b){return this.boardCtrl.board.id == b.id && primaryStage.getScene().equals(board);}
