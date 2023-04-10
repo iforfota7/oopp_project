@@ -184,6 +184,9 @@ public class BoardCtrl {
         });
     }
 
+    /**
+     * This method configures websockets for the board
+     */
     public void webSocketsBoard() {
         server.registerForMessages("/topic/boards/setCss", Boards.class, board->{
             Platform.runLater(new Runnable() {
