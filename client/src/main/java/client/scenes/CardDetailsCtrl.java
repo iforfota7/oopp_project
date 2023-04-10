@@ -99,6 +99,7 @@ public class CardDetailsCtrl {
             if(openedCard.subtasks != null){
                 for(Subtask s : openedCard.subtasks){
                     Subtask subtask = new Subtask(s.title, s.checked, s.position);
+                    subtask.id = s.id;
                     initialSubtasks.add(subtask);
                 }
             }
