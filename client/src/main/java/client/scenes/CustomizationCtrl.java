@@ -3,6 +3,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,6 +50,7 @@ public class CustomizationCtrl {
     private ChoiceBox<?> choice;
     private boolean renameActive;
     private Boards currentBoard;
+    private List<String> serverURLS;
 
     /**
      * Initialize method for Customization related currentBoard
@@ -69,6 +71,11 @@ public class CustomizationCtrl {
         Map<String, String> idToColorMap = new HashMap<>();
         this.currentBoard = currentBoard;
 
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketConfig();
+        }
+
         idToColorMap.put("boardBgColor", currentBoard.boardBgColor);
         idToColorMap.put("boardFtColor", currentBoard.boardFtColor);
         idToColorMap.put("listBgColor", currentBoard.listBgColor);
@@ -88,6 +95,22 @@ public class CustomizationCtrl {
     }
 
     /**
+     * When the customization details of a board are changed
+     * by a user, they are synchronized with all other users
+     *
+     */
+    public void websocketConfig() {
+        server.registerForMessages("/topic/boards/setCss", Boards.class, board->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    setColorPickers(board);
+                }
+            });
+        });
+    }
+
+    /**
      * Auxiliary call to mainCtrl Inject function
      *
      * @param mainCtrl          The master controller, which will later be replaced
@@ -101,6 +124,7 @@ public class CustomizationCtrl {
         this.mainCtrl = mainCtrl;
         this.boardCtrl = boardCtrl;
         this.server = server;
+        serverURLS = new ArrayList<>();
 
     }
     /**
@@ -151,7 +175,6 @@ public class CustomizationCtrl {
         boardFtColor.setValue(Color.rgb(0, 0, 0));
 
         saveCustomization();
-        setColorPickers(currentBoard);
     }
 
     /**
@@ -163,7 +186,6 @@ public class CustomizationCtrl {
         listFtColor.setValue(Color.rgb(0, 0, 0));
 
         saveCustomization();
-        setColorPickers(currentBoard);
     }
 
     /**
@@ -213,7 +235,6 @@ public class CustomizationCtrl {
             deleteButton.setOnAction(e -> {
                 currentColorPreset.remove(name);
                 saveCustomization();
-                setColorPickers(boardCtrl.getCurrentBoard());
             });
             taskBox.getChildren().addAll(nameLabel, editButton,
                     colorPicker1, colorPicker2, deleteButton);
@@ -239,7 +260,6 @@ public class CustomizationCtrl {
                 hexToColor(color1) + " " + hexToColor(color2));
 
         saveCustomization();
-        setColorPickers(boardCtrl.getCurrentBoard());
     }
 
     /**
@@ -294,7 +314,6 @@ public class CustomizationCtrl {
                 currentColorPreset.put(inputName, hexToColor(color1) + " " + hexToColor(color2));
 
                 saveCustomization();
-                setColorPickers(boardCtrl.getCurrentBoard());
             }
         });
         return editButton;
@@ -348,7 +367,6 @@ public class CustomizationCtrl {
         choiceBox.getSelectionModel().selectFirst();
         choiceBox.setOnAction(event -> {
             saveCustomization();
-            setColorPickers(boardCtrl.getCurrentBoard());
         });
     }
 
@@ -375,6 +393,7 @@ public class CustomizationCtrl {
         colorPicker1.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 3px;");
         ColorPicker colorPicker2 = new ColorPicker();
+        colorPicker2.setValue(Color.BLACK);
         colorPicker2.setMaxWidth(60);
         colorPicker2.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 3px;");
@@ -404,7 +423,6 @@ public class CustomizationCtrl {
                 currentColorPreset.put(taskName, hexToColor(color1) + " " + hexToColor(color2));
 
                 saveCustomization();
-                setColorPickers(boardCtrl.getCurrentBoard());
             }
         });
         addTaskBox.getChildren().addAll(nameInput, colorPicker1, colorPicker2, addButton);

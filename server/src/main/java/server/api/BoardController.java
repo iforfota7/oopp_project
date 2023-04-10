@@ -228,6 +228,8 @@ public class BoardController {
         savedBoard.colorPreset = boards.colorPreset;
         savedBoard.defaultColor = boards.defaultColor;
         Boards saved = repo.save(savedBoard);
+
+        msgs.convertAndSend("/topic/boards/setCss", saved);
         return ResponseEntity.ok(saved);
     }
 }
