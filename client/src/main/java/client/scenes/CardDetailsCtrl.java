@@ -41,6 +41,10 @@ public class CardDetailsCtrl {
     private TextField subtaskName;
     @FXML
     private Text warningSubtask;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button closeButton;
     private int inputsOpen = 0;
     private boolean rename = false;
 
@@ -49,11 +53,12 @@ public class CardDetailsCtrl {
     private TagsCardDetails tagsCardDetails;
 
     private Subtask toRename;
-    private Cards openedCard;
+    public Cards openedCard;
     private Boards board;
     private boolean sceneOpened = false;
     private List<String> serverURLS;
 
+    public String colors;
     /**
      * Initializes the card details controller object
      * An instance of TagsCardDetails is initialized
@@ -193,6 +198,11 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
+        String[] colors = this.colors.split(" ");
+        cardTitleInput.getScene().getRoot()
+                .setStyle("-fx-background-color: " + colors[0] + ";");
+        cardTitleInput.setStyle("-fx-text-fill: " + colors[1] + ";");
+        description.setStyle("-fx-text-fill: " + colors[1] + ";");
     }
 
     /**
@@ -493,6 +503,14 @@ public class CardDetailsCtrl {
      */
     public void setBoard(Boards board) {
         this.board = board;
+    }
+    /**
+     * The trigger event of the button opens the personalization selection window for that card
+     */
+    public void customization() {
+        mainCtrl.closeSecondaryStage();
+        mainCtrl.openCardCustomization();
+
     }
 
     /**
