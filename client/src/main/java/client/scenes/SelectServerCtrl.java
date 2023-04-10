@@ -53,6 +53,7 @@ public class SelectServerCtrl {
     }
 
     /**
+<<<<<<< HEAD
      * Setter method for current user primarily used for testing
      * @param user the user to be set to
      */
@@ -63,6 +64,15 @@ public class SelectServerCtrl {
      * @param text the text serverWarning should be set to
      */
     public void setServerWarning(Text text) {this.serverWarning = text; }
+
+    /**
+     * Method that sets currentUser to the user from the database
+     * with the currently used username in ServerUtils
+     */
+    public void updateCurrentUser(){
+        currentUser = server.findUser();
+    }
+
 
     /**
      * Method to be executed when connect button is clicked

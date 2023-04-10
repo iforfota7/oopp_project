@@ -12,16 +12,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SelectServerCtrlTest {
     private TestMainCtrl testMainCtrl;
-    private TestServerUtils testServerUtils;
-    private TestSelectServerCtrlServices testSelectServerCtrlServices;
+    private MockServerUtils mockServerUtils;
+    private MockSelectServerCtrlServices testSelectServerCtrlServices;
     private SelectServerCtrl sut;
 
     @BeforeEach
     public void setup() {
         testMainCtrl = new TestMainCtrl();
-        testServerUtils = new TestServerUtils();
-        testSelectServerCtrlServices = new TestSelectServerCtrlServices();
-        sut = new SelectServerCtrl(testServerUtils,testMainCtrl, testSelectServerCtrlServices);
+        mockServerUtils = new MockServerUtils();
+        testSelectServerCtrlServices = new MockSelectServerCtrlServices();
+        sut = new SelectServerCtrl(mockServerUtils,testMainCtrl, testSelectServerCtrlServices);
         sut.setCurrentUser(new User("test", new ArrayList<>(), false));
 
         Text text = new Text();

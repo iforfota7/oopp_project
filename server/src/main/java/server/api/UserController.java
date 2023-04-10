@@ -3,6 +3,7 @@ package server.api;
 import commons.Boards;
 import commons.User;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.UserRepository;
 
@@ -15,14 +16,17 @@ import java.util.Random;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserRepository repo;
+    private final SimpMessagingTemplate msgs;
     private String password;
 
     /**
      * Constructor method
      * @param repo the user repository
+     * @param msgs the messaging template for using websockets
      */
-    public UserController(UserRepository repo) {
+    public UserController(UserRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
+        this.msgs = msgs;
     }
 
     /**
@@ -61,6 +65,7 @@ public class UserController {
     @Transactional
     @PostMapping (path = {"/update", "/update/"})
     public User updateUser(@RequestBody User user){
+        msgs.convertAndSend("/topic/users/update", user);
         return repo.save(user);
     }
 
@@ -78,6 +83,8 @@ public class UserController {
         boolean admin = user.isAdmin;
         user.isAdmin = admin;
         repo.save(user);
+        msgs.convertAndSend("/topic/users/refresh", user);
+
         return ResponseEntity.ok().build();
     }
 
@@ -89,7 +96,9 @@ public class UserController {
     @GetMapping (path = "/boards/{username}")
     @ResponseBody
     public List<Boards> getAllBoards(@PathVariable String username) {
-        return repo.findById(username).get().boards;
+        List<Boards> boards = repo.findById(username).get().boards;
+        msgs.convertAndSend("/topic/users/boards", "deleted");
+        return boards;
     }
 
     /**

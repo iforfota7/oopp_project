@@ -5,6 +5,7 @@ import commons.Cards;
 import commons.Subtask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +13,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CardDetailsCtrlTest {
 
-    private TestServerUtils testServerUtils;
+    private MockServerUtils mockServerUtils;
     private TestMainCtrl testMainCtrl;
     private CardDetailsCtrl sut;
 
     @BeforeEach
     public void setUp() {
 
-        testServerUtils = new TestServerUtils();
+        mockServerUtils = new MockServerUtils();
         testMainCtrl = new TestMainCtrl();
-        sut = new CardDetailsCtrl(testServerUtils, testMainCtrl);
+        sut = new CardDetailsCtrl(mockServerUtils, testMainCtrl);
     }
 
     @Test

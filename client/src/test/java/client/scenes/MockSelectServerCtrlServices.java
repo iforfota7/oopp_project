@@ -5,7 +5,7 @@ import commons.User;
 
 import java.util.ArrayList;
 
-public class TestSelectServerCtrlServices extends SelectServerCtrlServices{
+public class MockSelectServerCtrlServices extends SelectServerCtrlServices{
 
     @Override
     public User checkConnection(String address, String username, ServerUtils server){

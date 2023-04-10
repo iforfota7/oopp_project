@@ -17,8 +17,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootElement" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ccffcc;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
-   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="127.0" layoutY="33.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="346.0" promptText="Input a card title" style="-fx-border-color: #b8e0b8;" AnchorPane.leftAnchor="127.0" AnchorPane.topAnchor="33.0">
+<AnchorPane fx:id="rootElement" prefHeight="471.0" prefWidth="625.0" style="-fx-background-color: #ccffcc;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
+   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="158.0" layoutY="37.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="346.0" promptText="Input a card title" style="-fx-border-color: #b8e0b8;" AnchorPane.leftAnchor="158.0" AnchorPane.topAnchor="37.0">
       <font>
          <Font name="Bell MT" size="17.0" />
       </font>
@@ -31,9 +31,9 @@
       </effect>
    </TextField>
    <Accordion layoutX="230.0" layoutY="90.0" />
-   <Button fx:id="saveDetails" layoutX="454.20000000000005" layoutY="334.0" mnemonicParsing="false" onAction="#save" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #81e481;" text="Save" AnchorPane.bottomAnchor="34.0" AnchorPane.rightAnchor="55.39999999999998" />
+   <Button fx:id="saveDetails" layoutX="507.0" layoutY="358.0" mnemonicParsing="false" onAction="#save" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #81e481;" text="Save" AnchorPane.bottomAnchor="81.0" />
    <Text fx:id="warning" fill="RED" layoutX="233.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
-   <TextArea fx:id="description" layoutX="35.0" layoutY="102.0" prefHeight="144.0" prefWidth="258.0" promptText="Description.." style="-fx-background-color: #ffffff; -fx-border-color: #b8e0b8; -fx-background-radius: 4; -fx-border-radius: 4;" wrapText="true" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="102.0">
+   <TextArea fx:id="description" layoutX="35.0" layoutY="103.0" prefHeight="220.0" prefWidth="266.0" promptText="Description.." style="-fx-background-color: #ffffff; -fx-border-color: #b8e0b8; -fx-background-radius: 4; -fx-border-radius: 4;" wrapText="true" AnchorPane.bottomAnchor="148.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="323.6" AnchorPane.topAnchor="103.0">
       <font>
          <Font name="Bell MT" size="15.0" />
       </font>
@@ -51,7 +51,7 @@
          </InnerShadow>
       </effect>
    </TextArea>
-   <VBox fx:id="taskList" layoutX="326.0" layoutY="102.0" prefHeight="214.0" prefWidth="235.0" style="-fx-background-color: #ffffff; -fx-border-color: #b8e0b8; -fx-border-radius: 4; -fx-background-radius: 4;" AnchorPane.bottomAnchor="84.0" AnchorPane.leftAnchor="326.0" AnchorPane.topAnchor="102.0">
+   <VBox fx:id="taskList" layoutX="337.0" layoutY="103.0" prefHeight="221.0" prefWidth="253.0" style="-fx-background-color: #ffffff; -fx-border-color: #b8e0b8; -fx-border-radius: 4; -fx-background-radius: 4;" AnchorPane.bottomAnchor="146.4" AnchorPane.leftAnchor="337.0" AnchorPane.topAnchor="103.0">
       <effect>
          <InnerShadow>
             <color>
@@ -62,7 +62,7 @@
       <children>
          <HBox prefHeight="21.0" prefWidth="214.0">
             <children>
-               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="206.0" text="Tasks:">
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="223.0" text="Tasks:">
                   <font>
                      <Font name="Bell MT" size="14.0" />
                   </font>
@@ -84,7 +84,7 @@
             <children>
                <AnchorPane prefHeight="50.0" prefWidth="188.0">
                   <children>
-                     <TextField fx:id="subtaskName" layoutX="10.0" layoutY="6.0" prefHeight="21.0" prefWidth="172.0">
+                     <TextField fx:id="subtaskName" layoutX="10.0" layoutY="6.0" prefHeight="24.0" prefWidth="200.0">
                         <font>
                            <Font size="11.0" />
                         </font>
@@ -107,24 +107,24 @@
                      <Insets bottom="-3.0" left="-3.0" right="-3.0" top="-3.0" />
                   </padding>
                   <HBox.margin>
-                     <Insets bottom="6.0" left="18.0" />
+                     <Insets bottom="6.0" left="13.0" />
                   </HBox.margin>
                </Button>
             </children>
          </HBox>
       </children>
    </VBox>
-   <GridPane fx:id="tagList" layoutX="35.0" layoutY="255.0" prefHeight="94.0" prefWidth="258.0" style="-fx-background-color: #ecf9ee; -fx-border-color: #b8e0b8; -fx-background-radius: 4; -fx-border-radius: 4;" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="35.0">
+   <GridPane fx:id="tagList" hgap="3.0" layoutX="35.0" layoutY="345.6" prefHeight="94.0" prefWidth="448.0" style="-fx-background-color: #ecf9ee; -fx-border-color: #b8e0b8; -fx-background-radius: 4; -fx-border-radius: 4;" vgap="3.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="35.0">
       <columnConstraints>
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="127.79998779296876" minWidth="10.0" prefWidth="62.599999999999994" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="127.79998779296876" minWidth="10.0" prefWidth="66.60000000000001" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="79.0000244140625" minWidth="10.0" prefWidth="67.19997558593748" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.20001220703125" minWidth="10.0" prefWidth="64.80002441406253" />
+         <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="112.5" />
+         <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="112.5" />
+         <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="112.5" />
+         <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="112.5" />
       </columnConstraints>
       <rowConstraints>
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
       </rowConstraints>
       <effect>
          <InnerShadow>
@@ -134,26 +134,29 @@
          </InnerShadow>
       </effect>
       <children>
-         <Label alignment="BASELINE_LEFT" prefHeight="32.0" prefWidth="76.0" text="Tags:">
+         <Label prefHeight="24.0" prefWidth="103.0" style="-fx-background-color: #daf1dd; -fx-border-color: #87c590; -fx-border-radius: 3;" text="Tags:">
             <font>
                <Font name="Bell MT" size="14.0" />
             </font>
-            <padding>
-               <Insets left="7.0" />
-            </padding>
             <GridPane.margin>
-               <Insets />
+               <Insets left="2.0" top="1.0" />
             </GridPane.margin>
+            <padding>
+               <Insets left="9.0" />
+            </padding>
          </Label>
-         <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="21.0" style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-background-color: #d0fbd0; -fx-border-color: #8cd98c;" text="+" GridPane.columnIndex="3" GridPane.rowIndex="2">
+         <Button mnemonicParsing="false" onAction="#showAddTagToCard" prefHeight="20.0" prefWidth="21.0" style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-background-color: #d0fbd0; -fx-border-color: #8cd98c;" text="+" GridPane.columnIndex="3" GridPane.rowIndex="2">
             <GridPane.margin>
-               <Insets bottom="3.0" left="35.0" />
+               <Insets left="83.0" right="-2.0" top="2.0" />
             </GridPane.margin>
             <padding>
                <Insets top="-1.0" />
             </padding>
          </Button>
       </children>
+      <padding>
+         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
    </GridPane>
-   <Button fx:id="saveDetails1" layoutX="342.0" layoutY="334.0" mnemonicParsing="false" onAction="#close" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #badeba;" text="Close" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="342.0" />
+   <Button fx:id="saveDetails1" layoutX="507.0" layoutY="398.0" mnemonicParsing="false" onAction="#close" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #badeba;" text="Close" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="507.0" />
 </AnchorPane>

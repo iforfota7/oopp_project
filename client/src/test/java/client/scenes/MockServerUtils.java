@@ -2,13 +2,14 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.User;
+import commons.Boards;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.util.function.Consumer;
 
-public class TestServerUtils extends ServerUtils {
+public class MockServerUtils extends ServerUtils {
 
     /**
      * Mocks the behaviour of the connect method in ServerUtils
@@ -74,4 +75,11 @@ public class TestServerUtils extends ServerUtils {
     public User refreshAdmin(User user){
         return user;
     }
+
+    /**
+     * Mocks the behaviour of the registerForUpdates method in ServerUtils
+     * @param consumer - Deleted board...
+     */
+    @Override
+    public void registerForUpdates(Consumer<Boards> consumer) {}
 }
