@@ -509,7 +509,6 @@ public class BoardCtrl {
             cardDetailsCtrl.setBoard(board);
             cardDetailsCtrl.setOpenedCard(openedCard);
             cardDetailsCtrl.colors = board.colorPreset.get(openedCard.colorStyle);
-            mainCtrl.closeSecondaryStage();
             mainCtrl.showCardDetail();
             cardDetailsCtrl.refreshOpenedCard();
         }
