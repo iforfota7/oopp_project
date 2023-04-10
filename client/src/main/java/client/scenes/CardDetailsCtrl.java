@@ -103,7 +103,9 @@ public class CardDetailsCtrl {
             }
             if(openedCard.subtasks != null){
                 for(Subtask s : openedCard.subtasks){
-                    initialSubtasks.add(s);
+                    Subtask subtask = new Subtask(s.title, s.checked, s.position);
+                    subtask.id = s.id;
+                    initialSubtasks.add(subtask);
                 }
             }
         }
@@ -501,6 +503,7 @@ public class CardDetailsCtrl {
             // therefore, the position and checked value of the subtask can be different from
             // the initial ones when a subtask is just created
             if(rename){
+                openedCard.subtasks.remove(toRename);
                 position = toRename.position;
                 checked = toRename.checked;
             }
@@ -562,7 +565,6 @@ public class CardDetailsCtrl {
             int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
             taskList.getChildren().set(indexInVbox, inputSubtask);
 
-            openedCard.subtasks.remove(toRename);
         }
         else {
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
