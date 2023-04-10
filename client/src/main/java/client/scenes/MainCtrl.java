@@ -232,9 +232,7 @@ public class MainCtrl {
         primaryStage.setScene(board);
         if(secondaryStage!=null && secondaryStage.isShowing()) {secondaryStage.close();}
 
-
         boardCtrl.initialize(b);
-
     }
 
     /**
@@ -550,9 +548,6 @@ public class MainCtrl {
      */
     public void closeSecondaryStage(){
         secondaryStage.close();
-        if(thirdStage != null && thirdStage.getScene().equals(confirmCloseCard)){
-            thirdStage.close();
-        }
     }
 
     /**

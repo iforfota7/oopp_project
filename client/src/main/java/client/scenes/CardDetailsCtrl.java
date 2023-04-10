@@ -85,6 +85,7 @@ public class CardDetailsCtrl {
 
         changesFromTags = false;
         changesFromSubtasks = false;
+        changesInTitleOrDescription = false;
 
         initialTags = new ArrayList<>();
         initialSubtasks = new ArrayList<>();
