@@ -137,7 +137,6 @@ public class CustomizationCtrl {
     @FXML
     void close() {
         saveCustomization();
-        boardCtrl.refresh();
         mainCtrl.closeSecondaryStage();
 
     }
@@ -196,7 +195,6 @@ public class CustomizationCtrl {
      */
     public void setBoardToDB() {
         server.setBoardCss(currentBoard);
-        boardCtrl.refresh();
     }
 
     /**

@@ -192,6 +192,7 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    server.revertPreset(board);
                     initialize(board);
                 }
             });
@@ -209,6 +210,7 @@ public class BoardCtrl {
         for (Lists list : board.lists) {
             addNewList(list);
         }
+
         refreshCustomization();
     }
 
@@ -621,9 +623,13 @@ public class BoardCtrl {
         innerShadow.setWidth(18.66);
         innerShadow.setHeight(18.66);
 
-        if(c.colorStyle == null || !(board.colorPreset.containsKey(c.colorStyle))){
-            currentCardColor = board.colorPreset.get(board.defaultColor);}
-        else{currentCardColor = board.colorPreset.get(c.colorStyle);}
+        if(c.colorStyle == null || !(board.colorPreset.containsKey(c.colorStyle))) {
+            currentCardColor = board.colorPreset.get(board.defaultColor);
+            c.colorStyle = null; // this will be setup later
+        }
+        else
+            currentCardColor = board.colorPreset.get(c.colorStyle);
+
         String[] colors = currentCardColor.split(" ");
         cardBody.setStyle("-fx-background-color: " +
                 colors[0] + ";-fx-background-radius: 4;");
@@ -657,13 +663,6 @@ public class BoardCtrl {
         cardTitle.setPrefHeight(31.2);
         cardTitle.setPadding(new Insets(0, 0, -2, 12));
         cardTitle.setFont(font);
-
-        if(c.colorStyle == null||!(board.colorPreset.containsKey(c.colorStyle))) {
-            currentCardColor = board.colorPreset.get(board.defaultColor);
-        }
-        else {
-            currentCardColor = board.colorPreset.get(c.colorStyle);
-        }
 
         String[] colors = currentCardColor.split(" ");
 
