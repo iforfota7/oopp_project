@@ -77,6 +77,7 @@ public class BoardCtrl {
             serverURLS.add(server.getServer());
             webSocketLists();
             webSocketCards();
+            webSocketsBoard();
 
         }
         refresh();
@@ -174,6 +175,17 @@ public class BoardCtrl {
         });
 
         server.registerForMessages("/topic/cards/add", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(board);
+                }
+            });
+        });
+    }
+
+    public void webSocketsBoard() {
+        server.registerForMessages("/topic/boards/setCss", Boards.class, board->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {

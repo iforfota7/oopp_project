@@ -240,9 +240,6 @@ public class CardDetailsCtrl {
                 changesFromSubtasks = false;
             }
         }
-        System.out.println(changesInTitleOrDescription);
-        System.out.println(changesFromSubtasks);
-        System.out.println(changesFromTags);
 
         if(changesInTitleOrDescription || changesFromSubtasks || changesFromTags){
             mainCtrl.showConfirmCloseCard();
