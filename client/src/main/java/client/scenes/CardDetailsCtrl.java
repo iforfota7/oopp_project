@@ -54,7 +54,7 @@ public class CardDetailsCtrl {
 
     private Subtask toRename;
     public Cards openedCard;
-    private Boards board;
+    public Boards board;
     private boolean sceneOpened = false;
     private List<String> serverURLS;
 
@@ -199,8 +199,10 @@ public class CardDetailsCtrl {
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
         String[] colors = this.colors.split(" ");
-        cardTitleInput.getScene().getRoot()
-                .setStyle("-fx-background-color: " + colors[0] + ";");
+//        cardTitleInput.getScene().getRoot()
+//                .setStyle("-fx-background-color: " + colors[0] + ";");
+        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
+        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
         cardTitleInput.setStyle("-fx-text-fill: " + colors[1] + ";");
         description.setStyle("-fx-text-fill: " + colors[1] + ";");
     }
