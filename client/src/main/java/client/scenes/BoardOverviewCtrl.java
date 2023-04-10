@@ -88,6 +88,15 @@ public class BoardOverviewCtrl{
                 }
             });
         });
+
+        server.registerForMessages("/topic/boards/setCss", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
     }
 
     private void websocketUsers(){
