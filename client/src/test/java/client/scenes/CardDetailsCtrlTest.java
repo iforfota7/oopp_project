@@ -14,15 +14,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class CardDetailsCtrlTest {
 
     private MockServerUtils mockServerUtils;
-    private TestMainCtrl testMainCtrl;
+    private MockMainCtrl mockMainCtrl;
     private CardDetailsCtrl sut;
 
     @BeforeEach
     public void setUp() {
 
         mockServerUtils = new MockServerUtils();
-        testMainCtrl = new TestMainCtrl();
-        sut = new CardDetailsCtrl(mockServerUtils, testMainCtrl);
+        mockMainCtrl = new MockMainCtrl();
+        sut = new CardDetailsCtrl(mockServerUtils, mockMainCtrl);
     }
 
     @Test

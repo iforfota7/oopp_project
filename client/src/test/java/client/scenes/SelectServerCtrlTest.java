@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SelectServerCtrlTest {
-    private TestMainCtrl testMainCtrl;
+    private MockMainCtrl mockMainCtrl;
     private MockServerUtils mockServerUtils;
     private MockSelectServerCtrlServices testSelectServerCtrlServices;
     private SelectServerCtrl sut;
 
     @BeforeEach
     public void setup() {
-        testMainCtrl = new TestMainCtrl();
+        mockMainCtrl = new MockMainCtrl();
         mockServerUtils = new MockServerUtils();
         testSelectServerCtrlServices = new MockSelectServerCtrlServices();
-        sut = new SelectServerCtrl(mockServerUtils,testMainCtrl, testSelectServerCtrlServices);
+        sut = new SelectServerCtrl(mockServerUtils,mockMainCtrl, testSelectServerCtrlServices);
         sut.setCurrentUser(new User("test", new ArrayList<>(), false));
 
         Text text = new Text();
