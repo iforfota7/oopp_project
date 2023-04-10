@@ -50,19 +50,26 @@ public class CardCustomizationCtrl {
         colorPresetHolder.getChildren().clear();
         for (String preset : presets) {
             Button btn = new Button(preset);
-            btn.setMinWidth(100);
-            btn.setMaxWidth(100);
-            btn.setStyle("-fx-background-color: #E0FFFF;");
+            btn.setPrefWidth(160);
+            btn.setPrefHeight(20);
+            String[] colors = ((String) cardDetailsCtrl.board.colorPreset.get(preset)).split(" ");
+            btn.setStyle("-fx-background-color: " + colors[0] + "; " +
+                    "-fx-text-fill: " + colors[1] + ";");
             btn.setOnAction(event -> {
                 cardDetailsCtrl.openedCard.colorStyle = ((Button) event.getSource()).getText();
-                server.renameCard(cardDetailsCtrl.openedCard);
-                boardCtrl.refresh();
-                mainCtrl.closeSecondaryStage();
+                cardDetailsCtrl.refreshOpenedCard();
+                close();
             });
             colorPresetHolder.getChildren().add(btn);
         }
     }
 
-
+    /**
+     * Closes the CardCustomization window
+     */
+    @FXML
+    public void close(){
+        mainCtrl.closeThirdStage();
+    }
 
 }

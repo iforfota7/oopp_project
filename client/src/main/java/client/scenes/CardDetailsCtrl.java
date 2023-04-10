@@ -51,16 +51,16 @@ public class CardDetailsCtrl {
 
     private Subtask toRename;
     public Cards openedCard;
-    private Boards board;
+    public Boards board;
     private boolean sceneOpened = false;
     public boolean changesFromTags;
     private boolean changesFromSubtasks;
     private boolean changesInTitleOrDescription;
     private List<String> serverURLS;
+    public String colors;
     private List<Tags> initialTags;
     private List<Subtask> initialSubtasks;
 
-    public String colors;
     /**
      * Initializes the card details controller object
      * An instance of TagsCardDetails is initialized
@@ -285,7 +285,7 @@ public class CardDetailsCtrl {
 
     /**
      * Used to refresh the details of the opened card
-     * after something related to subtasks has changed
+     * after something related to it has changed
      *
      */
     public void refreshOpenedCard() {
@@ -296,8 +296,10 @@ public class CardDetailsCtrl {
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
         String[] colors = this.colors.split(" ");
-        cardTitleInput.getScene().getRoot()
-                .setStyle("-fx-background-color: " + colors[0] + ";");
+//        cardTitleInput.getScene().getRoot()
+//                .setStyle("-fx-background-color: " + colors[0] + ";");
+        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
+        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
         cardTitleInput.setStyle("-fx-text-fill: " + colors[1] + ";");
         description.setStyle("-fx-text-fill: " + colors[1] + ";");
     }
@@ -607,7 +609,6 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.closeSecondaryStage();
         mainCtrl.openCardCustomization();
 
     }
