@@ -51,6 +51,7 @@ public class CustomizationCtrl {
     private VBox taskColor;
     @FXML
     private ChoiceBox<?> choice;
+    private boolean renameActive;
 
     /**
      * Initialize method for Customization related currentBoard
@@ -116,6 +117,7 @@ public class CustomizationCtrl {
      *
      */
     public void saveCustomization() {
+        renameActive = false;
         saveCardColor();
         readCustomizationChange();
         setBoardToDB();
@@ -229,9 +231,18 @@ public class CustomizationCtrl {
         editButton.setStyle("-fx-background-color: #66cc66; " +
                 "-fx-background-radius: 3; -fx-text-fill: white;");
         editButton.setOnAction(e -> {
-            taskBox.getChildren().removeAll(editButton, nameLabel);
-            taskBox.getChildren().add(0, newName);
-            taskBox.getChildren().add(1, saveRename);
+            if(renameActive) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText("You can't rename multiple things" +
+                        " at the same time!");
+                alert.showAndWait();
+            } else {
+                renameActive = true;
+                taskBox.getChildren().removeAll(editButton, nameLabel);
+                taskBox.getChildren().add(0, newName);
+                taskBox.getChildren().add(1, saveRename);
+            }
         });
         saveRename.setOnAction(e -> {
             String inputName = newName.getText();
@@ -241,17 +252,19 @@ public class CustomizationCtrl {
                 alert.setHeaderText("Name cannot be empty.");
                 alert.showAndWait();
             } else {
+                renameActive = false;
                 currentColorPreset.remove(nameLabel.getText());
                 nameLabel.setText(inputName);
                 newName.clear();
                 taskBox.getChildren().removeAll(saveRename, newName);
                 taskBox.getChildren().add(0, nameLabel);
                 taskBox.getChildren().add(1, editButton);
-                saveCustomization();
+                ColorPicker colorPicker1 = (ColorPicker) taskBox.getChildren().get(2);
+                ColorPicker colorPicker2 = (ColorPicker) taskBox.getChildren().get(3);
+                addTaskColor(inputName, colorPicker1.getValue(), colorPicker2.getValue());
             }
         });
         return editButton;
-
     }
 
     /**
@@ -318,21 +331,17 @@ public class CustomizationCtrl {
         addTaskBox.setSpacing(10);
         addTaskBox.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 5px;");
-
         TextField nameInput = new TextField();
         nameInput.setPromptText("New name");
         nameInput.setPrefWidth(100);
-
         ColorPicker colorPicker1 = new ColorPicker();
         colorPicker1.setMaxWidth(60);
         colorPicker1.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 3px;");
-
         ColorPicker colorPicker2 = new ColorPicker();
         colorPicker2.setMaxWidth(60);
         colorPicker2.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 3px;");
-
         Button addButton = new Button("+");
         addButton.setPrefSize(26, 23);
         addButton.setPadding(new Insets(-2, 0, -2, 0));
@@ -340,16 +349,24 @@ public class CustomizationCtrl {
                 "-fx-background-radius: 3; -fx-text-fill: white; -fx-font-size: 15");
         addButton.setOnAction(e -> {
             String taskName = nameInput.getText();
-            if (taskName.isEmpty()) {
+            if(renameActive) {
+                Alert alert = new Alert(Alert.AlertType.WARNING,
+                        "Please finish renaming the current card!", ButtonType.OK);
+                alert.showAndWait();
+            }
+            else if (taskName.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING,
                         "Please input name!", ButtonType.OK);
+                alert.showAndWait();
+            } else if(currentColorPreset.containsKey(taskName)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING,
+                        "There exists a preset with this name!", ButtonType.OK);
                 alert.showAndWait();
             } else {
                 addTaskColor(taskName, colorPicker1.getValue(), colorPicker2.getValue());
                 nameInput.setText("");
             }
         });
-
         addTaskBox.getChildren().addAll(nameInput, colorPicker1, colorPicker2, addButton);
         return addTaskBox;
     }
@@ -361,6 +378,7 @@ public class CustomizationCtrl {
      * @param color2 new finish color of new task color preset
      */
     void addTaskColor(String name, Color color1, Color color2) {
+        saveCardColor();
         String value = color1.toString() + " " + color2.toString();
         currentColorPreset.put(name, value);
         boardCtrl.getCurrentBoard().colorPreset = currentColorPreset;
