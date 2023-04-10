@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectServerCtrl {
@@ -90,8 +91,7 @@ public class SelectServerCtrl {
      * @return true if the method completed successfully and the user sees a new scene
      */
     public boolean connect(String address, String username){
-        this.currentUser = selectServerCtrlServices.checkConnection(address, username, server);
-        boolean exists = currentUser != null;
+        boolean exists = selectServerCtrlServices.checkConnection(address, username, server);
 
         if(!exists) serverWarning.setVisible(true);
         else serverWarning.setVisible(false);
@@ -100,8 +100,13 @@ public class SelectServerCtrl {
         if(!serverWarning.isVisible()){
             // if user does not exist, continue
             // otherwise show confirmation scene
-            if(!exists) mainCtrl.showBoardOverview();
+            if(!server.existsUser()){
+                currentUser = new User(username, new ArrayList<>(), false);
+                server.addUser(currentUser); // try to add user if not already in database
+                mainCtrl.showBoardOverview();
+            }
             else{
+                currentUser = server.findUser();
                 mainCtrl.showConfirmUsername();
             }
             return true;

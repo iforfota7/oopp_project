@@ -1,10 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.User;
 import org.jvnet.hk2.annotations.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class SelectServerCtrlServices {
@@ -14,13 +11,13 @@ public class SelectServerCtrlServices {
      * @param address the server address
      * @param username the username of the user
      * @param server instance of ServerUtils
-     * @return the user if they can exist or can be created as well as connected
-     *          to the server, otherwise null
+     * @return true if the user can exist or can be created as well as connected
+     *          to the server, otherwise false
      */
-    public User checkConnection(String address, String username, ServerUtils server){
+    public boolean checkConnection(String address, String username, ServerUtils server){
         //if address is empty do nothing
         if(address == null || address.equals("")){
-            return null;
+            return false;
         }
         // transforms to complete url
         // if begins with colon assumed to be localhost address with specified port
@@ -31,22 +28,12 @@ public class SelectServerCtrlServices {
         if(server.checkServer()){
             server.setWebsockets();
 
-            if(username == null || username.equals("")) return null;
+            if(username == null || username.equals("")) return false;
 
             // set the username in the frontend
             server.setUsername(username);
-            // create user from information
-
-            if(!server.existsUser()){
-                User user = new User(username, new ArrayList<>(), false);
-                server.addUser(user); // try to add user if not already in database
-                return user;
-            }
-            else{
-                User user = server.findUser();
-                return user;
-            }
+            return true;
         }
-        return null;
+        return false;
     }
 }
