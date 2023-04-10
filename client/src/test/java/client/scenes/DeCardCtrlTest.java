@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DeCardCtrlTest {
-    private TestBoardCtrl testBoardCtrl;
+    private MockBoardCtrl mockBoardCtrl;
     private DeCardCtrl sut;
 
     /**
@@ -14,8 +14,8 @@ public class DeCardCtrlTest {
      */
     @BeforeEach
     public void setup() {
-        testBoardCtrl = new TestBoardCtrl();
-        sut = new DeCardCtrl(testBoardCtrl);
+        mockBoardCtrl = new MockBoardCtrl();
+        sut = new DeCardCtrl(mockBoardCtrl);
     }
 
     @Test
