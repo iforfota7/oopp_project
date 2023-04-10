@@ -53,7 +53,6 @@ public class SelectServerCtrl {
     }
 
     /**
-<<<<<<< HEAD
      * Setter method for current user primarily used for testing
      * @param user the user to be set to
      */

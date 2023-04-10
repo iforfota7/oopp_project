@@ -3,8 +3,6 @@ package client.scenes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class SelectServerCtrlServicesTest {
@@ -49,9 +47,7 @@ class SelectServerCtrlServicesTest {
 
     @Test
     public void newUsername(){
-        // likely to have a new username not in the database
-        Random random = new Random();
-        String username = "" + random.nextInt();
+        String username = "user"; // since method overriden to only have "test" be correct
         assertNotNull(sut.checkConnection(":8080", username, mockServerUtils));
     }
 }

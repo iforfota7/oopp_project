@@ -11,6 +11,9 @@ import java.util.function.Consumer;
 
 public class MockServerUtils extends ServerUtils {
 
+    private String serverAddress;
+    private String username;
+
     /**
      * Mocks the behaviour of the connect method in ServerUtils
      * @param url the url for the websockets
@@ -82,4 +85,48 @@ public class MockServerUtils extends ServerUtils {
      */
     @Override
     public void registerForUpdates(Consumer<Boards> consumer) {}
+
+    @Override
+    public void setServer(String server){
+        this.serverAddress = server;
+    }
+
+    @Override
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    /**
+     * Checks whether the address is http://localhost:8080
+     * Mimicking behaviour to test whether the server address is valid
+     * @return true if it is, otherwise falls
+     */
+    @Override
+    public boolean checkServer(){
+        return (this.serverAddress != null && !this.serverAddress.equals("")
+                && this.serverAddress.equals("http://localhost:8080"));
+    }
+
+    @Override
+    public void setWebsockets(){
+    }
+
+    /**
+     * Username exists if it is test
+     * @return if the username is test, return true, otherwise false
+     */
+    @Override
+    public boolean existsUser(){
+        return this.username.equals("test");
+    }
+
+    @Override
+    public User addUser(User user){
+        return user;
+    }
+
+    @Override
+    public User findUser(){
+        return new User(username, null, false);
+    }
 }

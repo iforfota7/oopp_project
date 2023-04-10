@@ -34,7 +34,7 @@ public class SelectServerCtrlServices {
             if(username == null || username.equals("")) return null;
 
             // set the username in the frontend
-            ServerUtils.setUsername(username);
+            server.setUsername(username);
             // create user from information
 
             if(!server.existsUser()){
