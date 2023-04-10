@@ -98,7 +98,8 @@ public class CardDetailsCtrl {
             }
             if(openedCard.subtasks != null){
                 for(Subtask s : openedCard.subtasks){
-                    initialSubtasks.add(s);
+                    Subtask subtask = new Subtask(s.title, s.checked, s.position);
+                    initialSubtasks.add(subtask);
                 }
             }
         }
