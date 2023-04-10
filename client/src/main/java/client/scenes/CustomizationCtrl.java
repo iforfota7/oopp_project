@@ -51,6 +51,7 @@ public class CustomizationCtrl {
     private boolean renameActive;
     private Boards currentBoard;
     private List<String> serverURLS;
+    private Alert alert;
 
     /**
      * Initialize method for Customization related currentBoard
@@ -68,6 +69,8 @@ public class CustomizationCtrl {
      * @param currentBoard current board set previously by clicking the button customization
      */
     void setColorPickers(Boards currentBoard) {
+        alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         Map<String, String> idToColorMap = new HashMap<>();
         this.currentBoard = currentBoard;
 
@@ -134,7 +137,6 @@ public class CustomizationCtrl {
     @FXML
     void close() {
         saveCustomization();
-        boardCtrl.refresh();
         mainCtrl.closeSecondaryStage();
 
     }
@@ -193,7 +195,6 @@ public class CustomizationCtrl {
      */
     public void setBoardToDB() {
         server.setBoardCss(currentBoard);
-        boardCtrl.refresh();
     }
 
     /**
@@ -203,7 +204,10 @@ public class CustomizationCtrl {
      */
     void checkColor() {
         createChoiceBox();
-        for (Map.Entry<String, String> entry : currentColorPreset.entrySet()) {
+
+        TreeMap<String, String> sortedCurrentColorPreset = new TreeMap<>(currentColorPreset);
+
+        for (Map.Entry<String, String> entry : sortedCurrentColorPreset.entrySet()) {
             String name = entry.getKey();
             String[] colors = entry.getValue().split(" ");
 
@@ -286,13 +290,12 @@ public class CustomizationCtrl {
                 "-fx-background-radius: 3; -fx-text-fill: white;");
         editButton.setOnAction(e -> {
             if(renameActive) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
                 alert.setHeaderText("You can't rename multiple things" +
                         " at the same time!");
                 alert.showAndWait();
             } else {
                 renameActive = true;
+                newName.setText(nameLabel.getText());
                 taskBox.getChildren().removeAll(editButton, nameLabel);
                 taskBox.getChildren().add(0, newName);
                 taskBox.getChildren().add(1, saveRename);
@@ -301,22 +304,37 @@ public class CustomizationCtrl {
         saveRename.setOnAction(e -> {
             String inputName = newName.getText();
             if (inputName.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
                 alert.setHeaderText("Name cannot be empty.");
+                alert.showAndWait();
+            } else if(!inputName.equals(nameLabel.getText()) &&
+                    currentColorPreset.containsKey(inputName)) {
+                alert.setHeaderText("There exists a preset with this name!");
                 alert.showAndWait();
             } else {
                 renameActive = false;
                 currentColorPreset.remove(nameLabel.getText());
-
                 Color color1 = ((ColorPicker) taskBox.getChildren().get(2)).getValue();
                 Color color2 = ((ColorPicker) taskBox.getChildren().get(3)).getValue();
                 currentColorPreset.put(inputName, hexToColor(color1) + " " + hexToColor(color2));
-
+                renamePreset(inputName);
                 saveCustomization();
             }
         });
         return editButton;
+    }
+
+    /**
+     * When a preset is renamed, it gets removed and then re-added
+     * This method makes sure that the color style of the cards
+     * is changed according to the renamed preset and not reset to default
+     *
+     * @param newName The new name of the preset
+     */
+    public void renamePreset(String newName) {
+        String defaultColor = currentBoard.defaultColor;
+        currentBoard.defaultColor = newName;
+        server.revertPreset(currentBoard);
+        currentBoard.defaultColor = defaultColor;
     }
 
     /**
@@ -405,17 +423,14 @@ public class CustomizationCtrl {
         addButton.setOnAction(e -> {
             String taskName = nameInput.getText();
             if(renameActive) {
-                Alert alert = new Alert(Alert.AlertType.WARNING,
-                        "Please finish renaming the current card!", ButtonType.OK);
+                alert.setHeaderText("Please finish renaming the current preset!");
                 alert.showAndWait();
             }
             else if (taskName.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING,
-                        "Please input name!", ButtonType.OK);
+                alert.setHeaderText("Please input name!");
                 alert.showAndWait();
             } else if(currentColorPreset.containsKey(taskName)) {
-                Alert alert = new Alert(Alert.AlertType.WARNING,
-                        "There exists a preset with this name!", ButtonType.OK);
+                alert.setHeaderText("There exists a preset with this name!");
                 alert.showAndWait();
             } else {
                 Color color1 = ((ColorPicker) addTaskBox.getChildren().get(1)).getValue();
