@@ -19,6 +19,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import commons.Boards;
@@ -73,6 +75,28 @@ public class ServerUtils {
                 path("api/user/find/" + USERNAME).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>(){});
+    }
+
+    /**
+     * Generate the password for becoming an admin on the server
+     */
+    public void generatePassword(){
+        ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/admin/").
+                request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .get();
+    }
+
+    /**
+     * Test whether the user input password is correct
+     * @param password the input password
+     * @return true if the password is right, otherwise false
+     */
+    public boolean checkPassword(String password){
+        String x = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/user/admin/password").request(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .post(Entity.entity(password, APPLICATION_JSON), String.class);
+        return x.equals("true");
     }
 
     /**
@@ -460,6 +484,54 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/user/update").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
+     * Method for removing references from all cards
+     * to a specific tag
+     *
+     * @param tags The tag object we are removing
+     * @return The removed tag object
+     */
+    public Tags removeTagFromCards(Tags tags) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/cards/removeTag").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(tags, APPLICATION_JSON), Tags.class);
+    }
+    private static final ExecutorService EXEC = Executors.newCachedThreadPool();
+
+    /** Calls endpoint on backend for long polling constantly when it recieves the board
+     * @param consumer - Deleted board...
+     */
+    public void registerForUpdates(Consumer<Boards> consumer) {
+
+        EXEC.submit(()->{
+                while(!EXEC.isShutdown()) {
+                    try {
+                        var res = ClientBuilder.newClient(new ClientConfig()).
+                                target(serverAddress).path("api/boards/longPolling").
+                                request(APPLICATION_JSON).
+                                accept(APPLICATION_JSON).get(Response.class);
+                        if (res.getStatus() == 204) {
+                            continue;
+                        }
+                        var q = res.readEntity(Boards.class);
+                        consumer.accept(q);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+
+        });
+
+
+    }
+
+    /**
+     * Shutdowns Thread executor service.
+     */
+    public void stop(){
+        EXEC.shutdownNow();
     }
 
 }

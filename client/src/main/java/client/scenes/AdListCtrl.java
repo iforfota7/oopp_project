@@ -42,43 +42,28 @@ public class AdListCtrl {
      */
     @FXML
     public void saveNewList() {
+        adListCtrlServices.setCtrl(this, boardCtrl, mainCtrl);
 
-        warning.setVisible(false);
-
-        if(newListName.getText().isBlank()) {
-
-            warning.setVisible(true);
-            return;
+        if(adListCtrlServices.saveNewList(newListName.getText())) {
+            mainCtrl.closeSecondaryStage();
         }
-
-        int positionInsideBoard = getPositionOfListInsideBoard();
-        addListToBoard(newListName.getText(), positionInsideBoard);
-
-        newListName.setText("");
-        mainCtrl.closeSecondaryStage();
     }
 
     /**
-     * Calls the AdListCtrl service's method for adding a list
-     * to a board.
-     * @param newListName the name of the list
-     * @param positionInsideBoard the position of the list inside the board
-     * @return true if adding the list was successful
+     * Setter for the visibility of the warning
+     *
+     * @param isVisible True iff the warning should be visible
      */
-    public boolean addListToBoard(String newListName, int positionInsideBoard) {
-
-        adListCtrlServices.addListToBoard(boardCtrl, newListName, positionInsideBoard);
-        return true;
+    public void setWarningVisibility(Boolean isVisible) {
+        warning.setVisible(isVisible);
     }
 
     /**
-     * Calls the AdListCtrl service's method for getting a list's position
-     * inside the board it's being added to.
-     * @return the list's position inside the board
+     * Setter for the text found in the text field
+     *
+     * @param text The new text in the text field
      */
-    public int getPositionOfListInsideBoard() {
-
-        return adListCtrlServices
-                .getPositionOfListInsideBoard(boardCtrl);
+    public void setNewListName(String text) {
+        newListName.setText(text);
     }
 }

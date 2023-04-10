@@ -2,17 +2,22 @@ package client.scenes;
 
 import javafx.scene.layout.HBox;
 
-public class TestBoardCtrl extends BoardCtrl {
+import java.util.ArrayList;
+import java.util.List;
 
-    private HBox firstRow;
+public class MockBoardCtrl extends BoardCtrl {
+
+    public HBox firstRow;
+    public List<String> calledMethods;
 
     /**
      * Constructor of the TestBoardCtrl class
      */
-    public TestBoardCtrl() {
+    public MockBoardCtrl() {
 
         super();
         firstRow = new HBox();
+        calledMethods = new ArrayList<>();
     }
 
     /**
@@ -22,8 +27,7 @@ public class TestBoardCtrl extends BoardCtrl {
      */
     @Override
     public void addListToBoard(String text, int position) {
-
-        System.out.println("Successfully added");
+        calledMethods.add("addListToBoard " + position);
     }
 
     /**

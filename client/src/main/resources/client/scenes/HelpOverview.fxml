@@ -20,7 +20,7 @@
             <Font name="Baskerville Old Face" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="49.0" layoutY="128.0" text="These are the actions that you can do in this specific scene:" AnchorPane.leftAnchor="49.0">
+      <Label layoutX="49.0" layoutY="128.0" text="These are the actions that you can do in this scene:" AnchorPane.leftAnchor="49.0">
          <font>
             <Font name="Baskerville Old Face" size="16.0" />
          </font>
@@ -28,12 +28,29 @@
       <Label layoutX="169.0" layoutY="783.0" prefHeight="59.0" prefWidth="240.0" wrapText="true" />
       <AnchorPane layoutX="22.0" layoutY="163.0" prefHeight="202.0" prefWidth="186.0" style="-fx-background-color: #ffffff; -fx-border-color: #800000; -fx-border-radius: 5;">
          <children>
-            <ImageView fitHeight="64.0" fitWidth="128.0" layoutX="29.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="64.0" fitWidth="128.0" layoutX="29.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/client/scenes/Images/add_card_lala.png" />
+                  <Image url="@/client/scenes/Images/add_board.png" />
                </image>
             </ImageView>
-            <Label layoutX="14.0" layoutY="75.0" prefHeight="116.0" prefWidth="158.0" text="You can add a new list inside a board by clicking on the purple &quot;+&quot; button on the bottom right. To name it, a new scene will appear." textAlignment="CENTER" wrapText="true">
+            <Label layoutX="19.0" layoutY="83.0" prefHeight="119.0" prefWidth="149.0" text="In this overview you can create new boards to seperate your tasks and thoughts better. This can be done by clicking the &quot;Create Board&quot; button in the bottom right." textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font name="Baskerville Old Face" size="13.0" />
+               </font>
+               <padding>
+                  <Insets left="3.0" right="3.0" />
+               </padding>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="232.0" layoutY="164.0" prefHeight="202.0" prefWidth="186.0" style="-fx-background-color: #ffffff; -fx-border-color: #800000; -fx-border-radius: 5;">
+         <children>
+            <ImageView fitHeight="68.0" fitWidth="140.0" layoutX="32.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/client/scenes/Images/join_board.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="14.0" layoutY="84.0" prefHeight="103.0" prefWidth="158.0" text="You can join an already existing board by its unique name using the &quot;Join Board by Name&quot; button." textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Baskerville Old Face" size="13.0" />
                </font>
@@ -43,26 +60,9 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="232.0" layoutY="164.0" prefHeight="202.0" prefWidth="186.0" style="-fx-background-color: #ffffff; -fx-border-color: #800000; -fx-border-radius: 5;">
-         <children>
-            <ImageView fitHeight="52.0" fitWidth="134.0" layoutX="33.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@/client/scenes/Images/Untitled.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="18.0" layoutY="76.0" prefHeight="119.0" prefWidth="149.0" text="Once you have a list, you can start adding cards, representing your tasks, by pressing this &quot;+&quot; button on the bottom left of the respective list. You will then see the card details." textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="Baskerville Old Face" size="13.0" />
-               </font>
-               <padding>
-                  <Insets left="3.0" right="3.0" />
-               </padding>
-            </Label>
-         </children>
-      </AnchorPane>
       <AnchorPane layoutX="441.0" layoutY="163.0" prefHeight="202.0" prefWidth="186.0" style="-fx-background-color: #ffffff; -fx-border-color: #800000; -fx-border-radius: 5;">
          <children>
-            <Label layoutX="12.0" layoutY="78.0" prefHeight="124.0" prefWidth="166.0" text="Once you created a list, you can rename it, in case you think another name would fit better or you made a mistake. You can also delete it if you no longer need the list." textAlignment="CENTER" wrapText="true">
+            <Label layoutX="12.0" layoutY="78.0" prefHeight="124.0" prefWidth="166.0" text="Once you have created or joined a board, you can rename it using the &quot;rename&quot; button." textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Baskerville Old Face" size="13.0" />
                </font>
@@ -72,19 +72,19 @@
             </Label>
             <ImageView fitHeight="67.0" fitWidth="140.0" layoutX="27.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/client/scenes/Images/edit_list.png" />
+                  <Image url="@/client/scenes/Images/rename_board.png" />
                </image>
             </ImageView>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="22.0" layoutY="400.0" prefHeight="260.0" prefWidth="186.0" style="-fx-background-color: #ffffff; -fx-border-color: #800000; -fx-border-radius: 5;">
          <children>
-            <ImageView fitHeight="120.0" fitWidth="137.0" layoutX="24.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="120.0" fitWidth="137.0" layoutX="24.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/client/scenes/Images/card_edit.png" />
+                  <Image url="@/client/scenes/Images/hide_board.png" />
                </image>
             </ImageView>
-            <Label layoutX="17.0" layoutY="132.0" prefHeight="116.0" prefWidth="156.0" text="Once you add cards to your list, you can delete them in case they are not relevant anymore. This is done by pressing the red button labeled &quot;X&quot; beside the card." textAlignment="CENTER" wrapText="true">
+            <Label layoutX="15.0" layoutY="105.0" prefHeight="134.0" prefWidth="156.0" text="The board overview will show you any boards you have created or joined in the past. To no longer see a board you can press the &quot;hide&quot; button, removing it from your board overview." textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Baskerville Old Face" size="13.0" />
                </font>
@@ -96,12 +96,12 @@
       </AnchorPane>
       <AnchorPane layoutX="232.0" layoutY="400.0" prefHeight="260.0" prefWidth="186.0" style="-fx-background-color: #ffffff; -fx-border-color: #800000; -fx-border-radius: 5;">
          <children>
-            <ImageView fitHeight="119.0" fitWidth="186.0" layoutX="22.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="103.0" fitWidth="142.0" layoutX="22.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/client/scenes/Images/edit_card.png" />
+                  <Image url="@/client/scenes/Images/save_board.png" />
                </image>
             </ImageView>
-            <Label layoutX="22.0" layoutY="144.0" prefHeight="103.0" prefWidth="142.0" text="By double clicking on the title of a card, you can open its details, allowing you to add a description, subtasks, and tags as well as renaming the card." textAlignment="CENTER" wrapText="true">
+            <Label layoutX="22.0" layoutY="133.0" prefHeight="103.0" prefWidth="142.0" text="By clicking the &quot;i&quot; button, you can see your current information like the username, server address and whether you are an admin." textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Baskerville Old Face" size="13.0" />
                </font>
@@ -110,12 +110,12 @@
       </AnchorPane>
       <AnchorPane layoutX="441.0" layoutY="400.0" prefHeight="260.0" prefWidth="186.0" style="-fx-background-color: #ffffff; -fx-border-color: #800000; -fx-border-radius: 5;">
          <children>
-            <ImageView fitHeight="87.0" fitWidth="90.0" layoutX="50.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="90.0" fitWidth="166.0" layoutX="10.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/client/scenes/Images/drag_and_drop_new.png" />
+                  <Image url="@/client/scenes/Images/password_board.png" />
                </image>
             </ImageView>
-            <Label layoutX="4.0" layoutY="97.0" prefHeight="156.0" prefWidth="178.0" text="You can also drag cards between or within a list for better organisation. Just press on a card and move it, releasing it at its new intended position in a list. You can see a visual indicator while dragging, being a red highlighting of the list and a grey line showing its new position." textAlignment="CENTER" wrapText="true">
+            <Label layoutX="4.0" layoutY="115.0" prefHeight="133.0" prefWidth="177.0" text="In this information scene, you can become an admin by clicking the &quot;Input password to become an admin&quot; button at the bottom of the scene. The admin has the ability to delete boards instead of hiding them." textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Baskerville Old Face" size="13.0" />
                </font>

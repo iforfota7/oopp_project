@@ -4,7 +4,6 @@ import client.utils.ServerUtils;
 import commons.Boards;
 import commons.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -23,9 +22,6 @@ public class SelectServerCtrl {
 
     @FXML
     private TextField inputUsername;
-
-    @FXML
-    private Button connect;
 
     private User currentUser;
 
@@ -50,6 +46,14 @@ public class SelectServerCtrl {
      */
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    /**
+     * Method that sets currentUser to the user from the database
+     * with the currently used username in ServerUtils
+     */
+    public void setCurrentUser(){
+        currentUser = server.findUser();
     }
 
     /**

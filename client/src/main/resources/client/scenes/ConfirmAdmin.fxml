@@ -11,16 +11,21 @@
    <effect>
       <DropShadow />
    </effect>
-   <Button fx:id="adminLogin" layoutX="195.0" layoutY="100.0" mnemonicParsing="false" onAction="#adminLogin" style="-fx-background-color: #FFFFCC;" text="Log In" />
-   <Label layoutX="71.0" layoutY="31.0" text="Input admin password">
+   <Button fx:id="adminLogin" layoutX="195.0" layoutY="105.0" mnemonicParsing="false" onAction="#adminLogin" style="-fx-background-color: #FFFFCC;" text="Log In" />
+   <Label layoutX="68.0" layoutY="31.0" text="Input admin password">
       <font>
-         <Font name="Avenir Book" size="16.0" />
+         <Font size="17.0" />
       </font>
    </Label>
-   <PasswordField fx:id="inputPassword" layoutX="51.0" layoutY="100.0" prefHeight="26.0" prefWidth="133.0" />
-   <Label fx:id="errorLabel" layoutX="71.0" layoutY="126.0" prefHeight="17.0" prefWidth="125.0" text="Password incorrect!" textFill="#f50000" visible="false">
+   <PasswordField fx:id="inputPassword" layoutX="51.0" layoutY="105.0" prefHeight="26.0" prefWidth="133.0" />
+   <Label fx:id="errorLabel" layoutX="69.0" layoutY="131.0" prefHeight="17.0" prefWidth="125.0" text="Password incorrect!" textFill="#f50000" visible="false">
       <font>
          <Font size="11.0" />
+      </font>
+   </Label>
+   <Label fx:id="errorLabel1" layoutX="55.0" layoutY="57.0" prefHeight="18.0" prefWidth="210.0" text="You will find it printed in the server terminal">
+      <font>
+         <Font size="10.0" />
       </font>
    </Label>
 </AnchorPane>

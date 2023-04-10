@@ -26,7 +26,7 @@ public class Boards {
     @JsonIgnore
     public List<Lists> lists;
 
-    @OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Tags> tags;
 
     /**
@@ -79,7 +79,7 @@ public class Boards {
         return "Boards{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lists=" + lists.toString() +
+                ", lists=" + lists+
                 '}';
     }
 }
