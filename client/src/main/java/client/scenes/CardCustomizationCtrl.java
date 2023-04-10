@@ -52,12 +52,13 @@ public class CardCustomizationCtrl {
             Button btn = new Button(preset);
             btn.setPrefWidth(160);
             btn.setPrefHeight(20);
-            btn.setStyle("-fx-background-color: #f9ecf9;");
+            String[] colors = ((String) cardDetailsCtrl.board.colorPreset.get(preset)).split(" ");
+            btn.setStyle("-fx-background-color: " + colors[0] + "; " +
+                    "-fx-text-fill: " + colors[1] + ";");
             btn.setOnAction(event -> {
                 cardDetailsCtrl.openedCard.colorStyle = ((Button) event.getSource()).getText();
-                server.renameCard(cardDetailsCtrl.openedCard);
-                boardCtrl.refresh();
                 cardDetailsCtrl.refreshOpenedCard();
+                close();
             });
             colorPresetHolder.getChildren().add(btn);
         }
