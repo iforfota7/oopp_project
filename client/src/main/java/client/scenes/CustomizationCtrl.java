@@ -145,12 +145,19 @@ public class CustomizationCtrl {
     }
 
     /**
-     * Reset all buttons to their initial values stored in a file on the client side.
+     * Reverts the Board's background and font color to the default ones
      */
     @FXML
-    void revertCustomization() {
+    private void revertBoardCustomization(){
         boardBgColor.setValue(Color.rgb(230, 230, 250));
         boardFtColor.setValue(Color.rgb(0, 0, 0));
+    }
+
+    /**
+     * Reverts the List's background and font color to the default ones
+     */
+    @FXML
+    private void revertListCustomization(){
         listBgColor.setValue(Color.rgb(255, 255, 255));
         listFtColor.setValue(Color.rgb(0, 0, 0));
     }
