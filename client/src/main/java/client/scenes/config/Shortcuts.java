@@ -21,8 +21,72 @@ public class Shortcuts {
     private HBox currentBoard;
     private MainCtrl mainCtrl;
     private ServerUtils server;
+    /**
+     * Chooses one of the shortcuts based on the key pressed
+     * @param keyEvent an object containing information about the pressed key
+     */
+    public void activateShortcut(KeyEvent keyEvent) {
+
+        if(keyEvent.getCode() == KeyCode.H)
+            openHelpScene();
+
+        moveHighlight(keyEvent);
+
+        shiftCards(keyEvent);
+
+        if (keyEvent.getCode() == KeyCode.E)
+            openEditCardTitle();
+        else if (keyEvent.getCode() == KeyCode.DELETE || keyEvent.getCode() == KeyCode.BACK_SPACE)
+            deleteCard();
+        else if (keyEvent.getCode() == KeyCode.ENTER)
+            openDetails();
+        else if (keyEvent.getCode() == KeyCode.T)
+            addTagToCard();
+        else if (keyEvent.getCode() == KeyCode.C)
+            openColorPresetSelection();
+
+        keyEvent.consume();
+    }
+
+    /**
+     * Shifts card up or down the list based on whichever arrow key was pressed
+     * @param keyEvent an object containing information about the pressed key
+     */
+    private void shiftCards(KeyEvent keyEvent) {
+
+        if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown())
+            swapCard(y-1);
+        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown())
+            swapCard(y+1);
+    }
+
+    /**
+     * Moves highlight based on whichever arrow key was pressed
+     * @param keyEvent an object containing information about the pressed key
+     */
+    private void moveHighlight(KeyEvent keyEvent) {
+
+        if (keyEvent.getCode() == KeyCode.UP && keyEvent.isControlDown()) {
+            calculateNewHighlightPosition(x, y-1);
+            highlightCardAtPosition();
+        }
+        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isControlDown()) {
+            calculateNewHighlightPosition(x, y+1);
+            highlightCardAtPosition();
+        }
+        else if (keyEvent.getCode() == KeyCode.LEFT && keyEvent.isControlDown()) {
+            calculateNewHighlightPosition(x-1, y);
+            highlightCardAtPosition();
+        }
+        else if (keyEvent.getCode() == KeyCode.RIGHT && keyEvent.isControlDown()) {
+            calculateNewHighlightPosition(x+1, y);
+            highlightCardAtPosition();
+        }
+    }
+
     private BoardCtrl boardCtrl;
     private int x; //position of list inside board
+
     private int y; //position of card inside list
 
     /**
@@ -119,9 +183,11 @@ public class Shortcuts {
      * Constructor for Shortcuts class,
      * to be used inside MainCtrl
      * @param mainCtrl an instance of MainCtrl
+     * @param boardCtrl an instance of BoardCtrl
      */
-    public Shortcuts(MainCtrl mainCtrl) {
+    public Shortcuts(MainCtrl mainCtrl, BoardCtrl boardCtrl) {
         this.mainCtrl = mainCtrl;
+        this.boardCtrl = boardCtrl;
     }
 
     /**
@@ -143,38 +209,6 @@ public class Shortcuts {
         setPositionForCard();
 
         mouseEvent.consume();
-    }
-
-    /**
-     * Chooses one of the shortcuts based on the key pressed
-     * @param keyEvent an object containing information about the pressed key
-     */
-    public void activateShortcut(KeyEvent keyEvent) {
-
-        if(keyEvent.getCode() == KeyCode.H)
-            openHelpScene();
-
-        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x, y-1);
-            highlightCardAtPosition();
-        }
-        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x, y+1);
-            highlightCardAtPosition();
-        }
-        else if (keyEvent.getCode() == KeyCode.LEFT && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x-1, y);
-            highlightCardAtPosition();
-        }
-        else if (keyEvent.getCode() == KeyCode.RIGHT && keyEvent.isControlDown()) {
-            calculateNewHighlightPosition(x+1, y);
-            highlightCardAtPosition();
-        }
-
-        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown())
-            swapCard(y-1);
-        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown())
-            swapCard(y+1);
     }
 
     /**
@@ -220,6 +254,18 @@ public class Shortcuts {
 
         this.y=y;
 
+    }
+
+    /**
+     * Opens popup to delete the currently highlighted card.
+     */
+    private void deleteCard() {
+
+        if(currentCard==null) return;
+
+        Cards c = (Cards) currentCard.getParent().getProperties().get("card");
+        boardCtrl.setCurrentCard(c);
+        mainCtrl.showDeleteCard();
     }
 
     /**
@@ -276,6 +322,76 @@ public class Shortcuts {
     }
 
     /**
+     * Closes the card details of the  currently highlighted card.
+     * @param keyEvent an object containing information about the pressed key
+     */
+    public void closeCardDetails(KeyEvent keyEvent) {
+
+        if(keyEvent.getCode()==KeyCode.ESCAPE) {
+            mainCtrl.closeSecondaryStage();
+        }
+        else if(keyEvent.getCode()==KeyCode.ENTER) {
+            boardCtrl.getCardDetailsCtrl().save();
+        }
+
+        keyEvent.consume();
+    }
+
+    /**
+     * Opens the card details of the  currently highlighted card.
+     */
+    private void openDetails() {
+
+        if(currentCardObject==null) return;
+
+        boardCtrl.getCardDetailsCtrl().setBoard(board);
+        boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
+        mainCtrl.showCardDetail();
+    }
+
+    /**
+     * Opens the scene for adding tags to a card.
+     */
+    private void addTagToCard() {
+
+        if(currentCardObject==null || board==null) return;
+
+        boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
+        boardCtrl.getCardDetailsCtrl().setBoard(board);
+
+        mainCtrl.showAddTagToCard(currentCardObject, board, boardCtrl.getCardDetailsCtrl());
+
+        Lists blankList = new Lists(null, 0, null);
+        blankList.id = currentCardObject.list.id;
+        currentCardObject.list = blankList;
+
+        currentCardObject = server.renameCard(currentCardObject);
+     }
+
+    /**
+     * Opens the scene for customizing a card.
+     */
+    private void openColorPresetSelection() {
+
+        if(currentCardObject==null || board==null) return;
+
+        boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
+        boardCtrl.getCardDetailsCtrl().setBoard(board);
+
+        boardCtrl.getCardDetailsCtrl().customization();
+    }
+
+    /**
+     * Opens the scene for editing a card's title.
+     */
+    private void openEditCardTitle() {
+
+        if(currentCardObject==null) return;
+
+        mainCtrl.showEditCardTitle(currentCardObject);
+    }
+
+    /**
      * Setter for the currently highlighted card container
      * @param currentCard the currently highlighted card container
      */
@@ -290,4 +406,5 @@ public class Shortcuts {
     public void setCurrentCardObject(Cards cards) {
         this.currentCardObject = cards;
     }
+
 }

@@ -3,6 +3,7 @@ package server.api;
 import commons.Boards;
 import commons.Cards;
 import commons.Lists;
+import commons.Subtask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -264,13 +265,13 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
         sut.addCard(c);
 
         assertEquals(1, repo.cards.size());
         assertEquals("a", repo.cards.get(0).title);
 
-        Cards c2 = getCard("b", 0, list);
+        Cards c2 = getCard("b", 0, list, new ArrayList<>());
         c2.id = c.id;
         sut.renameCard(c2);
 
@@ -288,7 +289,7 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
 
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c));
     }
@@ -298,11 +299,11 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
         sut.addCard(c);
 
         Lists list2 = new Lists("todo", 0, testBoard);
-        Cards c2 = getCard("b", 0, list2);
+        Cards c2 = getCard("b", 0, list2, new ArrayList<>());
         c2.id = c.id;
         list2.id = 5;
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
@@ -313,10 +314,10 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
         sut.addCard(c);
 
-        Cards c2 = getCard("b", 1, list);
+        Cards c2 = getCard("b", 1, list, new ArrayList<>());
         c2.id = c.id;
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
     }
@@ -415,6 +416,14 @@ class CardControllerTest {
     public Cards getCard(String t, int p, Lists list) {
 
         Cards card = new Cards(t,p,list, "Test description", null);
+        card.id = cardCount;
+        cardCount++;
+        return card;
+    }
+
+    public Cards getCard(String t, int p, Lists list, List<Subtask> subtasks) {
+
+        Cards card = new Cards(t,p,list, "Test description", subtasks);
         card.id = cardCount;
         cardCount++;
         return card;

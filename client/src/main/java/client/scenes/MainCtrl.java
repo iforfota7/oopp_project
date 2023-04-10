@@ -28,7 +28,8 @@ import javafx.util.Pair;
 public class MainCtrl {
     private Stage primaryStage, secondaryStage, thirdStage;
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmCloseCard, warningCardDeletion, confirmUsername;
+    private Scene cardDetails, cardEditTitle, newCard;
+    private Scene confirmUsername, confirmCloseCard, warningCardDeletion;
     private Scene boardOverview, addBoard, renameBoard;
     private Scene tagControl, addTag, tagDetails, addTagToCard;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
@@ -56,6 +57,7 @@ public class MainCtrl {
     private AdListCtrl addListCtrl;
 
     private CardDetailsCtrl cardDetailsCtrl;
+    private CardEditTitleCtrl cardEditTitleCtrl;
     private NewCardCtrl newCardCtrl;
     private DeCardCtrl deCardCtrl;
 
@@ -142,6 +144,7 @@ public class MainCtrl {
     /**
      * Initialize method for card related scenes
      * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
+     * @param cardEditTitle cardEditTitleCtrl parent pair for cardEditTitle scene
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
      * @param deCardCtrl deCardCtrl parent pair for deCard scene
      * @param confirmCloseCard confirmCloseCard parent pair for confirmCloseCard scene
@@ -149,6 +152,7 @@ public class MainCtrl {
      *                            WarningCardDeletion scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
+                                Pair<CardEditTitleCtrl, Parent> cardEditTitle,
                                 Pair<NewCardCtrl, Parent> newCardCtrl,
                                 Pair<DeCardCtrl, Parent> deCardCtrl,
                                 Pair<CardDetailsCtrl, Parent> confirmCloseCard,
@@ -156,6 +160,12 @@ public class MainCtrl {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
+
+        shortcuts = new Shortcuts(this, boardCtrl);
+        this.cardDetails.setOnKeyPressed(shortcuts::closeCardDetails);
+
+        this.cardEditTitle = new Scene(cardEditTitle.getValue());
+        this.cardEditTitleCtrl = cardEditTitle.getKey();
 
         this.newCard = new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
@@ -182,7 +192,7 @@ public class MainCtrl {
         this.helpOverview = new Scene(helpOverviewCtrl.getValue()); // uses same ctrl as help
         this.helpShortcuts = new Scene(helpShortcutsCtrl.getValue()); // uses same ctrl as help
 
-        shortcuts = new Shortcuts(this);
+        shortcuts = new Shortcuts(this, boardCtrl);
         helpShortcuts.setOnKeyPressed(shortcuts::closeHelpScene);
     }
 
@@ -615,4 +625,18 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Opens a new window for editing a card's title
+     * @param card the highlighted card
+     */
+    public void showEditCardTitle(Cards card) {
+
+        if(secondaryStage!=null && secondaryStage.isShowing())
+            return;
+        cardEditTitleCtrl.init(card);
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Edit title");
+        secondaryStage.setScene(cardEditTitle);
+        secondaryStage.show();
+    }
 }

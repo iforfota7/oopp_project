@@ -163,7 +163,7 @@ public class CardDetailsCtrl {
      * A warning is displayed if the input field is empty.
      */
     @FXML
-    void save() {
+    public void save() {
         warning.setVisible(false);
         rename = false;
 

@@ -80,6 +80,7 @@ public class BoardCtrl {
 
         }
         refresh();
+        firstRow.requestFocus();
         server.registerForUpdates(b->{
 
             Platform.runLater(new Runnable() {
@@ -582,13 +583,6 @@ public class BoardCtrl {
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
 
-        if(shortcuts.getCurrentCard()!=null &&
-                newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
-            blanket.setStyle("-fx-border-color: red;  " +
-                    "-fx-border-radius: 4;");
-            shortcuts.setCurrentCard(blanket);
-        }
-
         if(c.positionInsideList > 5){
             Double height = anchor.getMinHeight();
             anchor.setMinHeight(height + 47);
@@ -907,5 +901,21 @@ public class BoardCtrl {
      */
     public Boards getBoard() {
         return board;
+    }
+
+    /**
+     * Sets the currentCard reference to the provided card
+     * @param card the card to be assigned to currentCard
+     */
+    public void setCurrentCard(Cards card) {
+        this.currentCard = card;
+    }
+
+    /**
+     * Gets the card details controller object of this board
+     * @return the card details controller object
+     */
+    public CardDetailsCtrl getCardDetailsCtrl() {
+        return cardDetailsCtrl;
     }
 }
