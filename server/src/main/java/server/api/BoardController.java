@@ -89,6 +89,8 @@ public class BoardController {
 
         Boards saved = repo.save(board);
 
+        msgs.convertAndSend("/topic/boards/add", saved);
+
         return ResponseEntity.ok(saved);
     }
 
@@ -107,6 +109,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
 
         Boards saved = repo.save(board);
+        msgs.convertAndSend("/topic/boards/rename", saved);
 
         return ResponseEntity.ok(saved);
     }
@@ -187,6 +190,8 @@ public class BoardController {
         repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
+        msgs.convertAndSend("/topic/boards/remove", boards);
+
         return ResponseEntity.ok().build();
     }
 
@@ -223,6 +228,8 @@ public class BoardController {
         savedBoard.colorPreset = boards.colorPreset;
         savedBoard.defaultColor = boards.defaultColor;
         Boards saved = repo.save(savedBoard);
+
+        msgs.convertAndSend("/topic/boards/setCss", saved);
         return ResponseEntity.ok(saved);
     }
 }

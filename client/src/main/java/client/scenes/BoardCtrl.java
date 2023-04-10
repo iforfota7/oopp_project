@@ -77,6 +77,7 @@ public class BoardCtrl {
             serverURLS.add(server.getServer());
             webSocketLists();
             webSocketCards();
+            webSocketsBoard();
 
         }
         refresh();
@@ -184,6 +185,21 @@ public class BoardCtrl {
     }
 
     /**
+     * This method configures websockets for the board
+     */
+    public void webSocketsBoard() {
+        server.registerForMessages("/topic/boards/setCss", Boards.class, board->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    server.revertPreset(board);
+                    initialize(board);
+                }
+            });
+        });
+    }
+
+    /**
      * Method that refreshes the board by getting all lists from the
      * server and displaying them
      */
@@ -194,6 +210,7 @@ public class BoardCtrl {
         for (Lists list : board.lists) {
             addNewList(list);
         }
+
         refreshCustomization();
     }
 
@@ -341,7 +358,7 @@ public class BoardCtrl {
         Label listName = createListTitle(l.title);
         listName.setId("list_title_"+l.id);
         Font fontList = Font.font("Bell MT", FontWeight.NORMAL,
-                FontPosture.REGULAR, 17);;
+                FontPosture.REGULAR, 17);
         listName.setFont(fontList);
 
         headerList.getChildren().addAll(listName, listSeparator);
@@ -605,9 +622,13 @@ public class BoardCtrl {
         innerShadow.setWidth(18.66);
         innerShadow.setHeight(18.66);
 
-        if(c.colorStyle == null || !(board.colorPreset.containsKey(c.colorStyle))){
-            currentCardColor = board.colorPreset.get(board.defaultColor);}
-        else{currentCardColor = board.colorPreset.get(c.colorStyle);}
+        if(c.colorStyle == null || !(board.colorPreset.containsKey(c.colorStyle))) {
+            currentCardColor = board.colorPreset.get(board.defaultColor);
+            c.colorStyle = null; // this will be setup later
+        }
+        else
+            currentCardColor = board.colorPreset.get(c.colorStyle);
+
         String[] colors = currentCardColor.split(" ");
         cardBody.setStyle("-fx-background-color: " +
                 colors[0] + ";-fx-background-radius: 4;");
@@ -642,13 +663,6 @@ public class BoardCtrl {
         cardTitle.setPadding(new Insets(0, 0, -2, 12));
         cardTitle.setFont(font);
 
-        if(c.colorStyle == null||!(board.colorPreset.containsKey(c.colorStyle))) {
-            currentCardColor = board.colorPreset.get(board.defaultColor);
-        }
-        else {
-            currentCardColor = board.colorPreset.get(c.colorStyle);
-        }
-
         String[] colors = currentCardColor.split(" ");
 
         cardOverviewBody.setStyle("-fx-background-color: " +
@@ -677,13 +691,16 @@ public class BoardCtrl {
         cardDetailsOverview.setPrefWidth(66.4);
         cardDetailsOverview.setPrefHeight(31.2);
 
+        String[] colors = currentCardColor.split(" ");
+
         Label subtasksCount = createSubtasksCountLabel(card);
+        subtasksCount.setStyle("-fx-font-size: 7; -fx-text-fill: " + colors[1]);
         ProgressBar subtasksProgressBar = createSubtasksProgressBar(card);
         String labelText = "Description: no";
         if(!card.description.equals(""))
             labelText = "Description: yes";
         Label descriptionExistence = new Label(labelText);
-        descriptionExistence.setStyle("-fx-font-size: 8;");
+        descriptionExistence.setStyle("-fx-font-size: 8; -fx-text-fill: " + colors[1]);
         descriptionExistence.setAlignment(Pos.CENTER_LEFT);
         descriptionExistence.setPrefWidth(50.4);
         descriptionExistence.setPrefHeight(7);
@@ -712,14 +729,17 @@ public class BoardCtrl {
                     done++;
             subtasksLabelText = done + "/" + total + " subtasks";
         }
+
+              //  board.colorPreset.get("default").split(" ");
+
         Label subtasksCount = new Label(subtasksLabelText);
 
         String descriptionLabelText = "Description: no";
-        if(!card.description.equals(""))
+        if(!card.description.equals("")) {
             descriptionLabelText = "Description: yes";
+        }
         Label descriptionExistence = new Label(descriptionLabelText);
 
-        subtasksCount.setStyle("-fx-font-size: 7;");
         subtasksCount.setAlignment(Pos.CENTER_RIGHT);
         subtasksCount.setPrefWidth(65.6);
         subtasksCount.setPrefHeight(16);

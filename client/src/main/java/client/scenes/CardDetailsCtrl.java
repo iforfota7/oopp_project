@@ -3,10 +3,7 @@ package client.scenes;
 import client.scenes.config.TagsCardDetails;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Boards;
-import commons.Cards;
-import commons.Lists;
-import commons.Subtask;
+import commons.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,11 +51,16 @@ public class CardDetailsCtrl {
 
     private Subtask toRename;
     public Cards openedCard;
-    private Boards board;
+    public Boards board;
     private boolean sceneOpened = false;
+    public boolean changesFromTags;
+    private boolean changesFromSubtasks;
+    private boolean changesInTitleOrDescription;
+    private boolean changesInCustomization;
     private List<String> serverURLS;
-
     public String colors;
+
+
     /**
      * Initializes the card details controller object
      * An instance of TagsCardDetails is initialized
@@ -85,6 +87,12 @@ public class CardDetailsCtrl {
             serverURLS.add(server.getServer());
             websocketConfig();
         }
+
+        changesFromTags = false;
+        changesFromSubtasks = false;
+        changesInTitleOrDescription = false;
+        changesInCustomization = false;
+
         warning.setVisible(false);
     }
 
@@ -93,6 +101,15 @@ public class CardDetailsCtrl {
      *
      */
     public void websocketConfig() {
+
+        cardWebsocketConfig();
+        boardWebsocketConfig();
+    }
+
+    /**
+     * Configures the websockets which depend on cards
+     */
+    public void cardWebsocketConfig(){
 
         // When a client modifies card details, this scene gets modified
         // so that clients that see this scene will see the details changing
@@ -114,19 +131,39 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id && sceneOpened) {
                         mainCtrl.closeSecondaryStage();
+                        mainCtrl.showWarningCardDeletion();
                     }
                 }
             });
         });
+    }
 
-        // when tags are updated, the card details scene needs to
-        // receive this information
+    /**
+     * Configures the websockets which depend on boards
+     */
+    public void boardWebsocketConfig(){
+
+        // when tags are updated, the card details scene needs to receive this information
         server.registerForMessages("/topic/boards/update", Boards.class, b->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     if(board != null && board.id == b.id) {
                         board = b;
+                    }
+                }
+            });
+        });
+
+        // when the presets of a card are changed, the card details scene of another
+        // client will synchronize with the new presets -> background and font colors
+        server.registerForMessages("/topic/boards/setCss", Boards.class, b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null && board.id == b.id) {
+                        board = b;
+                        refreshOpenedCard();
                     }
                 }
             });
@@ -175,34 +212,113 @@ public class CardDetailsCtrl {
 
         server.renameCard(openedCard);
         sceneOpened = false;
+        changesFromTags = false;
+        changesFromSubtasks = false;
+        changesInTitleOrDescription = false;
         mainCtrl.closeSecondaryStage();
     }
 
     /**
      * The user can close the card details without the modifications made
-     * to be saved by pressing the 'close' button
+     * to be saved by pressing the 'Close' button. However, because this
+     * can happen accidentally, a warning asking for confirmation of
+     * closing the card without saving the modifications is displayed
      */
     @FXML
-    void close(){
+    public void closeCardDetails(){
+        Cards initialCard = server.getCardById(openedCard.id);
+
+        if(!initialCard.title.equals(openedCard.title) ||
+            !initialCard.title.equals(cardTitleInput.getText()) ||
+            !initialCard.description.equals(openedCard.description) ||
+            !initialCard.description.equals(description.getText())){
+            changesInTitleOrDescription = true;
+        }
+        else {
+            changesInTitleOrDescription = false;
+        }
+
+        if(!initialCard.subtasks.equals(openedCard.subtasks)){
+            changesFromSubtasks = true;
+        }
+        else {
+            changesFromSubtasks = false;
+        }
+
+        if(!initialCard.tags.equals(openedCard.tags)){
+            changesFromTags = true;
+        }
+        else {
+            changesFromTags = false;
+        }
+
+        if(!initialCard.colorStyle.equals(openedCard.colorStyle)){
+            changesInCustomization = true;
+        }
+        else {
+            changesInCustomization = false;
+        }
+
+        if(changesInTitleOrDescription || changesFromSubtasks
+                || changesFromTags || changesInCustomization){
+            mainCtrl.showConfirmCloseCard();
+        }
+        else {
+            close();
+        }
+    }
+
+    /**
+     * Simply closes the cardDetails scene without any warning, as no modifications
+     * has been made and need to be saved
+     */
+    public void close(){
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
         mainCtrl.showBoard(board);
     }
 
     /**
+     * When the warning regarding the confirmation of closing the card without
+     * saving the modifications appears, the user can choose to not close the card
+     * by pressing on the 'No' button
+     */
+    @FXML
+    public void noClose(){
+        mainCtrl.closeThirdStage();
+        mainCtrl.showCardDetail();
+    }
+
+    /**
+     * The user can close the card details without the modifications made
+     * to be saved by pressing the 'Yes' button on the warning that appears
+     * once the user has pressed the 'close' button on the card details scene
+     */
+    @FXML
+    public void closeWithoutSaving(){
+        sceneOpened = false;
+        mainCtrl.closeSecondaryStage();
+        mainCtrl.closeThirdStage();
+        mainCtrl.showBoard(board);
+    }
+
+    /**
      * Used to refresh the details of the opened card
-     * after something related to subtasks has changed
+     * after something related to it has changed
      *
      */
     public void refreshOpenedCard() {
+        if(!openedCard.title.equals(cardTitleInput.getText()) ||
+            !openedCard.description.equals(description.getText())) {
+        }
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
         String[] colors = this.colors.split(" ");
-        cardTitleInput.getScene().getRoot()
-                .setStyle("-fx-background-color: " + colors[0] + ";");
-        cardTitleInput.setStyle("-fx-text-fill: " + colors[1] + ";");
-        description.setStyle("-fx-text-fill: " + colors[1] + ";");
+        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
+        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
+        cardTitleInput.setStyle("-fx-text-fill: " + newColors[1] + ";");
+        description.setStyle("-fx-text-fill: " + newColors[1] + ";");
     }
 
     /**
@@ -328,7 +444,6 @@ public class CardDetailsCtrl {
      * @param actionEvent Object containing information about the action event
      */
     public void swapSubtasks(ActionEvent actionEvent) {
-//        changes = true;
         Button arrow = (Button)actionEvent.getTarget();
         int position = Integer.parseInt(arrow.getId());
         List<Subtask> subtaskList = openedCard.subtasks;
@@ -389,6 +504,8 @@ public class CardDetailsCtrl {
         subtaskName.setStyle("");
         warningSubtask.setVisible(false);
 
+        changesFromSubtasks = true;
+
         if(subtaskName.getText().equals("")){
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
                     "-fx-border-color: #b30000; -fx-background-radius: 4; " +
@@ -405,6 +522,7 @@ public class CardDetailsCtrl {
             // therefore, the position and checked value of the subtask can be different from
             // the initial ones when a subtask is just created
             if(rename){
+                openedCard.subtasks.remove(toRename);
                 position = toRename.position;
                 checked = toRename.checked;
             }
@@ -466,7 +584,6 @@ public class CardDetailsCtrl {
             int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
             taskList.getChildren().set(indexInVbox, inputSubtask);
 
-            openedCard.subtasks.remove(toRename);
         }
         else {
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
@@ -493,6 +610,7 @@ public class CardDetailsCtrl {
         int subtaskIndex = openedCard.subtasks.indexOf(subtask);
         Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
         updatedSubtask.checked = checkBox.isSelected();
+
         refreshOpenedCard();
     }
 
@@ -508,9 +626,19 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.closeSecondaryStage();
         mainCtrl.openCardCustomization();
 
+    }
+
+    /**
+     * If a user deletes a card another user is currently viewing the details of,
+     * the second user receives a warning regarding the deletion of the current
+     * card and the fact that they have been redirected to the board
+     * This method serves to close the window of the warning scene
+     */
+    @FXML
+    public void closeWarningCardDeletion(){
+        mainCtrl.closeSecondaryStage();
     }
 
     /**

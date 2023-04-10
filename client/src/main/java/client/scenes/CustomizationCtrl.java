@@ -3,11 +3,12 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import javafx.scene.layout.GridPane;
@@ -18,8 +19,6 @@ import javafx.scene.paint.Color;
 import javax.inject.Inject;
 
 import java.util.*;
-
-
 
 /**
  * Controller for customization
@@ -38,19 +37,22 @@ public class CustomizationCtrl {
 
     @FXML
     private GridPane defaultChoice;
-    public String defaultColor;
 
     @FXML
     private ColorPicker listBgColor;
 
     @FXML
     private ColorPicker listFtColor;
-    private Boards setBoard;
     public Map<String, String> currentColorPreset = new HashMap<>();
     @FXML
     private VBox taskColor;
     @FXML
     private ChoiceBox<?> choice;
+    private boolean renameActive;
+    private Boards currentBoard;
+    private List<String> serverURLS;
+    private Alert alert;
+    public int changedInBoard;
 
     /**
      * Initialize method for Customization related currentBoard
@@ -61,6 +63,7 @@ public class CustomizationCtrl {
         colorPickers.add(boardFtColor);
         colorPickers.add(listBgColor);
         colorPickers.add(listFtColor);
+        changedInBoard = 0;
     }
     /**
      *Set the initial color of each color picker based on the
@@ -68,7 +71,16 @@ public class CustomizationCtrl {
      * @param currentBoard current board set previously by clicking the button customization
      */
     void setColorPickers(Boards currentBoard) {
+        alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         Map<String, String> idToColorMap = new HashMap<>();
+        this.currentBoard = currentBoard;
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketConfig();
+        }
+
         idToColorMap.put("boardBgColor", currentBoard.boardBgColor);
         idToColorMap.put("boardFtColor", currentBoard.boardFtColor);
         idToColorMap.put("listBgColor", currentBoard.listBgColor);
@@ -79,8 +91,28 @@ public class CustomizationCtrl {
             if (color != null) {
                 colorPicker.setValue(Color.web(color));
             }
+            colorPicker.setOnAction(e -> {
+                saveCustomization();
+                setColorPickers(boardCtrl.getCurrentBoard());
+            });
         }
         checkColor();
+    }
+
+    /**
+     * When the customization details of a board are changed
+     * by a user, they are synchronized with all other users
+     *
+     */
+    public void websocketConfig() {
+        server.registerForMessages("/topic/boards/setCss", Boards.class, board->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    setColorPickers(board);
+                }
+            });
+        });
     }
 
     /**
@@ -97,6 +129,7 @@ public class CustomizationCtrl {
         this.mainCtrl = mainCtrl;
         this.boardCtrl = boardCtrl;
         this.server = server;
+        serverURLS = new ArrayList<>();
 
     }
     /**
@@ -104,52 +137,66 @@ public class CustomizationCtrl {
      * close this window, and finally refresh the displayed board colors.
      */
     @FXML
-    void saveCustomization() {
-        saveCardColor();
-        readCustomizationChange();
-        setBoardToDB();
-        boardCtrl.refresh();
+    void close() {
+        saveCustomization();
         mainCtrl.closeSecondaryStage();
 
+    }
+
+    /**
+     * Method used for saving customization
+     *
+     */
+    public void saveCustomization() {
+        renameActive = false;
+        readCustomizationChange();
+        setBoardToDB();
     }
 
     /**
      * Synchronize and save the user's modified colors, and synchronize them back to the board.
      */
     private void readCustomizationChange() {
-        this.setBoard = boardCtrl.getCurrentBoard();
         Map<String, String> idToColorMap = new HashMap<>();
         for (ColorPicker colorPicker : colorPickers) {
             String id = colorPicker.getId();
-            String color = "#" + colorPicker.getValue().toString().substring(2, 8);
+            String color = hexToColor(colorPicker.getValue());
             idToColorMap.put(id, color);
         }
-        setBoard.boardBgColor = idToColorMap.get("boardBgColor");
-        setBoard.boardFtColor = idToColorMap.get("boardFtColor");
-        setBoard.listBgColor = idToColorMap.get("listBgColor");
-        setBoard.listFtColor = idToColorMap.get("listFtColor");
-        setBoard.colorPreset = currentColorPreset;
-        setBoard.defaultColor = (String) this.choice.getSelectionModel().getSelectedItem();
-        boardCtrl.setCurrentBoard(setBoard);
+        currentBoard.boardBgColor = idToColorMap.get("boardBgColor");
+        currentBoard.boardFtColor = idToColorMap.get("boardFtColor");
+        currentBoard.listBgColor = idToColorMap.get("listBgColor");
+        currentBoard.listFtColor = idToColorMap.get("listFtColor");
+        currentBoard.defaultColor = (String) this.choice.getSelectionModel().getSelectedItem();
     }
 
     /**
-     * Reset all buttons to their initial values stored in a file on the client side.
+     * Reverts the Board's background and font color to the default ones
      */
     @FXML
-    void revertCustomization() {
+    private void revertBoardCustomization(){
         boardBgColor.setValue(Color.rgb(230, 230, 250));
         boardFtColor.setValue(Color.rgb(0, 0, 0));
+
+        saveCustomization();
+    }
+
+    /**
+     * Reverts the List's background and font color to the default ones
+     */
+    @FXML
+    private void revertListCustomization(){
         listBgColor.setValue(Color.rgb(255, 255, 255));
         listFtColor.setValue(Color.rgb(0, 0, 0));
+
+        saveCustomization();
     }
 
     /**
      * Upload all new color modifications to the database.
      */
     public void setBoardToDB() {
-        server.setBoardCss(setBoard);
-        boardCtrl.refresh();
+        server.setBoardCss(currentBoard);
     }
 
     /**
@@ -159,7 +206,10 @@ public class CustomizationCtrl {
      */
     void checkColor() {
         createChoiceBox();
-        for (Map.Entry<String, String> entry : currentColorPreset.entrySet()) {
+
+        TreeMap<String, String> sortedCurrentColorPreset = new TreeMap<>(currentColorPreset);
+
+        for (Map.Entry<String, String> entry : sortedCurrentColorPreset.entrySet()) {
             String name = entry.getKey();
             String[] colors = entry.getValue().split(" ");
 
@@ -174,6 +224,7 @@ public class CustomizationCtrl {
 
             ColorPicker colorPicker1= createColorPicker(Color.web(colors[0]));
             ColorPicker colorPicker2= createColorPicker(Color.web(colors[1]));
+
             Button deleteButton = new Button("x");
             deleteButton.setPrefSize(35, 24);
             deleteButton.setPadding(new Insets(0, 5, 0, 4));
@@ -183,9 +234,13 @@ public class CustomizationCtrl {
                 deleteButton.setVisible(false);
                 editButton.setVisible(false);
             }
+
+            colorPicker1.setOnAction(this::presetColorPickerOnAction);
+            colorPicker2.setOnAction(this::presetColorPickerOnAction);
+
             deleteButton.setOnAction(e -> {
                 currentColorPreset.remove(name);
-                taskColor.getChildren().remove(taskBox);
+                saveCustomization();
             });
             taskBox.getChildren().addAll(nameLabel, editButton,
                     colorPicker1, colorPicker2, deleteButton);
@@ -193,6 +248,24 @@ public class CustomizationCtrl {
         }
         HBox addTaskBox = createAddColorBox();
         taskColor.getChildren().add(addTaskBox);
+    }
+
+    /**
+     * When the color of a preset changes
+     * The scene is re-rendered and the board is saved
+     *
+     * @param event Contains information about the ActionEvent
+     */
+    public void presetColorPickerOnAction(ActionEvent event) {
+        ColorPicker target = (ColorPicker) event.getSource();
+        HBox taskBox = (HBox)target.getParent();
+
+        Color color1 = ((ColorPicker) taskBox.getChildren().get(2)).getValue();
+        Color color2 = ((ColorPicker) taskBox.getChildren().get(3)).getValue();
+        currentColorPreset.put(((Label)taskBox.getChildren().get(0)).getText(),
+                hexToColor(color1) + " " + hexToColor(color2));
+
+        saveCustomization();
     }
 
     /**
@@ -207,10 +280,10 @@ public class CustomizationCtrl {
         TextField newName = new TextField();
         newName.setPromptText("Rename");
         newName.setPrefWidth(90);
-        Button checkButton = new Button("S");
-        checkButton.setPrefSize(35, 23);
-        checkButton.setPadding(new Insets(2, 8, 1, 6));
-        checkButton.setStyle("-fx-background-color: #66cc66; " +
+        Button saveRename = new Button("S");
+        saveRename.setPrefSize(35, 23);
+        saveRename.setPadding(new Insets(2, 8, 1, 6));
+        saveRename.setStyle("-fx-background-color: #66cc66; " +
                 "-fx-background-radius: 3; -fx-text-fill: white;");
         Button editButton = new Button("R");
         editButton.setPrefSize(35, 23);
@@ -218,28 +291,52 @@ public class CustomizationCtrl {
         editButton.setStyle("-fx-background-color: #66cc66; " +
                 "-fx-background-radius: 3; -fx-text-fill: white;");
         editButton.setOnAction(e -> {
-            taskBox.getChildren().removeAll(editButton, nameLabel);
-            taskBox.getChildren().add(0, newName);
-            taskBox.getChildren().add(1, checkButton);
-        });
-        checkButton.setOnAction(e -> {
-            String inputName = newName.getText();
-            if (inputName.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Name cannot be empty.");
+            if(renameActive) {
+                alert.setHeaderText("You can't rename multiple things" +
+                        " at the same time!");
                 alert.showAndWait();
             } else {
-                nameLabel.setText(inputName);
-                newName.clear();
-                taskBox.getChildren().removeAll(checkButton, newName);
-                taskBox.getChildren().add(0, nameLabel);
-                taskBox.getChildren().add(1, editButton);
-
+                renameActive = true;
+                newName.setText(nameLabel.getText());
+                taskBox.getChildren().removeAll(editButton, nameLabel);
+                taskBox.getChildren().add(0, newName);
+                taskBox.getChildren().add(1, saveRename);
+            }
+        });
+        saveRename.setOnAction(e -> {
+            String inputName = newName.getText();
+            if (inputName.isEmpty()) {
+                alert.setHeaderText("Name cannot be empty.");
+                alert.showAndWait();
+            } else if(!inputName.equals(nameLabel.getText()) &&
+                    currentColorPreset.containsKey(inputName)) {
+                alert.setHeaderText("There exists a preset with this name!");
+                alert.showAndWait();
+            } else {
+                renameActive = false;
+                currentColorPreset.remove(nameLabel.getText());
+                Color color1 = ((ColorPicker) taskBox.getChildren().get(2)).getValue();
+                Color color2 = ((ColorPicker) taskBox.getChildren().get(3)).getValue();
+                currentColorPreset.put(inputName, hexToColor(color1) + " " + hexToColor(color2));
+                renamePreset(inputName);
+                saveCustomization();
             }
         });
         return editButton;
+    }
 
+    /**
+     * When a preset is renamed, it gets removed and then re-added
+     * This method makes sure that the color style of the cards
+     * is changed according to the renamed preset and not reset to default
+     *
+     * @param newName The new name of the preset
+     */
+    public void renamePreset(String newName) {
+        String defaultColor = currentBoard.defaultColor;
+        currentBoard.defaultColor = newName;
+        server.revertPreset(currentBoard);
+        currentBoard.defaultColor = defaultColor;
     }
 
     /**
@@ -265,11 +362,11 @@ public class CustomizationCtrl {
      */
     private void createChoiceBox() {
         taskColor.getChildren().clear();
-        this.currentColorPreset = boardCtrl.getCurrentBoard().colorPreset;
+        this.currentColorPreset = currentBoard.colorPreset;
         String[] choices = currentColorPreset.keySet().toArray(new String[0]);
 
         for (int i = 1; i < choices.length; i++) {
-            if (Objects.equals(choices[i], boardCtrl.getCurrentBoard().defaultColor)) {
+            if (Objects.equals(choices[i], currentBoard.defaultColor)) {
                 String temp = choices[i];
                 choices[i] = choices[0];
                 choices[0] = temp;
@@ -288,7 +385,9 @@ public class CustomizationCtrl {
         items.clear();
         items.addAll(choices);
         choiceBox.getSelectionModel().selectFirst();
-        choiceBox.setOnAction(event -> this.defaultColor = choiceBox.getValue());
+        choiceBox.setOnAction(event -> {
+            saveCustomization();
+        });
     }
 
 
@@ -300,27 +399,24 @@ public class CustomizationCtrl {
      * @return New Button Entity
      */
     private HBox createAddColorBox() {
-        HBox addBox = new HBox();
-        addBox.setId("new");
-        addBox.setAlignment(Pos.CENTER_LEFT);
-        addBox.setSpacing(10);
-        addBox.setStyle("-fx-background-color: #e6f2ff; " +
+        HBox addTaskBox = new HBox();
+        addTaskBox.setId("newTask");
+        addTaskBox.setAlignment(Pos.CENTER_LEFT);
+        addTaskBox.setSpacing(10);
+        addTaskBox.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 5px;");
-
         TextField nameInput = new TextField();
         nameInput.setPromptText("New name");
         nameInput.setPrefWidth(100);
-
         ColorPicker colorPicker1 = new ColorPicker();
         colorPicker1.setMaxWidth(60);
         colorPicker1.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 3px;");
-
         ColorPicker colorPicker2 = new ColorPicker();
+        colorPicker2.setValue(Color.BLACK);
         colorPicker2.setMaxWidth(60);
         colorPicker2.setStyle("-fx-background-color: #e6f2ff; " +
                 "-fx-background-radius: 3; -fx-padding: 3px;");
-
         Button addButton = new Button("+");
         addButton.setPrefSize(26, 23);
         addButton.setPadding(new Insets(-2, 0, -2, 0));
@@ -328,54 +424,37 @@ public class CustomizationCtrl {
                 "-fx-background-radius: 3; -fx-text-fill: white; -fx-font-size: 15");
         addButton.setOnAction(e -> {
             String taskName = nameInput.getText();
-            if (taskName.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING,
-                        "Please input name!", ButtonType.OK);
+            if(renameActive) {
+                alert.setHeaderText("Please finish renaming the current preset!");
+                alert.showAndWait();
+            }
+            else if (taskName.isEmpty()) {
+                alert.setHeaderText("Please input name!");
+                alert.showAndWait();
+            } else if(currentColorPreset.containsKey(taskName)) {
+                alert.setHeaderText("There exists a preset with this name!");
                 alert.showAndWait();
             } else {
-                addColor(taskName, colorPicker1.getValue(), colorPicker2.getValue());
-                nameInput.setText("");
+                Color color1 = ((ColorPicker) addTaskBox.getChildren().get(1)).getValue();
+                Color color2 = ((ColorPicker) addTaskBox.getChildren().get(2)).getValue();
+                currentColorPreset.put(taskName, hexToColor(color1) + " " + hexToColor(color2));
+
+                saveCustomization();
             }
         });
-
-        addBox.getChildren().addAll(nameInput, colorPicker1, colorPicker2, addButton);
-        return addBox;
+        addTaskBox.getChildren().addAll(nameInput, colorPicker1, colorPicker2, addButton);
+        return addTaskBox;
     }
 
     /**
-     * Create a trigger button to create a new color preset and save it to the database.
-     * @param name name of new task color preset
-     * @param color1 new before color of new task color preset
-     * @param color2 new finish color of new task color preset
+     * Method for converting between hex representation
+     * of a color to the css representation of it
+     *
+     * @param color The color to be converted
+     * @return String containing the css representation
      */
-    void addColor(String name, Color color1, Color color2) {
-        String value = color1.toString() + " " + color2.toString();
-        currentColorPreset.put(name, value);
-        boardCtrl.getCurrentBoard().colorPreset = currentColorPreset;
-        checkColor();
-    }
-
-    /**
-     * Retrieve the colors modified by the user and store
-     * them back to the storage map of color presets.
-     */
-    void saveCardColor() {
-        for (Node node : taskColor.getChildren()) {
-            if (node instanceof HBox) {
-                HBox taskBox = (HBox) node;
-                if (!"new".equals(taskBox.getId())) {
-                    Label nameLabel = (Label) taskBox.getChildren().get(0);
-                    ColorPicker colorPicker1 = (ColorPicker) taskBox.getChildren().get(2);
-                    ColorPicker colorPicker2 = (ColorPicker) taskBox.getChildren().get(3);
-
-                    String name = nameLabel.getText();
-                    String color1 = "#" + colorPicker1.getValue().toString().substring(2, 8);
-                    String color2 = "#" + colorPicker2.getValue().toString().substring(2, 8);
-                    String colors = color1 + " " + color2;
-                    currentColorPreset.put(name, colors);
-                }
-            }
-        }
+    public String hexToColor(Color color) {
+        return '#' + color.toString().substring(2, 8);
     }
 
 

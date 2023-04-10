@@ -34,7 +34,7 @@
          </font>
       </Label>
       <Group fx:id="boardGroup" layoutX="25.0" layoutY="68.0" />
-      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="890.6" layoutY="543.0" mnemonicParsing="false" onAction="#addList" prefHeight="28.0" prefWidth="30.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="79.0">
+      <Button fx:id="AddList" alignment="CENTER" contentDisplay="CENTER" layoutX="879.6" layoutY="543.0" mnemonicParsing="false" onAction="#addList" prefHeight="28.0" prefWidth="30.0" style="-fx-border-radius: 50; -fx-background-radius: 70; -fx-background-color: #c8a5d9; -fx-border-color: #8d78a6; -fx-alignment: bottom-right;" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="90.0">
          <font>
             <Font name="Bell MT" size="20.0" />
          </font>
@@ -42,18 +42,18 @@
             <Insets bottom="1.0" right="7.3" top="-1.0" />
          </padding>
       </Button>
-      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="937.0" layoutY="541.4" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="29.0" prefWidth="32.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="H" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="31.0">
+      <Button fx:id="helpBtu" contentDisplay="CENTER" layoutX="937.0" layoutY="541.4" mnemonicParsing="false" onAction="#showHelpScene" prefHeight="30.0" prefWidth="45.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Help" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="31.0">
          <font>
             <Font name="Bell MT" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="tags" layoutX="805.2" layoutY="32.0" mnemonicParsing="false" onAction="#openTag" prefHeight="27.0" prefWidth="80.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="114.79999999999995" AnchorPane.topAnchor="32.0">
+      <Button fx:id="tags" layoutX="805.2" layoutY="32.0" mnemonicParsing="false" onAction="#openTag" prefHeight="28.0" prefWidth="80.0" style="-fx-background-color: #FFF0F5; -fx-border-color: #8d78a6; -fx-border-radius: 2;" text="Tags" AnchorPane.rightAnchor="114.79999999999995" AnchorPane.topAnchor="32.0">
          <font>
             <Font name="Bell MT" size="13.0" />
          </font></Button>
-      <Button fx:id="customization" alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="360.0" mnemonicParsing="false" onAction="#openCustomization" prefHeight="23.0" prefWidth="75.0" style="-fx-background-color: #ffcccc; -fx-alignment: bottom-right; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 0);" text="Customization" textAlignment="CENTER" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="25.0">
+      <Button fx:id="customization" alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="32.0" mnemonicParsing="false" onAction="#openCustomization" prefHeight="28.0" prefWidth="120.0" style="-fx-background-color: #d2d2f9; -fx-border-color: #9999e6; -fx-background-radius: 2; -fx-border-radius: 2;" text="Customization" textAlignment="CENTER">
       <font>
-         <Font size="10.0" />
+         <Font name="Bell MT" size="13.0" />
       </font>
       </Button>
    </children>
