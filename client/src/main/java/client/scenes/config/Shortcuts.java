@@ -370,6 +370,7 @@ public class Shortcuts {
         boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
         boardCtrl.getCardDetailsCtrl().setBoard(board);
 
+        mainCtrl.shortcutsActivatedCardCustomization();
         boardCtrl.getCardDetailsCtrl().customization();
     }
 

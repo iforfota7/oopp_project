@@ -435,6 +435,14 @@ public class MainCtrl {
         addTagToCardCtrl.setShortcutActivated(true);
     }
 
+    /**
+     * Method for setting the shortcut activated to true
+     * in card customization controller
+     *
+     */
+    public void shortcutsActivatedCardCustomization() {
+        cardCustomizationCtrl.setShortcutActivated(true);
+    }
 
     /**
      * Closes an instance of a third stage

@@ -73,7 +73,6 @@ public class CardController {
      */
     @PostMapping(path = {"/rename","/rename/"})
     public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
-        System.out.println(card);
         if(card == null || card.list==null
                 || isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();

@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Lists;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -22,6 +23,7 @@ public class CardCustomizationCtrl {
     private final ServerUtils server;
     @FXML
     private final CardDetailsCtrl cardDetailsCtrl;
+    private boolean shortcutActivated;
 
     /**
      * Auxiliary call to mainCtrl Inject function
@@ -39,6 +41,7 @@ public class CardCustomizationCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.cardDetailsCtrl = cardDetailsCtrl;
+        this.shortcutActivated = false;
     }
 
     /**
@@ -57,7 +60,17 @@ public class CardCustomizationCtrl {
                     "-fx-text-fill: " + colors[1] + ";");
             btn.setOnAction(event -> {
                 cardDetailsCtrl.openedCard.colorStyle = ((Button) event.getSource()).getText();
-                cardDetailsCtrl.refreshOpenedCard();
+                if(shortcutActivated) {
+                    Lists blankList = new Lists(null, 0, null);
+                    blankList.id = cardDetailsCtrl.openedCard.list.id;
+                    cardDetailsCtrl.openedCard.list = blankList;
+
+                    server.renameCard(cardDetailsCtrl.openedCard);
+                }
+                else
+                    cardDetailsCtrl.refreshOpenedCard();
+
+                shortcutActivated = false;
                 close();
             });
             colorPresetHolder.getChildren().add(btn);
@@ -72,4 +85,11 @@ public class CardCustomizationCtrl {
         mainCtrl.closeThirdStage();
     }
 
+    /**
+     * Setter for the shortcut activate attribute
+     * @param shortcutActivated The new value of the attribute
+     */
+    public void setShortcutActivated(boolean shortcutActivated) {
+        this.shortcutActivated = shortcutActivated;
+    }
 }
