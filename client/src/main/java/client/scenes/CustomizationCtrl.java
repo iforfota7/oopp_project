@@ -4,10 +4,10 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Boards;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import javafx.scene.layout.GridPane;
@@ -18,8 +18,6 @@ import javafx.scene.paint.Color;
 import javax.inject.Inject;
 
 import java.util.*;
-
-
 
 /**
  * Controller for customization
@@ -38,7 +36,6 @@ public class CustomizationCtrl {
 
     @FXML
     private GridPane defaultChoice;
-    public String defaultColor;
 
     @FXML
     private ColorPicker listBgColor;
@@ -82,7 +79,6 @@ public class CustomizationCtrl {
             if (color != null) {
                 colorPicker.setValue(Color.web(color));
             }
-
             colorPicker.setOnAction(e -> {
                 saveCustomization();
                 setColorPickers(boardCtrl.getCurrentBoard());
@@ -129,7 +125,6 @@ public class CustomizationCtrl {
         setBoardToDB();
     }
 
-
     /**
      * Synchronize and save the user's modified colors, and synchronize them back to the board.
      */
@@ -137,7 +132,7 @@ public class CustomizationCtrl {
         Map<String, String> idToColorMap = new HashMap<>();
         for (ColorPicker colorPicker : colorPickers) {
             String id = colorPicker.getId();
-            String color = "#" + colorPicker.getValue().toString().substring(2, 8);
+            String color = hexToColor(colorPicker.getValue());
             idToColorMap.put(id, color);
         }
         currentBoard.boardBgColor = idToColorMap.get("boardBgColor");
@@ -211,23 +206,9 @@ public class CustomizationCtrl {
                 deleteButton.setVisible(false);
                 editButton.setVisible(false);
             }
-            colorPicker1.setOnAction(e -> {
-                Color color1 = ((ColorPicker) taskBox.getChildren().get(2)).getValue();
-                Color color2 = ((ColorPicker) taskBox.getChildren().get(3)).getValue();
-                currentColorPreset.put(name, hexToColor(color1) + " " + hexToColor(color2));
 
-                saveCustomization();
-                setColorPickers(boardCtrl.getCurrentBoard());
-            });
-
-            colorPicker2.setOnAction(e -> {
-                Color color1 = ((ColorPicker) taskBox.getChildren().get(2)).getValue();
-                Color color2 = ((ColorPicker) taskBox.getChildren().get(3)).getValue();
-                currentColorPreset.put(name, hexToColor(color1) + " " + hexToColor(color2));
-
-                saveCustomization();
-                setColorPickers(boardCtrl.getCurrentBoard());
-            });
+            colorPicker1.setOnAction(this::presetColorPickerOnAction);
+            colorPicker2.setOnAction(this::presetColorPickerOnAction);
 
             deleteButton.setOnAction(e -> {
                 currentColorPreset.remove(name);
@@ -240,6 +221,25 @@ public class CustomizationCtrl {
         }
         HBox addTaskBox = createAddColorBox();
         taskColor.getChildren().add(addTaskBox);
+    }
+
+    /**
+     * When the color of a preset changes
+     * The scene is re-rendered and the board is saved
+     *
+     * @param event Contains information about the ActionEvent
+     */
+    public void presetColorPickerOnAction(ActionEvent event) {
+        ColorPicker target = (ColorPicker) event.getSource();
+        HBox taskBox = (HBox)target.getParent();
+
+        Color color1 = ((ColorPicker) taskBox.getChildren().get(2)).getValue();
+        Color color2 = ((ColorPicker) taskBox.getChildren().get(3)).getValue();
+        currentColorPreset.put(((Label)taskBox.getChildren().get(0)).getText(),
+                hexToColor(color1) + " " + hexToColor(color2));
+
+        saveCustomization();
+        setColorPickers(boardCtrl.getCurrentBoard());
     }
 
     /**
@@ -411,6 +411,13 @@ public class CustomizationCtrl {
         return addTaskBox;
     }
 
+    /**
+     * Method for converting between hex representation
+     * of a color to the css representation of it
+     *
+     * @param color The color to be converted
+     * @return String containing the css representation
+     */
     public String hexToColor(Color color) {
         return '#' + color.toString().substring(2, 8);
     }
