@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Boards;
 import commons.Cards;
 import commons.Tags;
 import org.springframework.http.ResponseEntity;
@@ -72,7 +73,6 @@ public class CardController {
      */
     @PostMapping(path = {"/rename","/rename/"})
     public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
-        System.out.println(card);
         if(card == null || card.list==null
                 || isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();
@@ -159,6 +159,33 @@ public class CardController {
         List<Cards> cardsList = repo.findAll();
         for(Cards card : cardsList) {
             card.tags.removeIf(tag::equals);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Each card that had its preset removed
+     * will revert back to the default preset
+     *
+     * @param board Board object used to obtain the map
+     *              of presets and default preset
+     * @return OK iff the operation was successful
+     */
+    @Transactional
+    @PostMapping(path = {"/revertPreset", "/revertPreset/"})
+    public ResponseEntity<Cards> revertPreset(@RequestBody Boards board) {
+        if(board == null)
+            return ResponseEntity.badRequest().build();
+
+        String presetName = board.defaultColor;
+
+        List<Cards> cardsList = repo.findAll();
+        for(Cards card : cardsList) {
+            if(!board.colorPreset.containsKey(card.colorStyle)) {
+                card.colorStyle = presetName;
+                repo.save(card);
+            }
         }
 
         return ResponseEntity.ok().build();

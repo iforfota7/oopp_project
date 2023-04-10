@@ -356,16 +356,8 @@ public class Shortcuts {
 
         if(currentCardObject==null || board==null) return;
 
-        boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
-        boardCtrl.getCardDetailsCtrl().setBoard(board);
-
+        mainCtrl.shortcutsActivatedAddTagToCard();
         mainCtrl.showAddTagToCard(currentCardObject, board, boardCtrl.getCardDetailsCtrl());
-
-        Lists blankList = new Lists(null, 0, null);
-        blankList.id = currentCardObject.list.id;
-        currentCardObject.list = blankList;
-
-        currentCardObject = server.renameCard(currentCardObject);
      }
 
     /**
@@ -378,6 +370,7 @@ public class Shortcuts {
         boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
         boardCtrl.getCardDetailsCtrl().setBoard(board);
 
+        mainCtrl.shortcutsActivatedCardCustomization();
         boardCtrl.getCardDetailsCtrl().customization();
     }
 
