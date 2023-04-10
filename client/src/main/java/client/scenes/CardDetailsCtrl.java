@@ -209,7 +209,6 @@ public class CardDetailsCtrl {
      * to be saved by pressing the 'Close' button. However, because this
      * can happen accidentally, a warning asking for confirmation of
      * closing the card without saving the modifications is displayed
-     * @return false
      */
     @FXML
     public void closeCardDetails(){
