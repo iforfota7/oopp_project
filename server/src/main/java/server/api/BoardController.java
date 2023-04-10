@@ -31,7 +31,8 @@ public class BoardController {
     }
 
 
-    private ConcurrentMap<Object, Consumer<Boards>> listeners = new ConcurrentHashMap<Object, Consumer<Boards>>();
+    private ConcurrentMap<Object, Consumer<Boards>> listeners = new
+            ConcurrentHashMap<Object, Consumer<Boards>>();
 
 
     /** Long Polling request server endpoint.

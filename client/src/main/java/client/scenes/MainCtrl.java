@@ -544,6 +544,8 @@ public class MainCtrl {
         if(secondaryStage!=null)
         secondaryStage.close();
     }
-    public boolean isBoard(Boards b){return this.boardCtrl.board.id == b.id && primaryStage.getScene().equals(board);}
-    public boolean isBoardOverview(){return primaryStage.getScene().equals(boardOverview);}
+    public boolean isBoard(Boards b){return this.boardCtrl.board.id == b.id &&
+            primaryStage.getScene().equals(board);}
+    public boolean isBoardOverview(){return primaryStage.
+            getScene().equals(boardOverview);}
 }
