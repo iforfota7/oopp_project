@@ -434,6 +434,29 @@ public class ServerUtils {
                 }).isAdmin;
     }
 
+    /**
+     * Find the board from the server by boardID and return the Board
+     * @param boardID ID of the board to be found.
+     * @return Target board
+     */
+    public Boards getBoardByID(String boardID) {
+        return  ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/get/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){});
+    }
+
+    /**
+     * By sending the current Board to the server, compare and store the new color information,
+     * and update the database
+     * @param board User's newly revised board
+     * @return new board
+     */
+    public Boards setBoardCss(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/setCss/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 
     /**
      * Method that adds the current board to the user
@@ -498,6 +521,20 @@ public class ServerUtils {
                 path("api/cards/removeTag").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(tags, APPLICATION_JSON), Tags.class);
     }
+
+    /**
+     * If the preset of a card was removed
+     * it will be reverted back to the default preset
+     *
+     * @param board Used for obtaining the map and default preset
+     * @return Status code 200 if the operation was successful
+     */
+    public Cards revertPreset(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/cards/revertPreset").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Cards.class);
+    }
+
     private static final ExecutorService EXEC = Executors.newCachedThreadPool();
 
     /** Calls endpoint on backend for long polling constantly when it recieves the board
