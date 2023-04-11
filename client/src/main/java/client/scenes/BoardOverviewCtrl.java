@@ -2,6 +2,8 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
+import commons.User;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -12,6 +14,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -25,6 +29,8 @@ public class BoardOverviewCtrl{
     private Boards currentBoard;
     private int numberOfBoards = 0;
     private List<String> serverURLS;
+
+    Font font;
 
 
     /**
@@ -42,14 +48,83 @@ public class BoardOverviewCtrl{
         serverURLS = new ArrayList<>();
         this.selectServerCtrl = selectServerCtrl;
     }
+
+    /**
+     * This method configures websockets related to the board overview
+     */
+    private void websocketBoards(){
+        server.registerForMessages("/topic/boards/add", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/rename", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/remove", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+    }
+
+    private void websocketUsers(){
+        server.registerForMessages("/topic/users/refresh", User.class, user ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/users/boards", String.class, message ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/users/update", User.class, user ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+    }
+
     @FXML
     GridPane gridPane;
 
     @FXML
     private Label adminLabel;
-    @FXML
-    private Label userLabel;
-
     private boolean adminLock;
 
     /**
@@ -63,11 +138,22 @@ public class BoardOverviewCtrl{
 
     /**
      * Creates a list of boards holding all labels
-     * Initializes the onMouseClicked event for these labels
+     * Also initialises the font for the boardOverview.fxml
+     * And initialises the websockets if the server isn't in serverURLS yet
      */
     public void init() {
         boardsList = new ArrayList<>();
+        font = Font.font("Bell MT", FontWeight.NORMAL,
+                FontPosture.REGULAR, 19);
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketBoards();
+            websocketUsers();
+        }
+
         refresh();
+
     }
 
     /**
@@ -113,7 +199,7 @@ public class BoardOverviewCtrl{
         newBoard.setAccessibleRole(AccessibleRole.TEXT);
         gridPane.add(newBoard, positionInColumn, row);
         gridPane.setMargin(gridPane.getChildren().get(numberOfBoards - 1),
-                new Insets(10, 10 , 10 ,10));
+                new Insets(20, 20 , 20 ,20));
     }
 
     /**
@@ -122,28 +208,17 @@ public class BoardOverviewCtrl{
      * @return The Label controller that will be displayed
      */
     public StackPane createNewBoard(Boards b) {
-        Label newBoard = new Label(b.name);
-
-        newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
-                "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
-                "-fx-z-index: 999;");
-        newBoard.setPrefWidth(160.8);
-        newBoard.setPrefHeight(73.6);
-        newBoard.setMinWidth(160.8);
-        newBoard.setMinHeight(73.6);
-        newBoard.setAlignment(Pos.CENTER);
-        newBoard.setText(b.name);
-        newBoard.getProperties().put("board", b);
-        newBoard.setFont(new Font(15));
-        newBoard.setOnMouseClicked(this::goToBoard);
+        Label newBoard = boardBody(b);
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().add(newBoard);
         stackPane.getProperties().put("board", b);
 
         Button removeBoardButton = new Button("delete");
+        removeBoardButton.setFont(font);
         removeBoardButton.setStyle("-fx-background-color: #f08080;" +
-                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
+                " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px; " +
+                "-fx-font-family: Bell MT;");
         removeBoardButton.setOnMouseClicked(this::removeBoard);
         removeBoardButton.setUserData(b.name);
         removeBoardButton.setVisible(adminLock);
@@ -151,6 +226,7 @@ public class BoardOverviewCtrl{
         StackPane.setAlignment(removeBoardButton, Pos.TOP_RIGHT);
 
         Button hideBoardButton = new Button("hide");
+        hideBoardButton.setFont(font);
         hideBoardButton.setStyle("-fx-background-color: #f08080;" +
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         hideBoardButton.setOnMouseClicked(this::hideBoard);
@@ -160,6 +236,7 @@ public class BoardOverviewCtrl{
         StackPane.setAlignment(hideBoardButton, Pos.TOP_RIGHT);
 
         Button renameBoardButton = new Button("rename");
+        renameBoardButton.setFont(font);
         renameBoardButton.setStyle("-fx-background-color: #f08080;" +
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         renameBoardButton.setOnMouseClicked(this::showRenameBoard);
@@ -168,6 +245,25 @@ public class BoardOverviewCtrl{
         StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
 
         return stackPane;
+    }
+
+    private Label boardBody(Boards b){
+        Label newBoard = new Label(b.name);
+
+        newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
+                "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
+                "-fx-z-index: 999;");
+        newBoard.setPrefWidth(263.2);
+        newBoard.setPrefHeight(110.4);
+        newBoard.setMinWidth(263.2);
+        newBoard.setMinHeight(110.4);
+        newBoard.setAlignment(Pos.CENTER);
+        newBoard.setText(b.name);
+        newBoard.getProperties().put("board", b);
+        newBoard.setFont(font);
+        newBoard.setOnMouseClicked(this::goToBoard);
+
+        return newBoard;
     }
     /**
      * The functionality of the delete current board button will be displayed
@@ -222,12 +318,15 @@ public class BoardOverviewCtrl{
 
         if(adminLock){
             boardsList = server.getBoards();
+            openAdminFeatures();
         }
         else{
             boardsList = server.viewedBoards();
             selectServerCtrl.setBoardsOfCurrentUser(boardsList);
+            closeAdminFeatures();
         }
 
+        selectServerCtrl.setCurrentUser();
         selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
@@ -249,8 +348,7 @@ public class BoardOverviewCtrl{
     public void openAdminFeatures() {
         adminLock = true;
         mainCtrl.closeSecondaryStage();
-        adminLabel.setVisible(true);
-        userLabel.setVisible(false);
+        adminLabel.setText("Admin Mode");
     }
 
     /**
@@ -258,14 +356,14 @@ public class BoardOverviewCtrl{
      * Hide delete buttons.
      */
     public void closeAdminFeatures(){
-        adminLabel.setVisible(false);
-        userLabel.setVisible(true);
+        adminLabel.setText("User Mode");
     }
 
     /**
      * Method that shows the help scene
      */
+    @FXML
     public void showHelpScene(){
-        mainCtrl.showHelpScene();
+        mainCtrl.showHelpOverviewScene();
     }
 }
