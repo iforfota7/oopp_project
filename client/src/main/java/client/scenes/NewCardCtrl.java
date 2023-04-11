@@ -13,14 +13,17 @@ public class NewCardCtrl {
 
 
     private final BoardCtrl boardCtrl;
+    private final MainCtrl mainCtrl;
 
     /**
      * Constructor method for NewCardCtrl
      * @param boardCtrl instance of BoardCtrl
+     * @param mainCtrl instance of MainCtrl
      */
     @Inject
-    public NewCardCtrl(BoardCtrl boardCtrl){
+    public NewCardCtrl(BoardCtrl boardCtrl, MainCtrl mainCtrl){
         this.boardCtrl = boardCtrl;
+        this.mainCtrl = mainCtrl;
     }
 
     /**
@@ -45,5 +48,15 @@ public class NewCardCtrl {
 
         boardCtrl.addCardToList(cardTitleInput.getText());
         cardTitleInput.clear();
+    }
+
+    /**
+     * Closes the window for adding a new card.
+     */
+    @FXML
+    void close() {
+        warning.setVisible(false);
+        cardTitleInput.clear();
+        mainCtrl.closeSecondaryStage();
     }
 }

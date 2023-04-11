@@ -28,7 +28,8 @@ import javafx.util.Pair;
 public class MainCtrl {
     private Stage primaryStage, secondaryStage, thirdStage;
     private Scene board, renameList, deleteList, addList;
-    private Scene cardDetails, newCard, confirmCloseCard, warningCardDeletion, confirmUsername;
+    private Scene cardDetails, cardEditTitle, newCard;
+    private Scene confirmUsername, confirmCloseCard, warningCardDeletion;
     private Scene boardOverview, addBoard, renameBoard;
     private Scene tagControl, addTag, tagDetails, addTagToCard;
     private Scene selectServer, joinBoardByID, userDetails, deleteCard;
@@ -56,6 +57,7 @@ public class MainCtrl {
     private AdListCtrl addListCtrl;
 
     private CardDetailsCtrl cardDetailsCtrl;
+    private CardEditTitleCtrl cardEditTitleCtrl;
     private NewCardCtrl newCardCtrl;
     private DeCardCtrl deCardCtrl;
 
@@ -98,6 +100,9 @@ public class MainCtrl {
 
         this.boardOverview = new Scene(boardOverview.getValue());
         this.boardOverviewCtrl = boardOverview.getKey();
+
+        shortcuts = new Shortcuts(this, boardCtrl);
+        this.boardOverview.setOnKeyPressed(shortcuts::openHelpScene);
 
         this.addBoard = new Scene(addBoard.getValue());
         this.addBoardCtrl = addBoard.getKey();
@@ -142,6 +147,7 @@ public class MainCtrl {
     /**
      * Initialize method for card related scenes
      * @param cardDetails cardDetailsCtrl parent pair for cardDetails scene
+     * @param cardEditTitle cardEditTitleCtrl parent pair for cardEditTitle scene
      * @param newCardCtrl newCardCtrl parent pair for newCard scene
      * @param deCardCtrl deCardCtrl parent pair for deCard scene
      * @param confirmCloseCard confirmCloseCard parent pair for confirmCloseCard scene
@@ -149,6 +155,7 @@ public class MainCtrl {
      *                            WarningCardDeletion scene
      */
     public void initializeCards(Pair<CardDetailsCtrl, Parent> cardDetails,
+                                Pair<CardEditTitleCtrl, Parent> cardEditTitle,
                                 Pair<NewCardCtrl, Parent> newCardCtrl,
                                 Pair<DeCardCtrl, Parent> deCardCtrl,
                                 Pair<CardDetailsCtrl, Parent> confirmCloseCard,
@@ -156,6 +163,12 @@ public class MainCtrl {
 
         this.cardDetails = new Scene(cardDetails.getValue());
         this.cardDetailsCtrl = cardDetails.getKey();
+
+        shortcuts = new Shortcuts(this, boardCtrl);
+        this.cardDetails.setOnKeyPressed(shortcuts::closeCardDetails);
+
+        this.cardEditTitle = new Scene(cardEditTitle.getValue());
+        this.cardEditTitleCtrl = cardEditTitle.getKey();
 
         this.newCard = new Scene(newCardCtrl.getValue());
         this.newCardCtrl = newCardCtrl.getKey();
@@ -182,7 +195,7 @@ public class MainCtrl {
         this.helpOverview = new Scene(helpOverviewCtrl.getValue()); // uses same ctrl as help
         this.helpShortcuts = new Scene(helpShortcutsCtrl.getValue()); // uses same ctrl as help
 
-        shortcuts = new Shortcuts(this);
+        shortcuts = new Shortcuts(this, boardCtrl);
         helpShortcuts.setOnKeyPressed(shortcuts::closeHelpScene);
     }
 
@@ -413,9 +426,27 @@ public class MainCtrl {
         thirdStage = new Stage();
         thirdStage.setScene(addTagToCard);
         thirdStage.setTitle("Add Tag to Card");
+        thirdStage.setResizable(false);
         thirdStage.show();
     }
 
+    /**
+     * Method for setting the shortcut activated to true
+     * in add tag to card controller
+     *
+     */
+    public void shortcutsActivatedAddTagToCard() {
+        addTagToCardCtrl.setShortcutActivated(true);
+    }
+
+    /**
+     * Method for setting the shortcut activated to true
+     * in card customization controller
+     *
+     */
+    public void shortcutsActivatedCardCustomization() {
+        cardCustomizationCtrl.setShortcutActivated(true);
+    }
 
     /**
      * Closes an instance of a third stage
@@ -545,6 +576,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Keyboard shortcuts");
         secondaryStage.setScene(helpShortcuts);
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -578,55 +610,9 @@ public class MainCtrl {
             if(thirdStage != null)
                 thirdStage.close();
             secondaryStage.close();
+            boardCtrl.getFirstRow().requestFocus();
         }
     }
-
-    /**Checks if primary stage presents boards scene
-     * @param b boards scene
-     * @return true if it represents, false otherwise
-     */
-    public boolean isBoard(Boards b){return this.boardCtrl.board.id == b.id &&
-            primaryStage.getScene().equals(board);}
-
-    /**Method that checks weather primaryStage shows boardOverview.
-     * @return true if it represents boardOverview, false otherwise
-     */
-    public boolean isBoardOverview(){return primaryStage.
-            getScene().equals(boardOverview);}
-
-
-    /**
-     * Open a new window that displays the customization scene
-     * @param name current board name
-     */
-    public void showCustomization(String name) {
-        if(secondaryStage != null && secondaryStage.isShowing()) return;
-        secondaryStage = new Stage();
-        secondaryStage.setTitle("Customization for "+name);
-        secondaryStage.setScene(customization);
-
-        secondaryStage.setOnCloseRequest(event -> {
-            customizationCtrl.close();
-        });
-
-        customizationCtrl.setColorPickers(boardCtrl.getCurrentBoard());
-        secondaryStage.show();
-    }
-
-    /**
-     * Open a new window that displays the CardCustomization scene
-     * @param boards The board object which contains the opened card
-     */
-    public void openCardCustomization(Boards boards) {
-        if(thirdStage != null && thirdStage.isShowing()) return;
-        thirdStage = new Stage();
-        thirdStage.setTitle("Customization for Card");
-        thirdStage.setScene(cardCustomization);
-        cardCustomizationCtrl.setSceneOpened(true);
-        cardCustomizationCtrl.checkColorPreset(boards);
-        thirdStage.show();
-    }
-
 
     /**
      * Shows in a third window a warning that asks for confirmation for closing
@@ -652,11 +638,87 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**Checks if primary stage presents boards scene
+     * @param b boards scene
+     * @return true if it represents, false otherwise
+     */
+    public boolean isBoard(Boards b) {
+        return this.boardCtrl.getCurrentBoard().id == b.id &&
+            primaryStage.getScene().equals(board);
+    }
+
+    /**Method that checks weather primaryStage shows boardOverview.
+     * @return true if it represents boardOverview, false otherwise
+     */
+    public boolean isBoardOverview(){return primaryStage.
+            getScene().equals(boardOverview);}
+
+
+    /**
+     * Open a new window that displays the customization scene
+     * @param name current board name
+     */
+    public void showCustomization(String name) {
+        if(secondaryStage != null && secondaryStage.isShowing()) return;
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Customization for "+name);
+        secondaryStage.setScene(customization);
+
+        secondaryStage.setOnCloseRequest(event -> {
+            customizationCtrl.close();
+        });
+
+        customizationCtrl.setColorPickers(boardCtrl.getCurrentBoard());
+        secondaryStage.setResizable(false);
+        secondaryStage.show();
+    }
+
+    /**
+     * Open a new window that displays the CardCustomization scene
+     * @param boards The board object which contains the opened card
+     * @param cards The opened card object
+     */
+    public void openCardCustomization(Boards boards, Cards cards) {
+        if(thirdStage != null && thirdStage.isShowing()) return;
+        thirdStage = new Stage();
+        thirdStage.setTitle("Customization for Card");
+        thirdStage.setScene(cardCustomization);
+        cardCustomizationCtrl.setSceneOpened(true);
+        cardCustomizationCtrl.init(boards, cards);
+        thirdStage.setResizable(false);
+        thirdStage.show();
+    }
+
+    /**
+     * Opens a new window for editing a card's title
+     * @param card the highlighted card
+     */
+    public void showEditCardTitle(Cards card) {
+
+        if(secondaryStage!=null && secondaryStage.isShowing())
+            return;
+        cardEditTitleCtrl.init(card);
+        secondaryStage = new Stage();
+        secondaryStage.setTitle("Edit title");
+        secondaryStage.setScene(cardEditTitle);
+        secondaryStage.show();
+    }
+
     /**
      * Checks whether the current primary stage is the board overview
      * @return true if the primary stage is board overview
      */
     public boolean checkInBoardOverview(){
         return primaryStage.getScene().equals(boardOverview);
+    }
+
+    /**
+     * Checks whether card details are open
+     * @return true if card details are open, false otherwise
+     */
+    public boolean isCardDetailsShowing() {
+
+        if(secondaryStage==null) return false;
+        return secondaryStage.getScene().equals(cardDetails);
     }
 }

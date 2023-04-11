@@ -132,7 +132,8 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(openedCard != null && c.id == openedCard.id && sceneOpened) {
+                    if(openedCard != null && c.id == openedCard.id
+                            && sceneOpened && mainCtrl.isCardDetailsShowing()) {
                         mainCtrl.closeSecondaryStage();
                         mainCtrl.showWarningCardDeletion();
                     }
@@ -232,7 +233,7 @@ public class CardDetailsCtrl {
      * A warning is displayed if the input field is empty.
      */
     @FXML
-    void save() {
+    public void save() {
         warning.setVisible(false);
         rename = false;
 
@@ -688,7 +689,7 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.openCardCustomization(board);
+        mainCtrl.openCardCustomization(board, openedCard);
 
     }
 

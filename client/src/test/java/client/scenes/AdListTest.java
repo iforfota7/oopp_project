@@ -40,4 +40,10 @@ class AdListTest {
         assertTrue(mockMainCtrl.calledMethods.contains("closeSecondaryStage"));
         assertTrue(mockBoardCtrl.calledMethods.contains("addListToBoard 1"));
     }
+
+    @Test
+    public void closeTest() {
+        mockAdListCtrl.close();
+        assertTrue(mockAdListCtrl.calledMethods.contains("close"));
+    }
 }
