@@ -563,6 +563,7 @@ public class ServerUtils {
                                 target(serverAddress).path("api/boards/longPolling").
                                 request(APPLICATION_JSON).
                                 accept(APPLICATION_JSON).get(Response.class);
+
                         if (res.getStatus() == 204) {
                             continue;
                         }

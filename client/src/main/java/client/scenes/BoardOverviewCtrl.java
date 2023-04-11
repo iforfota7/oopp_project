@@ -162,6 +162,17 @@ public class BoardOverviewCtrl{
         }
 
         refresh();
+        server.registerForUpdates(b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(mainCtrl.isBoardOverview()){
+                        refresh();
+                    }
+
+                }
+            });
+        });
 
     }
 
