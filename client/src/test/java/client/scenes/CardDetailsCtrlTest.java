@@ -14,15 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class CardDetailsCtrlTest {
 
     private MockServerUtils mockServerUtils;
-    private MockMainCtrl mockMainCtrl;
+    private MockMainCtrl testMainCtrl;
     private CardDetailsCtrl sut;
 
     @BeforeEach
     public void setUp() {
-
         mockServerUtils = new MockServerUtils();
-        mockMainCtrl = new MockMainCtrl();
-        sut = new CardDetailsCtrl(mockServerUtils, mockMainCtrl);
+        testMainCtrl = new MockMainCtrl();
+        sut = new CardDetailsCtrl(mockServerUtils, testMainCtrl);
     }
 
     @Test
@@ -39,7 +38,20 @@ class CardDetailsCtrlTest {
         subtaskList.add(s3);
         subtaskList.add(s4);
 
-        sut.swapSubtasksService(subtaskList, 0, 1);
+        assertTrue(sut.swapSubtasksService(subtaskList, 0, 1));
+    }
+
+    @Test
+    void swapSubtasksOutOfBoundsTest() {
+
+        Subtask s1 = new Subtask();
+        Subtask s2 = new Subtask();
+        Subtask s3 = new Subtask();
+        Subtask s4 = new Subtask();
+
+        List<Subtask> subtaskList = new ArrayList<>();
+
+        assertFalse(sut.swapSubtasksService(subtaskList, 0, 1));
     }
 
     @Test
@@ -75,7 +87,10 @@ class CardDetailsCtrlTest {
 
         Boards board = new Boards();
         sut.setBoard(board);
+        boolean result = sut.close();
 
-        assertFalse(sut.close());
+        assertFalse(result);
+        assertTrue(testMainCtrl.calledMethods.contains("closeSecondaryStage"));
+        assertTrue(testMainCtrl.calledMethods.contains("showBoard"));
     }
 }

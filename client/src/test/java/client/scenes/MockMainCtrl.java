@@ -27,15 +27,6 @@ public class MockMainCtrl extends MainCtrl {
         calledMethods.add("closeSecondaryStage");
     }
 
-    /**
-     * Mocks the behaviour of the showBoard method in MainCtrl
-     */
-    @Override
-    public void showBoard(Boards b) {
-
-        System.out.println("Successfully showed board");
-    }
-
     @Override
     public void showBoardOverview(){
         System.out.println("Successfully showed board overview");
@@ -50,4 +41,5 @@ public class MockMainCtrl extends MainCtrl {
     public void showUserDetails(User user){
         System.out.println("Successfully showed user details");
     }
+    public void showBoard(Boards b) { calledMethods.add("showBoard"); }
 }
