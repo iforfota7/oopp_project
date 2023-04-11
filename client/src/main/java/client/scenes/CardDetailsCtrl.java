@@ -104,9 +104,9 @@ public class CardDetailsCtrl {
      *
      */
     public void websocketConfig() {
-
         cardWebsocketConfig();
         boardWebsocketConfig();
+        listWebsocketConfig();
     }
 
     /**
@@ -161,7 +161,6 @@ public class CardDetailsCtrl {
      * Configures the websockets which depend on boards
      */
     public void boardWebsocketConfig(){
-
         // when tags are updated, the card details scene needs to receive this information
         server.registerForMessages("/topic/boards/update", Boards.class, b->{
             Platform.runLater(new Runnable() {
@@ -169,6 +168,20 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(board != null && board.id == b.id) {
                         board = b;
+                    }
+                }
+            });
+        });
+
+
+        // when tags are updated, the card details scene needs to receive this information
+        server.registerForMessages("/topic/lists/remove", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && l.id == openedCard.list.id && sceneOpened) {
+                        mainCtrl.closeSecondaryStage();
+                        mainCtrl.showWarningCardDeletion();
                     }
                 }
             });
@@ -186,6 +199,26 @@ public class CardDetailsCtrl {
                             Cards updatedCard = server.getCardById(openedCard.id);
                             openedCard.colorStyle = updatedCard.colorStyle;
                         }
+                        refreshOpenedCard();
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Configures the websockets which depend on lists
+     */
+    public void listWebsocketConfig(){
+        // When another client removes this card, this client will be
+        // sent to the board scene
+        server.registerForMessages("/topic/cards/revertPreset", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && !board.colorPreset.containsKey(openedCard.colorStyle)
+                            && sceneOpened) {
+                        openedCard.colorStyle = c.colorStyle;
                         refreshOpenedCard();
                     }
                 }

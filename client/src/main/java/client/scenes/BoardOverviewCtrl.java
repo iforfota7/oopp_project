@@ -57,7 +57,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -66,7 +66,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview())init();
                 }
             });
         });
@@ -75,7 +75,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -84,7 +84,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -93,7 +93,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -104,7 +104,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -113,7 +113,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -122,7 +122,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });

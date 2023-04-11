@@ -14,7 +14,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="84.0" layoutY="82.0" text="You will be renturned to the board.">
+      <Label layoutX="84.0" layoutY="82.0" text="You will be returned to the board.">
          <font>
             <Font size="15.0" />
          </font>

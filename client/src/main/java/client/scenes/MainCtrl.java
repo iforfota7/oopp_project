@@ -483,6 +483,12 @@ public class MainCtrl {
         primaryStage.setTitle("Board Overview"+titleLabel);
         primaryStage.setX(300);
         primaryStage.setY(100);
+
+        if(primaryStage.getScene().equals(board)){
+            if(secondaryStage != null && secondaryStage.isShowing()) closeSecondaryStage();
+            if(thirdStage != null && thirdStage.isShowing()) closeThirdStage();
+        }
+
         primaryStage.setScene(boardOverview);
     }
 
@@ -492,6 +498,8 @@ public class MainCtrl {
     public void showSelectServer() {
         primaryStage.setTitle("Start");
         primaryStage.setScene(selectServer);
+        if(secondaryStage != null && secondaryStage.isShowing()) closeSecondaryStage();
+        if(thirdStage != null && thirdStage.isShowing()) closeThirdStage();
     }
 
     /**
@@ -598,9 +606,12 @@ public class MainCtrl {
      * This method closes any general secondary stage
      */
     public void closeSecondaryStage(){
-        if(secondaryStage!=null)
-        secondaryStage.close();
-        boardCtrl.getFirstRow().requestFocus();
+        if(secondaryStage!=null) {
+            if(thirdStage != null)
+                thirdStage.close();
+            secondaryStage.close();
+            boardCtrl.getFirstRow().requestFocus();
+        }
     }
 
     /**
@@ -691,6 +702,14 @@ public class MainCtrl {
         secondaryStage.setTitle("Edit title");
         secondaryStage.setScene(cardEditTitle);
         secondaryStage.show();
+    }
+
+    /**
+     * Checks whether the current primary stage is the board overview
+     * @return true if the primary stage is board overview
+     */
+    public boolean checkInBoardOverview(){
+        return primaryStage.getScene().equals(boardOverview);
     }
 
     /**
