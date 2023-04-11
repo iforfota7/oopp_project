@@ -89,6 +89,8 @@ public class BoardController {
 
         Boards saved = repo.save(board);
 
+        msgs.convertAndSend("/topic/boards/add", saved);
+
         return ResponseEntity.ok(saved);
     }
 
@@ -107,6 +109,7 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
 
         Boards saved = repo.save(board);
+        msgs.convertAndSend("/topic/boards/rename", saved);
 
         return ResponseEntity.ok(saved);
     }
@@ -187,6 +190,47 @@ public class BoardController {
         repo.removeReferenced(boards.id);
         repo.deleteById(boards.id);
 
+        msgs.convertAndSend("/topic/boards/remove", boards);
+
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * Find the specified board by the request information of boardName and return this board.
+     * @param boardName Name of the target board.
+     * @return Target board.
+     */
+    @GetMapping(path = {"/get/{boardName}"})
+    @ResponseBody
+    public Boards getBoard(@PathVariable String boardName) {
+
+        if(repo.findByName(boardName).isEmpty()) return null;
+        return repo.findByName(boardName).get();
+    }
+
+    /**
+     *  By sending the new board from the client,
+     *  refresh the color information of the same board in the database and store it
+     * @param boards board with new color
+     * @return Notification of whether the modification was successful
+     */
+    @PostMapping(path = {"/setCss","/setCss/"})
+    public ResponseEntity<Boards> setCss(@RequestBody Boards boards) {
+        Optional<Boards> optionalBoard = repo.findByName(boards.name);
+        if (optionalBoard.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Boards savedBoard = optionalBoard.get();
+        savedBoard.boardBgColor = boards.boardBgColor;
+        savedBoard.boardFtColor = boards.boardFtColor;
+        savedBoard.listBgColor = boards.listBgColor;
+        savedBoard.listFtColor = boards.listFtColor;
+        savedBoard.colorPreset = boards.colorPreset;
+        savedBoard.defaultColor = boards.defaultColor;
+        Boards saved = repo.save(savedBoard);
+
+        msgs.convertAndSend("/topic/boards/setCss", saved);
+        return ResponseEntity.ok(saved);
+    }
 }
+

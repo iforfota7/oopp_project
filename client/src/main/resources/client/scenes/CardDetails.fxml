@@ -164,4 +164,5 @@
       </padding>
    </GridPane>
    <Button fx:id="saveDetails1" layoutX="507.0" layoutY="398.0" mnemonicParsing="false" onAction="#closeCardDetails" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #badeba;" text="Close" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="507.0" />
-</AnchorPane>
+   <Button layoutX="55.0" layoutY="44.0" mnemonicParsing="false" onAction="#customization" style="-fx-background-color: #81e481;" text="Customization" />
+        </AnchorPane>

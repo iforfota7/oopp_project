@@ -2,6 +2,8 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Boards;
+import commons.User;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -28,8 +30,7 @@ public class BoardOverviewCtrl{
     private int numberOfBoards = 0;
     private List<String> serverURLS;
 
-    Font font = Font.font("Bell MT", FontWeight.NORMAL,
-            FontPosture.REGULAR, 19);
+    Font font;
 
 
     /**
@@ -47,6 +48,87 @@ public class BoardOverviewCtrl{
         serverURLS = new ArrayList<>();
         this.selectServerCtrl = selectServerCtrl;
     }
+
+    /**
+     * This method configures websockets related to the board overview
+     */
+    private void websocketBoards(){
+        server.registerForMessages("/topic/boards/add", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/rename", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/update", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/remove", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/setCss", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+    }
+
+    private void websocketUsers(){
+        server.registerForMessages("/topic/users/refresh", User.class, user ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/users/boards", String.class, message ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/users/update", User.class, user ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        });
+
+    }
+
     @FXML
     GridPane gridPane;
 
@@ -65,10 +147,20 @@ public class BoardOverviewCtrl{
 
     /**
      * Creates a list of boards holding all labels
-     * Initializes the onMouseClicked event for these labels
+     * Also initialises the font for the boardOverview.fxml
+     * And initialises the websockets if the server isn't in serverURLS yet
      */
     public void init() {
         boardsList = new ArrayList<>();
+        font = Font.font("Bell MT", FontWeight.NORMAL,
+                FontPosture.REGULAR, 19);
+
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketBoards();
+            websocketUsers();
+        }
+
         refresh();
 
     }
@@ -158,8 +250,10 @@ public class BoardOverviewCtrl{
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         renameBoardButton.setOnMouseClicked(this::showRenameBoard);
         renameBoardButton.setUserData(b.name);
+
         stackPane.getChildren().add(renameBoardButton);
         StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
+        //stackPane.setStyle("-fx-background-radius: 3px; -fx-border-radius: 3px;");
 
         return stackPane;
     }
@@ -167,9 +261,10 @@ public class BoardOverviewCtrl{
     private Label boardBody(Boards b){
         Label newBoard = new Label(b.name);
 
-        newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
-                "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
-                "-fx-z-index: 999;");
+        newBoard.setStyle("-fx-background-color: " + b.boardBgColor + ";" +
+                " -fx-text-fill:  " + b.boardFtColor + "; " +
+                "-fx-border-color: #8d78a6; -fx-background-radius: 5px;" +
+                "-fx-border-radius: 5px; -fx-z-index: 999;");
         newBoard.setPrefWidth(263.2);
         newBoard.setPrefHeight(110.4);
         newBoard.setMinWidth(263.2);
@@ -235,12 +330,15 @@ public class BoardOverviewCtrl{
 
         if(adminLock){
             boardsList = server.getBoards();
+            openAdminFeatures();
         }
         else{
             boardsList = server.viewedBoards();
             selectServerCtrl.setBoardsOfCurrentUser(boardsList);
+            closeAdminFeatures();
         }
 
+        selectServerCtrl.updateCurrentUser();
         selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
