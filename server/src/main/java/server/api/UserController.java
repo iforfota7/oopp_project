@@ -103,6 +103,7 @@ public class UserController {
 
     /**
      * Generate a random alphanumerical String of length 15 and print it in the server terminal
+     * @return Return the password
      */
 
     public String passwordCreate(){
@@ -116,6 +117,10 @@ public class UserController {
         // print the password so the admin can see it
         return password;
     }
+
+    /**
+     * Displays password
+     */
     @GetMapping (path = {"/admin", "/admin/"})
     public void getPassword(){
         System.out.println(passwordCreate());

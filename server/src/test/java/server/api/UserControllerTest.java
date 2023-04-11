@@ -3,16 +3,15 @@ package server.api;
 
 import commons.Boards;
 import commons.User;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.support.AbstractMessageChannel;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class UserControllerTest {
@@ -23,13 +22,22 @@ public class UserControllerTest {
 
     public UserController sut;
 
+    public SimpMessagingTemplate msgs;
+
 
 
     @BeforeEach
     public void setup(){
         this.userCount = 0;
         repo = new TestUserRepository();
-      sut = new UserController(repo);
+        msgs = new SimpMessagingTemplate(new AbstractMessageChannel() {
+            @Override
+            protected boolean sendInternal(Message<?> message, long timeout) {
+                return true;
+            }
+        });
+
+        sut = new UserController(repo, msgs);
         }
 
 
@@ -74,6 +82,12 @@ public class UserControllerTest {
         User u2 = getUser("eee", true);
         sut.updateUser(u2);
     }
+
+    /**Creates new user for the repo
+     * @param username String username
+     * @param admin boolean admin
+     * @return - new user
+     */
     public User getUser(String username, boolean admin){
 
     User user = new User(username, null, admin);

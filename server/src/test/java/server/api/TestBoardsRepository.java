@@ -224,7 +224,9 @@ private void call(String name) {calledMethods.add(name);}
     }
 
     @Override
-    public <S extends Boards, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends Boards, R> R findBy(Example<S> example,
+                          Function<FluentQuery.FetchableFluentQuery<S>,
+            R> queryFunction) {
         return null;
     }
 }

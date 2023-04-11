@@ -3,8 +3,6 @@ package server.api;
 
 import commons.Boards;
 import commons.Tags;
-import org.apache.commons.lang3.builder.ToStringExclude;
-import org.apache.coyote.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +11,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.support.AbstractMessageChannel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Map;
-import java.util.function.Consumer;
 public class BoardControllerTest {
 
     public long boardCount;
@@ -33,6 +26,9 @@ public class BoardControllerTest {
 
     public SimpMessagingTemplate msgs;
 
+    /**
+     * COnfiguration before each test
+     */
     @BeforeEach
     public void setup(){
         this.boardCount = 0;
@@ -180,7 +176,7 @@ public class BoardControllerTest {
 
         Boards b2 = getBoards("a");
         b2.tags = new ArrayList<>();
-        b2.tags.add(new Tags("eee", "black", b2));
+        b2.tags.add(new Tags("eee", "black", "white"));
         b2.id = b.id;
 
         sut.updateBoard(b2);
@@ -199,7 +195,7 @@ public class BoardControllerTest {
 
         Boards b2 = getBoards("b");
         b2.tags = new ArrayList<>();
-        b2.tags.add(new Tags("eee", "black", b2));
+        b2.tags.add(new Tags("eee", "black", "white"));
         b2.id = b.id;
         assertEquals(ResponseEntity.badRequest().build(),   sut.updateBoard(b2));
     }
@@ -233,8 +229,10 @@ public class BoardControllerTest {
     }
 
 
-
-
+    /**Creates new board for the repo
+     * @param t String title
+     * @return board
+     */
    public Boards getBoards(String t){
         Boards board = new Boards(t, null, null);
         board.id = boardCount;
