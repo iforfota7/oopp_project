@@ -689,6 +689,10 @@ public class MainCtrl {
         secondaryStage.show();
     }
 
+    /**
+     * Checks whether card details are open
+     * @return true if card details are open, false otherwise
+     */
     public boolean isCardDetailsShowing() {
 
         if(secondaryStage==null) return false;
