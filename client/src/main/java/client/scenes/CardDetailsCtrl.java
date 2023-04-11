@@ -399,8 +399,8 @@ public class CardDetailsCtrl {
     public void renderSubtask(Subtask subtask, int position) {
         // styling for the subtask container
         HBox subtaskContainer = new HBox();
-        subtaskContainer.setPrefWidth(214);
-        subtaskContainer.setPrefHeight(32);
+        subtaskContainer.setMinWidth(214);
+        subtaskContainer.setMinHeight(32);
         subtaskContainer.setAlignment(Pos.CENTER);
         subtaskContainer.getProperties().put("subtask", subtask);
 
