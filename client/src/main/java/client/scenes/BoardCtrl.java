@@ -42,7 +42,7 @@ public class BoardCtrl {
     @FXML
     public ScrollPane scrollPane;
 
-     Boards board;
+    Boards board;
 
     List<VBox> listContainers;
     List<AnchorPane> listCards;
@@ -72,6 +72,8 @@ public class BoardCtrl {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
+        if(board != null)
+            boardName.setText(board.name);
 
         if(!serverURLS.contains(server.getServer())) {
             serverURLS.add(server.getServer());
@@ -80,6 +82,7 @@ public class BoardCtrl {
             webSocketsBoard();
         }
         refresh();
+        firstRow.requestFocus();
         server.registerForUpdates(b->{
 
             Platform.runLater(new Runnable() {
@@ -90,7 +93,7 @@ public class BoardCtrl {
 
 
                         Alert e = new Alert(Alert.AlertType.WARNING,
-                    "This board has been deleted by admin");
+                                "This board has been deleted by admin");
                         e.show();
 
                         mainCtrl.closeSecondaryStage();
@@ -146,6 +149,15 @@ public class BoardCtrl {
         });
 
         server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(b);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/rename", Boards.class, b -> {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -372,7 +384,6 @@ public class BoardCtrl {
 
         headerList.getChildren().addAll(listName, listSeparator);
         listContainers.add(headerList);
-
 
         list.getChildren().addAll(headerList, footerList);
         list.setId("list"+Long.toString(l.id));
@@ -885,8 +896,8 @@ public class BoardCtrl {
     }
 
     /**
-     * confirm the board elements.
-     * @return current board
+     * Gets the board object of the current board
+     * @return this board's board object
      */
     public Boards getCurrentBoard() {
         return board;
@@ -921,10 +932,19 @@ public class BoardCtrl {
     }
 
     /**
-     * Gets the board object of the current board
-     * @return this board's board object
+     * Sets the currentCard reference to the provided card
+     * @param card the card to be assigned to currentCard
      */
-    public Boards getBoard() {
-        return board;
+    public void setCurrentCard(Cards card) {
+        this.currentCard = card;
+    }
+
+    /**
+     * Gets the card details controller object of this board
+     * @return the card details controller object
+     */
+    public CardDetailsCtrl getCardDetailsCtrl() {
+        return cardDetailsCtrl;
     }
 }
+
