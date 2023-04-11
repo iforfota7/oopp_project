@@ -574,8 +574,11 @@ public class MainCtrl {
      * This method closes any general secondary stage
      */
     public void closeSecondaryStage(){
-        if(secondaryStage!=null)
-        secondaryStage.close();
+        if(secondaryStage!=null) {
+            if(thirdStage != null)
+                thirdStage.close();
+            secondaryStage.close();
+        }
     }
 
     /**Checks if primary stage presents boards scene

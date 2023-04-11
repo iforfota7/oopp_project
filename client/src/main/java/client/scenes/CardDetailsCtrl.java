@@ -161,6 +161,19 @@ public class CardDetailsCtrl {
      */
     public void boardWebsocketConfig(){
         // when tags are updated, the card details scene needs to receive this information
+        server.registerForMessages("/topic/boards/update", Boards.class, b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null && board.id == b.id) {
+                        board = b;
+                    }
+                }
+            });
+        });
+
+
+        // when tags are updated, the card details scene needs to receive this information
         server.registerForMessages("/topic/lists/remove", Lists.class, l->{
             Platform.runLater(new Runnable() {
                 @Override
