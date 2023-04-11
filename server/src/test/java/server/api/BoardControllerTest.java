@@ -5,6 +5,7 @@ import commons.Boards;
 import commons.Tags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -226,6 +227,36 @@ public class BoardControllerTest {
         Boards b4 = getBoards("55");
         sut.addBoard(b4);
         assertEquals("55", sut.findBoard("55").name);
+    }
+
+    @Test
+    void getBoardName(){
+        Boards b4 = getBoards("55");
+        sut.addBoard(b4);
+        assertEquals("55", sut.getBoard("55").name);
+
+    }
+
+    @Test
+    void getBoardNameNull(){
+        Boards b4 = getBoards("55");
+        assertEquals(null, sut.getBoard("55"));
+
+    }
+
+    @Test
+    void cssTest(){
+        Boards b4 = getBoards("55");
+        sut.addBoard(b4);
+        assertEquals(HttpStatus.OK, sut.setCss(b4).getStatusCode());
+
+    }
+
+    @Test
+    void cssTestNull(){
+        Boards b4 = getBoards("55");
+        assertEquals(ResponseEntity.badRequest().build(), sut.setCss(b4));
+
     }
 
 

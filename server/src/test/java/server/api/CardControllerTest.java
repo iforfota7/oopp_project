@@ -3,8 +3,11 @@ package server.api;
 import commons.Boards;
 import commons.Cards;
 import commons.Lists;
+import commons.Tags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -388,6 +391,34 @@ class CardControllerTest {
         assertTrue(allCards.contains(newCard));
         assertEquals(1, newCard.positionInsideList);
     }
+
+    @Test
+    void removeTagFromCards(){
+        Lists list = new Lists("My List", 0, testBoard);
+        Cards oldCard = getCard("My Card", 0, list);
+        oldCard.tags = new ArrayList<>();
+        Tags t = new Tags("fsdf", "fsdf", "adf");
+        oldCard.tags.add(t);
+        sut.addCard(oldCard);
+        assertEquals(HttpStatus.OK, sut.removeTagFromCards(t).getStatusCode());
+        }
+    @Test
+    void removeTagFromCardsNull(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.removeTagFromCards(null));
+    }
+
+    @Test
+    void revertPresetTestNull(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.revertPreset(null));
+    }
+
+    @Test
+    void revertPreset(){
+        Lists list = new Lists("My List", 0, testBoard);
+        Cards oldCard = getCard("My Card", 0, list);
+        oldCard.
+    }
+
 
     @Test
     void moveCardSameListBelow() {
