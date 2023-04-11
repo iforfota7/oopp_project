@@ -29,15 +29,20 @@ public class SelectServerCtrl {
 
     private final MainCtrl mainCtrl;
 
+    private final SelectServerCtrlServices selectServerCtrlServices;
+
     /**
      * Constructor method for SelectServerCtrl
      * @param server instance of ServerUtils
      * @param mainCtrl instance of MainCtrl
+     * @param selectServerCtrlServices instance of SelectServerCtrlServices
      */
     @Inject
-    public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl){
+    public SelectServerCtrl(ServerUtils server, MainCtrl mainCtrl,
+                            SelectServerCtrlServices selectServerCtrlServices){
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.selectServerCtrlServices = selectServerCtrlServices;
     }
 
     /**
@@ -49,90 +54,93 @@ public class SelectServerCtrl {
     }
 
     /**
+     * Setter method for current user primarily used for testing
+     * @param user the user to be set to
+     */
+    public void setCurrentUser(User user) {this.currentUser = user; }
+
+    /**
+     * Setter method for the serverWarning primarily used for tests
+     * @param text the text serverWarning should be set to
+     */
+    public void setServerWarning(Text text) {this.serverWarning = text; }
+
+    /**
      * Method that sets currentUser to the user from the database
      * with the currently used username in ServerUtils
      */
-    public void setCurrentUser(){
+    public void updateCurrentUser(){
         currentUser = server.findUser();
     }
 
+
     /**
      * Method to be executed when connect button is clicked
-     * Gets url from text-field and sets it as server url in ServerUtils
-     * Gets username from text-field and sets it as username in ServerUtils
+     * Gets url username from text-field
      */
     public void connect() {
         String address = inputServer.getText();
         String username = inputUsername.getText();
-        boolean exists = false;
-        //if address is empty do nothing
-        if(address == null || address.equals("")){
-            return;
-        }
-        // transforms to complete url
-        // if begins with colon assumed to be localhost address with specified port
-        if(address.startsWith("http://")) server.setServer(address);
-        else if(address.startsWith(":")) server.setServer("http://localhost" + address);
-        else server.setServer("http://" + address);
-        // if you can connect to the specified server address
-        if(server.checkServer()){
-            serverWarning.setVisible(false);
-            server.setWebsockets();
+        connect(address, username);
+    }
 
-            // set the username in the frontend
-            ServerUtils.setUsername(username);
-            // create user from information
+    /**
+     * Method that connects the user to the board overview
+     * @param address sets it as server url in ServerUtils if valid
+     * @param username sets it as username in ServerUtils and finds current user
+     * @return true if the method completed successfully and the user sees a new scene
+     */
+    public boolean connect(String address, String username){
+        boolean exists = selectServerCtrlServices.checkConnection(address, username, server);
 
-            exists = server.existsUser();
-            if(!exists){
-                try{
-                    User user = new User(username, new ArrayList<>(), false);
-                    server.addUser(user); // try to add user if not already in database
-                    this.currentUser = user;
-                }
-                catch(Exception e){
-                    System.out.println(e); // probably need a better way of communicating the error
-                }
-            }
-            else{
-                User user = server.findUser();
-                this.currentUser = user;
-            }
+        if(!exists) serverWarning.setVisible(true);
+        else serverWarning.setVisible(false);
 
-        }
-        else serverWarning.setVisible(true);
         // if server exists
         if(!serverWarning.isVisible()){
             // if user does not exist, continue
             // otherwise show confirmation scene
-            if(!exists) mainCtrl.showBoardOverview();
+            if(!server.existsUser()){
+                currentUser = new User(username, new ArrayList<>(), false);
+                server.addUser(currentUser); // try to add user if not already in database
+                mainCtrl.showBoardOverview();
+            }
             else{
+                currentUser = server.findUser();
                 mainCtrl.showConfirmUsername();
             }
+            return true;
         }
+        return false;
     }
 
     /**
      * Set user's permission level to admin in the database.
+     * @return true if the user was successfully set as admin
      */
-    public void setAdmin() {
+    public boolean setAdmin() {
         currentUser.isAdmin = true;
         server.refreshAdmin(currentUser);
+        return true;
     }
 
     /**
      * Set user's permission level back to user in the database.
+     * @return true if the user was successfully removed as an admin
      */
-    public void removeAdmin() {
+    public boolean removeAdmin() {
         currentUser.isAdmin = false;
         server.refreshAdmin(currentUser);
+        return true;
     }
 
     /**
      * Display the updated user information after refresh.
+     * @return true if the scene was successfully shown
      */
-    public void refreshUserDetails() {
+    public boolean refreshUserDetails() {
         mainCtrl.showUserDetails(currentUser);
+        return true;
     }
 
     /**

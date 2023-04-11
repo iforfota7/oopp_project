@@ -338,7 +338,7 @@ public class BoardOverviewCtrl{
             closeAdminFeatures();
         }
 
-        selectServerCtrl.setCurrentUser();
+        selectServerCtrl.updateCurrentUser();
         selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {
