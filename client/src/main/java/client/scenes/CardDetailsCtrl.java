@@ -132,7 +132,8 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(openedCard != null && c.id == openedCard.id && sceneOpened) {
+                    if(openedCard != null && c.id == openedCard.id
+                            && sceneOpened && mainCtrl.isCardDetailsShowing()) {
                         mainCtrl.closeSecondaryStage();
                         mainCtrl.showWarningCardDeletion();
                     }
