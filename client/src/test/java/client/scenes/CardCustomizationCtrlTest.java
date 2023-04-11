@@ -24,7 +24,8 @@ class CardCustomizationCtrlTest {
         testServerUtils = new MockServerUtils();
         testMainCtrl = new MockMainCtrl();
         cardDetailsCtrl =new CardDetailsCtrl(testServerUtils, testMainCtrl);
-        sut = new CardCustomizationCtrl(testBoardCtrl,testMainCtrl,testServerUtils, cardDetailsCtrl);
+        sut = new CardCustomizationCtrl(testBoardCtrl,testMainCtrl,
+                testServerUtils, cardDetailsCtrl);
     }
 
     @Test
