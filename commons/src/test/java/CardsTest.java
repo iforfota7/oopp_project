@@ -132,11 +132,12 @@ class CardsTest {
 
     @Test
     void testToString(){
-
-        String stringCard1 = "Cards{id=0, title='Card 1', positionInsideList=1, " +
-                "description='This is Card 1', list.id=1, " +
-                "subtasks=[Subtask{id=0, title='Subtask 1', " +
-                "checked=false, position=1}], tags=[]}";
+        System.out.println(card1.toString());
+        String stringCard1 = "Cards{id=0, title='Card 1', " +
+                "positionInsideList=1, description='This is Card 1', " +
+                "list=Lists{id=1, title='list 1', positionInsideBoard=1, " +
+                "cards=[], board=Board1}, colorStyle='null', subtasks=[Subtask{id=0, " +
+                "title='Subtask 1', checked=false, position=1}], tags=[]}";
 
         assertEquals(card1.toString(), stringCard1);
         assertEquals(card1.toString(), card11.toString());

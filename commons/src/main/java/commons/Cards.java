@@ -67,13 +67,15 @@ public class Cards {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Cards)) return false;
         Cards cards = (Cards) o;
-        return id == cards.id && positionInsideList == cards.positionInsideList
-                && Objects.equals(title, cards.title) && list.id==cards.list.id
-                && Objects.equals(description, cards.description)
-                && Objects.equals(subtasks, cards.subtasks)
-                && Objects.equals(tags, cards.tags);
+        return id == cards.id && positionInsideList == cards.positionInsideList &&
+                Objects.equals(title, cards.title) &&
+                Objects.equals(description, cards.description) &&
+                Objects.equals(list, cards.list) &&
+                Objects.equals(colorStyle, cards.colorStyle) &&
+                Objects.equals(subtasks, cards.subtasks) &&
+                Objects.equals(tags, cards.tags);
     }
 
     /**
@@ -82,7 +84,8 @@ public class Cards {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, list.id, positionInsideList, description, subtasks, tags);
+        return Objects.hash(id, title, positionInsideList, description,
+                list, colorStyle, subtasks, tags);
     }
 
     /**
@@ -97,8 +100,9 @@ public class Cards {
                 ", title='" + title + '\'' +
                 ", positionInsideList=" + positionInsideList +
                 ", description='" + description + '\'' +
-                ", list.id=" + list.id +
-                ", subtasks=" + subtasks.toString() +
+                ", list=" + list +
+                ", colorStyle='" + colorStyle + '\'' +
+                ", subtasks=" + subtasks +
                 ", tags=" + tags +
                 '}';
     }
