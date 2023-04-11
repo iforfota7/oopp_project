@@ -93,7 +93,7 @@ public class BoardCtrl {
 
 
                         Alert e = new Alert(Alert.AlertType.WARNING,
-                    "This board has been deleted by admin");
+                                "This board has been deleted by admin");
                         e.show();
 
                         mainCtrl.closeSecondaryStage();
@@ -947,3 +947,4 @@ public class BoardCtrl {
         return cardDetailsCtrl;
     }
 }
+

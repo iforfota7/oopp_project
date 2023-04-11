@@ -10,6 +10,9 @@
         <module name="MissingJavadocMethod">
             <property name="severity" value="warning"/>
             <property name="allowedAnnotations" value="Override, Test, Before, BeforeEach"/>
+
+            <property name="scope" value="public"/>
+
             <property name="minLineCount" value="0"/>
             <property name="allowedAnnotations" value="Main"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, COMPACT_CTOR_DEF"/>
