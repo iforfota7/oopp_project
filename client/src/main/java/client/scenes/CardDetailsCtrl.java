@@ -183,9 +183,6 @@ public class CardDetailsCtrl {
                         board = b;
                         if(!board.colorPreset.containsKey(openedCard.colorStyle)) {
                             Cards updatedCard = server.getCardById(openedCard.id);
-                            System.out.println(openedCard.colorStyle);
-                            System.out.println(updatedCard.colorStyle);
-                            System.out.println(board.colorPreset);
                             openedCard.colorStyle = updatedCard.colorStyle;
                         }
                         refreshOpenedCard();
