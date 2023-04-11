@@ -126,6 +126,8 @@ void checkWrongPassword(){
             .limit(15)
             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
             .toString();
+
+        sut.setIsTested(true);
         assertEquals(password, sut.passwordCreate());
 }
 

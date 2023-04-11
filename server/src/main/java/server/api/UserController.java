@@ -18,6 +18,7 @@ public class UserController {
     private final UserRepository repo;
     private final SimpMessagingTemplate msgs;
     private String password;
+    private boolean isTested;
 
     /**
      * Constructor method
@@ -27,6 +28,7 @@ public class UserController {
     public UserController(UserRepository repo, SimpMessagingTemplate msgs) {
         this.repo = repo;
         this.msgs = msgs;
+        isTested = false;
     }
 
     /**
@@ -107,7 +109,10 @@ public class UserController {
      */
 
     public String passwordCreate(){
-        Random random = new Random(100);
+        Random random = new Random();
+        if(isTested)
+            random = new Random(100);
+
         password = random.ints(48, 123)
                 .filter(i -> (i <= 57 || i >= 65 && i <= 90 || i >= 97))
                 .limit(15)
@@ -140,5 +145,16 @@ public class UserController {
         }
         if(this.password.equals(password)) return "true";
         return null;
+    }
+
+    /**
+     * Sets a flag in the class that states
+     * if it's currently tested or not
+     *
+     * @param isTested true iff the class is tested
+     *                 currently
+     */
+    public void setIsTested(boolean isTested) {
+        this.isTested = isTested;
     }
 }
