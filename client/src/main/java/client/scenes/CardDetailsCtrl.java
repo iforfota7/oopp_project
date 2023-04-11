@@ -148,7 +148,7 @@ public class CardDetailsCtrl {
                 @Override
                 public void run() {
                     if(openedCard != null && !board.colorPreset.containsKey(openedCard.colorStyle)
-                            && sceneOpened) {
+                            && sceneOpened && mainCtrl.isCardDetailsShowing()) {
                         openedCard.colorStyle = c.colorStyle;
                         refreshOpenedCard();
                     }
@@ -193,7 +193,7 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(board != null && board.id == b.id) {
+                    if(board != null && board.id == b.id && mainCtrl.isCardDetailsShowing()) {
                         board = b;
                         if(!board.colorPreset.containsKey(openedCard.colorStyle)) {
                             Cards updatedCard = server.getCardById(openedCard.id);
