@@ -19,14 +19,14 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="rootElement" prefHeight="471.0" prefWidth="625.0" style="-fx-background-color: #ccffcc;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
-   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="158.0" layoutY="37.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="346.0" promptText="Input a card title" style="-fx-border-color: #b8e0b8;" AnchorPane.leftAnchor="158.0" AnchorPane.topAnchor="37.0">
+   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="158.0" layoutY="37.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="346.0" promptText="Input a card title" style="-fx-border-color: #d9d9d9;" AnchorPane.leftAnchor="158.0" AnchorPane.topAnchor="37.0">
       <font>
          <Font name="Bell MT" size="17.0" />
       </font>
       <effect>
          <InnerShadow>
             <color>
-               <Color red="0.5529412031173706" green="0.6745098233222961" blue="0.5607843399047852" />
+               <Color red="0.6941176652908325" green="0.6941176652908325" blue="0.6941176652908325" />
             </color>
          </InnerShadow>
       </effect>
@@ -34,7 +34,7 @@
    <Accordion layoutX="230.0" layoutY="90.0" />
    <Button fx:id="saveDetails" layoutX="507.0" layoutY="358.0" mnemonicParsing="false" onAction="#save" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #81e481;" text="Save" AnchorPane.bottomAnchor="81.0" />
    <Text fx:id="warning" fill="RED" layoutX="233.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
-   <TextArea fx:id="description" layoutX="35.0" layoutY="103.0" prefHeight="220.0" prefWidth="266.0" promptText="Description.." style="-fx-background-color: #ffffff; -fx-border-color: #b8e0b8; -fx-background-radius: 4; -fx-border-radius: 4;" wrapText="true" AnchorPane.bottomAnchor="148.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="323.6" AnchorPane.topAnchor="103.0">
+   <TextArea fx:id="description" layoutX="35.0" layoutY="103.0" prefHeight="220.0" prefWidth="266.0" promptText="Description.." style="-fx-background-color: #ffffff; -fx-border-color: #d9d9d9; -fx-background-radius: 4; -fx-border-radius: 4;" wrapText="true" AnchorPane.bottomAnchor="148.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="323.6" AnchorPane.topAnchor="103.0">
       <font>
          <Font name="Bell MT" size="15.0" />
       </font>
@@ -47,18 +47,18 @@
       <effect>
          <InnerShadow>
             <color>
-               <Color red="0.5529412031173706" green="0.6745098233222961" blue="0.5607843399047852" />
+               <Color red="0.6941176652908325" green="0.6941176652908325" blue="0.6941176652908325" />
             </color>
          </InnerShadow>
       </effect>
    </TextArea>
-   <ScrollPane hbarPolicy="NEVER" layoutX="337.0" layoutY="103.0" prefHeight="223.0" prefWidth="266.0">
+   <ScrollPane hbarPolicy="NEVER" layoutX="337.0" layoutY="103.0" prefHeight="223.0" prefWidth="266.0" style="-fx-background-radius: 4; -fx-border-radius: 4;">
       <content>
-         <VBox fx:id="taskList" prefHeight="221.0" prefWidth="253.0" style="-fx-background-color: #ffffff; -fx-border-color: #b8e0b8; -fx-border-radius: 4; -fx-background-radius: 4;">
+         <VBox fx:id="taskList" prefHeight="221.0" prefWidth="253.0" style="-fx-background-color: #ffffff; -fx-border-color: #d9d9d9; -fx-border-radius: 4; -fx-background-radius: 4;">
             <effect>
                <InnerShadow>
                   <color>
-                     <Color red="0.5529412031173706" green="0.6745098233222961" blue="0.5607843399047852" />
+                     <Color red="0.6941176652908325" green="0.6941176652908325" blue="0.6941176652908325" />
                   </color>
                </InnerShadow>
             </effect>
@@ -119,7 +119,7 @@
          </VBox>
       </content>
    </ScrollPane>
-   <GridPane fx:id="tagList" hgap="3.0" layoutX="35.0" layoutY="345.6" prefHeight="94.0" prefWidth="448.0" style="-fx-background-color: #ecf9ee; -fx-border-color: #b8e0b8; -fx-background-radius: 4; -fx-border-radius: 4;" vgap="3.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="35.0">
+   <GridPane fx:id="tagList" hgap="3.0" layoutX="35.0" layoutY="345.6" prefHeight="94.0" prefWidth="448.0" style="-fx-background-color: #f2f2f2; -fx-border-color: #d9d9d9; -fx-background-radius: 4; -fx-border-radius: 4;" vgap="3.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="35.0">
       <columnConstraints>
          <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="112.5" />
          <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="112.5" />
@@ -134,7 +134,7 @@
       <effect>
          <InnerShadow>
             <color>
-               <Color red="0.5529412031173706" green="0.6745098233222961" blue="0.5607843399047852" />
+               <Color red="0.6941176652908325" green="0.6941176652908325" blue="0.6941176652908325" />
             </color>
          </InnerShadow>
       </effect>
@@ -164,5 +164,8 @@
       </padding>
    </GridPane>
    <Button fx:id="saveDetails1" layoutX="507.0" layoutY="398.0" mnemonicParsing="false" onAction="#closeCardDetails" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #badeba;" text="Close" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="507.0" />
-   <Button layoutX="55.0" layoutY="44.0" mnemonicParsing="false" onAction="#customization" style="-fx-background-color: #81e481;" text="Customization" />
+   <Button layoutX="36.0" layoutY="43.0" mnemonicParsing="false" onAction="#customization" prefHeight="26.0" prefWidth="103.0" style="-fx-background-color: #81e481;" text="Customization">
+      <padding>
+         <Insets bottom="-1.0" />
+      </padding></Button>
         </AnchorPane>
