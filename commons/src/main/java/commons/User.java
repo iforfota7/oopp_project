@@ -14,6 +14,7 @@ public class User {
 
     public boolean isAdmin;
 
+
     /**
      * Constructor method for User class
      * @param username the username of the user

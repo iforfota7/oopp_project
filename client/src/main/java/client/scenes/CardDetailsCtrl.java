@@ -3,10 +3,7 @@ package client.scenes;
 import client.scenes.config.TagsCardDetails;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Boards;
-import commons.Cards;
-import commons.Lists;
-import commons.Subtask;
+import commons.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,6 +38,10 @@ public class CardDetailsCtrl {
     private TextField subtaskName;
     @FXML
     private Text warningSubtask;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button closeButton;
     private int inputsOpen = 0;
     private boolean rename = false;
 
@@ -49,10 +50,19 @@ public class CardDetailsCtrl {
     private TagsCardDetails tagsCardDetails;
 
     private Subtask toRename;
-    private Cards openedCard;
-    private Boards board;
+    public Cards openedCard;
+    public Boards board;
     private boolean sceneOpened = false;
+    public boolean changesFromTags;
+    private boolean changesFromSubtasks;
+    private boolean changesInTitleOrDescription;
+    private boolean changesInCustomization;
     private List<String> serverURLS;
+    public String colors;
+
+    private CardDetailsCtrlServices cardDetailsCtrlServices = new CardDetailsCtrlServices();
+    private List<Tags> initialTags;
+    private List<Subtask> initialSubtasks;
 
     /**
      * Initializes the card details controller object
@@ -80,6 +90,12 @@ public class CardDetailsCtrl {
             serverURLS.add(server.getServer());
             websocketConfig();
         }
+
+        changesFromTags = false;
+        changesFromSubtasks = false;
+        changesInTitleOrDescription = false;
+        changesInCustomization = false;
+
         warning.setVisible(false);
     }
 
@@ -88,6 +104,15 @@ public class CardDetailsCtrl {
      *
      */
     public void websocketConfig() {
+
+        cardWebsocketConfig();
+        boardWebsocketConfig();
+    }
+
+    /**
+     * Configures the websockets which depend on cards
+     */
+    public void cardWebsocketConfig(){
 
         // When a client modifies card details, this scene gets modified
         // so that clients that see this scene will see the details changing
@@ -109,19 +134,61 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id && sceneOpened) {
                         mainCtrl.closeSecondaryStage();
+                        mainCtrl.showWarningCardDeletion();
                     }
                 }
             });
         });
 
-        // when tags are updated, the card details scene needs to
-        // receive this information
+        // When another client removes this card, this client will be
+        // sent to the board scene
+        server.registerForMessages("/topic/cards/revertPreset", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && !board.colorPreset.containsKey(openedCard.colorStyle)
+                            && sceneOpened) {
+                        openedCard.colorStyle = c.colorStyle;
+                        refreshOpenedCard();
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Configures the websockets which depend on boards
+     */
+    public void boardWebsocketConfig(){
+
+        // when tags are updated, the card details scene needs to receive this information
         server.registerForMessages("/topic/boards/update", Boards.class, b->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     if(board != null && board.id == b.id) {
                         board = b;
+                    }
+                }
+            });
+        });
+
+        // when the presets of a card are changed, the card details scene of another
+        // client will synchronize with the new presets -> background and font colors
+        server.registerForMessages("/topic/boards/setCss", Boards.class, b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null && board.id == b.id) {
+                        board = b;
+                        if(!board.colorPreset.containsKey(openedCard.colorStyle)) {
+                            Cards updatedCard = server.getCardById(openedCard.id);
+                            System.out.println(openedCard.colorStyle);
+                            System.out.println(updatedCard.colorStyle);
+                            System.out.println(board.colorPreset);
+                            openedCard.colorStyle = updatedCard.colorStyle;
+                        }
+                        refreshOpenedCard();
                     }
                 }
             });
@@ -147,16 +214,7 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
 
-        // if we have multiple created subtasks
-        // a JSON error will be thrown because it will have to serialize
-        // multiple objects with the same id (0)
-        // this block of code ensures that the ids sent are distinct
-        int index = 0;
-        if(openedCard.subtasks != null) {
-            for(Subtask subtask : openedCard.subtasks)
-                if(subtask.id == 0)
-                    subtask.id = --index;
-        }
+        ensureIdDistinct(openedCard);
 
         subtaskName.setText("");
 
@@ -170,29 +228,124 @@ public class CardDetailsCtrl {
 
         server.renameCard(openedCard);
         sceneOpened = false;
+        changesFromTags = false;
+        changesFromSubtasks = false;
+        changesInTitleOrDescription = false;
         mainCtrl.closeSecondaryStage();
     }
 
     /**
+     * Calls the CardDetailsCtrl service's method that ensures
+     * the ids of subtasks are distinct before serializing them
+     * @param openedCard the card whose details are opened
+     * @return true if the card has subtasks, false otherwise
+     */
+    public boolean ensureIdDistinct(Cards openedCard) {
+
+        return cardDetailsCtrlServices.ensureIdDistinct(openedCard);
+    }
+
+    /**
      * The user can close the card details without the modifications made
-     * to be saved by pressing the 'close' button
+     * to be saved by pressing the 'Close' button. However, because this
+     * can happen accidentally, a warning asking for confirmation of
+     * closing the card without saving the modifications is displayed
      */
     @FXML
-    void close(){
+    public void closeCardDetails(){
+        Cards initialCard = server.getCardById(openedCard.id);
+
+        if(!initialCard.title.equals(openedCard.title) ||
+            !initialCard.title.equals(cardTitleInput.getText()) ||
+            !initialCard.description.equals(openedCard.description) ||
+            !initialCard.description.equals(description.getText())){
+            changesInTitleOrDescription = true;
+        }
+        else {
+            changesInTitleOrDescription = false;
+        }
+
+        if(!initialCard.subtasks.equals(openedCard.subtasks)){
+            changesFromSubtasks = true;
+        }
+        else {
+            changesFromSubtasks = false;
+        }
+
+        if(!initialCard.tags.equals(openedCard.tags)){
+            changesFromTags = true;
+        }
+        else {
+            changesFromTags = false;
+        }
+
+        if(!initialCard.colorStyle.equals(openedCard.colorStyle)){
+            changesInCustomization = true;
+        }
+        else {
+            changesInCustomization = false;
+        }
+
+        if(changesInTitleOrDescription || changesFromSubtasks
+                || changesFromTags || changesInCustomization){
+            mainCtrl.showConfirmCloseCard();
+        }
+        else {
+            close();
+        }
+    }
+
+    /**
+     * Simply closes the cardDetails scene without any warning, as no modifications
+     * has been made and need to be saved
+     * @return true if the scene was opened, otherwise false
+     */
+    public boolean close(){
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
+        mainCtrl.showBoard(board);
+
+        return sceneOpened;
+    }
+
+    /**
+     * When the warning regarding the confirmation of closing the card without
+     * saving the modifications appears, the user can choose to not close the card
+     * by pressing on the 'No' button
+     */
+    @FXML
+    public void noClose(){
+        mainCtrl.closeThirdStage();
+        mainCtrl.showCardDetail();
+    }
+
+    /**
+     * The user can close the card details without the modifications made
+     * to be saved by pressing the 'Yes' button on the warning that appears
+     * once the user has pressed the 'close' button on the card details scene
+     */
+    @FXML
+    public void closeWithoutSaving(){
+        sceneOpened = false;
+        mainCtrl.closeSecondaryStage();
+        mainCtrl.closeThirdStage();
         mainCtrl.showBoard(board);
     }
 
     /**
      * Used to refresh the details of the opened card
-     * after something related to subtasks has changed
+     * after something related to it has changed
      *
      */
     public void refreshOpenedCard() {
+        if(!openedCard.title.equals(cardTitleInput.getText()) ||
+            !openedCard.description.equals(description.getText())) {
+        }
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
+
+
     }
 
     /**
@@ -227,6 +380,11 @@ public class CardDetailsCtrl {
                 openedCard.subtasks.get(i).position = i;
                 renderSubtask(openedCard.subtasks.get(i), i);
             }
+
+        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
+        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
+        cardTitleInput.setStyle("-fx-text-fill: " + newColors[1] + ";");
+        description.setStyle("-fx-text-fill: " + newColors[1] + ";");
 
         inputsOpen = 0;
     }
@@ -318,7 +476,6 @@ public class CardDetailsCtrl {
      * @param actionEvent Object containing information about the action event
      */
     public void swapSubtasks(ActionEvent actionEvent) {
-//        changes = true;
         Button arrow = (Button)actionEvent.getTarget();
         int position = Integer.parseInt(arrow.getId());
         List<Subtask> subtaskList = openedCard.subtasks;
@@ -326,12 +483,12 @@ public class CardDetailsCtrl {
         if(arrow.getText().equals("\uD83D\uDD3C")) {
             // up arrow
             if(position > 0) {
-                swapSubtasks(subtaskList, position, position - 1);
+                swapSubtasksService(subtaskList, position, position - 1);
             }
         } else {
             // down arrow
             if(position < subtaskList.size() - 1) {
-                swapSubtasks(subtaskList, position, position + 1);
+                swapSubtasksService(subtaskList, position, position + 1);
             }
         }
 
@@ -339,16 +496,16 @@ public class CardDetailsCtrl {
     }
 
     /**
-     * Swaps subtasks at positions i and j in the subtasks list
-     *
-     * @param subtaskList The list containing the subtasks
-     * @param i The position of the first subtask
-     * @param j The position of the second subtask
+     * Calls the CardDetailsCtrl service's swapSubtask method which
+     * reorders the subtasks based on the clicked button
+     * @param subtaskList the list of subtasks
+     * @param i the position of the current subtask
+     * @param j the position of the subtask below or above
+     * @return true
      */
-    private void swapSubtasks(List<Subtask> subtaskList, int i, int j) {
-        Subtask tmp = subtaskList.get(i);
-        subtaskList.set(i, subtaskList.get(j));
-        subtaskList.set(j, tmp);
+    public boolean swapSubtasksService(List<Subtask> subtaskList, int i, int j) {
+
+        return cardDetailsCtrlServices.swapSubtasks(subtaskList, i, j);
     }
 
     /**
@@ -379,6 +536,8 @@ public class CardDetailsCtrl {
         subtaskName.setStyle("");
         warningSubtask.setVisible(false);
 
+        changesFromSubtasks = true;
+
         if(subtaskName.getText().equals("")){
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
                     "-fx-border-color: #b30000; -fx-background-radius: 4; " +
@@ -395,6 +554,7 @@ public class CardDetailsCtrl {
             // therefore, the position and checked value of the subtask can be different from
             // the initial ones when a subtask is just created
             if(rename){
+                openedCard.subtasks.remove(toRename);
                 position = toRename.position;
                 checked = toRename.checked;
             }
@@ -456,7 +616,6 @@ public class CardDetailsCtrl {
             int indexInVbox = taskList.getChildren().indexOf(currentSubtask);
             taskList.getChildren().set(indexInVbox, inputSubtask);
 
-            openedCard.subtasks.remove(toRename);
         }
         else {
             subtaskName.setStyle("-fx-background-color: #ffcccc; " +
@@ -483,6 +642,7 @@ public class CardDetailsCtrl {
         int subtaskIndex = openedCard.subtasks.indexOf(subtask);
         Subtask updatedSubtask = openedCard.subtasks.get(subtaskIndex);
         updatedSubtask.checked = checkBox.isSelected();
+
         refreshOpenedCard();
     }
 
@@ -493,6 +653,24 @@ public class CardDetailsCtrl {
      */
     public void setBoard(Boards board) {
         this.board = board;
+    }
+    /**
+     * The trigger event of the button opens the personalization selection window for that card
+     */
+    public void customization() {
+        mainCtrl.openCardCustomization(board);
+
+    }
+
+    /**
+     * If a user deletes a card another user is currently viewing the details of,
+     * the second user receives a warning regarding the deletion of the current
+     * card and the fact that they have been redirected to the board
+     * This method serves to close the window of the warning scene
+     */
+    @FXML
+    public void closeWarningCardDeletion(){
+        mainCtrl.closeSecondaryStage();
     }
 
     /**
