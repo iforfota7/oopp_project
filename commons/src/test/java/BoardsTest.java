@@ -95,9 +95,11 @@ public class BoardsTest {
         list3 = new Lists("List 3", 3, board1);
 
         board1.lists.add(list1);
-        String stringBoard1 = "Boards{id=0, name='Board 1', " +
-                "lists=[Lists{id=0, title='List 1', positionInsideBoard=1, " +
-                "cards=[], board=Board 1}]}";
+        String stringBoard1 = "Boards{id=0, name='Board 1', lists=" +
+                "[Lists{id=0, title='List 1', positionInsideBoard=1, " +
+                "cards=[], board=Board 1}], boardBgColor='#E6E6FA', boardFt" +
+                "Color='#000000', listBgColor='#ffffff', listFtColor='#000000'," +
+                " defaultColor='default', colorPreset={default=#e6e6fa #000000}, tags=[]}";
 
         assertEquals(board1.toString(), stringBoard1);
         assertEquals(board1.toString(), board11.toString());

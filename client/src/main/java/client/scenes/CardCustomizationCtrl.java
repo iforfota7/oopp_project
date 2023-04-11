@@ -51,7 +51,7 @@ public class CardCustomizationCtrl {
     /**
      * This method implements setting the corresponding
      * color preset to the current card when the user clicks on any button
-     * @param the board object which contains the opened card
+     * @param board board object which contains the opened card
      */
     void checkColorPreset(Boards board) {
         if(!serverURLS.contains(server.getServer())) {

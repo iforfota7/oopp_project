@@ -42,4 +42,15 @@ public class MockMainCtrl extends MainCtrl {
         System.out.println("Successfully showed user details");
     }
     public void showBoard(Boards b) { calledMethods.add("showBoard"); }
+
+    /**
+     * Mocks the behaviour of the customization method in MainCtrl
+     */
+    @Override
+    public void openCardCustomization(Boards b) { calledMethods.add("checkColorPreset"); }
+    /**
+     * Mocks the behaviour of the closeThirdStage method in MainCtrl
+     */
+    @Override
+    public void closeThirdStage(){calledMethods.add("closeStage");}
 }
