@@ -74,11 +74,10 @@ public class BoardCtrl {
 
         if(!serverURLS.contains(server.getServer())) {
             serverURLS.add(server.getServer());
-            webSocketLists();
-            webSocketCards();
+            webSocket();
 
         }
-        refresh();
+
         server.registerForUpdates(b->{
 
             Platform.runLater(new Runnable() {
@@ -116,75 +115,24 @@ public class BoardCtrl {
     /**
      * This method configures websockets for lists
      */
-    private void webSocketLists() {
-        server.registerForMessages("/topic/lists", Lists.class, l->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize(board);
-                }
-            });
+    private void webSocket() {
+
+        server.registerForMessages("/topic/client/refresh", Object.class, o -> {
+           Platform.runLater(new Runnable() {
+               @Override
+               public void run() {
+                   refresh();
+               }
+           });
         });
 
-        server.registerForMessages("/topic/lists/rename", Lists.class, l->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize(board);
-                }
-            });
-        });
 
-        server.registerForMessages("/topic/lists/remove", Lists.class, l->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize(board);
-                }
-            });
-        });
-
-        server.registerForMessages("/topic/boards/update", Boards.class, b -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize(b);
-                }
-            });
-        });
     }
 
     /**
      * This method configures websockets for cards
      */
-    private void webSocketCards() {
-        server.registerForMessages("/topic/cards/remove", Cards.class, c->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize(board);
-                }
-            });
-        });
 
-        server.registerForMessages("/topic/cards/rename", Cards.class, c->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize(board);
-                }
-            });
-        });
-
-        server.registerForMessages("/topic/cards/add", Cards.class, c->{
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize(board);
-                }
-            });
-        });
-    }
 
     /**
      * Method that refreshes the board by getting all lists from the
