@@ -569,8 +569,17 @@ public class MainCtrl {
         if(secondaryStage!=null)
         secondaryStage.close();
     }
+
+    /**Checks if primary stage presents boards scene
+     * @param b boards scene
+     * @return true if it represents, false otherwise
+     */
     public boolean isBoard(Boards b){return this.boardCtrl.board.id == b.id &&
             primaryStage.getScene().equals(board);}
+
+    /**Method that checks weather primaryStage shows boardOverview.
+     * @return true if it represents boardOverview, false otherwise
+     */
     public boolean isBoardOverview(){return primaryStage.
             getScene().equals(boardOverview);}
 
