@@ -136,6 +136,21 @@ public class CardDetailsCtrl {
                 }
             });
         });
+
+        // When another client removes this card, this client will be
+        // sent to the board scene
+        server.registerForMessages("/topic/cards/revertPreset", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && !board.colorPreset.containsKey(openedCard.colorStyle)
+                            && sceneOpened) {
+                        openedCard.colorStyle = c.colorStyle;
+                        refreshOpenedCard();
+                    }
+                }
+            });
+        });
     }
 
     /**
@@ -163,6 +178,13 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(board != null && board.id == b.id) {
                         board = b;
+                        if(!board.colorPreset.containsKey(openedCard.colorStyle)) {
+                            Cards updatedCard = server.getCardById(openedCard.id);
+                            System.out.println(openedCard.colorStyle);
+                            System.out.println(updatedCard.colorStyle);
+                            System.out.println(board.colorPreset);
+                            openedCard.colorStyle = updatedCard.colorStyle;
+                        }
                         refreshOpenedCard();
                     }
                 }
@@ -314,11 +336,8 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
-        String[] colors = this.colors.split(" ");
-        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
-        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
-        cardTitleInput.setStyle("-fx-text-fill: " + newColors[1] + ";");
-        description.setStyle("-fx-text-fill: " + newColors[1] + ";");
+
+
     }
 
     /**
@@ -353,6 +372,11 @@ public class CardDetailsCtrl {
                 openedCard.subtasks.get(i).position = i;
                 renderSubtask(openedCard.subtasks.get(i), i);
             }
+
+        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
+        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
+        cardTitleInput.setStyle("-fx-text-fill: " + newColors[1] + ";");
+        description.setStyle("-fx-text-fill: " + newColors[1] + ";");
 
         inputsOpen = 0;
     }
@@ -626,7 +650,7 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.openCardCustomization();
+        mainCtrl.openCardCustomization(board);
 
     }
 
