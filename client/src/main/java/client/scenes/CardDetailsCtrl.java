@@ -298,7 +298,7 @@ public class CardDetailsCtrl {
     /**
      * Simply closes the cardDetails scene without any warning, as no modifications
      * has been made and need to be saved
-     * @return true if the method was successfully completed, otherwise false
+     * @return true if the scene was opened, otherwise false
      */
     public boolean close(){
         sceneOpened = false;

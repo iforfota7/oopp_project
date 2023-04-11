@@ -421,7 +421,7 @@ public class MainCtrl {
      * Closes an instance of a third stage
      *
      */
-    public void closeThirdStage(){thirdStage.close();}
+    public void closeThirdStage(){if(thirdStage!=null)thirdStage.close();}
 
     /**
      * Opens a secondary window which asks for confirmation for
@@ -566,8 +566,23 @@ public class MainCtrl {
      * This method closes any general secondary stage
      */
     public void closeSecondaryStage(){
+        if(secondaryStage!=null)
         secondaryStage.close();
     }
+
+    /**Checks if primary stage presents boards scene
+     * @param b boards scene
+     * @return true if it represents, false otherwise
+     */
+    public boolean isBoard(Boards b){return this.boardCtrl.board.id == b.id &&
+            primaryStage.getScene().equals(board);}
+
+    /**Method that checks weather primaryStage shows boardOverview.
+     * @return true if it represents boardOverview, false otherwise
+     */
+    public boolean isBoardOverview(){return primaryStage.
+            getScene().equals(boardOverview);}
+
 
     /**
      * Open a new window that displays the customization scene
