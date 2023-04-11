@@ -13,7 +13,8 @@ public class MockCardCustomizationCtrl extends CardCustomizationCtrl {
      * @param cardDetailsCtrl Used to pass the information of
      *                        the current card to the scene
      */
-    public MockCardCustomizationCtrl(BoardCtrl boardCtrl, MainCtrl mainCtrl, ServerUtils server, CardDetailsCtrl cardDetailsCtrl) {
+    public MockCardCustomizationCtrl(BoardCtrl boardCtrl, MainCtrl mainCtrl,
+                                     ServerUtils server, CardDetailsCtrl cardDetailsCtrl) {
         super(boardCtrl, mainCtrl, server, cardDetailsCtrl);
     }
 }
