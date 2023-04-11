@@ -9,22 +9,20 @@ class TagsTest {
     Tags tag2;
     Tags tag3;
 
-
-
     @BeforeEach
     void setUp(){
-
         tag1 = new Tags("title 1", "backgroundColor","fontColor");
         tag2 = new Tags("title 2", "backgroundColor 1","fontColor");
         tag3 = new Tags("title 2", "backgroundColor 1","fontColor");
-
     }
+
     @Test
     void testConstructor(){
         assertNotNull(new Tags("1", "2", "3"));
         assertNotNull(tag1);
         assertNotNull(new Tags());
     }
+
     @Test
     void testEqualsTrue() {
         assertEquals(tag2, tag3);
@@ -32,18 +30,18 @@ class TagsTest {
         tag1.backgroundColor = tag2.backgroundColor;
         assertEquals(tag1, tag2);
     }
+
     @Test
     void testEqualsFalse() {
         assertNotEquals(tag1, tag2);
     }
+
     @Test
     void testHashCode() {
         int hashcode1 = tag1.hashCode();
-
         assertNotEquals(hashcode1, tag2.hashCode());
         assertNotEquals(hashcode1, tag3.hashCode());
         assertEquals(hashcode1, tag1.hashCode());
-
         assertEquals(tag2.hashCode(), tag3.hashCode());
     }
 
