@@ -72,6 +72,8 @@ public class BoardCtrl {
         listContainers = new ArrayList<>();
         listCards = new ArrayList<>();
         this.board = board;
+        if(board != null)
+            boardName.setText(board.name);
 
         if(!serverURLS.contains(server.getServer())) {
             serverURLS.add(server.getServer());
@@ -146,6 +148,15 @@ public class BoardCtrl {
         });
 
         server.registerForMessages("/topic/boards/update", Boards.class, b -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    initialize(b);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/rename", Boards.class, b -> {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
