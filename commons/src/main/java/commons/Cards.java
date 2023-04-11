@@ -72,7 +72,7 @@ public class Cards {
         return id == cards.id && positionInsideList == cards.positionInsideList &&
                 Objects.equals(title, cards.title) &&
                 Objects.equals(description, cards.description) &&
-                Objects.equals(list, cards.list) &&
+                Objects.equals(list.id, cards.list.id) &&
                 Objects.equals(colorStyle, cards.colorStyle) &&
                 Objects.equals(subtasks, cards.subtasks) &&
                 Objects.equals(tags, cards.tags);
@@ -85,7 +85,7 @@ public class Cards {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, positionInsideList, description,
-                list, colorStyle, subtasks, tags);
+                list.id, colorStyle, subtasks, tags);
     }
 
     /**
@@ -100,7 +100,7 @@ public class Cards {
                 ", title='" + title + '\'' +
                 ", positionInsideList=" + positionInsideList +
                 ", description='" + description + '\'' +
-                ", list=" + list +
+                ", list=" + list.id +
                 ", colorStyle='" + colorStyle + '\'' +
                 ", subtasks=" + subtasks +
                 ", tags=" + tags +
