@@ -1,11 +1,15 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Boards;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A window used to switch the current card color preset
@@ -22,6 +26,8 @@ public class CardCustomizationCtrl {
     private final ServerUtils server;
     @FXML
     private final CardDetailsCtrl cardDetailsCtrl;
+    private List<String> serverURLS;
+    private boolean sceneOpened;
 
     /**
      * Auxiliary call to mainCtrl Inject function
@@ -39,14 +45,21 @@ public class CardCustomizationCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.cardDetailsCtrl = cardDetailsCtrl;
+        serverURLS = new ArrayList<>();
     }
 
     /**
      * This method implements setting the corresponding
      * color preset to the current card when the user clicks on any button
+     * @param the board object which contains the opened card
      */
-    void checkColorPreset() {
-        String[] presets = boardCtrl.getCurrentBoard().colorPreset.keySet().toArray(new String[0]);
+    void checkColorPreset(Boards board) {
+        if(!serverURLS.contains(server.getServer())) {
+            serverURLS.add(server.getServer());
+            websocketConfig();
+        }
+
+        String[] presets = board.colorPreset.keySet().toArray(new String[0]);
         colorPresetHolder.getChildren().clear();
         for (String preset : presets) {
             Button btn = new Button(preset);
@@ -65,11 +78,38 @@ public class CardCustomizationCtrl {
     }
 
     /**
+     * Method for configuring websockets in the
+     * Card Customization scene
+     *
+     */
+    public void websocketConfig() {
+        server.registerForMessages("/topic/boards/setCss", Boards.class, b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(sceneOpened)
+                        checkColorPreset(b);
+                }
+            });
+        });
+    }
+
+    /**
      * Closes the CardCustomization window
      */
     @FXML
     public void close(){
+        sceneOpened = false;
         mainCtrl.closeThirdStage();
+    }
+
+    /**
+     * Setter for the sceneOpened property
+     *
+     * @param sceneOpened The new value of sceneOpened
+     */
+    public void setSceneOpened(boolean sceneOpened) {
+        this.sceneOpened = sceneOpened;
     }
 
 }

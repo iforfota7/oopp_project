@@ -182,12 +182,16 @@ public class CardController {
         String presetName = board.defaultColor;
 
         List<Cards> cardsList = repo.findAll();
+        Cards saved = null;
         for(Cards card : cardsList) {
             if(!board.colorPreset.containsKey(card.colorStyle)) {
                 card.colorStyle = presetName;
-                repo.save(card);
+                saved = repo.save(card);
             }
         }
+
+        if(saved != null)
+            msgs.convertAndSend("/topic/cards/revertPreset", saved);
 
         return ResponseEntity.ok().build();
     }
