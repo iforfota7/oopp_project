@@ -276,6 +276,14 @@ public class Shortcuts {
     }
 
     /**
+     * Gets the current card fxml element
+     * @return the current card fxml element
+     */
+    public AnchorPane getCurrentCard() {
+        return currentCard;
+    }
+
+    /**
      * Setter for the currently highlighted card container
      * @param currentCard the currently highlighted card container
      */
