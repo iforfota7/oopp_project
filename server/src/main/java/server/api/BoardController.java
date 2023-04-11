@@ -9,10 +9,9 @@ import org.springframework.web.context.request.async.DeferredResult;
 import server.database.BoardsRepository;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 @RestController
@@ -32,7 +31,9 @@ public class BoardController {
     }
 
 
-    private Map<Object, Consumer<Boards>> listeners = new HashMap<>();
+    private ConcurrentMap<Object, Consumer<Boards>> listeners = new
+            ConcurrentHashMap<Object, Consumer<Boards>>();
+
 
     /** Long Polling request server endpoint.
      * @return nothing if it timeouts, else board for deletion
@@ -48,7 +49,6 @@ public class BoardController {
         //used for long polling
         listeners.put(key, b -> {
             res.setResult(ResponseEntity.ok(b));
-
         });
 
         res.onCompletion(()->{
