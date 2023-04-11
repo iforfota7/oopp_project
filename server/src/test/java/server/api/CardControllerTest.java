@@ -416,7 +416,27 @@ class CardControllerTest {
     void revertPreset(){
         Lists list = new Lists("My List", 0, testBoard);
         Cards oldCard = getCard("My Card", 0, list);
-        oldCard.
+        Boards b = new Boards();
+        b.colorPreset.put("black", "lala");
+        oldCard.colorStyle = "white";
+        sut.addCard(oldCard);
+        assertEquals(HttpStatus.OK, sut.revertPreset(b).getStatusCode());
+    }
+
+    @Test
+    void getCardByIdTest(){
+        Lists list = new Lists("My List", 0, testBoard);
+        Cards oldCard = getCard("My Card", 0, list);
+        sut.addCard(oldCard);
+        assertEquals(200, sut.getCardById(0).getStatusCodeValue());
+
+
+    }
+
+    @Test
+    void getCardByIdTestNull(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.getCardById(0));
+
     }
 
 
