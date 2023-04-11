@@ -426,6 +426,7 @@ public class MainCtrl {
         thirdStage = new Stage();
         thirdStage.setScene(addTagToCard);
         thirdStage.setTitle("Add Tag to Card");
+        thirdStage.setResizable(false);
         thirdStage.show();
     }
 
@@ -567,6 +568,7 @@ public class MainCtrl {
         secondaryStage = new Stage();
         secondaryStage.setTitle("Keyboard shortcuts");
         secondaryStage.setScene(helpShortcuts);
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -656,6 +658,7 @@ public class MainCtrl {
         });
 
         customizationCtrl.setColorPickers(boardCtrl.getCurrentBoard());
+        secondaryStage.setResizable(false);
         secondaryStage.show();
     }
 
@@ -671,6 +674,7 @@ public class MainCtrl {
         thirdStage.setScene(cardCustomization);
         cardCustomizationCtrl.setSceneOpened(true);
         cardCustomizationCtrl.init(boards, cards);
+        thirdStage.setResizable(false);
         thirdStage.show();
     }
 
