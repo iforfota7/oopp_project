@@ -141,7 +141,7 @@ public class CardController {
             throw new RuntimeException("Failed to add card");
         }
 
-        return ResponseEntity.ok().build();
+        return addResponse;
     }
 
     /**

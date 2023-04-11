@@ -52,7 +52,7 @@ public class BoardCtrl {
     private Cards currentCard;
 
     private final Draggable drag;
-    private final Shortcuts shortcuts;
+    private Shortcuts shortcuts;
 
     private List<String> serverURLS;
 
@@ -78,7 +78,6 @@ public class BoardCtrl {
             webSocketLists();
             webSocketCards();
             webSocketsBoard();
-
         }
         refresh();
         server.registerForUpdates(b->{
@@ -211,6 +210,13 @@ public class BoardCtrl {
         this.board = server.getBoardByID(boardName.getText());
         firstRow.getChildren().clear();
         board.lists = server.getListsByBoard(board.id);
+
+        Cards currentCardObject = null;
+        if(shortcuts != null)
+            currentCardObject = shortcuts.getCurrentCardObject();
+        shortcuts=new Shortcuts(mainCtrl, server, this, currentCardObject);
+        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
+
         for (Lists list : board.lists) {
             addNewList(list);
         }
@@ -233,7 +239,6 @@ public class BoardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.drag = new Draggable(this.server);
-        this.shortcuts = new Shortcuts(mainCtrl);
         this.cardDetailsCtrl = cardDetailsCtrl;
 
         serverURLS = new ArrayList<>();
@@ -248,7 +253,7 @@ public class BoardCtrl {
         mainCtrl=new MainCtrl();
         server=new ServerUtils();
         cardDetailsCtrl=new CardDetailsCtrl(server,mainCtrl);
-        shortcuts=new Shortcuts(mainCtrl);
+
         drag = new Draggable(server);
     }
 
@@ -582,8 +587,12 @@ public class BoardCtrl {
 
         blanket.setId("card"+Long.toString(c.id));
         blanket.setOnMouseEntered(shortcuts::onMouseHover);
+        blanket.getProperties().put("card", c);
 
-        mainCtrl.getBoard().setOnKeyPressed(shortcuts::activateShortcut);
+        if(c.equals(shortcuts.getCurrentCardObject())) {
+            shortcuts.setCurrentCard(blanket);
+            shortcuts.highlightCurrentCard();
+        }
 
         card.getProperties().put("card", c);
         card.setId("card"+Long.toString(c.id));
@@ -733,9 +742,6 @@ public class BoardCtrl {
                     done++;
             subtasksLabelText = done + "/" + total + " subtasks";
         }
-
-              //  board.colorPreset.get("default").split(" ");
-
         Label subtasksCount = new Label(subtasksLabelText);
 
         String descriptionLabelText = "Description: no";
@@ -750,7 +756,6 @@ public class BoardCtrl {
         subtasksCount.setPadding(new Insets(-3, 10, -8, 0));
         return subtasksCount;
     }
-
 
     /**
      *To create a progress bar for a task:
@@ -867,6 +872,7 @@ public class BoardCtrl {
      * Exits the specific board to show board overview
      */
     public void exitBoard() {
+        shortcuts.setCurrentCardObject(null);
         mainCtrl.showBoardOverview();
     }
 
@@ -912,5 +918,13 @@ public class BoardCtrl {
      */
     public void openTag(){
         mainCtrl.showTagControl(board);
+    }
+
+    /**
+     * Gets the board object of the current board
+     * @return this board's board object
+     */
+    public Boards getBoard() {
+        return board;
     }
 }
