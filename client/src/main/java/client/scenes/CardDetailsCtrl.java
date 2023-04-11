@@ -104,9 +104,9 @@ public class CardDetailsCtrl {
      *
      */
     public void websocketConfig() {
-
         cardWebsocketConfig();
         boardWebsocketConfig();
+        listWebsocketConfig();
     }
 
     /**
@@ -132,7 +132,8 @@ public class CardDetailsCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(openedCard != null && c.id == openedCard.id && sceneOpened) {
+                    if(openedCard != null && c.id == openedCard.id
+                            && sceneOpened && mainCtrl.isCardDetailsShowing()) {
                         mainCtrl.closeSecondaryStage();
                         mainCtrl.showWarningCardDeletion();
                     }
@@ -160,7 +161,6 @@ public class CardDetailsCtrl {
      * Configures the websockets which depend on boards
      */
     public void boardWebsocketConfig(){
-
         // when tags are updated, the card details scene needs to receive this information
         server.registerForMessages("/topic/boards/update", Boards.class, b->{
             Platform.runLater(new Runnable() {
@@ -168,6 +168,20 @@ public class CardDetailsCtrl {
                 public void run() {
                     if(board != null && board.id == b.id) {
                         board = b;
+                    }
+                }
+            });
+        });
+
+
+        // when tags are updated, the card details scene needs to receive this information
+        server.registerForMessages("/topic/lists/remove", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && l.id == openedCard.list.id && sceneOpened) {
+                        mainCtrl.closeSecondaryStage();
+                        mainCtrl.showWarningCardDeletion();
                     }
                 }
             });
@@ -183,11 +197,28 @@ public class CardDetailsCtrl {
                         board = b;
                         if(!board.colorPreset.containsKey(openedCard.colorStyle)) {
                             Cards updatedCard = server.getCardById(openedCard.id);
-                            System.out.println(openedCard.colorStyle);
-                            System.out.println(updatedCard.colorStyle);
-                            System.out.println(board.colorPreset);
                             openedCard.colorStyle = updatedCard.colorStyle;
                         }
+                        refreshOpenedCard();
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Configures the websockets which depend on lists
+     */
+    public void listWebsocketConfig(){
+        // When another client removes this card, this client will be
+        // sent to the board scene
+        server.registerForMessages("/topic/cards/revertPreset", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && !board.colorPreset.containsKey(openedCard.colorStyle)
+                            && sceneOpened) {
+                        openedCard.colorStyle = c.colorStyle;
                         refreshOpenedCard();
                     }
                 }
@@ -202,7 +233,7 @@ public class CardDetailsCtrl {
      * A warning is displayed if the input field is empty.
      */
     @FXML
-    void save() {
+    public void save() {
         warning.setVisible(false);
         rename = false;
 
@@ -658,7 +689,7 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.openCardCustomization(board);
+        mainCtrl.openCardCustomization(board, openedCard);
 
     }
 

@@ -1,6 +1,7 @@
 package client.scenes;
 
 import commons.Boards;
+import commons.Cards;
 import commons.User;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class MockMainCtrl extends MainCtrl {
      * Mocks the behaviour of the customization method in MainCtrl
      */
     @Override
-    public void openCardCustomization(Boards b) { calledMethods.add("checkColorPreset"); }
+    public void openCardCustomization(Boards b, Cards c) { calledMethods.add("checkColorPreset"); }
     /**
      * Mocks the behaviour of the closeThirdStage method in MainCtrl
      */

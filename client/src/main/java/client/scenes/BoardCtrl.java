@@ -42,7 +42,7 @@ public class BoardCtrl {
     @FXML
     public ScrollPane scrollPane;
 
-    Boards board;
+    private Boards board;
 
     List<VBox> listContainers;
     List<AnchorPane> listCards;

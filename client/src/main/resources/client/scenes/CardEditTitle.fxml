@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #F0FFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardEditTitleCtrl">
+   <TextField fx:id="cardTitleInput" alignment="CENTER" layoutX="72.0" layoutY="93.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="154.0">
+      <font>
+         <Font name="Avenir Book" size="13.0" />
+      </font>
+   </TextField>
+   <Accordion layoutX="85.0" layoutY="149.0" />
+   <Button fx:id="saveDetails" layoutX="170.0" layoutY="136.0" mnemonicParsing="false" onAction="#save" text="Save" />
+   <Label layoutX="79.0" layoutY="53.0" text="Input new Card Title">
+      <font>
+         <Font name="Hiragino Sans GB W3" size="16.0" />
+      </font>
+   </Label>
+   <Text fx:id="warning" fill="RED" layoutX="88.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
+   <Button layoutX="88.0" layoutY="136.0" mnemonicParsing="false" onAction="#close" text="Cancel" />
+</AnchorPane>

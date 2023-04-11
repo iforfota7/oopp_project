@@ -36,7 +36,6 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
-
     /**
      * Main method that runs client side application
      * @param args any arguments
@@ -142,6 +141,8 @@ public class Main extends Application {
     public void initializeCards(MainCtrl mainCtrl){
         var cardDetails = FXML.load(CardDetailsCtrl.class,"client", "scenes",
                 "CardDetails.fxml" );
+        var cardEditTitle = FXML.load(CardEditTitleCtrl.class,"client", "scenes",
+                "CardEditTitle.fxml");
         var confirmCloseCard = FXML.load(CardDetailsCtrl.class, "client",
                 "scenes", "CardDetailsConfirmExit.fxml");
         var warningCardDeletion = FXML.load(CardDetailsCtrl.class, "client",
@@ -149,7 +150,7 @@ public class Main extends Application {
         var addCard = FXML.load(NewCardCtrl.class,"client", "scenes", "ADDNewCard.fxml");
         var deleteCard = FXML.load(DeCardCtrl.class, "client", "scenes", "DeCard.fxml");
 
-        mainCtrl.initializeCards(cardDetails, addCard, deleteCard,
+        mainCtrl.initializeCards(cardDetails, cardEditTitle, addCard, deleteCard,
                 confirmCloseCard, warningCardDeletion);
     }
 
@@ -157,7 +158,7 @@ public class Main extends Application {
      * Initializes the fxml files related to tags
      * @param mainCtrl instance of the mainCtrl object used to initialize the files
      */
-    public void initializeTags(MainCtrl mainCtrl){
+    public void initializeTags(MainCtrl mainCtrl) {
         var tagsControl = FXML.load(TagsCtrl.class, "client", "scenes", "tagsController.fxml");
         var tagDetails = FXML.load(TagDetailsCtrl.class, "client", "scenes", "tagDetail.fxml");
         var addTag = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
@@ -174,11 +175,8 @@ public class Main extends Application {
     public void initializeCustomization(MainCtrl mainCtrl) {
         var customization = FXML.load(CustomizationCtrl.class,
                 "client","scenes","Customization.fxml");
-
         var cardCustomization = FXML.load(CardCustomizationCtrl.class,
                 "client", "scenes", "CardCustomization.fxml");
-
-        mainCtrl.initializeCustomization(customization,cardCustomization);
-
+        mainCtrl.initializeCustomization(customization, cardCustomization);
     }
 }

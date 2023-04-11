@@ -47,4 +47,12 @@ public class MockAdListCtrl extends AdListCtrl{
     public void setNewListName(String text) {
         calledMethods.add("setNewListName");
     }
+
+    /**
+     * Overrides the method close in AdListCtrl
+     */
+    @Override
+    public void close() {
+        calledMethods.add("close");
+    }
 }

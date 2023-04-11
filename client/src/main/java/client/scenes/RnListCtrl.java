@@ -11,14 +11,17 @@ import javax.inject.Inject;
  */
 public class RnListCtrl {
     private final BoardCtrl boardCtrl;
+    private final MainCtrl mainCtrl;
 
     /**
      * Constructor method for RnListCtrl
      * @param boardCtrl instance of BoardCtrl
+     * @param mainCtrl instance of MainCtrl
      */
     @Inject
-    public RnListCtrl(BoardCtrl boardCtrl){
+    public RnListCtrl(BoardCtrl boardCtrl, MainCtrl mainCtrl){
         this.boardCtrl = boardCtrl;
+        this.mainCtrl = mainCtrl;
     }
     @FXML
     private TextField newName;
@@ -40,6 +43,16 @@ public class RnListCtrl {
         }
 
         boardCtrl.rnList(newName.getText());
+        newName.clear();
     }
 
+    /**
+     * Closes the window for editing a list's title.
+     */
+    @FXML
+    void close() {
+        warning.setVisible(false);
+        newName.clear();
+        mainCtrl.closeSecondaryStage();
+    }
 }
