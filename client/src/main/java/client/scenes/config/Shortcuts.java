@@ -41,7 +41,7 @@ public class Shortcuts {
         this.boardCtrl = boardCtrl;
         this.currentCardObject = currentCardObject;
 
-        board = boardCtrl.getBoard();
+        board = boardCtrl.getCurrentBoard();
         currentBoard = boardCtrl.getFirstRow();
 
         setPositionForCard();
