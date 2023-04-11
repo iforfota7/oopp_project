@@ -93,4 +93,11 @@ class CardDetailsCtrlTest {
         assertTrue(testMainCtrl.calledMethods.contains("closeSecondaryStage"));
         assertTrue(testMainCtrl.calledMethods.contains("showBoard"));
     }
+
+    @Test
+    void customizationTest(){
+        sut.customization();
+        assertTrue(testMainCtrl.calledMethods.contains("checkColorPreset"));
+
+    }
 }
