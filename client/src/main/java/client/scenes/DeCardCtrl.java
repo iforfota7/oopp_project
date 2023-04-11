@@ -22,18 +22,22 @@ public class DeCardCtrl {
 
     /**
      * Calls the method to definitively deleting a card
+     * @return true if the boardCtrl method has been called
      */
     @FXML
-    void deleteCard() {
+    public boolean deleteCard() {
         boardCtrl.deleteCard();
+        return true;
     }
 
     /**
      * Calls the method to cancel the deletion of a card
+     * @return true if the boardCtrl method has been called
      */
     @FXML
-    void undeleteCard() {
+    public boolean undeleteCard() {
         boardCtrl.undeleteCard();
+        return true;
     }
 
 }
