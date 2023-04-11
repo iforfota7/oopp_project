@@ -647,7 +647,7 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.openCardCustomization(board);
+        mainCtrl.openCardCustomization(board, openedCard);
 
     }
 

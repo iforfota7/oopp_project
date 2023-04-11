@@ -357,9 +357,6 @@ public class Shortcuts {
 
         if(currentCardObject==null || board==null) return;
 
-        boardCtrl.getCardDetailsCtrl().setBoard(board);
-        boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
-
         mainCtrl.shortcutsActivatedAddTagToCard();
         mainCtrl.showAddTagToCard(currentCardObject, board, boardCtrl.getCardDetailsCtrl());
      }
@@ -371,11 +368,8 @@ public class Shortcuts {
 
         if(currentCardObject==null || board==null) return;
 
-        boardCtrl.getCardDetailsCtrl().setOpenedCard(currentCardObject);
-        boardCtrl.getCardDetailsCtrl().setBoard(board);
-
         mainCtrl.shortcutsActivatedCardCustomization();
-        boardCtrl.getCardDetailsCtrl().customization();
+        mainCtrl.openCardCustomization(board, currentCardObject);
     }
 
     /**

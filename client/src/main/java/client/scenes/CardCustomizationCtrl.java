@@ -31,6 +31,8 @@ public class CardCustomizationCtrl {
     private boolean shortcutActivated;
     private List<String> serverURLS;
     private boolean sceneOpened;
+    private Boards board;
+    private Cards card;
 
     /**
      * Auxiliary call to mainCtrl Inject function
@@ -55,9 +57,8 @@ public class CardCustomizationCtrl {
     /**
      * This method implements setting the corresponding
      * color preset to the current card when the user clicks on any button
-     * @param board the object which contains the opened card
      */
-    void checkColorPreset(Boards board) {
+    void checkColorPreset() {
         if(!serverURLS.contains(server.getServer())) {
             serverURLS.add(server.getServer());
             websocketConfig();
@@ -69,17 +70,17 @@ public class CardCustomizationCtrl {
             Button btn = new Button(preset);
             btn.setPrefWidth(160);
             btn.setPrefHeight(20);
-            String[] colors = ((String) cardDetailsCtrl.board.colorPreset.get(preset)).split(" ");
+            String[] colors = ((String) board.colorPreset.get(preset)).split(" ");
             btn.setStyle("-fx-background-color: " + colors[0] + "; " +
                     "-fx-text-fill: " + colors[1] + ";");
             btn.setOnAction(event -> {
-                cardDetailsCtrl.openedCard.colorStyle = ((Button) event.getSource()).getText();
+                card.colorStyle = ((Button) event.getSource()).getText();
                 if(shortcutActivated) {
                     Lists blankList = new Lists(null, 0, null);
-                    blankList.id = cardDetailsCtrl.openedCard.list.id;
-                    cardDetailsCtrl.openedCard.list = blankList;
+                    blankList.id = card.list.id;
+                    card.list = blankList;
 
-                    server.renameCard(cardDetailsCtrl.openedCard);
+                    server.renameCard(card);
                 }
                 else
                     cardDetailsCtrl.refreshOpenedCard();
@@ -102,7 +103,7 @@ public class CardCustomizationCtrl {
                 @Override
                 public void run() {
                     if(sceneOpened)
-                        checkColorPreset(b);
+                        init(b, card);
                 }
             });
         });
@@ -111,8 +112,7 @@ public class CardCustomizationCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    Cards currentCard = cardDetailsCtrl.openedCard;
-                    if(currentCard != null && c.id == currentCard.id) {
+                    if(card != null && c.id == card.id) {
                         close();
                     }
                 }
@@ -123,8 +123,7 @@ public class CardCustomizationCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    Cards currentCard = cardDetailsCtrl.openedCard;
-                    if(currentCard != null && currentCard.list.id == l.id) {
+                    if(card != null && card.list.id == l.id) {
                         close();
                     }
                 }
@@ -156,6 +155,19 @@ public class CardCustomizationCtrl {
      */
     public void setSceneOpened(boolean sceneOpened) {
         this.sceneOpened = sceneOpened;
+    }
+
+    /**
+     * Method for setting the board and card arguments
+     * and calling checkColorPreset
+     *
+     * @param board The board object
+     * @param card The opened card object
+     */
+    public void init(Boards board, Cards card) {
+        this.board = board;
+        this.card = card;
+        checkColorPreset();
     }
 
 }
