@@ -162,6 +162,17 @@ public class BoardOverviewCtrl{
         }
 
         refresh();
+        server.registerForUpdates(b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(mainCtrl.isBoardOverview()){
+                        refresh();
+                    }
+
+                }
+            });
+        });
 
     }
 
@@ -338,7 +349,7 @@ public class BoardOverviewCtrl{
             closeAdminFeatures();
         }
 
-        selectServerCtrl.setCurrentUser();
+        selectServerCtrl.updateCurrentUser();
         selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {

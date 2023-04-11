@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #f9f9d2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
    <children>
-      <Label layoutX="103.0" layoutY="49.0" text="This card has been deleted!">
+      <Label layoutX="68.0" layoutY="46.0" text="This card has been deleted or moved.">
          <font>
             <Font size="16.0" />
          </font>

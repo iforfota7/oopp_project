@@ -44,7 +44,7 @@ import static jakarta.ws.rs.core.MediaType.*;
 public class ServerUtils {
 
     private String serverAddress;
-    private static String USERNAME;
+    private String username;
 
     /**
      * Method that adds a user to the database
@@ -72,7 +72,7 @@ public class ServerUtils {
      */
     public User findUser(){
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>(){});
     }
@@ -326,7 +326,7 @@ public class ServerUtils {
      * Setter method for the username attribute
      * @param username the username to be set
      */
-    public static void setUsername(String username) { USERNAME = username;}
+    public void setUsername(String username) { this.username = username;}
 
     /**
      * Sends a simple get request to /api/test-connection in order to check if the
@@ -420,7 +420,7 @@ public class ServerUtils {
     public User hideBoardFromUser(Boards board){
         // get the current user using the saved USERNAME
         User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
 
@@ -442,7 +442,7 @@ public class ServerUtils {
      */
     public boolean checkAdmin() {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
                 }).isAdmin;
@@ -479,7 +479,7 @@ public class ServerUtils {
     public void addBoardToUser(Boards board){
         // get the current user using the saved USERNAME
         User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
 
@@ -505,7 +505,7 @@ public class ServerUtils {
      */
     public List<Boards> viewedBoards(){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(serverAddress).path("api/user/boards/" + USERNAME)
+                .target(serverAddress).path("api/user/boards/" + username)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
@@ -563,6 +563,7 @@ public class ServerUtils {
                                 target(serverAddress).path("api/boards/longPolling").
                                 request(APPLICATION_JSON).
                                 accept(APPLICATION_JSON).get(Response.class);
+
                         if (res.getStatus() == 204) {
                             continue;
                         }

@@ -107,7 +107,14 @@ public class Boards {
         return "Boards{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lists=" + lists+
+                ", lists=" + lists +
+                ", boardBgColor='" + boardBgColor + '\'' +
+                ", boardFtColor='" + boardFtColor + '\'' +
+                ", listBgColor='" + listBgColor + '\'' +
+                ", listFtColor='" + listFtColor + '\'' +
+                ", defaultColor='" + defaultColor + '\'' +
+                ", colorPreset=" + colorPreset +
+                ", tags=" + tags +
                 '}';
     }
 }

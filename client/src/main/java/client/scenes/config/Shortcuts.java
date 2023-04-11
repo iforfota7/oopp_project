@@ -85,7 +85,6 @@ public class Shortcuts {
 
     private BoardCtrl boardCtrl;
     private int x; //position of list inside board
-
     private int y; //position of card inside list
 
     /**
@@ -389,6 +388,14 @@ public class Shortcuts {
     }
 
     /**
+     * Gets the current card fxml element
+     * @return the current card fxml element
+     */
+    public AnchorPane getCurrentCard() {
+        return currentCard;
+    }
+
+    /**
      * Setter for the currently highlighted card container
      * @param currentCard the currently highlighted card container
      */
@@ -403,5 +410,4 @@ public class Shortcuts {
     public void setCurrentCardObject(Cards cards) {
         this.currentCardObject = cards;
     }
-
 }

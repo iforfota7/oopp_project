@@ -38,4 +38,16 @@ public class MockBoardCtrl extends BoardCtrl {
     public HBox getFirstRow() {
         return firstRow;
     }
+
+    /**
+     * Mocks the behaviour of the deleteCard method
+     */
+    @Override
+    public void deleteCard(){}
+
+    /**
+     * Mocks the behaviour of the undeleteCard method
+     */
+    @Override
+    public void undeleteCard(){}
 }

@@ -78,7 +78,6 @@ public class BoardCtrl {
             webSocketLists();
             webSocketCards();
             webSocketsBoard();
-
         }
         refresh();
         firstRow.requestFocus();
@@ -87,12 +86,16 @@ public class BoardCtrl {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(board.id == b.id){
+
+                    if(mainCtrl.isBoard(b)){
 
 
                         Alert e = new Alert(Alert.AlertType.WARNING,
                     "This board has been deleted by admin");
                         e.show();
+
+                        mainCtrl.closeSecondaryStage();
+                        mainCtrl.closeThirdStage();
                         mainCtrl.showBoardOverview();
 
 
@@ -479,7 +482,7 @@ public class BoardCtrl {
      * Deletes a card from the database, after the user confirmed
      * the deletion
      */
-    void deleteCard() {
+    public void deleteCard() {
         server.removeCard(currentCard);
         mainCtrl.closeSecondaryStage();
     }
@@ -487,7 +490,7 @@ public class BoardCtrl {
     /**
      * Closes the scene which asks for confirmation of deleting a card
      */
-    void undeleteCard() {
+    public void undeleteCard() {
         mainCtrl.closeSecondaryStage();
     }
 
@@ -598,6 +601,13 @@ public class BoardCtrl {
         newCard.getChildren().addAll(deleteCard, card, blanket);
         newCard.getProperties().put("card", c);
         newCard.setId("card"+Long.toString(c.id));
+
+        if(shortcuts.getCurrentCard()!=null &&
+                newCard.getId().equals(shortcuts.getCurrentCard().getId())) {
+            blanket.setStyle("-fx-border-color: red;  " +
+                    "-fx-border-radius: 4;");
+            shortcuts.setCurrentCard(blanket);
+        }
 
         if(c.positionInsideList > 5){
             Double height = anchor.getMinHeight();
@@ -732,9 +742,6 @@ public class BoardCtrl {
                     done++;
             subtasksLabelText = done + "/" + total + " subtasks";
         }
-
-              //  board.colorPreset.get("default").split(" ");
-
         Label subtasksCount = new Label(subtasksLabelText);
 
         String descriptionLabelText = "Description: no";
@@ -749,7 +756,6 @@ public class BoardCtrl {
         subtasksCount.setPadding(new Insets(-3, 10, -8, 0));
         return subtasksCount;
     }
-
 
     /**
      *To create a progress bar for a task:

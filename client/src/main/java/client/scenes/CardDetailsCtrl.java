@@ -60,6 +60,9 @@ public class CardDetailsCtrl {
     private List<String> serverURLS;
     public String colors;
 
+    private CardDetailsCtrlServices cardDetailsCtrlServices = new CardDetailsCtrlServices();
+    private List<Tags> initialTags;
+    private List<Subtask> initialSubtasks;
 
     /**
      * Initializes the card details controller object
@@ -208,16 +211,7 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
 
-        // if we have multiple created subtasks
-        // a JSON error will be thrown because it will have to serialize
-        // multiple objects with the same id (0)
-        // this block of code ensures that the ids sent are distinct
-        int index = 0;
-        if(openedCard.subtasks != null) {
-            for(Subtask subtask : openedCard.subtasks)
-                if(subtask.id == 0)
-                    subtask.id = --index;
-        }
+        ensureIdDistinct(openedCard);
 
         subtaskName.setText("");
 
@@ -235,6 +229,17 @@ public class CardDetailsCtrl {
         changesFromSubtasks = false;
         changesInTitleOrDescription = false;
         mainCtrl.closeSecondaryStage();
+    }
+
+    /**
+     * Calls the CardDetailsCtrl service's method that ensures
+     * the ids of subtasks are distinct before serializing them
+     * @param openedCard the card whose details are opened
+     * @return true if the card has subtasks, false otherwise
+     */
+    public boolean ensureIdDistinct(Cards openedCard) {
+
+        return cardDetailsCtrlServices.ensureIdDistinct(openedCard);
     }
 
     /**
@@ -290,11 +295,14 @@ public class CardDetailsCtrl {
     /**
      * Simply closes the cardDetails scene without any warning, as no modifications
      * has been made and need to be saved
+     * @return true if the scene was opened, otherwise false
      */
-    public void close(){
+    public boolean close(){
         sceneOpened = false;
         mainCtrl.closeSecondaryStage();
         mainCtrl.showBoard(board);
+
+        return sceneOpened;
     }
 
     /**
@@ -388,8 +396,8 @@ public class CardDetailsCtrl {
     public void renderSubtask(Subtask subtask, int position) {
         // styling for the subtask container
         HBox subtaskContainer = new HBox();
-        subtaskContainer.setPrefWidth(214);
-        subtaskContainer.setPrefHeight(32);
+        subtaskContainer.setMinWidth(214);
+        subtaskContainer.setMinHeight(32);
         subtaskContainer.setAlignment(Pos.CENTER);
         subtaskContainer.getProperties().put("subtask", subtask);
 
@@ -472,12 +480,12 @@ public class CardDetailsCtrl {
         if(arrow.getText().equals("\uD83D\uDD3C")) {
             // up arrow
             if(position > 0) {
-                swapSubtasks(subtaskList, position, position - 1);
+                swapSubtasksService(subtaskList, position, position - 1);
             }
         } else {
             // down arrow
             if(position < subtaskList.size() - 1) {
-                swapSubtasks(subtaskList, position, position + 1);
+                swapSubtasksService(subtaskList, position, position + 1);
             }
         }
 
@@ -485,16 +493,16 @@ public class CardDetailsCtrl {
     }
 
     /**
-     * Swaps subtasks at positions i and j in the subtasks list
-     *
-     * @param subtaskList The list containing the subtasks
-     * @param i The position of the first subtask
-     * @param j The position of the second subtask
+     * Calls the CardDetailsCtrl service's swapSubtask method which
+     * reorders the subtasks based on the clicked button
+     * @param subtaskList the list of subtasks
+     * @param i the position of the current subtask
+     * @param j the position of the subtask below or above
+     * @return true
      */
-    private void swapSubtasks(List<Subtask> subtaskList, int i, int j) {
-        Subtask tmp = subtaskList.get(i);
-        subtaskList.set(i, subtaskList.get(j));
-        subtaskList.set(j, tmp);
+    public boolean swapSubtasksService(List<Subtask> subtaskList, int i, int j) {
+
+        return cardDetailsCtrlServices.swapSubtasks(subtaskList, i, j);
     }
 
     /**
