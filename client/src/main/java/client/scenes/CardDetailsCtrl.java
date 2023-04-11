@@ -59,9 +59,7 @@ public class CardDetailsCtrl {
     private boolean changesInCustomization;
     private List<String> serverURLS;
     public String colors;
-    private List<Tags> initialTags;
-    private List<Subtask> initialSubtasks;
-    private String initialCardColors;
+
 
     /**
      * Initializes the card details controller object
@@ -95,24 +93,6 @@ public class CardDetailsCtrl {
         changesInTitleOrDescription = false;
         changesInCustomization = false;
 
-        initialTags = new ArrayList<>();
-        initialSubtasks = new ArrayList<>();
-
-        if(openedCard != null){
-            if(openedCard.tags != null) {
-                for(Tags t : openedCard.tags){
-                    initialTags.add(t);
-                }
-            }
-            if(openedCard.subtasks != null){
-                for(Subtask s : openedCard.subtasks){
-                    Subtask subtask = new Subtask(s.title, s.checked, s.position);
-                    subtask.id = s.id;
-                    initialSubtasks.add(subtask);
-                }
-            }
-            initialCardColors = openedCard.colorStyle;
-        }
         warning.setVisible(false);
     }
 
@@ -121,6 +101,15 @@ public class CardDetailsCtrl {
      *
      */
     public void websocketConfig() {
+
+        cardWebsocketConfig();
+        boardWebsocketConfig();
+    }
+
+    /**
+     * Configures the websockets which depend on cards
+     */
+    public void cardWebsocketConfig(){
 
         // When a client modifies card details, this scene gets modified
         // so that clients that see this scene will see the details changing
@@ -148,14 +137,52 @@ public class CardDetailsCtrl {
             });
         });
 
-        // when tags are updated, the card details scene needs to
-        // receive this information
+        // When another client removes this card, this client will be
+        // sent to the board scene
+        server.registerForMessages("/topic/cards/revertPreset", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && !board.colorPreset.containsKey(openedCard.colorStyle)
+                            && sceneOpened) {
+                        openedCard.colorStyle = c.colorStyle;
+                        refreshOpenedCard();
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Configures the websockets which depend on boards
+     */
+    public void boardWebsocketConfig(){
+
+        // when tags are updated, the card details scene needs to receive this information
         server.registerForMessages("/topic/boards/update", Boards.class, b->{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     if(board != null && board.id == b.id) {
                         board = b;
+                    }
+                }
+            });
+        });
+
+        // when the presets of a card are changed, the card details scene of another
+        // client will synchronize with the new presets -> background and font colors
+        server.registerForMessages("/topic/boards/setCss", Boards.class, b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null && board.id == b.id) {
+                        board = b;
+                        if(!board.colorPreset.containsKey(openedCard.colorStyle)) {
+                            Cards updatedCard = server.getCardById(openedCard.id);
+                            openedCard.colorStyle = updatedCard.colorStyle;
+                        }
+                        refreshOpenedCard();
                     }
                 }
             });
@@ -218,37 +245,36 @@ public class CardDetailsCtrl {
      */
     @FXML
     public void closeCardDetails(){
+        Cards initialCard = server.getCardById(openedCard.id);
 
-        if(!openedCard.title.equals(cardTitleInput.getText()) ||
-                !openedCard.description.equals(description.getText())) {
+        if(!initialCard.title.equals(openedCard.title) ||
+            !initialCard.title.equals(cardTitleInput.getText()) ||
+            !initialCard.description.equals(openedCard.description) ||
+            !initialCard.description.equals(description.getText())){
             changesInTitleOrDescription = true;
         }
-        else{
+        else {
             changesInTitleOrDescription = false;
         }
 
-        if(openedCard.tags != null){
-            if(!openedCard.tags.equals(initialTags)){
-                changesFromTags = true;
-            }
-            else {
-                changesFromTags = false;
-            }
+        if(!initialCard.subtasks.equals(openedCard.subtasks)){
+            changesFromSubtasks = true;
+        }
+        else {
+            changesFromSubtasks = false;
         }
 
-        if(openedCard.subtasks != null){
-            if(!openedCard.subtasks.equals(initialSubtasks)){
-                changesFromSubtasks = true;
-            }
-            else {
-                changesFromSubtasks = false;
-            }
+        if(!initialCard.tags.equals(openedCard.tags)){
+            changesFromTags = true;
+        }
+        else {
+            changesFromTags = false;
         }
 
-        if(!openedCard.colorStyle.equals(initialCardColors)){
+        if(!initialCard.colorStyle.equals(openedCard.colorStyle)){
             changesInCustomization = true;
         }
-        else{
+        else {
             changesInCustomization = false;
         }
 
@@ -307,11 +333,8 @@ public class CardDetailsCtrl {
         openedCard.title = cardTitleInput.getText();
         openedCard.description = description.getText();
         setOpenedCard(openedCard);
-        String[] colors = this.colors.split(" ");
-        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
-        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
-        cardTitleInput.setStyle("-fx-text-fill: " + newColors[1] + ";");
-        description.setStyle("-fx-text-fill: " + newColors[1] + ";");
+
+
     }
 
     /**
@@ -346,6 +369,11 @@ public class CardDetailsCtrl {
                 openedCard.subtasks.get(i).position = i;
                 renderSubtask(openedCard.subtasks.get(i), i);
             }
+
+        String[] newColors = ((String)board.colorPreset.get(openedCard.colorStyle)).split(" ");
+        cardTitleInput.getParent().setStyle("-fx-background-color: " + newColors[0] + ";");
+        cardTitleInput.setStyle("-fx-text-fill: " + newColors[1] + ";");
+        description.setStyle("-fx-text-fill: " + newColors[1] + ";");
 
         inputsOpen = 0;
     }
@@ -619,7 +647,7 @@ public class CardDetailsCtrl {
      * The trigger event of the button opens the personalization selection window for that card
      */
     public void customization() {
-        mainCtrl.openCardCustomization();
+        mainCtrl.openCardCustomization(board);
 
     }
 

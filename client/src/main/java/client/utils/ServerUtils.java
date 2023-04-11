@@ -190,6 +190,20 @@ public class ServerUtils {
     }
 
     /**
+     * Method to find the card from the server by its id and return
+     * this Cards object
+     * @param cardId the id of the card to be found
+     * @return the Cards object of the card with the given id
+     */
+    public Cards getCardById(long cardId) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(serverAddress).path("api/cards/get/" + cardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Cards>(){});
+    }
+
+    /**
      * Method that adds Subtask to the database
      * @param subtask the subtask to be added
      * @return the response object

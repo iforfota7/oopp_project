@@ -137,6 +137,28 @@ public class AddTagToCardCtrl {
                 }
             });
         });
+
+        server.registerForMessages("/topic/cards/remove", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && c.id == openedCard.id) {
+                        close();
+                    }
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/lists/remove", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && openedCard.list.id == l.id) {
+                        close();
+                    }
+                }
+            });
+        });
     }
 
     /**

@@ -643,14 +643,16 @@ public class MainCtrl {
     }
 
     /**
-     *  Open a new window that displays the CardCustomization scene
+     * Open a new window that displays the CardCustomization scene
+     * @param boards The board object which contains the opened card
      */
-    public void openCardCustomization() {
+    public void openCardCustomization(Boards boards) {
         if(thirdStage != null && thirdStage.isShowing()) return;
         thirdStage = new Stage();
         thirdStage.setTitle("Customization for Card");
         thirdStage.setScene(cardCustomization);
-        cardCustomizationCtrl.checkColorPreset();
+        cardCustomizationCtrl.setSceneOpened(true);
+        cardCustomizationCtrl.checkColorPreset(boards);
         thirdStage.show();
     }
 
