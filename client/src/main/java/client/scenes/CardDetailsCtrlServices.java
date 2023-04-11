@@ -18,9 +18,13 @@ public class CardDetailsCtrlServices {
      * @return true
      */
     public boolean swapSubtasks(List<Subtask> subtaskList, int i, int j) {
+        //if the positions are out of bounds of the list size
+        if(i>=subtaskList.size() || j>=subtaskList.size())
+            return false;
         Subtask tmp = subtaskList.get(i);
         subtaskList.set(i, subtaskList.get(j));
         subtaskList.set(j, tmp);
+
         return true;
     }
 

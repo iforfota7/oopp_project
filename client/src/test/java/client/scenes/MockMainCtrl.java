@@ -30,8 +30,5 @@ public class MockMainCtrl extends MainCtrl {
      * Mocks the behaviour of the showBoard method in MainCtrl
      */
     @Override
-    public void showBoard(Boards b) {
-
-        System.out.println("Successfully showed board");
-    }
+    public void showBoard(Boards b) { calledMethods.add("showBoard"); }
 }
