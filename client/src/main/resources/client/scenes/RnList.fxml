@@ -12,12 +12,13 @@
    <effect>
       <DropShadow />
    </effect>
-   <TextField fx:id="newName" layoutX="39.0" layoutY="87.0" />
-   <Button fx:id="saveName" layoutX="212.0" layoutY="87.0" mnemonicParsing="false" onAction="#saveNewName" text="Save" />
-   <Label layoutX="89.0" layoutY="29.0" text="Input New Name">
+   <TextField fx:id="newName" layoutX="75.0" layoutY="87.0" />
+   <Button fx:id="saveName" layoutX="160.0" layoutY="136.0" mnemonicParsing="false" onAction="#saveNewName" text="Save" />
+   <Label layoutX="90.0" layoutY="39.0" text="Input New Name">
       <font>
          <Font name="Avenir Book" size="16.0" />
       </font>
    </Label>
-   <Text fx:id="warning" fill="RED" layoutX="87.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
+   <Text fx:id="warning" fill="RED" layoutX="87.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name cannot be blank!" visible="false" />
+   <Button layoutX="100.0" layoutY="136.0" mnemonicParsing="false" onAction="#close" text="Cancel" />
 </AnchorPane>

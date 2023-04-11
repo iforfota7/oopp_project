@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Boards;
 import commons.Cards;
 import commons.Tags;
 import org.springframework.http.ResponseEntity;
@@ -72,7 +73,6 @@ public class CardController {
      */
     @PostMapping(path = {"/rename","/rename/"})
     public ResponseEntity<Cards> renameCard(@RequestBody Cards card) {
-
         if(card == null || card.list==null
                 || isNullOrEmpty(card.title) || card.positionInsideList<0){
             return ResponseEntity.badRequest().build();
@@ -140,7 +140,7 @@ public class CardController {
             throw new RuntimeException("Failed to add card");
         }
 
-        return ResponseEntity.ok().build();
+        return addResponse;
     }
 
     /**
@@ -162,6 +162,50 @@ public class CardController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Each card that had its preset removed
+     * will revert to the default preset
+     *
+     * @param board Board object used to obtain the map
+     *              of presets and default preset
+     * @return OK iff the operation was successful
+     */
+    @Transactional
+    @PostMapping(path = {"/revertPreset", "/revertPreset/"})
+    public ResponseEntity<Cards> revertPreset(@RequestBody Boards board) {
+        if(board == null)
+            return ResponseEntity.badRequest().build();
+
+        String presetName = board.defaultColor;
+
+        List<Cards> cardsList = repo.findAll();
+        Cards saved = null;
+        for(Cards card : cardsList) {
+            if(!board.colorPreset.containsKey(card.colorStyle)) {
+                card.colorStyle = presetName;
+                saved = repo.save(card);
+            }
+        }
+
+        if(saved != null)
+            msgs.convertAndSend("/topic/cards/revertPreset", saved);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Method to find and return a card by its id
+     * @param cardId the id of the card to be found
+     * @return the card of cardId id
+     */
+    @GetMapping(path = "/get/{cardId}")
+    public ResponseEntity<Cards> getCardById(@PathVariable long cardId){
+        if(repo.findById(cardId).isEmpty())
+            return ResponseEntity.badRequest().build();
+        Cards card = repo.findById(cardId).get();
+        return ResponseEntity.ok(card);
     }
 
     /**

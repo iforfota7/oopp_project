@@ -3,8 +3,11 @@ package server.api;
 import commons.Boards;
 import commons.Cards;
 import commons.Lists;
+import commons.Tags;
+import commons.Subtask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -264,13 +267,13 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
         sut.addCard(c);
 
         assertEquals(1, repo.cards.size());
         assertEquals("a", repo.cards.get(0).title);
 
-        Cards c2 = getCard("b", 0, list);
+        Cards c2 = getCard("b", 0, list, new ArrayList<>());
         c2.id = c.id;
         sut.renameCard(c2);
 
@@ -288,7 +291,7 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
 
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c));
     }
@@ -298,11 +301,11 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
         sut.addCard(c);
 
         Lists list2 = new Lists("todo", 0, testBoard);
-        Cards c2 = getCard("b", 0, list2);
+        Cards c2 = getCard("b", 0, list2, new ArrayList<>());
         c2.id = c.id;
         list2.id = 5;
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
@@ -313,10 +316,10 @@ class CardControllerTest {
         Lists list = new Lists("todo", 0, testBoard);
         list.id = 0;
 
-        Cards c = getCard("a", 0, list);
+        Cards c = getCard("a", 0, list, new ArrayList<>());
         sut.addCard(c);
 
-        Cards c2 = getCard("b", 1, list);
+        Cards c2 = getCard("b", 1, list, new ArrayList<>());
         c2.id = c.id;
         assertEquals(ResponseEntity.badRequest().build(), sut.renameCard(c2));
     }
@@ -390,6 +393,54 @@ class CardControllerTest {
     }
 
     @Test
+    void removeTagFromCards(){
+        Lists list = new Lists("My List", 0, testBoard);
+        Cards oldCard = getCard("My Card", 0, list);
+        oldCard.tags = new ArrayList<>();
+        Tags t = new Tags("fsdf", "fsdf", "adf");
+        oldCard.tags.add(t);
+        sut.addCard(oldCard);
+        assertEquals(HttpStatus.OK, sut.removeTagFromCards(t).getStatusCode());
+        }
+    @Test
+    void removeTagFromCardsNull(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.removeTagFromCards(null));
+    }
+
+    @Test
+    void revertPresetTestNull(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.revertPreset(null));
+    }
+
+    @Test
+    void revertPreset(){
+        Lists list = new Lists("My List", 0, testBoard);
+        Cards oldCard = getCard("My Card", 0, list);
+        Boards b = new Boards();
+        b.colorPreset.put("black", "lala");
+        oldCard.colorStyle = "white";
+        sut.addCard(oldCard);
+        assertEquals(HttpStatus.OK, sut.revertPreset(b).getStatusCode());
+    }
+
+    @Test
+    void getCardByIdTest(){
+        Lists list = new Lists("My List", 0, testBoard);
+        Cards oldCard = getCard("My Card", 0, list);
+        sut.addCard(oldCard);
+        assertEquals(200, sut.getCardById(0).getStatusCodeValue());
+
+
+    }
+
+    @Test
+    void getCardByIdTestNull(){
+        assertEquals(ResponseEntity.badRequest().build(), sut.getCardById(0));
+
+    }
+
+
+    @Test
     void moveCardSameListBelow() {
         Lists list = new Lists("My List", 0, testBoard);
         Cards secondCard = getCard("My Second Card", 0, list);
@@ -415,6 +466,14 @@ class CardControllerTest {
     public Cards getCard(String t, int p, Lists list) {
 
         Cards card = new Cards(t,p,list, "Test description", null);
+        card.id = cardCount;
+        cardCount++;
+        return card;
+    }
+
+    public Cards getCard(String t, int p, Lists list, List<Subtask> subtasks) {
+
+        Cards card = new Cards(t,p,list, "Test description", subtasks);
         card.id = cardCount;
         cardCount++;
         return card;

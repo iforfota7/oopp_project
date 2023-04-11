@@ -66,4 +66,14 @@ public class AdListCtrl {
     public void setNewListName(String text) {
         newListName.setText(text);
     }
+
+    /**
+     * Closes the window for creating a new list.
+     */
+    @FXML
+    public void close() {
+        warning.setVisible(false);
+        newListName.clear();
+        mainCtrl.closeSecondaryStage();
+    }
 }

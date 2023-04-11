@@ -57,7 +57,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -66,7 +66,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview())init();
                 }
             });
         });
@@ -75,7 +75,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -84,7 +84,16 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/boards/setCss", Boards.class, board ->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -95,7 +104,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -104,7 +113,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -113,7 +122,7 @@ public class BoardOverviewCtrl{
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    init();
+                    if(mainCtrl.checkInBoardOverview()) init();
                 }
             });
         });
@@ -153,6 +162,17 @@ public class BoardOverviewCtrl{
         }
 
         refresh();
+        server.registerForUpdates(b->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(mainCtrl.isBoardOverview()){
+                        refresh();
+                    }
+
+                }
+            });
+        });
 
     }
 
@@ -241,8 +261,10 @@ public class BoardOverviewCtrl{
                 " -fx-text-fill: #ffffff; -fx-padding: 2px 6px; -fx-font-size: 10px");
         renameBoardButton.setOnMouseClicked(this::showRenameBoard);
         renameBoardButton.setUserData(b.name);
+
         stackPane.getChildren().add(renameBoardButton);
         StackPane.setAlignment(renameBoardButton, Pos.TOP_LEFT);
+        //stackPane.setStyle("-fx-background-radius: 3px; -fx-border-radius: 3px;");
 
         return stackPane;
     }
@@ -250,9 +272,10 @@ public class BoardOverviewCtrl{
     private Label boardBody(Boards b){
         Label newBoard = new Label(b.name);
 
-        newBoard.setStyle("-fx-background-color: #ffffff; -fx-text-fill:  #0d0d0d; " +
-                "-fx-border-color: #8d78a6; -fx-border-radius: 3px; -fx-text-fill: #000000;" +
-                "-fx-z-index: 999;");
+        newBoard.setStyle("-fx-background-color: " + b.boardBgColor + ";" +
+                " -fx-text-fill:  " + b.boardFtColor + "; " +
+                "-fx-border-color: #8d78a6; -fx-background-radius: 5px;" +
+                "-fx-border-radius: 5px; -fx-z-index: 999;");
         newBoard.setPrefWidth(263.2);
         newBoard.setPrefHeight(110.4);
         newBoard.setMinWidth(263.2);
@@ -326,7 +349,7 @@ public class BoardOverviewCtrl{
             closeAdminFeatures();
         }
 
-        selectServerCtrl.setCurrentUser();
+        selectServerCtrl.updateCurrentUser();
         selectServerCtrl.getCurrentUser().boards = boardsList;
         numberOfBoards = 0;
         for (Boards boards : boardsList) {

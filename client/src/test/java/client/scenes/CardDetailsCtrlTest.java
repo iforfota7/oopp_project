@@ -5,6 +5,7 @@ import commons.Cards;
 import commons.Subtask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +13,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CardDetailsCtrlTest {
 
-    private MockServerUtils testServerUtils;
+    private MockServerUtils mockServerUtils;
     private MockMainCtrl testMainCtrl;
     private CardDetailsCtrl sut;
 
     @BeforeEach
     public void setUp() {
-
-        testServerUtils = new MockServerUtils();
+        mockServerUtils = new MockServerUtils();
         testMainCtrl = new MockMainCtrl();
-        sut = new CardDetailsCtrl(testServerUtils, testMainCtrl);
+        sut = new CardDetailsCtrl(mockServerUtils, testMainCtrl);
     }
 
     @Test
@@ -92,5 +92,12 @@ class CardDetailsCtrlTest {
         assertFalse(result);
         assertTrue(testMainCtrl.calledMethods.contains("closeSecondaryStage"));
         assertTrue(testMainCtrl.calledMethods.contains("showBoard"));
+    }
+
+    @Test
+    void customizationTest(){
+        sut.customization();
+        assertTrue(testMainCtrl.calledMethods.contains("checkColorPreset"));
+
     }
 }

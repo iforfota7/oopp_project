@@ -9,10 +9,9 @@ import org.springframework.web.context.request.async.DeferredResult;
 import server.database.BoardsRepository;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 @RestController
@@ -32,7 +31,9 @@ public class BoardController {
     }
 
 
-    private Map<Object, Consumer<Boards>> listeners = new HashMap<>();
+    private ConcurrentMap<Object, Consumer<Boards>> listeners = new
+            ConcurrentHashMap<Object, Consumer<Boards>>();
+
 
     /** Long Polling request server endpoint.
      * @return nothing if it timeouts, else board for deletion
@@ -48,7 +49,6 @@ public class BoardController {
         //used for long polling
         listeners.put(key, b -> {
             res.setResult(ResponseEntity.ok(b));
-
         });
 
         res.onCompletion(()->{
@@ -173,6 +173,8 @@ public class BoardController {
     @Transactional
     @PostMapping(path = {"/remove", "/remove/"})
     public ResponseEntity<Void> removeBoard(@RequestBody Boards boards) {
+        if(boards == null)
+            return ResponseEntity.badRequest().build();
         String boardName = boards.name;
 
         if (boardName == null) {
@@ -194,4 +196,43 @@ public class BoardController {
 
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * Find the specified board by the request information of boardName and return this board.
+     * @param boardName Name of the target board.
+     * @return Target board.
+     */
+    @GetMapping(path = {"/get/{boardName}"})
+    @ResponseBody
+    public Boards getBoard(@PathVariable String boardName) {
+
+        if(repo.findByName(boardName).isEmpty()) return null;
+        return repo.findByName(boardName).get();
+    }
+
+    /**
+     *  By sending the new board from the client,
+     *  refresh the color information of the same board in the database and store it
+     * @param boards board with new color
+     * @return Notification of whether the modification was successful
+     */
+    @PostMapping(path = {"/setCss","/setCss/"})
+    public ResponseEntity<Boards> setCss(@RequestBody Boards boards) {
+        Optional<Boards> optionalBoard = repo.findByName(boards.name);
+        if (optionalBoard.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Boards savedBoard = optionalBoard.get();
+        savedBoard.boardBgColor = boards.boardBgColor;
+        savedBoard.boardFtColor = boards.boardFtColor;
+        savedBoard.listBgColor = boards.listBgColor;
+        savedBoard.listFtColor = boards.listFtColor;
+        savedBoard.colorPreset = boards.colorPreset;
+        savedBoard.defaultColor = boards.defaultColor;
+        Boards saved = repo.save(savedBoard);
+
+        msgs.convertAndSend("/topic/boards/setCss", saved);
+        return ResponseEntity.ok(saved);
+    }
 }
+

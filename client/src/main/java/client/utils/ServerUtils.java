@@ -44,7 +44,7 @@ import static jakarta.ws.rs.core.MediaType.*;
 public class ServerUtils {
 
     private String serverAddress;
-    private static String USERNAME;
+    private String username;
 
     /**
      * Method that adds a user to the database
@@ -72,7 +72,7 @@ public class ServerUtils {
      */
     public User findUser(){
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>(){});
     }
@@ -187,6 +187,20 @@ public class ServerUtils {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
                 path("api/cards/move").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(card, APPLICATION_JSON), Cards.class);
+    }
+
+    /**
+     * Method to find the card from the server by its id and return
+     * this Cards object
+     * @param cardId the id of the card to be found
+     * @return the Cards object of the card with the given id
+     */
+    public Cards getCardById(long cardId) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(serverAddress).path("api/cards/get/" + cardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Cards>(){});
     }
 
     /**
@@ -312,7 +326,7 @@ public class ServerUtils {
      * Setter method for the username attribute
      * @param username the username to be set
      */
-    public static void setUsername(String username) { USERNAME = username;}
+    public void setUsername(String username) { this.username = username;}
 
     /**
      * Sends a simple get request to /api/test-connection in order to check if the
@@ -406,7 +420,7 @@ public class ServerUtils {
     public User hideBoardFromUser(Boards board){
         // get the current user using the saved USERNAME
         User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
 
@@ -428,12 +442,35 @@ public class ServerUtils {
      */
     public boolean checkAdmin() {
         return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {
                 }).isAdmin;
     }
 
+    /**
+     * Find the board from the server by boardID and return the Board
+     * @param boardID ID of the board to be found.
+     * @return Target board
+     */
+    public Boards getBoardByID(String boardID) {
+        return  ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/get/"+boardID).
+                request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                get(new GenericType<Boards>(){});
+    }
+
+    /**
+     * By sending the current Board to the server, compare and store the new color information,
+     * and update the database
+     * @param board User's newly revised board
+     * @return new board
+     */
+    public Boards setBoardCss(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/boards/setCss/").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Boards.class);
+    }
 
     /**
      * Method that adds the current board to the user
@@ -442,7 +479,7 @@ public class ServerUtils {
     public void addBoardToUser(Boards board){
         // get the current user using the saved USERNAME
         User user = ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
-                path("api/user/find/" + USERNAME).
+                path("api/user/find/" + username).
                 request(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .get(new GenericType<User>() {});
 
@@ -468,7 +505,7 @@ public class ServerUtils {
      */
     public List<Boards> viewedBoards(){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(serverAddress).path("api/user/boards/" + USERNAME)
+                .target(serverAddress).path("api/user/boards/" + username)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Boards>>() {});
@@ -498,6 +535,20 @@ public class ServerUtils {
                 path("api/cards/removeTag").request(APPLICATION_JSON).accept(APPLICATION_JSON).
                 post(Entity.entity(tags, APPLICATION_JSON), Tags.class);
     }
+
+    /**
+     * If the preset of a card was removed
+     * it will be reverted back to the default preset
+     *
+     * @param board Used for obtaining the map and default preset
+     * @return Status code 200 if the operation was successful
+     */
+    public Cards revertPreset(Boards board) {
+        return ClientBuilder.newClient(new ClientConfig()).target(serverAddress).
+                path("api/cards/revertPreset").request(APPLICATION_JSON).accept(APPLICATION_JSON).
+                post(Entity.entity(board, APPLICATION_JSON), Cards.class);
+    }
+
     private static final ExecutorService EXEC = Executors.newCachedThreadPool();
 
     /** Calls endpoint on backend for long polling constantly when it recieves the board
@@ -512,6 +563,7 @@ public class ServerUtils {
                                 target(serverAddress).path("api/boards/longPolling").
                                 request(APPLICATION_JSON).
                                 accept(APPLICATION_JSON).get(Response.class);
+
                         if (res.getStatus() == 204) {
                             continue;
                         }

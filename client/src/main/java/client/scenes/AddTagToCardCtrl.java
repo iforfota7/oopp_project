@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Boards;
 import commons.Cards;
+import commons.Lists;
 import commons.Tags;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -31,6 +32,7 @@ public class AddTagToCardCtrl {
     private CardDetailsCtrl cardDetailsCtrl;
     private final ServerUtils server;
     private final List<String> serverURLS;
+    private boolean shortcutActivated;
 
     /**
      * Creates an instance of AddTagToCardCtrl
@@ -43,6 +45,7 @@ public class AddTagToCardCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         serverURLS = new ArrayList<>();
+        shortcutActivated = false;
     }
 
     /**
@@ -50,6 +53,7 @@ public class AddTagToCardCtrl {
      *
      */
     public void close() {
+        shortcutActivated = false;
         mainCtrl.closeThirdStage();
     }
 
@@ -67,7 +71,17 @@ public class AddTagToCardCtrl {
 
         openedCard.tags.addAll(selectedTags);
 
-        cardDetailsCtrl.refreshOpenedCard();
+        if(shortcutActivated) {
+            Lists blankList = new Lists(null, 0, null);
+            blankList.id = openedCard.list.id;
+            openedCard.list = blankList;
+
+            server.renameCard(openedCard);
+        }
+        else
+            cardDetailsCtrl.refreshOpenedCard();
+
+        shortcutActivated = false;
         mainCtrl.closeThirdStage();
     }
 
@@ -120,6 +134,28 @@ public class AddTagToCardCtrl {
                 public void run() {
                     if(openedCard != null && c.id == openedCard.id)
                         init(c, board, cardDetailsCtrl);
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/cards/remove", Cards.class, c->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && c.id == openedCard.id) {
+                        close();
+                    }
+                }
+            });
+        });
+
+        server.registerForMessages("/topic/lists/remove", Lists.class, l->{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(openedCard != null && openedCard.list.id == l.id) {
+                        close();
+                    }
                 }
             });
         });
@@ -249,6 +285,15 @@ public class AddTagToCardCtrl {
      */
     public String setTagLimitText(int tagCount) {
         return "You have selected " + tagCount + " out of 10 tags";
+    }
+
+    /**
+     * Setter for the shortcut activate attribute
+     *
+     * @param shortcutActivated The new value of the attribute
+     */
+    public void setShortcutActivated(boolean shortcutActivated) {
+        this.shortcutActivated = shortcutActivated;
     }
 
 }

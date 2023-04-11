@@ -1,6 +1,8 @@
 package client.scenes;
 
 import commons.Boards;
+import commons.Cards;
+import commons.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,30 @@ public class MockMainCtrl extends MainCtrl {
         calledMethods.add("closeSecondaryStage");
     }
 
+    @Override
+    public void showBoardOverview(){
+        System.out.println("Successfully showed board overview");
+    }
+
+    @Override
+    public void showConfirmUsername(){
+        System.out.println("Successfully showed confirmation scene for username");
+    }
+
+    @Override
+    public void showUserDetails(User user){
+        System.out.println("Successfully showed user details");
+    }
+    public void showBoard(Boards b) { calledMethods.add("showBoard"); }
+
     /**
-     * Mocks the behaviour of the showBoard method in MainCtrl
+     * Mocks the behaviour of the customization method in MainCtrl
      */
     @Override
-    public void showBoard(Boards b) { calledMethods.add("showBoard"); }
+    public void openCardCustomization(Boards b, Cards c) { calledMethods.add("checkColorPreset"); }
+    /**
+     * Mocks the behaviour of the closeThirdStage method in MainCtrl
+     */
+    @Override
+    public void closeThirdStage(){calledMethods.add("closeStage");}
 }

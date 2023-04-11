@@ -103,9 +103,11 @@ public class UserTest {
 
         user1.boards.add(board1);
         user3.boards.add(board2);
-
-        String stringUser1 = "User{username='iforfota7', " +
-                "boards=[Boards{id=0, name='Board 1', lists=[]}], isAdmin=true}";
+        String stringUser1 = "User{username='iforfota7', boards=[Boards{id=0, " +
+                "name='Board 1', lists=[], boardBgColor='#E6E6FA', boardFtColor" +
+                "='#000000', listBgColor='#ffffff', listFtColor='#000000', defaul" +
+                "tColor='default', colorPreset={default=#e6e6fa #000000}, tags=[]}]," +
+                " isAdmin=true}";
 
         assertEquals(user1.toString(), stringUser1);
         assertEquals(user1.toString(), user11.toString());
