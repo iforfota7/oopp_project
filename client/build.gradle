@@ -29,5 +29,6 @@ dependencies {
 
 	implementation 'org.openjfx:javafx-controls:17.0.2'
 	implementation 'org.openjfx:javafx-fxml:17.0.2'
-	
+    implementation 'org.nicosoft.config:config-client:1.0.1'
+
 }

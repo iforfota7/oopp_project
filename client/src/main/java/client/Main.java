@@ -63,6 +63,7 @@ public class Main extends Application {
         initializeLists(mainCtrl, primaryStage);
         initializeCards(mainCtrl);
         initializeTags(mainCtrl);
+        initializeCustomization(mainCtrl);
     }
 
     /**
@@ -164,5 +165,20 @@ public class Main extends Application {
                 "client", "scenes", "AddTagToCard.fxml");
 
         mainCtrl.initializeTags(tagDetails, addTag, tagsControl, addTagToCard);
+    }
+
+    /**
+     * Initializes the fxml files related to customization
+     * @param mainCtrl instance of the mainCtrl object used to initialize the files
+     */
+    public void initializeCustomization(MainCtrl mainCtrl) {
+        var customization = FXML.load(CustomizationCtrl.class,
+                "client","scenes","Customization.fxml");
+
+        var cardCustomization = FXML.load(CardCustomizationCtrl.class,
+                "client", "scenes", "CardCustomization.fxml");
+
+        mainCtrl.initializeCustomization(customization,cardCustomization);
+
     }
 }
