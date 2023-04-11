@@ -52,6 +52,7 @@ public class CustomizationCtrl {
     private Boards currentBoard;
     private List<String> serverURLS;
     private Alert alert;
+    public int changedInBoard;
 
     /**
      * Initialize method for Customization related currentBoard
@@ -62,6 +63,7 @@ public class CustomizationCtrl {
         colorPickers.add(boardFtColor);
         colorPickers.add(listBgColor);
         colorPickers.add(listFtColor);
+        changedInBoard = 0;
     }
     /**
      *Set the initial color of each color picker based on the

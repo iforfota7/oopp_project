@@ -63,4 +63,5 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
             "WHERE LIST_ID = ?1",
             nativeQuery = true)
     Integer maxPositionInsideList(long listID);
+
 }
